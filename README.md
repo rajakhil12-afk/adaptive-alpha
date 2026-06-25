@@ -36,6 +36,12 @@ Shorter-term Relative Strength tracks near-term momentum cycles over a rolling 6
 * **Volume Ratio:** `Current Volume / 20-Day Average Volume`. Signals institutional presence when volume is > 1.50x.
 * **52-Week Proximity:** `(Current Price - 52-Week High) / 52-Week High`. Tracks breakout readiness.
 
+### 4. Dual Supertrend Option (14/3 & 10/3)
+Supertrend acts as the second stage of our 2-stage screener, identifying the shorter-term trend direction and signals based on Average True Range (ATR) and median prices:
+* **Supertrend 14/3:** Standard configuration using a 14-period Wilder's ATR and a 3.0 multiplier. Smoother trend line.
+* **Supertrend 10/3:** Fast configuration using a 10-period Wilder's ATR and a 3.0 multiplier. More sensitive to short-term reversals.
+* **Buy Trigger:** Price closing above the trailing Supertrend line. Fresh breakouts show a pulsing signal glow and a ⚡ badge in the UI.
+
 ---
 
 ## ⚙️ Hybrid Data Architecture

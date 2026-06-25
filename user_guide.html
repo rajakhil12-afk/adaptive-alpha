@@ -307,7 +307,7 @@
     </div>
 
     <h1 class="page-break">2. Core Technical Metrics</h1>
-    <p>The dashboard renders five primary metrics for each stock, aligning exactly with the underlying momentum mathematical algorithm:</p>
+    <p>The dashboard renders six core technical metrics for each stock, aligning exactly with the underlying momentum mathematical algorithm:</p>
 
     <h2>Adaptive Relative Strength (ARS)</h2>
     <p>Unlike standard relative strength, ARS measures the asset's performance relative to the NIFTY 50 Index over a custom lookback window starting from a historical base date (Jan 1, 2021). It represents the percentage outperformance or underperformance relative to the benchmark:</p>
@@ -330,6 +330,14 @@
 
     <h2>Days in Trend</h2>
     <p>The consecutive count of days the ARS metric has maintained its current sign (positive or negative). A sudden change indicates a momentum flip date.</p>
+
+    <h2>Supertrend Indicator (Dual Parameters)</h2>
+    <p>Supertrend is a trend-following indicator based on Average True Range (ATR) and median prices, serving as the second stage of our 2-stage screener. The platform supports two configurations:</p>
+    <ul>
+      <li><strong>Supertrend 14/3 (Standard):</strong> Utilizes a 14-period ATR and 3x multiplier. This is the daily standard configuration, offering a smoother trend line and fewer whipsaws.</li>
+      <li><strong>Supertrend 10/3 (Fast):</strong> Utilizes a 10-period ATR and 3x multiplier. This is a more sensitive, faster-reacting trend line to capture early trend reversals.</li>
+    </ul>
+    <p>A stock generates a <strong>BUY</strong> signal when the price closes above the trailing Supertrend line. A fresh trend flip is highlighted with a pulse glow and a ⚡ icon.</p>
 
     <h1 class="page-break">3. Sector Rotation (RRG Model)</h1>
     <p>The <strong>Sector View</strong> tab categorizes industries into four distinct momentum quadrants, inspired by Relative Rotation Graphs (RRG). This classification helps determine whether an industry is in favor or starting to lag:</p>
@@ -386,6 +394,14 @@
     <ul>
       <li><strong>Filter Configuration:</strong> <code>ARS Trending ↑</code> (ON), <code>VOL+</code> (ON), <code>Near 52W High</code> (ON).</li>
       <li><strong>Scanning:</strong> Watch for stocks marked with the yellow <span class="badge" style="background:#fffbeb;color:#d97706;border:1px solid #fef3c7;font-size:10px">*NEW*</span> badge. This badge signals that the stock's ARS turned positive today for the first time in the lookback window.</li>
+    </ul>
+
+    <h2>Setup C: The 2-Stage Momentum &amp; Supertrend Screener</h2>
+    <p>Combining structural relative strength (long-term trend) with a short-term trend-following trigger to enter high-probability positions.</p>
+    <ul>
+      <li><strong>Filter Configuration:</strong> <code>ARS &gt; 0%</code> (ON), <code>Supertrend BUY</code> (ON), <code>Pass Only</code> (ON).</li>
+      <li><strong>Param Selector:</strong> Toggle between <code>Supertrend 14/3</code> (Daily standard) and <code>Supertrend 10/3</code> (Fast, sensitive) based on market volatility.</li>
+      <li><strong>Scanning:</strong> Scan for stocks that have strong baseline momentum (ARS > 0%) and have just flipped to a Supertrend BUY signal (indicated by the ⚡ icon on the BUY badge). This represents a low-risk pullback entry in a strong stock.</li>
     </ul>
 
     <div class="warning-box">

@@ -75,7 +75,7 @@
   .chip:hover { border-color: var(--border-lt); color: #ffffff; background: var(--bg3); }
   
   /* Green active pills with border glow */
-  .chip.on#f-ars, .chip.on#f-trend, .chip.on#f-srs, .chip.on#f-vol, .chip.on#f-52w {
+  .chip.on#f-ars, .chip.on#f-trend, .chip.on#f-srs, .chip.on#f-vol, .chip.on#f-52w, .chip.on#f-st {
     background: rgba(38, 166, 154, 0.08);
     color: #ffffff;
     border-color: var(--up);
@@ -91,7 +91,7 @@
   .divider { width: 1px; height: 20px; background: var(--border); margin: 0 6px; }
 
   .tbl-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-  .tbl-header { display: grid; grid-template-columns: 160px 90px 90px 90px 105px 95px 85px 80px 56px; background: var(--bg2); border-bottom: 1.5px solid var(--border); position: sticky; top: 0; z-index: 10; }
+  .tbl-header { display: grid; grid-template-columns: 160px 90px 90px 90px 105px 95px 85px 80px 80px 56px; background: var(--bg2); border-bottom: 1.5px solid var(--border); position: sticky; top: 0; z-index: 10; }
   
   /* Clean typography for table headers */
   .th { padding: 12px 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; cursor: pointer; user-select: none; border-right: 1px solid var(--border); display: flex; align-items: center; gap: 4px; transition: color 0.15s, background-color 0.15s; }
@@ -106,7 +106,7 @@
   .tbl-body::-webkit-scrollbar-thumb { background: var(--border-lt); border-radius: 3px; }
 
   /* Standardized row heights and elegant hover highlight state */
-  .tbl-row { display: grid; grid-template-columns: 160px 90px 90px 90px 105px 95px 85px 80px 56px; border-bottom: 1px solid var(--border); border-left: 3px solid transparent; transition: background-color 0.15s, border-left-color 0.15s; cursor: pointer; align-items: stretch; }
+  .tbl-row { display: grid; grid-template-columns: 160px 90px 90px 90px 105px 95px 85px 80px 80px 56px; border-bottom: 1px solid var(--border); border-left: 3px solid transparent; transition: background-color 0.15s, border-left-color 0.15s; cursor: pointer; align-items: stretch; }
   .tbl-row:last-child { border-bottom: none; }
   .tbl-row:hover { background: rgba(255, 255, 255, 0.02); border-left-color: var(--up); }
 
@@ -155,7 +155,14 @@
   .vol-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 4px; overflow: hidden; width: 100%; }
   .vol-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #26a69a, #5e96ff); }
 
-  .group-header { display: grid; grid-template-columns: 160px 90px 90px 90px 105px 95px 85px 80px 56px; background: rgba(23, 27, 38, 0.85); border-bottom: 1px solid var(--border); padding: 8px 10px; position: sticky; top: 0; z-index: 5; }
+  /* Supertrend badges and signals */
+  .st-badge { display: inline-block; font-family: var(--font-num); font-size: 9.5px; font-weight: 700; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.5px; }
+  .st-buy { background: var(--up-dim); color: var(--up); border: 1px solid rgba(38,166,154,0.15); }
+  .st-sell { background: var(--down-dim); color: var(--down); border: 1px solid rgba(239,83,80,0.12); }
+  .st-signal-glow { animation: pulse-signal-glow 1.5s infinite ease-in-out; }
+  @keyframes pulse-signal-glow { 0% { box-shadow: 0 0 0 0 rgba(38,166,154,0.3); } 50% { box-shadow: 0 0 6px 2px rgba(38,166,154,0.5); } 100% { box-shadow: 0 0 0 0 rgba(38,166,154,0.3); } }
+
+  .group-header { display: grid; grid-template-columns: 160px 90px 90px 90px 105px 95px 85px 80px 80px 56px; background: rgba(23, 27, 38, 0.85); border-bottom: 1px solid var(--border); padding: 8px 10px; position: sticky; top: 0; z-index: 5; }
   .group-header span { grid-column: 1 / -1; font-family: var(--font-sans); font-size: 11px; font-weight: 700; color: var(--muted-lt); text-transform: uppercase; letter-spacing: 0.7px; }
 
   .loading-overlay { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 12px; color: var(--muted); }
@@ -241,6 +248,10 @@
       <option value="100">Nifty 100 (100 stocks)</option>
       <option value="200">Nifty 200 (~200 stocks)</option>
     </select>
+    <select id="st-param-sel" onchange="switchSTParam()">
+      <option value="14">Supertrend 14/3 (Daily)</option>
+      <option value="10">Supertrend 10/3 (Fast)</option>
+    </select>
     <button id="refresh-btn" onclick="loadData()">↻ Live Data</button>
     <button id="sample-btn" onclick="useSampleData()">⊙ Instant Preview</button>
   </div>
@@ -272,6 +283,7 @@
     <div class="chip"    id="f-srs"     onclick="toggleChip('srs')">SRS &gt; 0%</div>
     <div class="chip"    id="f-vol"     onclick="toggleChip('vol')">VOL+</div>
     <div class="chip"    id="f-52w"     onclick="toggleChip('52w')">Near 52W High</div>
+    <div class="chip"    id="f-st"      onclick="toggleChip('st')">Supertrend BUY</div>
     <div class="divider"></div>
     <span class="ctrl-label">Show:</span>
     <div class="chip on" id="f-pass"    onclick="toggleChip('pass')">Pass Only</div>
@@ -282,6 +294,7 @@
       <option value="ars-desc">ARS High→Low</option>
       <option value="ars-asc">ARS Low→High</option>
       <option value="srs-desc">SRS High→Low</option>
+      <option value="st-desc">Supertrend BUY First</option>
       <option value="vol-desc">Volume Ratio</option>
       <option value="52w-desc">Near 52W High</option>
       <option value="days-desc">Longest in Trend</option>
@@ -301,6 +314,7 @@
         <div class="th" onclick="setSortCol('52w-desc')" id="th-52w">52W Prox <span class="sort-arrow">↕</span></div>
         <div class="th" onclick="setSortCol('days-desc')" id="th-days" title="How many days ARS has held its current sign, and the date it flipped">Days in Trend <span class="sort-arrow">↕</span></div>
         <div class="th" onclick="setSortCol('vol-desc')" id="th-vol">Vol Ratio <span class="sort-arrow">↕</span></div>
+        <div class="th" onclick="setSortCol('st-desc')" id="th-st">Supertrend <span class="sort-arrow">↕</span></div>
         <div class="th">Price ₹</div>
         <div class="th">Status</div>
         <div class="th">TV</div>
@@ -550,7 +564,8 @@ let currentIndex = 50;
 let allData      = [];
 let globalScreenerData = []; // Pre-calculated baseline database
 let prevDataMap  = {};
-let filters      = { ars:true, trend:true, srs:false, vol:false, '52w':false, pass:true, groups:true };
+let filters      = { ars:true, trend:true, srs:false, vol:false, '52w':false, st:false, pass:true, groups:true };
+let stParam      = '14'; // '14' or '10'
 let activeTab    = 'screener';
 let activeSector = null;
 
@@ -596,15 +611,132 @@ async function fetchYahoo(ticker, range = '5y') {
       const ts    = result.timestamp || [];
       const q     = result.indicators?.quote?.[0] || {};
       const close = q.close  || [];
+      const high  = q.high   || [];
+      const low   = q.low    || [];
       const vol   = q.volume || [];
       const candles = [];
       for (let i = 0; i < ts.length; i++) {
-        if (close[i] != null) candles.push({ t: ts[i], c: close[i], v: vol[i] || 0 });
+        if (close[i] != null) {
+          candles.push({ 
+            t: ts[i], 
+            c: close[i], 
+            h: high[i] !== undefined && high[i] !== null ? high[i] : close[i], 
+            l: low[i] !== undefined && low[i] !== null ? low[i] : close[i], 
+            v: vol[i] || 0 
+          });
+        }
       }
       return candles;
     } catch(_) { continue; }
   }
   return null;
+}
+
+// Calculate Supertrend client-side matching standard Pine Script parameters
+function calcSupertrend(candles, period = 10, multiplier = 3) {
+  const len = candles.length;
+  if (len < period + 5) return { trend: "sell", signal: null, val: 0 };
+  
+  const tr = [];
+  const hl2 = [];
+  for (let i = 0; i < len; i++) {
+    const c = candles[i];
+    hl2.push((c.h + c.l) / 2);
+    if (i === 0) {
+      tr.push(c.h - c.l);
+    } else {
+      const prevC = candles[i - 1];
+      const val1 = c.h - c.l;
+      const val2 = Math.abs(c.h - prevC.c);
+      const val3 = Math.abs(c.l - prevC.c);
+      tr.push(Math.max(val1, val2, val3));
+    }
+  }
+  
+  const atr = [];
+  let sum = 0;
+  for (let i = 0; i < period; i++) {
+    sum += tr[i];
+  }
+  let currentAtr = sum / period;
+  atr[period - 1] = currentAtr;
+  
+  for (let i = period; i < len; i++) {
+    currentAtr = (atr[i - 1] * (period - 1) + tr[i]) / period;
+    atr[i] = currentAtr;
+  }
+  
+  const up = [];
+  const dn = [];
+  const supertrend = [];
+  const trend = [];
+  
+  for (let i = 0; i < len; i++) {
+    if (i < period - 1) {
+      up.push(hl2[i] - multiplier * (tr[i] || 0));
+      dn.push(hl2[i] + multiplier * (tr[i] || 0));
+      supertrend.push(0);
+      trend.push(-1);
+      continue;
+    }
+    
+    const c = candles[i];
+    const prevC = candles[i - 1] || c;
+    const currentAtr = atr[i];
+    
+    const basicUp = hl2[i] - multiplier * currentAtr;
+    const basicDn = hl2[i] + multiplier * currentAtr;
+    
+    const prevUp = up[i - 1] || basicUp;
+    const prevDn = dn[i - 1] || basicDn;
+    
+    const finalUp = (basicUp > prevUp || prevC.c < prevUp) ? basicUp : prevUp;
+    const finalDn = (basicDn < prevDn || prevC.c > prevDn) ? basicDn : prevDn;
+    
+    up.push(finalUp);
+    dn.push(finalDn);
+    
+    const prevST = supertrend[i - 1] || 0;
+    const prevTrend = trend[i - 1] || -1;
+    
+    let currentST = 0;
+    let currentTrend = -1;
+    
+    if (prevTrend === 1) {
+      currentST = Math.max(prevST, finalUp);
+      if (c.c < currentST) {
+        currentTrend = -1;
+        currentST = finalDn;
+      } else {
+        currentTrend = 1;
+      }
+    } else {
+      currentST = Math.min(prevST, finalDn);
+      if (c.c > currentST) {
+        currentTrend = 1;
+        currentST = finalUp;
+      } else {
+        currentTrend = -1;
+      }
+    }
+    
+    supertrend.push(currentST);
+    trend.push(currentTrend);
+  }
+  
+  const lastIdx = len - 1;
+  const currentTrend = trend[lastIdx];
+  const prevTrend = trend[lastIdx - 1];
+  
+  let signal = null;
+  if (prevTrend === -1 && currentTrend === 1) signal = "buy_signal";
+  else if (prevTrend === 1 && currentTrend === -1) signal = "sell_signal";
+  
+  return {
+    trend: currentTrend === 1 ? "buy" : "sell",
+    signal: signal,
+    val: parseFloat(supertrend[lastIdx].toFixed(2))
+  };
 }
 
 function calcARS(stockCandles, benchCandles, cutoffTs) {
@@ -728,7 +860,30 @@ async function loadData() {
     const calc    = calcARS(candles, benchData, cutoffTs);
     const breakout = calc.ars != null && calc.prev != null && calc.ars > 0 && calc.prev <= 0;
     const trending = calc.ars != null && calc.prev != null && calc.ars > calc.prev;
-    results.push({ sym: stock.sym, name: stock.name, ind: stock.ind, ars: calc.ars, srs: calc.srs, vol_ratio: calc.vol, hi52_prox: calc.hi52, price: calc.price, breakout, trending, signSince: calc.signSince, signDays: calc.signDays });
+
+    let st14 = { trend: "sell", signal: null, val: 0 };
+    let st10 = { trend: "sell", signal: null, val: 0 };
+    if (candles && candles.length > 20) {
+      st14 = calcSupertrend(candles, 14, 3);
+      st10 = calcSupertrend(candles, 10, 3);
+    }
+
+    results.push({ 
+      sym: stock.sym, 
+      name: stock.name, 
+      ind: stock.ind, 
+      ars: calc.ars, 
+      srs: calc.srs, 
+      vol_ratio: calc.vol, 
+      hi52_prox: calc.hi52, 
+      price: calc.price, 
+      breakout, 
+      trending, 
+      signSince: calc.signSince, 
+      signDays: calc.signDays,
+      st14,
+      st10
+    });
     await new Promise(r => setTimeout(r, DELAY_MS));
   }
   allData = results.map(d => ({ ...d, ars: d.ars ?? 0, srs: d.srs ?? 0, vol_ratio: d.vol_ratio ?? 1, hi52_prox: d.hi52_prox ?? -0.1, price: d.price ?? 0, signDays: d.signDays ?? null }));
@@ -766,7 +921,24 @@ function generateSampleData(universe) {
     const magnitude  = Math.min(Math.abs(ars), 0.6);
     const simDays     = Math.round(15 + magnitude * 500 + Math.random() * 120);
     const simSinceMs  = Date.now() - simDays * 86400000;
-    return { sym: s.sym, name: s.name, ind: s.ind, ars, srs: parseFloat((ars * 0.55 + noise).toFixed(4)), vol_ratio: parseFloat((0.4 + Math.random() * 2.2).toFixed(2)), hi52_prox: parseFloat((ars > 0.2 ? -0.01 - Math.random()*0.08 : -0.05 - Math.random()*0.35).toFixed(4)), price: parseFloat(estimatePrice(s.sym)), breakout: ars > 0 && ars < 0.04, trending: Math.random() > (ars > 0 ? 0.35 : 0.65), signDays: simDays, signSince: Math.round(simSinceMs/1000) };
+    const price = parseFloat(estimatePrice(s.sym));
+    const isSTBuy = ars > 0 && Math.random() > 0.3;
+    return { 
+      sym: s.sym, 
+      name: s.name, 
+      ind: s.ind, 
+      ars, 
+      srs: parseFloat((ars * 0.55 + noise).toFixed(4)), 
+      vol_ratio: parseFloat((0.4 + Math.random() * 2.2).toFixed(2)), 
+      hi52_prox: parseFloat((ars > 0.2 ? -0.01 - Math.random()*0.08 : -0.05 - Math.random()*0.35).toFixed(4)), 
+      price, 
+      breakout: ars > 0 && ars < 0.04, 
+      trending: Math.random() > (ars > 0 ? 0.35 : 0.65), 
+      signDays: simDays, 
+      signSince: Math.round(simSinceMs/1000),
+      st14: { trend: isSTBuy ? "buy" : "sell", signal: Math.random() > 0.95 ? "buy_signal" : null, val: price * 0.95 },
+      st10: { trend: isSTBuy ? "buy" : "sell", signal: null, val: price * 0.96 }
+    };
   });
 }
 
@@ -808,6 +980,10 @@ function passes(d) {
   if (filters.srs)  ok = ok && d.srs > 0;
   if (filters.vol)  ok = ok && d.vol_ratio >= 1.5;
   if (filters['52w']) ok = ok && d.hi52_prox >= -0.05;
+  if (filters.st) {
+    const stData = stParam === '14' ? d.st14 : d.st10;
+    ok = ok && stData && stData.trend === 'buy';
+  }
   return ok;
 }
 
@@ -879,6 +1055,13 @@ function renderTable() {
     if (sort==='ars-desc') return b.ars - a.ars;
     if (sort==='ars-asc')  return a.ars - b.ars;
     if (sort==='srs-desc') return b.srs - a.srs;
+    if (sort==='st-desc') {
+      const aST = stParam === '14' ? a.st14 : a.st10;
+      const bST = stParam === '14' ? b.st14 : b.st10;
+      const aTrendVal = aST && aST.trend === 'buy' ? 1 : 0;
+      const bTrendVal = bST && bST.trend === 'buy' ? 1 : 0;
+      return bTrendVal - aTrendVal;
+    }
     if (sort==='vol-desc') return b.vol_ratio - a.vol_ratio;
     if (sort==='52w-desc') return b.hi52_prox - a.hi52_prox;
     if (sort==='days-desc') return (b.signDays ?? -1) - (a.signDays ?? -1);
@@ -919,6 +1102,21 @@ function rowHtml(d) {
   if (d.hi52_prox >= -0.05) tags.push('<span class="tag tag-52w">52W↑</span>');
   const tagHtml = tags.length ? `<div class="tick-tags">${tags.join('')}</div>` : '';
   
+  const stData = stParam === '14' ? d.st14 : d.st10;
+  const stTrend = stData ? stData.trend : 'sell';
+  const stSignal = stData ? stData.signal : null;
+  const stVal = stData ? stData.val : 0;
+  const isSTBuy = stTrend === 'buy';
+  const stBadgeCls = isSTBuy ? 'st-buy' : 'st-sell';
+  const glowCls = stSignal === 'buy_signal' ? 'st-signal-glow' : '';
+  const stText = isSTBuy ? 'BUY' : 'SELL';
+  const signalIcon = stSignal ? ' ⚡' : '';
+  
+  const stCellHtml = `<div class="td">
+    <div><span class="st-badge ${stBadgeCls} ${glowCls}">${stText}${signalIcon}</span></div>
+    <div class="cell-sub">ST: ₹${stVal.toLocaleString('en-IN')}</div>
+  </div>`;
+
   return `<div class="tbl-row" data-sym="${d.sym}" onclick="openTV('${d.sym}')">
     <div class="td td-ticker" title="Open NSE:${d.sym} on TradingView (1D)">
       <div style="display: flex; align-items: center;">
@@ -954,10 +1152,16 @@ function rowHtml(d) {
       <div class="ars-val" style="color:${d.vol_ratio>=1.5?'#7da9ff':'var(--text)'}">${d.vol_ratio.toFixed(2)}×</div>
       <div class="vol-bar"><div class="vol-fill" style="width:${volPct}%"></div></div>
     </div>
+    ${stCellHtml}
     <div class="td"><div class="ars-val" style="${d.price === 0 ? 'color:var(--muted)' : ''}">${d.price === 0 ? 'N/A' : '₹' + d.price.toLocaleString('en-IN')}</div></div>
     <div class="td"><span class="pass-badge ${d.pass?'pass-yes':'pass-no'}">${d.pass?'PASS':'FAIL'}</span></div>
     <div class="td" onclick="event.stopPropagation()"><a class="tv-btn" href="${tvUrl}" target="_blank" title="Open in TradingView">↗</a></div>
   </div>`;
+}
+
+function switchSTParam() {
+  stParam = document.getElementById('st-param-sel').value;
+  renderAll();
 }
 
 function openTV(sym) { window.open(`https://www.tradingview.com/chart/?symbol=NSE:${sym}&interval=D`, '_blank'); }
