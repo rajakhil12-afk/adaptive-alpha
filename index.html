@@ -342,7 +342,7 @@ const N50 = [
   {sym:'AXISBANK',   name:'Axis Bank',           ind:'Financial Services'},
   {sym:'BAJAJ-AUTO', name:'Bajaj Auto',          ind:'Automobile'},
   {sym:'BAJFINANCE', name:'Bajaj Finance',       ind:'Financial Services'},
-  {sym:'BAJAJFINSV', name:'BaJaj Finserv',       ind:'Financial Services'},
+  {sym:'BAJAJFINSV', name:'Bajaj Finserv',       ind:'Financial Services'},
   {sym:'BEL',        name:'Bharat Electronics',  ind:'Capital Goods'},
   {sym:'BHARTIARTL', name:'Bharti Airtel',       ind:'Telecom'},
   {sym:'CIPLA',      name:'Cipla',               ind:'Healthcare'},
@@ -394,7 +394,7 @@ const EXTRA = [
   {sym:'ADANIPOWER', name:'Adani Power',          ind:'Power'},
   {sym:'AMBUJACEM',  name:'Ambuja Cements',       ind:'Construction Materials'},
   {sym:'DMART',      name:'Avenue Supermarts',    ind:'Consumer Services'},
-  {sym:'BAJAJHLDNG', name:'Bajaj Holdings',       ind:'Financial Services'},
+  {sym:'BAJAJHLDNG', name:'BaJaj Holdings',       ind:'Financial Services'},
   {sym:'BANKBARODA', name:'Bank of Baroda',       ind:'Financial Services'},
   {sym:'BPCL',       name:'BPCL',                 ind:'Oil Gas'},
   {sym:'BOSCHLTD',   name:'Bosch India',          ind:'Automobile'},
@@ -997,7 +997,6 @@ function useSampleData() {
   renderAll();
 }
 
-// Toggle filters
 function toggleChip(key) {
   filters[key] = !filters[key];
   document.getElementById('f-'+key).classList.toggle('on', filters[key]);

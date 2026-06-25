@@ -1,0 +1,15 @@
+{
+  "name": "adaptive-alpha",
+  "version": "8.1.0",
+  "description": "Institutional momentum and sector rotation screener for NSE India.",
+  "main": "scripts/update_data.js",
+  "scripts": {
+    "start": "node scripts/update_data.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Adaptive Alpha Team",
+  "license": "MIT",
+  "dependencies": {}
+}
