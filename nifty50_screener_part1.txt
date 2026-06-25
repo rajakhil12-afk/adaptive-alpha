@@ -1,0 +1,349 @@
+//@version=5
+// ============================================================
+// Nifty 50 Screener Part 1 Dashboard (Generated)
+// Based on Premal Parekh's Multi-Sector ARS Screener v8.1
+// ============================================================
+indicator("Nifty 50 Screener Part 1", overlay=false, max_bars_back=500)
+
+// ============================================================
+// USER INPUTS
+// ============================================================
+startYear  = input.int(2021, title="Start Year",  minval=2000, maxval=2030, group="ARS Settings")
+startMonth = input.int(1,    title="Start Month", minval=1,    maxval=12,   group="ARS Settings")
+startDay   = input.int(1,    title="Start Day",   minval=1,    maxval=31,   group="ARS Settings")
+
+srsLen = input.int(63, title="SRS Lookback (days)", minval=10, maxval=500, group="ARS Settings")
+arsMaLen = input.int(20, title="ARS MA Length", minval=5, maxval=100, group="ARS Settings")
+
+volSurgeMultiple = input.float(1.5, title="Volume Surge Multiple", step=0.1, minval=1.1, maxval=5.0, group="Volume Settings")
+hiProxPct = input.float(5.0, title="52W High Proximity %", step=0.5, minval=1.0, maxval=20.0, group="52W Settings")
+arsThreshPct = input.float(0.0, title="ARS Threshold (%)", step=0.5, group="Screening Filters")
+
+filterArsGtThresh = input.bool(true,  title="Filter: ARS > Threshold%", group="Screening Filters")
+filterArsTrending = input.bool(true,  title="Filter: ARS trending UP", group="Screening Filters")
+filterArsAboveMa  = input.bool(false, title="Filter: ARS above MA", group="Screening Filters")
+filterSrsGtZero   = input.bool(false, title="Filter: SRS > 0%", group="Screening Filters")
+
+arsThreshold = arsThreshPct / 100.0
+breakoutBars = input.int(10, title="Breakout Lookback (bars)", minval=3, maxval=50, group="Screening Filters")
+onlyShowPass = input.bool(true, title="Show Only Passing Stocks", group="Display Settings", tooltip="If checked, the table compresses and only displays stocks that pass the filters.")
+
+// ============================================================
+// CORE FUNCTIONS
+// ============================================================
+f_len() =>
+    cutoff = timestamp(startYear, startMonth, startDay, 0, 0)
+    raw    = ta.barssince(time >= cutoff)
+    int result = 20
+    if not na(raw)
+        result := math.max(raw, 20)
+    result
+
+f_bench(sym) =>
+    request.security(sym, "D", close, lookahead=barmerge.lookahead_off)
+
+f_ars_srs(stockSym, benchClose) =>
+    len = f_len()
+    [stockClose, stockVol] = request.security(stockSym, "D", [close, volume], lookahead=barmerge.lookahead_off)
+    float ars      = na
+    float srs      = na
+    float volRatio = na
+    float hiProx   = na
+    bool arsOk = not na(stockClose[len]) and not na(benchClose[len]) and stockClose[len] != 0.0 and benchClose[len] != 0.0
+    bool srsOk = not na(stockClose[srsLen]) and not na(benchClose[srsLen]) and stockClose[srsLen] != 0.0 and benchClose[srsLen] != 0.0
+    if arsOk
+        ars := (stockClose / stockClose[len]) / (benchClose / benchClose[len]) - 1.0
+    if srsOk
+        srs := (stockClose / stockClose[srsLen]) / (benchClose / benchClose[srsLen]) - 1.0
+    avgVol = ta.sma(stockVol, 20)
+    if not na(avgVol) and avgVol > 0
+        volRatio := stockVol / avgVol
+    hi52 = ta.highest(stockClose, 252)
+    if not na(hi52) and hi52 > 0
+        hiProx := (stockClose - hi52) / hi52
+    [ars, srs, volRatio, hiProx]
+
+f_above_ma(v) =>
+    ma = ta.sma(v, arsMaLen)
+    not na(ma) and v > ma
+
+f_is_breakout(ars) =>
+    bool broke = false
+    if not na(ars) and ars > 0.0
+        i = 1
+        while i <= breakoutBars
+            if not na(ars[i]) and ars[i] <= 0.0
+                broke := true
+            i := i + 1
+    broke
+
+f_passes(ars, prevArs, srs) =>
+    bool isTrending = not na(ars) and not na(prevArs) and ars > prevArs
+    bool p = true
+    if filterArsGtThresh
+        p := p and (not na(ars) and ars > arsThreshold)
+    if filterArsTrending
+        p := p and isTrending
+    if filterArsAboveMa
+        p := p and f_above_ma(ars)
+    if filterSrsGtZero
+        p := p and (not na(srs) and srs > 0.0)
+    p
+
+f_pct(v) =>
+    na(v) ? "--" : str.tostring(v * 100.0, "#.##") + "%"
+
+// ============================================================
+// SYMBOLS & FETCH BENCHMARK
+// ============================================================
+bc = f_bench("NSE:NIFTY")
+
+// Stock Definitions
+s1 = "NSE:ADANIENT"
+s2 = "NSE:ADANIPORTS"
+s3 = "NSE:APOLLOHOSP"
+s4 = "NSE:ASIANPAINT"
+s5 = "NSE:AXISBANK"
+s6 = "NSE:BAJAJ_AUTO"
+s7 = "NSE:BAJFINANCE"
+s8 = "NSE:BAJAJFINSV"
+s9 = "NSE:BEL"
+s10 = "NSE:BHARTIARTL"
+s11 = "NSE:CIPLA"
+s12 = "NSE:COALINDIA"
+s13 = "NSE:DRREDDY"
+s14 = "NSE:EICHERMOT"
+s15 = "NSE:GRASIM"
+s16 = "NSE:HCLTECH"
+s17 = "NSE:HDFCBANK"
+s18 = "NSE:HDFCLIFE"
+s19 = "NSE:HINDALCO"
+s20 = "NSE:HINDUNILVR"
+s21 = "NSE:ICICIBANK"
+s22 = "NSE:ITC"
+s23 = "NSE:INFY"
+s24 = "NSE:INDIGO"
+s25 = "NSE:JSWSTEEL"
+
+// Fetch Metrics
+[sa1, ss1, sv1, sh1] = f_ars_srs(s1, bc)
+[sa2, ss2, sv2, sh2] = f_ars_srs(s2, bc)
+[sa3, ss3, sv3, sh3] = f_ars_srs(s3, bc)
+[sa4, ss4, sv4, sh4] = f_ars_srs(s4, bc)
+[sa5, ss5, sv5, sh5] = f_ars_srs(s5, bc)
+[sa6, ss6, sv6, sh6] = f_ars_srs(s6, bc)
+[sa7, ss7, sv7, sh7] = f_ars_srs(s7, bc)
+[sa8, ss8, sv8, sh8] = f_ars_srs(s8, bc)
+[sa9, ss9, sv9, sh9] = f_ars_srs(s9, bc)
+[sa10, ss10, sv10, sh10] = f_ars_srs(s10, bc)
+[sa11, ss11, sv11, sh11] = f_ars_srs(s11, bc)
+[sa12, ss12, sv12, sh12] = f_ars_srs(s12, bc)
+[sa13, ss13, sv13, sh13] = f_ars_srs(s13, bc)
+[sa14, ss14, sv14, sh14] = f_ars_srs(s14, bc)
+[sa15, ss15, sv15, sh15] = f_ars_srs(s15, bc)
+[sa16, ss16, sv16, sh16] = f_ars_srs(s16, bc)
+[sa17, ss17, sv17, sh17] = f_ars_srs(s17, bc)
+[sa18, ss18, sv18, sh18] = f_ars_srs(s18, bc)
+[sa19, ss19, sv19, sh19] = f_ars_srs(s19, bc)
+[sa20, ss20, sv20, sh20] = f_ars_srs(s20, bc)
+[sa21, ss21, sv21, sh21] = f_ars_srs(s21, bc)
+[sa22, ss22, sv22, sh22] = f_ars_srs(s22, bc)
+[sa23, ss23, sv23, sh23] = f_ars_srs(s23, bc)
+[sa24, ss24, sv24, sh24] = f_ars_srs(s24, bc)
+[sa25, ss25, sv25, sh25] = f_ars_srs(s25, bc)
+
+// Compute Status & Filters
+sb1 = f_is_breakout(sa1)
+sp1 = f_passes(sa1, sa1[1], ss1) ? 1 : 0
+sb2 = f_is_breakout(sa2)
+sp2 = f_passes(sa2, sa2[1], ss2) ? 1 : 0
+sb3 = f_is_breakout(sa3)
+sp3 = f_passes(sa3, sa3[1], ss3) ? 1 : 0
+sb4 = f_is_breakout(sa4)
+sp4 = f_passes(sa4, sa4[1], ss4) ? 1 : 0
+sb5 = f_is_breakout(sa5)
+sp5 = f_passes(sa5, sa5[1], ss5) ? 1 : 0
+sb6 = f_is_breakout(sa6)
+sp6 = f_passes(sa6, sa6[1], ss6) ? 1 : 0
+sb7 = f_is_breakout(sa7)
+sp7 = f_passes(sa7, sa7[1], ss7) ? 1 : 0
+sb8 = f_is_breakout(sa8)
+sp8 = f_passes(sa8, sa8[1], ss8) ? 1 : 0
+sb9 = f_is_breakout(sa9)
+sp9 = f_passes(sa9, sa9[1], ss9) ? 1 : 0
+sb10 = f_is_breakout(sa10)
+sp10 = f_passes(sa10, sa10[1], ss10) ? 1 : 0
+sb11 = f_is_breakout(sa11)
+sp11 = f_passes(sa11, sa11[1], ss11) ? 1 : 0
+sb12 = f_is_breakout(sa12)
+sp12 = f_passes(sa12, sa12[1], ss12) ? 1 : 0
+sb13 = f_is_breakout(sa13)
+sp13 = f_passes(sa13, sa13[1], ss13) ? 1 : 0
+sb14 = f_is_breakout(sa14)
+sp14 = f_passes(sa14, sa14[1], ss14) ? 1 : 0
+sb15 = f_is_breakout(sa15)
+sp15 = f_passes(sa15, sa15[1], ss15) ? 1 : 0
+sb16 = f_is_breakout(sa16)
+sp16 = f_passes(sa16, sa16[1], ss16) ? 1 : 0
+sb17 = f_is_breakout(sa17)
+sp17 = f_passes(sa17, sa17[1], ss17) ? 1 : 0
+sb18 = f_is_breakout(sa18)
+sp18 = f_passes(sa18, sa18[1], ss18) ? 1 : 0
+sb19 = f_is_breakout(sa19)
+sp19 = f_passes(sa19, sa19[1], ss19) ? 1 : 0
+sb20 = f_is_breakout(sa20)
+sp20 = f_passes(sa20, sa20[1], ss20) ? 1 : 0
+sb21 = f_is_breakout(sa21)
+sp21 = f_passes(sa21, sa21[1], ss21) ? 1 : 0
+sb22 = f_is_breakout(sa22)
+sp22 = f_passes(sa22, sa22[1], ss22) ? 1 : 0
+sb23 = f_is_breakout(sa23)
+sp23 = f_passes(sa23, sa23[1], ss23) ? 1 : 0
+sb24 = f_is_breakout(sa24)
+sp24 = f_passes(sa24, sa24[1], ss24) ? 1 : 0
+sb25 = f_is_breakout(sa25)
+sp25 = f_passes(sa25, sa25[1], ss25) ? 1 : 0
+
+// Row renderer
+f_set_row(tbl, row, sym, ars, prevArs, srs, isBreakout, volRatio, hiProx, passes) =>
+    name    = str.replace(sym, "NSE:", "")
+    arrow   = na(ars) or na(prevArs) ? "-" : ars > prevArs ? "^" : "v"
+    tag     = isBreakout ? " *NEW*" : ""
+    volTag  = not na(volRatio) and volRatio >= volSurgeMultiple ? "VOL+" : "--"
+    hiStr   = not na(hiProx) ? str.tostring(hiProx * 100.0, "#.##") + "%" : "--"
+    
+    // Set cell backgrounds based on performance
+    color arsBg = color.new(color.gray, 65)
+    if not na(ars)
+        if ars > 0.15
+            arsBg := color.new(color.lime, 15)
+        else if ars > 0.05
+            arsBg := color.new(color.green, 25)
+        else if ars > 0.0
+            arsBg := color.new(color.teal, 35)
+        else if ars > -0.05
+            arsBg := color.new(color.orange, 25)
+        else
+            arsBg := color.new(color.red, 25)
+            
+    color hiBg = not na(hiProx) and (hiProx * 100.0 >= -hiProxPct) ? color.new(color.lime, 20) : color.new(color.gray, 75)
+    color statusBg = passes > 0 ? color.new(color.lime, 15) : color.new(color.gray, 65)
+    string statusText = passes > 0 ? "PASS" : "FAIL"
+    color statusFg = passes > 0 ? color.black : color.gray
+    
+    table.cell(tbl, 0, row, name + tag, bgcolor=isBreakout ? color.new(color.yellow, 15) : color.new(color.black, 20), text_color=isBreakout ? color.black : color.white, text_size=size.small)
+    table.cell(tbl, 1, row, f_pct(ars) + " " + arrow, bgcolor=arsBg, text_color=color.black, text_size=size.small)
+    table.cell(tbl, 2, row, f_pct(srs), bgcolor=color.new(color.gray, 75), text_color=color.white, text_size=size.small)
+    table.cell(tbl, 3, row, hiStr, bgcolor=hiBg, text_color=(not na(hiProx) and (hiProx * 100.0 >= -hiProxPct)) ? color.black : color.white, text_size=size.small)
+    table.cell(tbl, 4, row, volTag, bgcolor=volTag == "VOL+" ? color.new(color.navy, 20) : color.new(color.gray, 75), text_color=color.white, text_size=size.small)
+    table.cell(tbl, 5, row, statusText, bgcolor=statusBg, text_color=statusFg, text_size=size.small)
+
+// ============================================================
+// MAIN TABLE (TOP-LEFT)
+// ============================================================
+var table tbl = table.new(position.top_left, 6, 27,
+     border_width = 0,
+     frame_width  = 0)
+
+if barstate.islast
+    // Clear all cells from previous bars to avoid ghosts
+    table.clear(tbl, 0, 0, 5, 26)
+    
+    hBg = color.new(color.navy, 20)
+    
+    // Header
+    table.cell(tbl, 0, 0, "TICKER", bgcolor=hBg, text_color=color.white, text_size=size.small)
+    table.cell(tbl, 1, 0, "ARS", bgcolor=hBg, text_color=color.white, text_size=size.small)
+    table.cell(tbl, 2, 0, "SRS", bgcolor=hBg, text_color=color.white, text_size=size.small)
+    table.cell(tbl, 3, 0, "52W PROX", bgcolor=hBg, text_color=color.white, text_size=size.small)
+    table.cell(tbl, 4, 0, "VOL SURGE", bgcolor=hBg, text_color=color.white, text_size=size.small)
+    table.cell(tbl, 5, 0, "STATUS", bgcolor=hBg, text_color=color.white, text_size=size.small)
+    
+    int curRow = 1
+    if not onlyShowPass or sp1 > 0
+        f_set_row(tbl, curRow, s1, sa1, sa1[1], ss1, sb1, sv1, sh1, sp1)
+        curRow := curRow + 1
+    if not onlyShowPass or sp2 > 0
+        f_set_row(tbl, curRow, s2, sa2, sa2[1], ss2, sb2, sv2, sh2, sp2)
+        curRow := curRow + 1
+    if not onlyShowPass or sp3 > 0
+        f_set_row(tbl, curRow, s3, sa3, sa3[1], ss3, sb3, sv3, sh3, sp3)
+        curRow := curRow + 1
+    if not onlyShowPass or sp4 > 0
+        f_set_row(tbl, curRow, s4, sa4, sa4[1], ss4, sb4, sv4, sh4, sp4)
+        curRow := curRow + 1
+    if not onlyShowPass or sp5 > 0
+        f_set_row(tbl, curRow, s5, sa5, sa5[1], ss5, sb5, sv5, sh5, sp5)
+        curRow := curRow + 1
+    if not onlyShowPass or sp6 > 0
+        f_set_row(tbl, curRow, s6, sa6, sa6[1], ss6, sb6, sv6, sh6, sp6)
+        curRow := curRow + 1
+    if not onlyShowPass or sp7 > 0
+        f_set_row(tbl, curRow, s7, sa7, sa7[1], ss7, sb7, sv7, sh7, sp7)
+        curRow := curRow + 1
+    if not onlyShowPass or sp8 > 0
+        f_set_row(tbl, curRow, s8, sa8, sa8[1], ss8, sb8, sv8, sh8, sp8)
+        curRow := curRow + 1
+    if not onlyShowPass or sp9 > 0
+        f_set_row(tbl, curRow, s9, sa9, sa9[1], ss9, sb9, sv9, sh9, sp9)
+        curRow := curRow + 1
+    if not onlyShowPass or sp10 > 0
+        f_set_row(tbl, curRow, s10, sa10, sa10[1], ss10, sb10, sv10, sh10, sp10)
+        curRow := curRow + 1
+    if not onlyShowPass or sp11 > 0
+        f_set_row(tbl, curRow, s11, sa11, sa11[1], ss11, sb11, sv11, sh11, sp11)
+        curRow := curRow + 1
+    if not onlyShowPass or sp12 > 0
+        f_set_row(tbl, curRow, s12, sa12, sa12[1], ss12, sb12, sv12, sh12, sp12)
+        curRow := curRow + 1
+    if not onlyShowPass or sp13 > 0
+        f_set_row(tbl, curRow, s13, sa13, sa13[1], ss13, sb13, sv13, sh13, sp13)
+        curRow := curRow + 1
+    if not onlyShowPass or sp14 > 0
+        f_set_row(tbl, curRow, s14, sa14, sa14[1], ss14, sb14, sv14, sh14, sp14)
+        curRow := curRow + 1
+    if not onlyShowPass or sp15 > 0
+        f_set_row(tbl, curRow, s15, sa15, sa15[1], ss15, sb15, sv15, sh15, sp15)
+        curRow := curRow + 1
+    if not onlyShowPass or sp16 > 0
+        f_set_row(tbl, curRow, s16, sa16, sa16[1], ss16, sb16, sv16, sh16, sp16)
+        curRow := curRow + 1
+    if not onlyShowPass or sp17 > 0
+        f_set_row(tbl, curRow, s17, sa17, sa17[1], ss17, sb17, sv17, sh17, sp17)
+        curRow := curRow + 1
+    if not onlyShowPass or sp18 > 0
+        f_set_row(tbl, curRow, s18, sa18, sa18[1], ss18, sb18, sv18, sh18, sp18)
+        curRow := curRow + 1
+    if not onlyShowPass or sp19 > 0
+        f_set_row(tbl, curRow, s19, sa19, sa19[1], ss19, sb19, sv19, sh19, sp19)
+        curRow := curRow + 1
+    if not onlyShowPass or sp20 > 0
+        f_set_row(tbl, curRow, s20, sa20, sa20[1], ss20, sb20, sv20, sh20, sp20)
+        curRow := curRow + 1
+    if not onlyShowPass or sp21 > 0
+        f_set_row(tbl, curRow, s21, sa21, sa21[1], ss21, sb21, sv21, sh21, sp21)
+        curRow := curRow + 1
+    if not onlyShowPass or sp22 > 0
+        f_set_row(tbl, curRow, s22, sa22, sa22[1], ss22, sb22, sv22, sh22, sp22)
+        curRow := curRow + 1
+    if not onlyShowPass or sp23 > 0
+        f_set_row(tbl, curRow, s23, sa23, sa23[1], ss23, sb23, sv23, sh23, sp23)
+        curRow := curRow + 1
+    if not onlyShowPass or sp24 > 0
+        f_set_row(tbl, curRow, s24, sa24, sa24[1], ss24, sb24, sv24, sh24, sp24)
+        curRow := curRow + 1
+    if not onlyShowPass or sp25 > 0
+        f_set_row(tbl, curRow, s25, sa25, sa25[1], ss25, sb25, sv25, sh25, sp25)
+        curRow := curRow + 1
+
+    // Footer row
+    totalPass = sp1 + sp2 + sp3 + sp4 + sp5 + sp6 + sp7 + sp8 + sp9 + sp10 + sp11 + sp12 + sp13 + sp14 + sp15 + sp16 + sp17 + sp18 + sp19 + sp20 + sp21 + sp22 + sp23 + sp24 + sp25
+    lastDate = str.format_time(time, "dd MMM yyyy", "Asia/Kolkata")
+    tsBg = color.new(color.navy, 40)
+    
+    table.cell(tbl, 0, curRow, "TOTAL PASS", bgcolor=tsBg, text_color=color.silver, text_size=size.tiny)
+    table.cell(tbl, 1, curRow, str.tostring(totalPass) + "/25", bgcolor=tsBg, text_color=color.white, text_size=size.tiny)
+    table.cell(tbl, 2, curRow, "Date: " + lastDate, bgcolor=tsBg, text_color=color.white, text_size=size.tiny)
+    table.cell(tbl, 3, curRow, "SRS: " + str.tostring(srsLen) + "d", bgcolor=tsBg, text_color=color.silver, text_size=size.tiny)
+    table.cell(tbl, 4, curRow, "VOL: x" + str.tostring(volSurgeMultiple,"#.#"), bgcolor=tsBg, text_color=color.silver, text_size=size.tiny)
+    table.cell(tbl, 5, curRow, "v8.1-Tab", bgcolor=tsBg, text_color=color.silver, text_size=size.tiny)

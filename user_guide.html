@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Alpha User Guide & Methodology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #26a69a;
+      --secondary: #5e96ff;
+      --accent: #ffb74d;
+      --dark: #0B0E14;
+      --panel: #131722;
+      --text-dark: #1e2229;
+      --text-muted: #5e6675;
+      --border: #e2e8f0;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-dark);
+      background: #f8fafc;
+      padding: 0;
+    }
+
+    /* Screen layout container */
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #ffffff;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    /* Cover page styling */
+    .cover {
+      background: linear-gradient(135deg, #0B0E14 0%, #171d2b 100%);
+      color: #ffffff;
+      padding: 100px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(38, 166, 154, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .logo {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #26a69a, #5e96ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+    .subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: #94a3b8;
+      margin-bottom: 50px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .title {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 60px;
+      color: #ffffff;
+    }
+    .meta {
+      display: flex;
+      gap: 40px;
+      font-size: 13px;
+      color: #94a3b8;
+      border-top: 1px solid #1e293b;
+      padding-top: 25px;
+    }
+    .meta strong { color: #ffffff; display: block; margin-bottom: 4px; font-size: 14px; }
+
+    /* Content Styling */
+    .content {
+      padding: 80px;
+    }
+    
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-top: 40px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 8px;
+    }
+    
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      margin-bottom: 20px;
+      color: #334155;
+    }
+
+    ul, ol {
+      margin-bottom: 25px;
+      padding-left: 20px;
+      color: #334155;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    /* Highlight box */
+    .note-box {
+      background: #f0fdf4;
+      border-left: 4px solid var(--primary);
+      padding: 20px;
+      border-radius: 4px;
+      margin: 25px 0;
+    }
+    .note-box h4 {
+      color: #14532d;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+    .note-box p {
+      margin-bottom: 0;
+      font-size: 14.5px;
+      color: #166534;
+    }
+
+    .warning-box {
+      background: #fffbeb;
+      border-left: 4px solid var(--accent);
+      padding: 20px;
+      border-radius: 4px;
+      margin: 25px 0;
+    }
+    .warning-box h4 {
+      color: #78350f;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+    .warning-box p {
+      margin-bottom: 0;
+      font-size: 14.5px;
+      color: #92400e;
+    }
+
+    /* Math blocks */
+    .math {
+      font-family: 'IBM Plex Mono', monospace;
+      background: #f1f5f9;
+      padding: 15px 20px;
+      border-radius: 6px;
+      margin: 20px 0;
+      font-size: 14px;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+      overflow-x: auto;
+    }
+
+    /* Premium Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 30px 0;
+      font-size: 14px;
+    }
+    th {
+      background: #f1f5f9;
+      color: var(--dark);
+      text-align: left;
+      font-weight: 700;
+      padding: 12px 16px;
+      border-bottom: 2px solid #cbd5e1;
+    }
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+    }
+    tr:hover {
+      background: #f8fafc;
+    }
+
+    /* Badge indicators */
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-leading { background: #d1fae5; color: #065f46; }
+    .badge-weakening { background: #fef3c7; color: #92400e; }
+    .badge-improving { background: #ecfeff; color: #155e75; }
+    .badge-lagging { background: #fee2e2; color: #991b1b; }
+
+    /* Footer print info */
+    .footer-info {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    /* Print styling rules */
+    @media print {
+      body {
+        background: #ffffff;
+        color: #000000;
+      }
+      .container {
+        margin: 0;
+        box-shadow: none;
+        border: none;
+        max-width: 100%;
+      }
+      .cover {
+        background: #0B0E14 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .content {
+        padding: 2cm 0;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+      h1, h2 {
+        page-break-after: avoid;
+      }
+      tr {
+        page-break-inside: avoid;
+      }
+      .note-box, .warning-box {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Cover Page -->
+  <div class="cover">
+    <div class="logo">Adaptive Alpha</div>
+    <div class="subtitle">Institutional Screener Platform</div>
+    <h1 class="title">User Guide &amp;<br>Methodology Manual</h1>
+    <div class="meta">
+      <div>
+        <strong>DOCUMENT VERSION</strong>
+        v8.1 (Enterprise)
+      </div>
+      <div>
+        <strong>CALCULATION METHOD</strong>
+        ARS / SRS Matrix
+      </div>
+      <div>
+        <strong>TARGET MARKET</strong>
+        NSE India (Nifty 200)
+      </div>
+    </div>
+  </div>
+
+  <!-- Manual Content -->
+  <div class="content">
+    
+    <h1>1. Platform Overview</h1>
+    <p><strong>Adaptive Alpha</strong> is a premium technical screener dashboard engineered to identify market leaders, breakouts, and sector rotation trends within the NSE India universe. The platform utilizes advanced price-volume calculation models to analyze momentum relative to the broader market index (NIFTY 50).</p>
+    <p>By shifting from standard trend metrics to adaptive relative strength, the application filters out market noise and equips analysts with high-probability long candidates matching institutional accumulation models.</p>
+
+    <div class="note-box">
+      <h4>Institutional Philosophy</h4>
+      <p>Institutional capital does not buy stocks in isolation; it accumulates assets showing relative strength vs a benchmark index. Adaptive Alpha calculates this relationship mathematically, highlighting where "smart money" is actively rotating.</p>
+    </div>
+
+    <h1 class="page-break">2. Core Technical Metrics</h1>
+    <p>The dashboard renders five primary metrics for each stock, aligning exactly with the underlying momentum mathematical algorithm:</p>
+
+    <h2>Adaptive Relative Strength (ARS)</h2>
+    <p>Unlike standard relative strength, ARS measures the asset's performance relative to the NIFTY 50 Index over a custom lookback window starting from a historical base date (Jan 1, 2021). It represents the percentage outperformance or underperformance relative to the benchmark:</p>
+    <div class="math">
+      ARS = ((Stock Today / Stock Base Date) / (NIFTY Today / NIFTY Base Date)) - 1
+    </div>
+    <ul>
+      <li><strong>ARS &gt; 0%:</strong> The stock has outperformed the index since the base date.</li>
+      <li><strong>ARS &lt; 0%:</strong> The stock has underperformed the index.</li>
+    </ul>
+
+    <h2>Shorter-term Relative Strength (SRS)</h2>
+    <p>SRS isolates near-term strength by calculating the relative performance over a fixed rolling window of <strong>63 trading days</strong> (approximately 3 calendar months). This helps spot near-term leaders before they reflect in the long-term ARS metric.</p>
+
+    <h2>Volume Ratio</h2>
+    <p>Measures the current day's trading volume against its <strong>20-day simple moving average</strong>. A value of <code>2.0x</code> indicates the stock traded double its typical daily volume, signaling active institutional positioning.</p>
+
+    <h2>52-Week Proximity (52W Prox)</h2>
+    <p>Shows how close the stock's closing price is to its 52-week high. Values near <code>0.00%</code> mean the stock is trading right at its 52-week high, which is typical for explosive momentum breakouts.</p>
+
+    <h2>Days in Trend</h2>
+    <p>The consecutive count of days the ARS metric has maintained its current sign (positive or negative). A sudden change indicates a momentum flip date.</p>
+
+    <h1 class="page-break">3. Sector Rotation (RRG Model)</h1>
+    <p>The <strong>Sector View</strong> tab categorizes industries into four distinct momentum quadrants, inspired by Relative Rotation Graphs (RRG). This classification helps determine whether an industry is in favor or starting to lag:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rotation Quadrant</th>
+          <th>Momentum Description</th>
+          <th>Institutional Bias</th>
+          <th>Visual Color</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-leading">Leading</span></td>
+          <td>High relative strength + positive momentum</td>
+          <td>Aggressive buying / Overweight</td>
+          <td>Emerald Green</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-weakening">Weakening</span></td>
+          <td>High relative strength but momentum is slowing</td>
+          <td>Hold / Trimming positions</td>
+          <td>Soft Amber</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-improving">Improving</span></td>
+          <td>Negative relative strength but momentum is turning positive</td>
+          <td>Accumulating / Early Watchlist</td>
+          <td>Soft Teal</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-lagging">Lagging</span></td>
+          <td>Negative relative strength + negative momentum</td>
+          <td>Distribution / Underweight</td>
+          <td>Soft Coral</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h1 class="page-break">4. Setup Scanner Strategies</h1>
+    <p>You can use the dashboard filters to isolate specific institutional trading setups:</p>
+
+    <h2>Setup A: The Momentum Leader (Trend Following)</h2>
+    <p>Targeting strong stocks that are steadily outperforming the market during a bull cycle.</p>
+    <ul>
+      <li><strong>Filter Configuration:</strong> <code>ARS &gt; 0%</code> (ON), <code>ARS Trending ↑</code> (ON), <code>Pass Only</code> (ON), <code>Group by Industry</code> (ON).</li>
+      <li><strong>Sorting:</strong> Sort by <em>ARS High &rarr; Low</em>. Focus on the top 2 sectors with the highest passing rates.</li>
+    </ul>
+
+    <h2>Setup B: High-Volume Institutional Breakout</h2>
+    <p>Identifying base breakouts accompanied by heavy institutional volume surges.</p>
+    <ul>
+      <li><strong>Filter Configuration:</strong> <code>ARS Trending ↑</code> (ON), <code>VOL+</code> (ON), <code>Near 52W High</code> (ON).</li>
+      <li><strong>Scanning:</strong> Watch for stocks marked with the yellow <span class="badge" style="background:#fffbeb;color:#d97706;border:1px solid #fef3c7;font-size:10px">*NEW*</span> badge. This badge signals that the stock's ARS turned positive today for the first time in the lookback window.</li>
+    </ul>
+
+    <div class="warning-box">
+      <h4>Volume Threshold Warning</h4>
+      <p>Ensure the Volume Ratio is &gt; 1.50x. Institutional buying leaves footprints—if a stock is breaking out to a 52-week high but volume is below average (ratio &lt; 1.00x), the breakout is highly likely to fail.</p>
+    </div>
+
+    <h1 class="page-break">5. Engine Data &amp; TradingView Integration</h1>
+    
+    <h2>Hybrid Data Architecture</h2>
+    <p>The dashboard is powered by a dual-engine data architecture designed for instant access and accuracy:</p>
+    <ol>
+      <li><strong>Precalculated closing database:</strong> The system automatically fetches a daily pre-calculated dataset generated at the close of every market day. This downloads in under 50ms on startup.</li>
+      <li><strong>Intraday Live Scan:</strong> Clicking the <strong>"↻ Live Data"</strong> button fetches current intraday prices directly from Yahoo Finance and recalculates all momentum metrics in the browser.</li>
+    </ol>
+
+    <h2>One-Click Charts</h2>
+    <p>To inspect a setup visually, click anywhere on a stock row. The platform will open the daily TradingView chart for that stock in a new tab: 
+      <code>https://www.tradingview.com/chart/?symbol=NSE:SYMBOL</code>
+    </p>
+
+    <h1 class="page-break">6. Support and Operations</h1>
+    <p>The data pipeline updates automatically after market hours on trading days. If the daily GitHub Actions pipeline runs into formatting changes on the NSE exchange servers, it uses fallback parsing to ensure data continuity.</p>
+    <p>For custom additions to the constituent list (adding new symbols or modifying sector weights), developers can update the universe arrays directly inside the core scripts.</p>
+
+  </div>
+
+  <!-- PDF Print Instructions Footer -->
+  <div class="footer-info">
+    Adaptive Alpha &copy; 2026. Document designed to print directly to PDF. <br>
+    <em>Press Ctrl + P (Cmd + P on Mac) and choose "Save as PDF" to generate your manual.</em>
+  </div>
+</div>
+
+</body>
+</html>
