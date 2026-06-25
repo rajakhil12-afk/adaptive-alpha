@@ -139,12 +139,12 @@
   .flash-up   { animation: flash-up 0.9s ease-out; }
   .flash-down { animation: flash-down 0.9s ease-out; }
 
-  /* Pastel color classes */
-  .c-strong-up { background: rgba(38,166,154,0.12); color: var(--up); }
-  .c-up        { background: rgba(38,166,154,0.08); color: var(--up); }
-  .c-mild-up   { background: rgba(38,166,154,0.04); color: var(--up); }
-  .c-mild-down { background: rgba(239,83,80,0.04);  color: var(--down); }
-  .c-down      { background: rgba(239,83,80,0.08);  color: var(--down); }
+  /* Curated HSL Color Matrix for ARS thresholds */
+  .c-strong-up { background: rgba(15, 229, 134, 0.12); color: #0fe586; font-weight: 700; text-shadow: 0 0 6px rgba(15, 229, 134, 0.15); } /* ARS > 15% */
+  .c-up        { background: rgba(99, 210, 151, 0.08);  color: #63d297; font-weight: 600; }                                                /* ARS > 5%  */
+  .c-mild-up   { background: rgba(159, 207, 174, 0.05); color: #9fcfae; }                                                               /* ARS > 0%  */
+  .c-mild-down { background: rgba(219, 155, 148, 0.05); color: #db9b94; }                                                               /* ARS > -5% */
+  .c-down      { background: rgba(244, 86, 98, 0.08);   color: #f45662; }                                                               /* ARS < -5% */
   .c-gray      { background: transparent; color: var(--text); }
   .c-breakout  { background: rgba(255,183,77,0.12); color: var(--amber); }
 
