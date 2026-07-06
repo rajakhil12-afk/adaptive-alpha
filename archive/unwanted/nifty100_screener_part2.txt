@@ -1,0 +1,3 @@
+// (archived) nifty100_screener_part2.txt
+//@version=5
+// Nifty 100 Screener Part 2 (archived)
