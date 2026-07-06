@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Adaptive Alpha</title>
-<script src="https://s3.tradingview.com/tv.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -235,44 +234,65 @@
     .skeleton { animation: none; }
   }
 
-  /* Widescreen Dashboard Layout & Side Panel */
-  .dashboard-container { display: flex; gap: 16px; align-items: flex-start; margin-top: 10px; }
-  .screener-left { flex: 1; min-width: 0; }
-  .screener-right { width: 380px; flex-shrink: 0; position: sticky; top: 80px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 16px; transition: all 0.2s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .dashboard-container { display: flex; gap: 16px; align-items: flex-start; margin-top: 10px; }
+    .screener-left { flex: 1; min-width: 0; }
+    .screener-right { width: 380px; flex-shrink: 0; position: sticky; top: 80px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 16px; transition: all 0.2s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
   
-  /* Row selection highlighting */
-  .tbl-row.selected { background: rgba(38, 166, 154, 0.05); border-left-color: var(--up); box-shadow: inset 0 0 10px rgba(38,166,154,0.05); }
+    /* Row selection highlighting */
+    .tbl-row.selected { background: rgba(38, 166, 154, 0.05); border-left-color: var(--up); box-shadow: inset 0 0 10px rgba(38,166,154,0.05); }
 
-  /* Side panel details */
-  .side-welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; color: var(--muted); border: 1px dashed var(--border); border-radius: var(--radius); background: rgba(255,255,255,0.01); height: 500px; }
-  .side-welcome svg { margin-bottom: 16px; color: var(--muted-lt); opacity: 0.5; }
-  .side-welcome h3 { font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 8px; font-family: var(--font-sans); }
-  .side-welcome p { font-size: 11.5px; line-height: 1.5; font-family: var(--font-sans); }
+    /* Side panel details */
+    .side-welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; color: var(--muted); border: 1px dashed var(--border); border-radius: var(--radius); background: rgba(255,255,255,0.01); height: 500px; }
+    .side-welcome svg { margin-bottom: 16px; color: var(--muted-lt); opacity: 0.5; }
+    .side-welcome h3 { font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 8px; font-family: var(--font-sans); }
+    .side-welcome p { font-size: 11.5px; line-height: 1.5; font-family: var(--font-sans); }
 
-  .side-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-  .side-sym-row { display: flex; align-items: center; gap: 8px; }
-  .side-sym { font-family: var(--font-sans); font-size: 18px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; }
-  .side-name { font-family: var(--font-sans); font-size: 12px; color: var(--muted-lt); margin-top: 3px; font-weight: 500; }
-  .side-price-col { text-align: right; }
-  .side-price { font-family: var(--font-num); font-size: 17px; font-weight: 700; color: #ffffff; }
+    .side-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .side-sym-row { display: flex; align-items: center; gap: 8px; }
+    .side-sym { font-family: var(--font-sans); font-size: 18px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; }
+    .side-name { font-family: var(--font-sans); font-size: 12px; color: var(--muted-lt); margin-top: 3px; font-weight: 500; }
+    .side-price-col { text-align: right; }
+    .side-price { font-family: var(--font-num); font-size: 17px; font-weight: 700; color: #ffffff; }
 
-  .side-chart-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--bg3); height: 320px; }
+    .side-chart-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--bg3); height: 320px; }
 
-  /* Scorecard Grid */
-  .side-scorecard { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .score-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; transition: background-color 0.15s; }
-  .score-card:hover { background: var(--border-lt); }
-  .score-lbl { font-family: var(--font-sans); font-size: 9.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-  .score-val { font-family: var(--font-num); font-size: 13.5px; font-weight: 600; color: #ffffff; }
-  .score-sub { font-family: var(--font-sans); font-size: 9px; color: var(--muted); margin-top: 2px; }
+    /* Scorecard Grid */
+    .side-scorecard { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .score-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; transition: background-color 0.15s; }
+    .score-card:hover { background: var(--border-lt); }
+    .score-lbl { font-family: var(--font-sans); font-size: 9.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .score-val { font-family: var(--font-num); font-size: 13.5px; font-weight: 600; color: #ffffff; }
+    .score-sub { font-family: var(--font-sans); font-size: 9px; color: var(--muted); margin-top: 2px; }
 
-  /* Responsive Collapsing */
-  @media (max-width: 1200px) {
-    .dashboard-container { flex-direction: column; }
-    .screener-right { width: 100%; position: static; box-shadow: none; }
-    .side-welcome { height: auto; padding: 30px 10px; }
-  }
-</style>
+    /* Responsive Collapsing */
+    @media (max-width: 1200px) {
+      .dashboard-container { flex-direction: column; }
+      .screener-right { width: 100%; position: static; box-shadow: none; }
+      .side-welcome { height: auto; padding: 30px 10px; }
+    }
+
+    /* Visual RS Vector Chart Card */
+    .side-chart-card { display: flex; flex-direction: column; height: 100%; width: 100%; background: var(--bg2); }
+    .chart-card-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--bg3); border-bottom: 1px solid var(--border); }
+    .chart-card-title { font-family: var(--font-sans); font-size: 10px; font-weight: 700; color: var(--muted-lt); text-transform: uppercase; letter-spacing: 0.5px; }
+    .chart-card-status { font-family: var(--font-sans); font-size: 9.5px; font-weight: 600; }
+    .chart-card-body { padding: 12px 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 10px; background: rgba(0,0,0,0.1); }
+    .momentum-gauge-wrap { width: 100%; height: 160px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .momentum-svg { width: 90%; height: 90%; }
+    .svg-lbl { font-family: var(--font-sans); font-size: 3px; font-weight: 700; fill: var(--muted); text-transform: uppercase; letter-spacing: 0.2px; }
+  
+    .tv-live-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: linear-gradient(135deg, #26a69a, #10b981); color: #ffffff; border: none; border-radius: var(--radius); padding: 10px 14px; font-family: var(--font-sans); font-size: 11px; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(38,166,154,0.25); }
+    .tv-live-btn:hover { background: linear-gradient(135deg, #2bbbad, #059669); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(38,166,154,0.35); }
+    .tv-live-btn:active { transform: translateY(0); }
+  
+    .chart-disclaimer { font-family: var(--font-sans); font-size: 10px; line-height: 1.3; color: var(--muted); text-align: center; margin: 0; }
+  
+    /* SVG animations */
+    .svg-path-anim { stroke-dasharray: 100; stroke-dashoffset: 100; animation: draw-path 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+    .svg-dot-anim { opacity: 0; animation: fade-in-dot 0.3s ease-out 0.6s forwards; }
+    @keyframes draw-path { to { stroke-dashoffset: 0; } }
+    @keyframes fade-in-dot { to { opacity: 1; } }
+  </style>
 </head>
 <body>
 
@@ -1267,7 +1287,6 @@ function selectStock(sym, forceWidget = false) {
       </div>
       <div class="side-scorecard" id="side-scorecard"></div>
     `;
-    forceWidget = true; // Force load since structure was reset
   }
 
   // Update Header
@@ -1319,33 +1338,53 @@ function selectStock(sym, forceWidget = false) {
     </div>
   `;
 
-  // Render TradingView Widget if symbol changed or forced
-  if (loadedWidgetSym !== sym || forceWidget) {
-    if (window.TradingView) {
-      new TradingView.widget({
-        width: "100%",
-        height: 320,
-        symbol: "NSE:" + sym,
-        interval: "D",
-        timezone: "Asia/Kolkata",
-        theme: "dark",
-        style: "1",
-        locale: "en",
-        enable_publishing: false,
-        hide_top_toolbar: true,
-        hide_legend: false,
-        save_image: false,
-        container_id: "tv-chart-widget"
-      });
-      loadedWidgetSym = sym;
-    } else {
-      document.getElementById('tv-chart-widget').innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px;background:var(--bg3);border-radius:var(--radius);border:1px dashed var(--border)">
-          TradingView Widget Loading...
+  // Calculate SVG Vector Coordinates based on ARS and SRS
+  // ars ranges from roughly -0.3 to +0.3
+  const ars = d.ars ?? 0;
+  const srs = d.srs ?? 0;
+  const clampedArs = Math.max(-0.3, Math.min(0.3, ars));
+  const clampedSrs = Math.max(-0.15, Math.min(0.15, srs));
+  
+  const normX = (clampedArs + 0.3) / 0.6;
+  const normY = (clampedSrs + 0.15) / 0.3;
+  
+  const dotX = 15 + normX * 70; // 15 to 85
+  const dotY = 35 - normY * 25; // 10 to 35
+  
+  const svgPath = `M 50 22.5 Q ${(50 + dotX)/2} 22.5 ${dotX} ${dotY}`;
+  const trendColor = isSTBuy ? '#0fe586' : '#f45662';
+  const tvUrl = `https://www.tradingview.com/chart/?symbol=NSE:${d.sym}&interval=D`;
+
+  // Render SVG Vector Chart instead of restricted iframe widget
+  document.getElementById('tv-chart-widget').innerHTML = `
+    <div class="side-chart-card">
+      <div class="chart-card-header">
+        <span class="chart-card-title">Relative Strength Vector</span>
+        <span class="chart-card-status" style="color:${trendColor}">${isSTBuy ? 'ST: BUY' : 'ST: SELL'}</span>
+      </div>
+      <div class="chart-card-body">
+        <div class="momentum-gauge-wrap">
+          <svg viewBox="0 0 100 45" class="momentum-svg">
+            <line x1="10" y1="22.5" x2="90" y2="22.5" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="1,1" />
+            <line x1="50" y1="5" x2="50" y2="40" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="1,1" />
+            
+            <text x="50" y="4.5" class="svg-lbl" text-anchor="middle">Neutral</text>
+            <text x="8" y="23.5" class="svg-lbl" text-anchor="end">Lagging</text>
+            <text x="92" y="23.5" class="svg-lbl" text-anchor="start">Leading</text>
+            
+            <path d="${svgPath}" fill="none" stroke="${trendColor}" stroke-width="1.8" stroke-linecap="round" class="svg-path-anim" />
+            <circle cx="${dotX}" cy="${dotY}" r="2" fill="${trendColor}" class="svg-dot-anim" />
+          </svg>
         </div>
-      `;
-    }
-  }
+        <a class="tv-live-btn" href="${tvUrl}" target="_blank">
+          <span>Open Chart on TradingView ↗</span>
+        </a>
+        <p class="chart-disclaimer">
+          ⚠️ TradingView restricts NSE charts inside embedded widgets. Click above to view full interactive charts.
+        </p>
+      </div>
+    </div>
+  `;
 }
 
 function clearSelection() {
