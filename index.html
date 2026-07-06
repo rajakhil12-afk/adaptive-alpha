@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Adaptive Alpha</title>
+<script src="https://s3.tradingview.com/tv.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -233,6 +234,44 @@
     .flash-up, .flash-down { animation: none; }
     .skeleton { animation: none; }
   }
+
+  /* Widescreen Dashboard Layout & Side Panel */
+  .dashboard-container { display: flex; gap: 16px; align-items: flex-start; margin-top: 10px; }
+  .screener-left { flex: 1; min-width: 0; }
+  .screener-right { width: 380px; flex-shrink: 0; position: sticky; top: 80px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 16px; transition: all 0.2s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+  
+  /* Row selection highlighting */
+  .tbl-row.selected { background: rgba(38, 166, 154, 0.05); border-left-color: var(--up); box-shadow: inset 0 0 10px rgba(38,166,154,0.05); }
+
+  /* Side panel details */
+  .side-welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; color: var(--muted); border: 1px dashed var(--border); border-radius: var(--radius); background: rgba(255,255,255,0.01); height: 500px; }
+  .side-welcome svg { margin-bottom: 16px; color: var(--muted-lt); opacity: 0.5; }
+  .side-welcome h3 { font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 8px; font-family: var(--font-sans); }
+  .side-welcome p { font-size: 11.5px; line-height: 1.5; font-family: var(--font-sans); }
+
+  .side-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+  .side-sym-row { display: flex; align-items: center; gap: 8px; }
+  .side-sym { font-family: var(--font-sans); font-size: 18px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; }
+  .side-name { font-family: var(--font-sans); font-size: 12px; color: var(--muted-lt); margin-top: 3px; font-weight: 500; }
+  .side-price-col { text-align: right; }
+  .side-price { font-family: var(--font-num); font-size: 17px; font-weight: 700; color: #ffffff; }
+
+  .side-chart-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--bg3); height: 320px; }
+
+  /* Scorecard Grid */
+  .side-scorecard { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .score-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; transition: background-color 0.15s; }
+  .score-card:hover { background: var(--border-lt); }
+  .score-lbl { font-family: var(--font-sans); font-size: 9.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .score-val { font-family: var(--font-num); font-size: 13.5px; font-weight: 600; color: #ffffff; }
+  .score-sub { font-family: var(--font-sans); font-size: 9px; color: var(--muted); margin-top: 2px; }
+
+  /* Responsive Collapsing */
+  @media (max-width: 1200px) {
+    .dashboard-container { flex-direction: column; }
+    .screener-right { width: 100%; position: static; box-shadow: none; }
+    .side-welcome { height: auto; padding: 30px 10px; }
+  }
 </style>
 </head>
 <body>
@@ -305,37 +344,52 @@
   </div>
 
   <div id="tab-screener">
+    <div class="dashboard-container">
+      <div class="screener-left">
+        <div class="tbl-wrap">
+          <div class="tbl-header">
+            <div class="th sorted" onclick="setSortCol('alpha')" id="th-sym">Ticker <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('ars-desc')" id="th-ars">ARS <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('srs-desc')" id="th-srs">SRS <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('52w-desc')" id="th-52w">52W Prox <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('days-desc')" id="th-days" title="How many days ARS has held its current sign, and the date it flipped">Days in Trend <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('vol-desc')" id="th-vol">Vol Ratio <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('st-desc')" id="th-st">Supertrend <span class="sort-arrow">↕</span></div>
+            <div class="th">Price ₹</div>
+            <div class="th">Status</div>
+            <div class="th">TV</div>
+          </div>
+          <div class="tbl-body" id="tbl-body">
+            <div class="loading-overlay">
+              <div class="spinner"></div>
+              <div id="load-msg">Loading market data…</div>
+              <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
 
-    <div class="tbl-wrap">
-      <div class="tbl-header">
-        <div class="th sorted" onclick="setSortCol('alpha')" id="th-sym">Ticker <span class="sort-arrow">↕</span></div>
-        <div class="th" onclick="setSortCol('ars-desc')" id="th-ars">ARS <span class="sort-arrow">↕</span></div>
-        <div class="th" onclick="setSortCol('srs-desc')" id="th-srs">SRS <span class="sort-arrow">↕</span></div>
-        <div class="th" onclick="setSortCol('52w-desc')" id="th-52w">52W Prox <span class="sort-arrow">↕</span></div>
-        <div class="th" onclick="setSortCol('days-desc')" id="th-days" title="How many days ARS has held its current sign, and the date it flipped">Days in Trend <span class="sort-arrow">↕</span></div>
-        <div class="th" onclick="setSortCol('vol-desc')" id="th-vol">Vol Ratio <span class="sort-arrow">↕</span></div>
-        <div class="th" onclick="setSortCol('st-desc')" id="th-st">Supertrend <span class="sort-arrow">↕</span></div>
-        <div class="th">Price ₹</div>
-        <div class="th">Status</div>
-        <div class="th">TV</div>
-      </div>
-      <div class="tbl-body" id="tbl-body">
-        <div class="loading-overlay">
-          <div class="spinner"></div>
-          <div id="load-msg">Loading market data…</div>
-          <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+        <div class="legend">
+          <div class="leg"><div class="leg-dot" style="background:rgba(15, 229, 134, 0.12)"></div>ARS &gt; 15%</div>
+          <div class="leg"><div class="leg-dot" style="background:rgba(99, 210, 151, 0.08)"></div>ARS &gt; 5%</div>
+          <div class="leg"><div class="leg-dot" style="background:rgba(159, 207, 174, 0.05)"></div>ARS &gt; 0%</div>
+          <div class="leg"><div class="leg-dot" style="background:rgba(219, 155, 148, 0.05)"></div>ARS &gt; -5%</div>
+          <div class="leg"><div class="leg-dot" style="background:rgba(244, 86, 98, 0.08)"></div>ARS &lt; -5%</div>
+          <div class="leg"><div class="leg-dot" style="background:rgba(255,183,77,0.12)"></div>Breakout *NEW*</div>
+          <span style="margin-left:auto;color:var(--muted);font-size:10px">Click any row to select & view interactive chart</span>
         </div>
       </div>
-    </div>
 
-    <div class="legend">
-      <div class="leg"><div class="leg-dot" style="background:rgba(38,166,154,0.12)"></div>ARS &gt; 15%</div>
-      <div class="leg"><div class="leg-dot" style="background:rgba(38,166,154,0.08)"></div>ARS &gt; 5%</div>
-      <div class="leg"><div class="leg-dot" style="background:rgba(38,166,154,0.04)"></div>ARS &gt; 0%</div>
-      <div class="leg"><div class="leg-dot" style="background:rgba(239,83,80,0.04)"></div>ARS &gt; -5%</div>
-      <div class="leg"><div class="leg-dot" style="background:rgba(239,83,80,0.08)"></div>ARS &lt; -5%</div>
-      <div class="leg"><div class="leg-dot" style="background:rgba(255,183,77,0.12)"></div>Breakout *NEW*</div>
-      <span style="margin-left:auto;color:var(--muted);font-size:10px">Click any row to open TradingView daily chart</span>
+      <!-- Sticky Sidebar Panel -->
+      <div class="screener-right" id="screener-right">
+        <div class="side-welcome">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+          </svg>
+          <h3>Select a Stock</h3>
+          <p>Click any stock row in the list to view its real-time TradingView chart and detailed technical indicators here.</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -568,6 +622,7 @@ let filters      = { ars:true, trend:true, srs:false, vol:false, '52w':false, st
 let stParam      = '14'; // '14' or '10'
 let activeTab    = 'screener';
 let activeSector = null;
+let selectedSym  = null;
 
 function filterActiveUniverse() {
   const universe = getUniverse();
@@ -1081,6 +1136,19 @@ function renderTable() {
     });
   } else { data.forEach(d => { html += rowHtml(d); }); }
   body.innerHTML = html;
+
+  // Auto-select first stock or maintain current selection
+  const visibleSyms = data.map(d => d.sym);
+  if (visibleSyms.length > 0) {
+    if (!selectedSym || !visibleSyms.includes(selectedSym)) {
+      selectStock(visibleSyms[0], false);
+    } else {
+      selectStock(selectedSym, false);
+    }
+  } else {
+    clearSelection();
+  }
+
   data.forEach(d => {
     const prev = prevDataMap[d.sym];
     if (prev !== undefined && prev !== d.ars) {
@@ -1117,7 +1185,7 @@ function rowHtml(d) {
     <div class="cell-sub">ST: ₹${stVal.toLocaleString('en-IN')}</div>
   </div>`;
 
-  return `<div class="tbl-row" data-sym="${d.sym}" onclick="openTV('${d.sym}')">
+  return `<div class="tbl-row" data-sym="${d.sym}" onclick="selectStock('${d.sym}')">
     <div class="td td-ticker" title="Open NSE:${d.sym} on TradingView (1D)">
       <div style="display: flex; align-items: center;">
         <div class="tick-name">${d.sym}</div>
@@ -1165,6 +1233,135 @@ function switchSTParam() {
 }
 
 function openTV(sym) { window.open(`https://www.tradingview.com/chart/?symbol=NSE:${sym}&interval=D`, '_blank'); }
+
+let loadedWidgetSym = null;
+
+function selectStock(sym, forceWidget = false) {
+  selectedSym = sym;
+  
+  // Highlight the row in the table
+  document.querySelectorAll('.tbl-row').forEach(row => {
+    row.classList.toggle('selected', row.getAttribute('data-sym') === sym);
+  });
+  
+  const d = allData.find(s => s.sym === sym);
+  if (!d) return;
+  
+  // Update the side scorecard details (always update this, in case parameters or price changed)
+  const stData = stParam === '14' ? d.st14 : d.st10;
+  const isSTBuy = stData && stData.trend === 'buy';
+  const stText = isSTBuy ? 'BUY' : 'SELL';
+  const stBadgeCls = isSTBuy ? 'st-buy' : 'st-sell';
+  const stSignalText = stData && stData.signal ? '⚡ SIGNAL' : '';
+  const arsCls = arsClass(d.ars, d.breakout);
+
+  // We only replace the header and the scorecard, keeping the chart wrap container intact
+  let sidebar = document.getElementById('screener-right');
+  
+  // Initialize standard structure if it's currently the welcome screen or empty
+  if (!sidebar.querySelector('.side-header')) {
+    sidebar.innerHTML = `
+      <div class="side-header" id="side-header"></div>
+      <div class="side-chart-wrap">
+        <div id="tv-chart-widget" style="height:320px;width:100%"></div>
+      </div>
+      <div class="side-scorecard" id="side-scorecard"></div>
+    `;
+    forceWidget = true; // Force load since structure was reset
+  }
+
+  // Update Header
+  document.getElementById('side-header').innerHTML = `
+    <div style="min-width:0;flex:1;padding-right:10px">
+      <div class="side-sym-row">
+        <span class="side-sym">${d.sym}</span>
+        <span class="badge badge-blue" style="font-size:9.5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:140px" title="${d.ind}">${d.ind}</span>
+      </div>
+      <div class="side-name" style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden" title="${d.name}">${d.name}</div>
+    </div>
+    <div class="side-price-col">
+      <div class="side-price">₹${d.price.toLocaleString('en-IN')}</div>
+      <div style="font-size:9.5px;color:var(--muted);margin-top:2px">Last Price</div>
+    </div>
+  `;
+
+  // Update Scorecard Grid
+  document.getElementById('side-scorecard').innerHTML = `
+    <div class="score-card">
+      <span class="score-lbl">ARS (Strength)</span>
+      <span class="score-val ${arsCls}">${pct(d.ars)}</span>
+      <span class="score-sub">vs Nifty since 2021</span>
+    </div>
+    <div class="score-card">
+      <span class="score-lbl">SRS (63-Day RS)</span>
+      <span class="score-val" style="color:${d.srs>0?'var(--up)':'var(--down)'}">${pct(d.srs)}</span>
+      <span class="score-sub">Short-term rotation</span>
+    </div>
+    <div class="score-card">
+      <span class="score-lbl">Supertrend (${stParam}/3)</span>
+      <div><span class="st-badge ${stBadgeCls}" style="font-size:11px;padding:2px 6px">${stText}${stSignalText ? ' ' + stSignalText : ''}</span></div>
+      <span class="score-sub">Val: ₹${stData ? stData.val.toLocaleString('en-IN') : 0}</span>
+    </div>
+    <div class="score-card">
+      <span class="score-lbl">Volume Ratio</span>
+      <span class="score-val" style="color:${d.vol_ratio>=1.5?'#7da9ff':'var(--text)'}">${d.vol_ratio.toFixed(2)}×</span>
+      <span class="score-sub">vs 20-day avg</span>
+    </div>
+    <div class="score-card">
+      <span class="score-lbl">52W Proximity</span>
+      <span class="score-val" style="color:${d.hi52_prox>=-0.05?'var(--up)':'var(--muted)'}">${pct(d.hi52_prox)}</span>
+      <span class="score-sub">from 52W High</span>
+    </div>
+    <div class="score-card">
+      <span class="score-lbl">Days in Trend</span>
+      <span class="score-val" style="color:${d.ars>=0?'var(--up)':'var(--down)'}">${fmtDays(d.signDays)}</span>
+      <span class="score-sub">${fmtSinceDate(d.signSince)}</span>
+    </div>
+  `;
+
+  // Render TradingView Widget if symbol changed or forced
+  if (loadedWidgetSym !== sym || forceWidget) {
+    if (window.TradingView) {
+      new TradingView.widget({
+        width: "100%",
+        height: 320,
+        symbol: "NSE:" + sym,
+        interval: "D",
+        timezone: "Asia/Kolkata",
+        theme: "dark",
+        style: "1",
+        locale: "en",
+        enable_publishing: false,
+        hide_top_toolbar: true,
+        hide_legend: false,
+        save_image: false,
+        container_id: "tv-chart-widget"
+      });
+      loadedWidgetSym = sym;
+    } else {
+      document.getElementById('tv-chart-widget').innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px;background:var(--bg3);border-radius:var(--radius);border:1px dashed var(--border)">
+          TradingView Widget Loading...
+        </div>
+      `;
+    }
+  }
+}
+
+function clearSelection() {
+  selectedSym = null;
+  loadedWidgetSym = null;
+  document.getElementById('screener-right').innerHTML = `
+    <div class="side-welcome">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="9" y1="3" x2="9" y2="21"></line>
+      </svg>
+      <h3>Select a Stock</h3>
+      <p>Click any stock row in the list to view its real-time TradingView chart and detailed technical indicators here.</p>
+    </div>
+  `;
+}
 
 function renderSectors() {
   if (!allData.length) return;
