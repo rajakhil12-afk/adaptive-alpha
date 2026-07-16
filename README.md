@@ -1,59 +1,78 @@
 # Adaptive Alpha — Institutional Momentum & Rotation Screener
 
-**Adaptive Alpha** is a premium, client-ready technical momentum screener and sector rotation dashboard for the **NSE India (Nifty 200)** stock universe. Designed with a high-end TradingView-inspired dark slate aesthetic, the platform helps analysts and traders identify market leaders, explosive volume breakouts, and industry rotation trends.
+**Adaptive Alpha** is a premium, client-ready technical momentum screener and sector rotation dashboard for the **NSE India** stock universe (Nifty 50 + Nifty Midcap 100 + Nifty Smallcap 100 + curated extras, ~200+ stocks). Designed with a high-end TradingView-inspired dark slate aesthetic, the platform helps analysts and traders identify market leaders, explosive volume breakouts, and industry rotation trends in real time.
+
+> **Live Site:** https://rajakhil12-afk.github.io/adaptive-alpha
 
 ---
 
 ## 🚀 Key Features
 
-* **TradingView Aesthetics:** A premium Slate Dark Theme (`#0B0E14` / `#131722`) optimized for clarity, using desaturated pastel indicators (Emerald Green, Soft Coral, and Amber Gold).
-* **Relative Strength Matrix:** Includes **Adaptive Relative Strength (ARS)** to calculate long-term outperformance against the NIFTY 50 since 2021, and **Shorter-term Relative Strength (SRS)** tracking 63-day momentum.
-* **Sector Rotation View:** Categorizes 17 core industries into RRG-style quadrants: **LEADING**, **WEAKENING**, **IMPROVING**, and **LAGGING**.
-* **Pill-Badge Filters & Smart Grouping:** Dynamic toggle filters for ARS, SRS, Volume Surges, and 52-Week High Proximity with a one-click industry grouping layout.
-* **Direct Chart Linkage:** Click any stock row to instantly open its live daily chart on TradingView.
-* **CSS Skeleton Loaders:** Shimmer animations for seamless visual states during data updates.
+* **TradingView Aesthetics:** Premium Slate Dark Theme (`#0B0E14` / `#131722`) with desaturated pastel indicators (Emerald Green, Soft Coral, Amber Gold).
+* **Adaptive Relative Strength (ARS):** Long-term outperformance vs NIFTY 50 anchored from January 2021.
+* **Shorter-term Relative Strength (SRS):** Rolling 63-day (1 quarter) momentum.
+* **RS Rating (1–99):** Composite rank combining ARS, SRS, Volume, and Duration — similar to IBD's RS Rating.
+* **ARS Slope:** 5-day momentum change in ARS, detecting stocks in the process of turning.
+* **Dual Supertrend (14/3 & 10/3):** Two-stage trend confirmation with fresh signal glow badges (⚡).
+* **MA Status:** Real-time 50MA / 200MA cross-check shown as `MA+` / `MA-`.
+* **Sector Rotation View:** 17 core industries categorized into RRG-style quadrants: **LEADING**, **WEAKENING**, **IMPROVING**, **LAGGING**.
+* **FII/DII Flow Ticker:** Live daily net buying/selling by foreign and domestic institutional investors.
+* **Pill-Badge Filters & Smart Grouping:** One-click filters for ARS+, SRS+, Volume Surge, 52W-High Proximity, Supertrend Buy, Breakout, and MA+.
+* **Direct Chart Linkage:** Click any stock row to open its live chart on TradingView.
+* **Interactive Tour Guide:** Auto-launches for first-time visitors to walk through the interface.
 
 ---
 
-## 📊 Technical Indicators & Math Details
+## 📊 Technical Indicators & Math
 
 ### 1. Adaptive Relative Strength (ARS)
-Adaptive Relative Strength measures a stock's cumulative outperformance or underperformance relative to the NIFTY 50 index since a historical anchor date (January 1, 2021). The adaptive window filters out index-wide market cycles, highlighting assets showing sustained structural accumulation.
-* **Formula:**
-  \[ARS = \frac{\frac{\text{Stock Price}_{\text{Today}}}{\text{Stock Price}_{\text{Base Date}}}}{\frac{\text{NIFTY Index}_{\text{Today}}}{\text{NIFTY Index}_{\text{Base Date}}}} - 1\]
-* **Significance:**
-  * **ARS > 0% (Green):** Outperforming Nifty since 2021.
-  * **ARS < 0% (Red):** Underperforming Nifty since 2021.
-  * **ARS Trending Up:** Stock is actively gaining momentum compared to the index.
+Measures cumulative outperformance vs NIFTY 50 since January 1, 2021.
+
+$$ARS = \frac{\text{Stock Price}_{\text{Today}} / \text{Stock Price}_{2021\text{-}01\text{-}01}}{\text{NIFTY}_{\text{Today}} / \text{NIFTY}_{2021\text{-}01\text{-}01}} - 1$$
+
+* **ARS > 0% (Green):** Outperforming Nifty since 2021.
+* **ARS < 0% (Red):** Underperforming Nifty since 2021.
+* **ARS Slope > 0:** Actively gaining momentum vs the index.
 
 ### 2. Shorter-term Relative Strength (SRS)
-Shorter-term Relative Strength tracks near-term momentum cycles over a rolling 63-trading-day window (equivalent to 1 business quarter). It identifies leading stocks during brief market corrections or sectors capturing early rotation interest.
-* **Formula:**
-  \[SRS = \frac{\frac{\text{Stock Price}_{\text{Today}}}{\text{Stock Price}_{63\text{ Days Ago}}}}{\frac{\text{NIFTY Index}_{\text{Today}}}{\text{NIFTY Index}_{63\text{ Days Ago}}}} - 1\]
-* **Significance:** Detects quick rotation phases before they reflect in the long-term ARS.
+Rolling 63-trading-day (1 business quarter) relative performance.
 
-### 3. Volume Ratio & 52W Proximity
-* **Volume Ratio:** `Current Volume / 20-Day Average Volume`. Signals institutional presence when volume is > 1.50x.
-* **52-Week Proximity:** `(Current Price - 52-Week High) / 52-Week High`. Tracks breakout readiness.
+$$SRS = \frac{\text{Stock Price}_{\text{Today}} / \text{Stock Price}_{63\text{ days ago}}}{\text{NIFTY}_{\text{Today}} / \text{NIFTY}_{63\text{ days ago}}} - 1$$
 
-### 4. Dual Supertrend Option (14/3 & 10/3)
-Supertrend acts as the second stage of our 2-stage screener, identifying the shorter-term trend direction and signals based on Average True Range (ATR) and median prices:
-* **Supertrend 14/3:** Standard configuration using a 14-period Wilder's ATR and a 3.0 multiplier. Smoother trend line.
-* **Supertrend 10/3:** Fast configuration using a 10-period Wilder's ATR and a 3.0 multiplier. More sensitive to short-term reversals.
-* **Buy Trigger:** Price closing above the trailing Supertrend line. Fresh breakouts show a pulsing signal glow and a ⚡ badge in the UI.
+Detects early rotation before it shows in long-term ARS.
+
+### 3. RS Rating (1–99)
+Composite percentile rank across ARS (40%), SRS (30%), Volume Ratio (15%), and ARS-positive duration (15%). A rating of **99** means the stock is in the top 1% of all screened stocks.
+
+### 4. Volume Ratio & 52W Proximity
+* **Volume Ratio:** `Current Volume / 20-Day Avg Volume`. Values > 1.5× signal institutional activity.
+* **52W Proximity:** `(Current Price − 52W High) / 52W High`. Near 0% = breakout zone.
+
+### 5. Dual Supertrend (14/3 & 10/3)
+ATR-based trailing stop system using Wilder's Smoothed Moving Average. Calculations match TradingView's Supertrend exactly.
+* **14/3 (Standard):** Smoother trend for swing traders.
+* **10/3 (Fast):** More sensitive for short-term reversals.
+* Fresh **⚡ Buy/Sell Signal** detected when trend flips on the latest candle.
 
 ---
 
 ## ⚙️ Hybrid Data Architecture
 
-To ensure speed and reliability, the application uses a dual-data engine:
+The app uses a two-layer data engine:
 
-1. **Static EOD Pipeline (GitHub Actions):** 
-   * A scheduled cron job runs Node.js calculations Monday through Friday at **4:30 PM IST** (after market close).
-   * It downloads the official NSE UDiFF Bhavcopy, merges benchmark history, calculates metrics, and updates `data/screener.json`.
-   * Pushing the updated JSON file redeploys the site instantly.
-2. **On-Demand Live Scan:** 
-   * Clicking **"↻ Live Data"** in the browser pulls real-time intraday price series from Yahoo Finance (via CORS proxies) and recalculates all indicators client-side.
+### Layer 1 — Static EOD Pipeline (GitHub Actions)
+Runs automatically every weekday at **4:30 PM IST** (11:30 UTC):
+
+1. Downloads official **NSE UDiFF Bhavcopy** (with fallback to legacy archive URL).
+2. Fetches 6-year historical series from **Yahoo Finance** for each stock and the NIFTY 50 index.
+3. Calculates ARS, SRS, RS Rating, Supertrend, MA Status, ARS Slope for all ~200+ stocks.
+4. Fetches latest **FII/DII flow** data.
+5. Writes `data/screener.json` and commits it — triggering an instant GitHub Pages redeploy.
+
+A **monthly keep-alive workflow** (`keepalive.yml`) runs on the 1st of every month to re-enable any workflows that GitHub may have paused due to inactivity.
+
+### Layer 2 — On-Demand Live Scan
+Clicking **"↻ Live Data"** in the dashboard pulls real-time price series from Yahoo Finance and recalculates all indicators client-side in the browser.
 
 ---
 
@@ -61,15 +80,20 @@ To ensure speed and reliability, the application uses a dual-data engine:
 
 ```text
 ├── .github/
+│   ├── last_updated.txt            # Heartbeat timestamp (updated every run)
 │   └── workflows/
-│       └── screener_update.yml  # Daily GitHub Actions workflow scheduler
+│       ├── screener_update.yml     # Daily EOD data update (Mon–Fri 4:30 PM IST)
+│       └── keepalive.yml           # Monthly keep-alive to prevent schedule pausing
 ├── data/
-│   └── screener.json           # Output static calculated stock database
+│   ├── screener.json               # Pre-calculated stock database (auto-generated)
+│   └── logo_ids.json               # TradingView logo ID cache
 ├── scripts/
-│   └── update_data.js          # Core Node.js momentum calculator script
-├── index.html                  # Root UI Dashboard
-├── user_guide.html             # Print-optimized User Guide
-└── README.md                   # Repository documentation (this file)
+│   ├── update_data.js              # Core Node.js pipeline (NSE + Yahoo + calculations)
+│   └── scrape_logo_ids.js          # One-time script to cache TradingView logo IDs
+├── index.html                      # Root UI Dashboard (single-file app)
+├── user_guide.html                 # Print-optimized User Guide
+├── package.json                    # Node.js project manifest
+└── README.md                       # This file
 ```
 
 ---
@@ -77,31 +101,54 @@ To ensure speed and reliability, the application uses a dual-data engine:
 ## 💻 Local Development
 
 ### Prerequisites
-* **Node.js** (v18 or higher)
+* **Node.js** v20 or higher (v24 recommended)
+* `unzip` utility (pre-installed on macOS/Linux; on Windows, PowerShell is used automatically)
 
 ### Setup & Run
-1. Clone the repository and navigate to the folder:
+
+1. Clone the repository:
    ```bash
-   git clone https://github.com/<your-username>/adaptive-alpha.git
+   git clone https://github.com/rajakhil12-afk/adaptive-alpha.git
    cd adaptive-alpha
    ```
-2. Manually generate the static stock database:
+
+2. Generate the static stock database:
    ```bash
    node scripts/update_data.js
    ```
-3. Open `index.html` in your web browser to view the dashboard.
+   This downloads the latest NSE Bhavcopy, fetches Yahoo Finance history, and writes `data/screener.json`. Takes ~5–10 minutes depending on network speed.
+
+3. Open `index.html` in your browser to view the dashboard.
 
 ---
 
 ## 🌐 Deploying to GitHub Pages
 
-1. Go to your repository **Settings** -> **Pages**.
-2. Under **Build and deployment**, set the source to **Deploy from a branch**.
-3. Select the **`main`** branch and the **`/ (root)`** folder.
+1. Go to **Settings → Pages** in your repository.
+2. Under **Build and deployment**, set source to **Deploy from a branch**.
+3. Select the **`main`** branch and **`/ (root)`** folder.
 4. Click **Save**.
+
+The site will live-update automatically every weekday after market close via the GitHub Actions workflow — no manual intervention needed.
+
+### Re-enabling the Workflow (if paused)
+GitHub auto-disables scheduled workflows on repos with no commits for 60+ days. To re-enable:
+* Go to **Actions → Daily Screener Update → Enable workflow**, OR
+* The `keepalive.yml` workflow handles this automatically on the 1st of every month.
+
+---
+
+## 🛠️ Automation Details
+
+| Workflow | Schedule | Purpose |
+|---|---|---|
+| `screener_update.yml` | Mon–Fri at 4:30 PM IST | Downloads NSE data, calculates indicators, updates `screener.json` |
+| `keepalive.yml` | 1st of every month | Re-enables any paused workflows; commits heartbeat file |
+
+Both workflows use **Node.js 24** on `ubuntu-latest`.
 
 ---
 
 ## 🤝 Acknowledgements
 
-Special thanks to the original Pine Script developer community on TradingView, particularly **Bhat Trader**, whose conceptual scripting and custom indicators for measuring relative strength against benchmark indexes laid the mathematical foundation for this application's momentum matrix logic.
+Special thanks to the Pine Script developer community on TradingView, particularly **Bhat Trader**, whose conceptual scripting and custom indicators for measuring relative strength against benchmark indexes laid the mathematical foundation for this application's momentum matrix logic.

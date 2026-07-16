@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      # Give the default GITHUB_TOKEN write permission to commit and push changes back
       contents: write
 
     steps:
@@ -21,16 +20,39 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
-      - name: Run Screener Generator
-        run: node scripts/update_data.js
+      - name: Install system dependencies
+        run: sudo apt-get install -y unzip
 
-      - name: Commit and Push screener.json
+      - name: Run Screener Generator (with retry)
+        run: |
+          for attempt in 1 2 3; do
+            echo "Attempt $attempt of 3..."
+            node scripts/update_data.js && echo "Success on attempt $attempt" && break
+            if [ $attempt -eq 3 ]; then
+              echo "All 3 attempts failed. Exiting."
+              exit 1
+            fi
+            echo "Attempt $attempt failed. Retrying in 60 seconds..."
+            sleep 60
+          done
+
+      - name: Commit and Push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/screener.json
-          # Commit only if there are changes to avoid failing the workflow when data is identical
-          git diff-index --quiet HEAD || git commit -m "Auto-update market data [skip ci]"
+
+          # Always write a heartbeat timestamp — this ensures a commit always happens,
+          # which keeps the repo "active" so GitHub never auto-pauses this schedule.
+          echo "Last successful run: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > .github/last_updated.txt
+
+          git add data/screener.json .github/last_updated.txt
+
+          # If screener.json changed, use a descriptive message; otherwise just heartbeat
+          if git diff --cached --quiet -- data/screener.json; then
+            git commit -m "ci: heartbeat keep-alive [skip ci]"
+          else
+            git commit -m "Auto-update market data $(date -u '+%Y-%m-%d') [skip ci]"
+          fi
           git push

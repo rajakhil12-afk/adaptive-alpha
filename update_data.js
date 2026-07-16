@@ -383,9 +383,15 @@ function downloadFile(url, dest) {
     const file = fs.createWriteStream(dest);
     const options = {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://www.nseindia.com/',
+        'Origin': 'https://www.nseindia.com',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
       }
     };
     https.get(url, options, (response) => {
@@ -398,7 +404,7 @@ function downloadFile(url, dest) {
       if (response.statusCode !== 200) {
         file.close(() => {
           fs.unlink(dest, () => {
-            reject(new Error(`Failed to download: Status Code ${response.statusCode}`));
+            reject(new Error(`Failed to download: HTTP ${response.statusCode} from ${url}`));
           });
         });
         return;
@@ -725,7 +731,7 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
   };
 }
 
-// Download Bhavcopy by scanning back in time
+// Download Bhavcopy by scanning back in time — tries two URL patterns per day
 async function downloadLatestBhavcopy() {
   const tempZip = path.join(scratchDir, 'bhav.zip');
   const tempExtract = path.join(scratchDir, 'temp_bhav');
@@ -736,41 +742,51 @@ async function downloadLatestBhavcopy() {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     const yyyymmdd = `${yyyy}${mm}${dd}`;
-    const url = `https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_${yyyymmdd}_F_0000.csv.zip`;
-    
-    console.log(`Attempting to download Bhavcopy for ${yyyymmdd}…`);
-    try {
-      await downloadFile(url, tempZip);
-      console.log(`Download successful!`);
-      
-      // Clean previous extraction folder if it exists
-      if (fs.existsSync(tempExtract)) {
-        fs.rmSync(tempExtract, { recursive: true, force: true });
-      }
-      fs.mkdirSync(tempExtract);
 
-      // Unzip using Windows powershell or standard unzip utility on Linux/macOS
-      if (process.platform === 'win32') {
-        execSync(`powershell -Command "Expand-Archive -Path '${tempZip}' -DestinationPath '${tempExtract}' -Force"`);
-      } else {
-        execSync(`unzip -o "${tempZip}" -d "${tempExtract}"`);
+    // Two URL patterns: new UDiFF format (primary) and legacy format (fallback)
+    const urls = [
+      `https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_${yyyymmdd}_F_0000.csv.zip`,
+      `https://archives.nseindia.com/content/historical/EQUITIES/${yyyy}/${mm.toUpperCase()}/cm${dd}${new Date(yyyy, date.getMonth()).toLocaleString('en-US',{month:'short'}).toUpperCase()}${yyyy}bhav.csv.zip`,
+    ];
+
+    for (const url of urls) {
+      console.log(`Attempting Bhavcopy for ${yyyymmdd}: ${url}`);
+      try {
+        await downloadFile(url, tempZip);
+        console.log('Download successful!');
+
+        // Clean previous extraction folder if it exists
+        if (fs.existsSync(tempExtract)) {
+          fs.rmSync(tempExtract, { recursive: true, force: true });
+        }
+        fs.mkdirSync(tempExtract);
+
+        // Unzip — always use system unzip (Linux runner on GitHub Actions)
+        if (process.platform === 'win32') {
+          execSync(`powershell -Command "Expand-Archive -Path '${tempZip}' -DestinationPath '${tempExtract}' -Force"`);
+        } else {
+          execSync(`unzip -o "${tempZip}" -d "${tempExtract}"`);
+        }
+
+        const files = fs.readdirSync(tempExtract);
+        const csvFile = files.find(f => f.endsWith('.csv'));
+        if (csvFile) {
+          const fullCsvPath = path.join(tempExtract, csvFile);
+          const parsed = parseBhavcopy(fullCsvPath);
+
+          // Clean up zip and temporary folders
+          fs.unlinkSync(tempZip);
+          fs.rmSync(tempExtract, { recursive: true, force: true });
+
+          return { data: parsed, date: date.toISOString().split('T')[0], timestamp: Math.round(date.getTime() / 1000) };
+        }
+      } catch (err) {
+        console.warn(`  Failed (${url.split('/').pop()}): ${err.message}`);
+        // Small pause before next attempt
+        await new Promise(r => setTimeout(r, 2000));
       }
-      
-      const files = fs.readdirSync(tempExtract);
-      const csvFile = files.find(f => f.endsWith('.csv'));
-      if (csvFile) {
-        const fullCsvPath = path.join(tempExtract, csvFile);
-        const parsed = parseBhavcopy(fullCsvPath);
-        
-        // Clean up zip and temporary folders
-        fs.unlinkSync(tempZip);
-        fs.rmSync(tempExtract, { recursive: true, force: true });
-        
-        return { data: parsed, date: date.toISOString().split('T')[0], timestamp: Math.round(date.getTime() / 1000) };
-      }
-    } catch (err) {
-      console.warn(`Failed for date ${yyyymmdd}: ${err.message}`);
     }
+
     date.setDate(date.getDate() - 1); // step back one day
   }
   throw new Error('Could not download any recent Bhavcopy files from NSE.');
