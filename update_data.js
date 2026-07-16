@@ -377,21 +377,15 @@ function toYF(sym) {
   return map[sym] || (sym + '.NS');
 }
 
-// Download helper with headers to avoid NSE 403 Forbidden
+// Download helper — used for non-NSE URLs (Yahoo Finance etc)
 function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
     const file = fs.createWriteStream(dest);
     const options = {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept': '*/*',
         'Accept-Language': 'en-US,en;q=0.9',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Referer': 'https://www.nseindia.com/',
-        'Origin': 'https://www.nseindia.com',
-        'Connection': 'keep-alive',
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
       }
     };
     https.get(url, options, (response) => {
@@ -419,6 +413,36 @@ function downloadFile(url, dest) {
       });
     });
   });
+}
+
+// NSE requires a real browser session with cookies.
+// Step 1: Visit nseindia.com to get session cookies (nsit, nseappid).
+// Step 2: Use those cookies to download the Bhavcopy zip.
+// We use curl (always available on Linux/macOS) because it handles
+// cookie jars and redirects far more reliably than Node's https module.
+function downloadNSEWithCurl(url, dest, cookieFile) {
+  // Build curl command — shell-safe using single-quoted strings
+  const ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
+  if (process.platform === 'win32') {
+    // Windows fallback: use PowerShell Invoke-WebRequest
+    execSync(
+      `powershell -Command "Invoke-WebRequest -Uri '${url}' -OutFile '${dest}' -UserAgent '${ua}' -UseBasicParsing"`,
+      { stdio: 'pipe', timeout: 60000 }
+    );
+  } else {
+    execSync(
+      `curl -L -f -s --retry 3 --retry-delay 3 --max-time 90 ` +
+      `-A '${ua}' ` +
+      `-H 'Referer: https://www.nseindia.com/' ` +
+      `-H 'Accept: application/zip,application/octet-stream,*/*;q=0.8' ` +
+      `-H 'Accept-Language: en-US,en;q=0.9' ` +
+      `-c '${cookieFile}' ` +
+      `-b '${cookieFile}' ` +
+      `-o '${dest}' ` +
+      `'${url}'`,
+      { stdio: 'pipe', timeout: 90000 }
+    );
+  }
 }
 
 // Fetch historical charts from Yahoo Finance
@@ -731,41 +755,68 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
   };
 }
 
-// Download Bhavcopy by scanning back in time — tries two URL patterns per day
+// Download Bhavcopy by scanning back in time — uses curl with NSE session cookies
 async function downloadLatestBhavcopy() {
-  const tempZip = path.join(scratchDir, 'bhav.zip');
+  const tempZip    = path.join(scratchDir, 'bhav.zip');
   const tempExtract = path.join(scratchDir, 'temp_bhav');
+  const cookieFile = path.join(scratchDir, 'nse_cookies.txt');
 
+  // ── Step 1: Acquire NSE session cookies ──────────────────────────────────
+  // NSE's archive server checks for valid session cookies (nsit, nseappid)
+  // issued by the main site. Without them every download returns 403.
+  if (process.platform !== 'win32') {
+    console.log('Acquiring NSE session cookies via curl...');
+    try {
+      const ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
+      // Visit homepage to get initial cookies
+      execSync(
+        `curl -L -s --max-time 30 -A '${ua}' -c '${cookieFile}' -o /dev/null 'https://www.nseindia.com'`,
+        { stdio: 'pipe' }
+      );
+      // Hit a data page to refresh/extend the session
+      execSync(
+        `curl -L -s --max-time 30 -A '${ua}' -c '${cookieFile}' -b '${cookieFile}' ` +
+        `-H 'Referer: https://www.nseindia.com/' -o /dev/null ` +
+        `'https://www.nseindia.com/market-data/live-equity-market'`,
+        { stdio: 'pipe' }
+      );
+      console.log('Session cookies acquired.');
+    } catch (e) {
+      console.warn('Warning: Could not acquire NSE cookies:', e.message);
+    }
+    // Wait 2s to appear like a human
+    await new Promise(r => setTimeout(r, 2000));
+  }
+
+  // ── Step 2: Try downloading Bhavcopy for recent trading days ─────────────
   let date = new Date();
   for (let lookback = 0; lookback < 10; lookback++) {
     const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
+    const mm   = String(date.getMonth() + 1).padStart(2, '0');
+    const dd   = String(date.getDate()).padStart(2, '0');
     const yyyymmdd = `${yyyy}${mm}${dd}`;
 
-    // Two URL patterns: new UDiFF format (primary) and legacy format (fallback)
+    // Primary: new UDiFF format | Fallback: legacy archive format
     const urls = [
       `https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_${yyyymmdd}_F_0000.csv.zip`,
-      `https://archives.nseindia.com/content/historical/EQUITIES/${yyyy}/${mm.toUpperCase()}/cm${dd}${new Date(yyyy, date.getMonth()).toLocaleString('en-US',{month:'short'}).toUpperCase()}${yyyy}bhav.csv.zip`,
+      `https://archives.nseindia.com/content/historical/EQUITIES/${yyyy}/${mm.toUpperCase()}/cm${dd}${new Date(yyyy, date.getMonth()).toLocaleString('en-US', { month: 'short' }).toUpperCase()}${yyyy}bhav.csv.zip`,
     ];
 
     for (const url of urls) {
-      console.log(`Attempting Bhavcopy for ${yyyymmdd}: ${url}`);
+      console.log(`Attempting Bhavcopy for ${yyyymmdd}: ${url.split('/').pop()}`);
       try {
-        await downloadFile(url, tempZip);
+        downloadNSEWithCurl(url, tempZip, cookieFile);
         console.log('Download successful!');
 
-        // Clean previous extraction folder if it exists
-        if (fs.existsSync(tempExtract)) {
-          fs.rmSync(tempExtract, { recursive: true, force: true });
-        }
+        // Clean previous extraction folder
+        if (fs.existsSync(tempExtract)) fs.rmSync(tempExtract, { recursive: true, force: true });
         fs.mkdirSync(tempExtract);
 
-        // Unzip — always use system unzip (Linux runner on GitHub Actions)
+        // Unzip
         if (process.platform === 'win32') {
           execSync(`powershell -Command "Expand-Archive -Path '${tempZip}' -DestinationPath '${tempExtract}' -Force"`);
         } else {
-          execSync(`unzip -o "${tempZip}" -d "${tempExtract}"`);
+          execSync(`unzip -o '${tempZip}' -d '${tempExtract}'`, { stdio: 'pipe' });
         }
 
         const files = fs.readdirSync(tempExtract);
@@ -773,23 +824,19 @@ async function downloadLatestBhavcopy() {
         if (csvFile) {
           const fullCsvPath = path.join(tempExtract, csvFile);
           const parsed = parseBhavcopy(fullCsvPath);
-
-          // Clean up zip and temporary folders
           fs.unlinkSync(tempZip);
           fs.rmSync(tempExtract, { recursive: true, force: true });
-
           return { data: parsed, date: date.toISOString().split('T')[0], timestamp: Math.round(date.getTime() / 1000) };
         }
       } catch (err) {
-        console.warn(`  Failed (${url.split('/').pop()}): ${err.message}`);
-        // Small pause before next attempt
-        await new Promise(r => setTimeout(r, 2000));
+        console.warn(`  Failed: ${err.message.slice(0, 120)}`);
+        await new Promise(r => setTimeout(r, 3000));
       }
     }
 
     date.setDate(date.getDate() - 1); // step back one day
   }
-  throw new Error('Could not download any recent Bhavcopy files from NSE.');
+  throw new Error('Could not download any recent Bhavcopy files from NSE after 10 days of lookback.');
 }
 
 async function run() {
