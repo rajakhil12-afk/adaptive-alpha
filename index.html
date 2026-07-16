@@ -1438,6 +1438,7 @@ const SMALLCAP100 = [
 let currentIndex = 50;
 let allData      = [];
 let globalScreenerData = []; // Pre-calculated baseline database
+let liveCache    = {};       // Cache of live scan results keyed by index value
 let prevDataMap  = {};
 let filters      = { ars:true, trend:true, srs:false, vol:false, '52w':false, st:false, pass:true, groups:true, watchlist:false };
 let stParam      = '14'; // '14' or '10'
@@ -1939,6 +1940,10 @@ async function loadData() {
     rs_rating: d.rs_rating ?? 1,
     ma_status: d.ma_status ?? 'MA-'
   }));
+
+  // Save to per-index cache so switching tabs doesn't lose results
+  liveCache[currentIndex] = { data: [...allData], ts: new Date() };
+
   showProgress('Done!', 100);
   document.getElementById('ts').textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}) + ' IST · ' + new Date().toLocaleDateString('en-IN', {day:'2-digit',month:'short'});
   renderAll();
@@ -3001,6 +3006,19 @@ function switchIndex() {
   document.getElementById('index-badge').textContent = label;
   activeSector = null;
   prevDataMap = {};
+
+  // ── If we have a live scan cache for this index, restore it instantly ──
+  if (liveCache[currentIndex]) {
+    const cached = liveCache[currentIndex];
+    allData = [...cached.data];
+    const cachedTime = cached.ts.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', hour12:true});
+    document.getElementById('ts').textContent = cachedTime + ' IST · (cached)';
+    document.getElementById('err-banner').style.display = 'none';
+    renderAll();
+    return;
+  }
+
+  // ── Otherwise fall back to static data or re-fetch ──
   if (globalScreenerData.length > 0) {
     filterActiveUniverse();
     renderAll();
