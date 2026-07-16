@@ -1101,11 +1101,10 @@ const APP_BUILD_DATE = '2026-07-16';
 window.addEventListener('error', (e) => {
   console.error('[Adaptive Alpha] Unhandled error:', e.message, '\n', e.filename + ':' + e.lineno);
   const banner = document.getElementById('err-banner');
-  if (banner && !banner.style.display || banner.style.display === 'none') {
-    if (banner) {
-      banner.textContent = `⚠️ UI Error: ${e.message} — Try refreshing the page.`;
-      banner.style.display = 'block';
-    }
+  // Parentheses required: banner must be truthy before accessing .style.display
+  if (banner && (!banner.style.display || banner.style.display === 'none')) {
+    banner.textContent = `⚠️ UI Error: ${e.message} — Try refreshing the page.`;
+    banner.style.display = 'block';
   }
 });
 
@@ -3463,6 +3462,11 @@ function openStockModal(sym) {
   modalStockCandles = null;
   modalBenchCandles = null;
   currentTVSym = sym;
+  // Reset D/W/M button active CSS state so it always opens showing D as active
+  ['D','W','M'].forEach(t => {
+    const btn = document.getElementById(`tf-${t.toLowerCase()}`);
+    if (btn) btn.classList.toggle('active', t === 'D');
+  });
   switchModalTab('ars');
 
   // Render ARS chart with 150ms delay to allow modal layout to settle
