@@ -1,2 +1,0 @@
-// This file has been moved to archive/unwanted/nifty50_screener_part2.txt
-// See branch: remove-unwanted-files, commit: 23d5ef90
