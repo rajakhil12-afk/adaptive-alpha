@@ -3,6 +3,32 @@ const path = require('path');
 const https = require('https');
 const { execSync } = require('child_process');
 
+function fetchFiiDiiData() {
+  return new Promise((resolve) => {
+    const url = 'https://fii-diidata.mrchartist.com/api/data';
+    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed && parsed.date) {
+            resolve({
+              date: parsed.date,
+              fii: parsed.fii_net || 0,
+              dii: parsed.dii_net || 0
+            });
+            return;
+          }
+        } catch (e) {}
+        resolve(null);
+      });
+    }).on('error', () => {
+      resolve(null);
+    });
+  });
+}
+
 const scratchDir = path.resolve(__dirname, '..');
 const dataDir = path.join(scratchDir, 'data');
 const outputJson = path.join(dataDir, 'screener.json');
@@ -10,6 +36,13 @@ const outputJson = path.join(dataDir, 'screener.json');
 // Ensure output directories exist
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
+}
+
+let logoIds = {};
+try {
+  logoIds = JSON.parse(fs.readFileSync(path.join(dataDir, 'logo_ids.json'), 'utf8') || '{}');
+} catch(e) {
+  console.log('Warning: logo_ids.json cache not found or unreadable.');
 }
 
 // Constituent stock lists
@@ -225,7 +258,110 @@ const MIDCAP100 = [
   {sym:'WHIRLPOOL',  name:'Whirlpool India',       ind:'Consumer Durables'}
 ];
 
-const UNIVERSE = [...N50, ...EXTRA, ...MIDCAP100];
+const SMALLCAP100 = [
+  {sym:'AARTIIND', name:'Aarti Industries', ind:'Chemicals'},
+  {sym:'ABREL', name:'Aditya Birla Real Estate', ind:'Realty'},
+  {sym:'AEGISLOG', name:'Aegis Logistics', ind:'Oil Gas'},
+  {sym:'AFCONS', name:'Afcons Infrastructure', ind:'Construction'},
+  {sym:'AFFLE', name:'Affle 3i', ind:'IT'},
+  {sym:'ARE&M', name:'Amara Raja Energy & Mobility', ind:'Automobile'},
+  {sym:'AMBER', name:'Amber Enterprises India', ind:'Consumer Durables'},
+  {sym:'ANANDRATHI', name:'Anand Rathi Wealth', ind:'Financial Services'},
+  {sym:'ANANTRAJ', name:'Anant Raj', ind:'Realty'},
+  {sym:'ANGELONE', name:'Angel One', ind:'Financial Services'},
+  {sym:'APTUS', name:'Aptus Value Housing Finance India', ind:'Financial Services'},
+  {sym:'ASTERDM', name:'Aster DM Healthcare', ind:'Healthcare'},
+  {sym:'ATHERENERG', name:'Ather Energy', ind:'Automobile'},
+  {sym:'BEML', name:'BEML', ind:'Capital Goods'},
+  {sym:'BLS', name:'BLS International Services', ind:'Consumer Services'},
+  {sym:'BANDHANBNK', name:'Bandhan Bank', ind:'Financial Services'},
+  {sym:'FIRSTCRY', name:'Brainbees Solutions', ind:'Consumer Services'},
+  {sym:'BRIGADE', name:'Brigade Enterprises', ind:'Realty'},
+  {sym:'CESC', name:'CESC', ind:'Power'},
+  {sym:'CGCL', name:'Capri Global Capital', ind:'Financial Services'},
+  {sym:'CASTROLIND', name:'Castrol India', ind:'Oil Gas'},
+  {sym:'CDSL', name:'Central Depository Services (India)', ind:'Financial Services'},
+  {sym:'CHAMBLFERT', name:'Chambal Fertilizers & Chemicals', ind:'Chemicals'},
+  {sym:'CHOLAHLDNG', name:'Cholamandalam Financial Holdings', ind:'Financial Services'},
+  {sym:'CUB', name:'City Union Bank', ind:'Financial Services'},
+  {sym:'COHANCE', name:'Cohance Lifesciences', ind:'Healthcare'},
+  {sym:'CAMS', name:'Computer Age Management Services', ind:'Financial Services'},
+  {sym:'CREDITACC', name:'CreditAccess Grameen', ind:'Financial Services'},
+  {sym:'CROMPTON', name:'Crompton Greaves Consumer Electricals', ind:'Consumer Durables'},
+  {sym:'DATAPATTNS', name:'Data Patterns (India)', ind:'Capital Goods'},
+  {sym:'DEEPAKFERT', name:'Deepak Fertilisers & Petrochemicals Corp.', ind:'Chemicals'},
+  {sym:'DELHIVERY', name:'Delhivery', ind:'Services'},
+  {sym:'DEVYANI', name:'Devyani International', ind:'Consumer Services'},
+  {sym:'LALPATHLAB', name:'Dr. Lal Path Labs', ind:'Healthcare'},
+  {sym:'FSL', name:'Firstsource Solutions', ind:'Services'},
+  {sym:'FIVESTAR', name:'Five-Star Business Finance', ind:'Financial Services'},
+  {sym:'FORCEMOT', name:'Force Motors', ind:'Automobile'},
+  {sym:'GRSE', name:'Garden Reach Shipbuilders & Engineers', ind:'Capital Goods'},
+  {sym:'GLAND', name:'Gland Pharma', ind:'Healthcare'},
+  {sym:'GPIL', name:'Godawari Power & Ispat', ind:'Capital Goods'},
+  {sym:'GESHIP', name:'Great Eastern Shipping Co.', ind:'Services'},
+  {sym:'GMDCLTD', name:'Gujarat Mineral Development Corporation', ind:'Metals & Mining'},
+  {sym:'HBLENGINE', name:'HBL Engineering', ind:'Capital Goods'},
+  {sym:'HSCL', name:'Himadri Speciality Chemical', ind:'Chemicals'},
+  {sym:'HINDCOPPER', name:'Hindustan Copper', ind:'Metals & Mining'},
+  {sym:'IDBI', name:'IDBI Bank', ind:'Financial Services'},
+  {sym:'IFCI', name:'IFCI', ind:'Financial Services'},
+  {sym:'IIFL', name:'IIFL Finance', ind:'Financial Services'},
+  {sym:'IRCON', name:'IRCON International', ind:'Construction'},
+  {sym:'ITI', name:'ITI', ind:'Telecom'},
+  {sym:'IGL', name:'Indraprastha Gas', ind:'Oil Gas'},
+  {sym:'INOXWIND', name:'Inox Wind', ind:'Capital Goods'},
+  {sym:'IKS', name:'Inventurus Knowledge Solutions', ind:'IT'},
+  {sym:'JBMA', name:'JBM Auto', ind:'Automobile'},
+  {sym:'JMFINANCIL', name:'JM Financial', ind:'Financial Services'},
+  {sym:'JSWCEMENT', name:'JSW Cement', ind:'Construction Materials'},
+  {sym:'JYOTICNC', name:'Jyoti CNC Automation', ind:'Capital Goods'},
+  {sym:'KARURVYSYA', name:'Karur Vysya Bank', ind:'Financial Services'},
+  {sym:'KAYNES', name:'Kaynes Technology India', ind:'Capital Goods'},
+  {sym:'KEC', name:'Kec International', ind:'Construction'},
+  {sym:'KFINTECH', name:'Kfin Technologies', ind:'Financial Services'},
+  {sym:'MANAPPURAM', name:'Manappuram Finance', ind:'Financial Services'},
+  {sym:'MRPL', name:'Mangalore Refinery & Petrochemicals', ind:'Oil Gas'},
+  {sym:'MEESHO', name:'Meesho', ind:'Consumer Services'},
+  {sym:'NATCOPHARM', name:'NATCO Pharma', ind:'Healthcare'},
+  {sym:'NBCC', name:'NBCC (India)', ind:'Construction'},
+  {sym:'NH', name:'Narayana Hrudayalaya', ind:'Healthcare'},
+  {sym:'NAVINFLUOR', name:'Navin Fluorine International', ind:'Chemicals'},
+  {sym:'NETWEB', name:'Netweb Technologies India', ind:'IT'},
+  {sym:'NEULANDLAB', name:'Neuland Laboratories', ind:'Healthcare'},
+  {sym:'NUVAMA', name:'Nuvama Wealth Management', ind:'Financial Services'},
+  {sym:'OLAELEC', name:'Ola Electric Mobility', ind:'Automobile'},
+  {sym:'PGEL', name:'PG Electroplast', ind:'Consumer Durables'},
+  {sym:'PNBHOUSING', name:'PNB Housing Finance', ind:'Financial Services'},
+  {sym:'PWL', name:'Physicswallah', ind:'Consumer Services'},
+  {sym:'PINELABS', name:'Pine Labs', ind:'Financial Services'},
+  {sym:'PIRAMALFIN', name:'Piramal Finance', ind:'Financial Services'},
+  {sym:'PPLPHARMA', name:'Piramal Pharma', ind:'Healthcare'},
+  {sym:'POONAWALLA', name:'Poonawalla Fincorp', ind:'Financial Services'},
+  {sym:'RBLBANK', name:'RBL Bank', ind:'Financial Services'},
+  {sym:'REDINGTON', name:'Redington', ind:'Services'},
+  {sym:'RPOWER', name:'Reliance Power', ind:'Power'},
+  {sym:'SAGILITY', name:'Sagility', ind:'IT'},
+  {sym:'SAILIFE', name:'Sai Life Sciences', ind:'Healthcare'},
+  {sym:'SARDAEN', name:'Sarda Energy and Minerals', ind:'Metals & Mining'},
+  {sym:'SIGNATURE', name:'Signatureglobal (India)', ind:'Realty'},
+  {sym:'SONACOMS', name:'Sona BLW Precision Forgings', ind:'Automobile'},
+  {sym:'STARHEALTH', name:'Star Health and Allied Insurance Company', ind:'Financial Services'},
+  {sym:'SWANCORP', name:'Swan Corp', ind:'Chemicals'},
+  {sym:'SYNGENE', name:'Syngene International', ind:'Healthcare'},
+  {sym:'TATACHEM', name:'Tata Chemicals', ind:'Chemicals'},
+  {sym:'TATATECH', name:'Tata Technologies', ind:'IT'},
+  {sym:'TENNIND', name:'Tenneco Clean Air India', ind:'Automobile'},
+  {sym:'RAMCOCEM', name:'The Ramco Cements', ind:'Construction Materials'},
+  {sym:'TRITURBINE', name:'Triveni Turbine', ind:'Capital Goods'},
+  {sym:'URBANCO', name:'Urban Company', ind:'Consumer Services'},
+  {sym:'WELCORP', name:'Welspun Corp', ind:'Capital Goods'},
+  {sym:'WHIRLPOOL', name:'Whirlpool of India', ind:'Consumer Durables'},
+  {sym:'WOCKPHARMA', name:'Wockhardt', ind:'Healthcare'},
+  {sym:'ZENSARTECH', name:'Zensar Technolgies', ind:'IT'},
+];
+
+const UNIVERSE = [...N50, ...EXTRA, ...MIDCAP100, ...SMALLCAP100];
 
 function toYF(sym) {
   const map = {
@@ -236,6 +372,7 @@ function toYF(sym) {
     'ENRIN':      'SIEMENSENE.NS',
     'LTM':        'LTIM.NS',
     'ETERNAL':    'ZOMATO.NS',
+    'ARE&M':      'ARE%26M.NS',
   };
   return map[sym] || (sym + '.NS');
 }
@@ -299,10 +436,20 @@ function fetchYahoo(ticker, range = '6y') {
           const ts    = result.timestamp || [];
           const q     = result.indicators?.quote?.[0] || {};
           const close = q.close  || [];
+          const high  = q.high   || [];
+          const low   = q.low    || [];
           const vol   = q.volume || [];
           const candles = [];
           for (let i = 0; i < ts.length; i++) {
-            if (close[i] != null) candles.push({ t: ts[i], c: close[i], v: vol[i] || 0 });
+            if (close[i] != null) {
+              candles.push({ 
+                t: ts[i], 
+                c: close[i], 
+                h: high[i] !== undefined && high[i] !== null ? high[i] : close[i], 
+                l: low[i] !== undefined && low[i] !== null ? low[i] : close[i], 
+                v: vol[i] || 0 
+              });
+            }
           }
           resolve(candles);
         } catch(_) {
@@ -320,6 +467,117 @@ function fetchYahoo(ticker, range = '6y') {
       resolve(null);
     });
   });
+}
+
+// Calculate Supertrend (period, multiplier) matching TradingView exactly
+function calcSupertrend(candles, period = 10, multiplier = 3) {
+  const len = candles.length;
+  if (len < period + 5) return { trend: "sell", signal: null, val: 0 };
+  
+  const tr = [];
+  const hl2 = [];
+  
+  // Calculate True Range (TR) and HL2 Median Price
+  for (let i = 0; i < len; i++) {
+    const c = candles[i];
+    hl2.push((c.h + c.l) / 2);
+    if (i === 0) {
+      tr.push(c.h - c.l);
+    } else {
+      const prevC = candles[i - 1];
+      const val1 = c.h - c.l;
+      const val2 = Math.abs(c.h - prevC.c);
+      const val3 = Math.abs(c.l - prevC.c);
+      tr.push(Math.max(val1, val2, val3));
+    }
+  }
+  
+  // Calculate ATR using Wilder's Smoothed Moving Average (RMA)
+  const atr = [];
+  let sum = 0;
+  for (let i = 0; i < period; i++) {
+    sum += tr[i];
+  }
+  let currentAtr = sum / period;
+  atr[period - 1] = currentAtr;
+  
+  for (let i = period; i < len; i++) {
+    currentAtr = (atr[i - 1] * (period - 1) + tr[i]) / period;
+    atr[i] = currentAtr;
+  }
+  
+  // Trailing Bands & Direction calculations
+  const up = [];
+  const dn = [];
+  const supertrend = [];
+  const trend = []; // 1 for BUY, -1 for SELL
+  
+  for (let i = 0; i < len; i++) {
+    if (i < period - 1) {
+      up.push(hl2[i] - multiplier * (tr[i] || 0));
+      dn.push(hl2[i] + multiplier * (tr[i] || 0));
+      supertrend.push(0);
+      trend.push(-1);
+      continue;
+    }
+    
+    const c = candles[i];
+    const prevC = candles[i - 1] || c;
+    const currentAtr = atr[i];
+    
+    const basicUp = hl2[i] - multiplier * currentAtr;
+    const basicDn = hl2[i] + multiplier * currentAtr;
+    
+    const prevUp = up[i - 1] || basicUp;
+    const prevDn = dn[i - 1] || basicDn;
+    
+    const finalUp = (basicUp > prevUp || prevC.c < prevUp) ? basicUp : prevUp;
+    const finalDn = (basicDn < prevDn || prevC.c > prevDn) ? basicDn : prevDn;
+    
+    up.push(finalUp);
+    dn.push(finalDn);
+    
+    const prevST = supertrend[i - 1] || 0;
+    const prevTrend = trend[i - 1] || -1;
+    
+    let currentST = 0;
+    let currentTrend = -1;
+    
+    if (prevTrend === 1) {
+      currentST = Math.max(prevST, finalUp);
+      if (c.c < currentST) {
+        currentTrend = -1;
+        currentST = finalDn;
+      } else {
+        currentTrend = 1;
+      }
+    } else {
+      currentST = Math.min(prevST, finalDn);
+      if (c.c > currentST) {
+        currentTrend = 1;
+        currentST = finalUp;
+      } else {
+        currentTrend = -1;
+      }
+    }
+    
+    supertrend.push(currentST);
+    trend.push(currentTrend);
+  }
+  
+  const lastIdx = len - 1;
+  const currentTrend = trend[lastIdx];
+  const prevTrend = trend[lastIdx - 1];
+  
+  let signal = null;
+  if (prevTrend === -1 && currentTrend === 1) signal = "buy_signal";
+  else if (prevTrend === 1 && currentTrend === -1) signal = "sell_signal";
+  
+  return {
+    trend: currentTrend === 1 ? "buy" : "sell",
+    signal: signal,
+    val: parseFloat(supertrend[lastIdx].toFixed(2))
+  };
 }
 
 function findHeader(headers, options) {
@@ -434,7 +692,37 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
     }
   }
 
-  return { ars, srs, vol_ratio, hi52_prox, price: sToday.c, prev: arsPrev, signSince, signDays, breakout: ars > 0 && arsPrev <= 0, trending: ars > arsPrev };
+  // Calculate 50MA and 200MA
+  const slice50 = stockCandles.slice(Math.max(0, sLen - 50));
+  const sma50 = slice50.reduce((s, c) => s + c.c, 0) / Math.max(1, slice50.length);
+  
+  const slice200 = stockCandles.slice(Math.max(0, sLen - 200));
+  const sma200 = slice200.reduce((s, c) => s + c.c, 0) / Math.max(1, slice200.length);
+  
+  const maAbove50 = sToday.c > sma50;
+  const maAbove200 = sToday.c > sma200;
+  const ma_status = (maAbove50 && maAbove200) ? 'MA+' : 'MA-';
+  
+  // Calculate ARS 5 days ago to get the slope
+  const sPrev5 = stockCandles[Math.max(0, sLen - 6)]; // 5 trading days ago is index sLen-6 (current day is sLen-1)
+  const bPrev5 = benchCandles[Math.max(0, bLen - 6)];
+  const ars5 = sStart.c && bStart.c && bStart.c !== 0 ? ((sPrev5.c / sStart.c) / (bPrev5.c / bStart.c)) - 1 : 0;
+  const ars_slope = ars - ars5;
+
+  return { 
+    ars, 
+    srs, 
+    vol_ratio, 
+    hi52_prox, 
+    price: sToday.c, 
+    prev: arsPrev, 
+    signSince, 
+    signDays, 
+    breakout: ars > 0 && arsPrev <= 0, 
+    trending: ars > arsPrev,
+    ma_status,
+    ars_slope
+  };
 }
 
 // Download Bhavcopy by scanning back in time
@@ -512,9 +800,11 @@ async function run() {
   if (niftyBhav) {
     const last = benchData[benchData.length - 1];
     if (last.t < bhav.timestamp) {
-      benchData.push({ t: bhav.timestamp, c: niftyBhav.close, v: niftyBhav.volume || 0 });
+      benchData.push({ t: bhav.timestamp, c: niftyBhav.close, h: niftyBhav.close, l: niftyBhav.close, v: niftyBhav.volume || 0 });
     } else {
       last.c = niftyBhav.close;
+      last.h = niftyBhav.close;
+      last.l = niftyBhav.close;
     }
   }
 
@@ -535,19 +825,25 @@ async function run() {
     if (latestBhav) {
       const last = stockHist[stockHist.length - 1];
       if (last.t < bhav.timestamp) {
-        stockHist.push({ t: bhav.timestamp, c: latestBhav.close, v: latestBhav.volume });
+        stockHist.push({ t: bhav.timestamp, c: latestBhav.close, h: latestBhav.close, l: latestBhav.close, v: latestBhav.volume });
       } else {
         last.c = latestBhav.close;
+        last.h = latestBhav.close;
+        last.l = latestBhav.close;
         last.v = latestBhav.volume;
       }
     }
 
     const calc = calcARS(stockHist, benchData, cutoffTs);
     if (calc) {
+      const st14 = calcSupertrend(stockHist, 14, 3);
+      const st10 = calcSupertrend(stockHist, 10, 3);
+
       results.push({
         sym: stock.sym,
         name: stock.name,
         ind: stock.ind,
+        logoid: logoIds[stock.sym] || null,
         ars: parseFloat(calc.ars.toFixed(4)),
         srs: parseFloat(calc.srs.toFixed(4)),
         vol_ratio: parseFloat(calc.vol_ratio.toFixed(2)),
@@ -556,7 +852,11 @@ async function run() {
         breakout: calc.breakout,
         trending: calc.trending,
         signDays: calc.signDays,
-        signSince: calc.signSince
+        signSince: calc.signSince,
+        st14: { trend: st14.trend, signal: st14.signal, val: st14.val },
+        st10: { trend: st10.trend, signal: st10.signal, val: st10.val },
+        ma_status: calc.ma_status,
+        ars_slope: parseFloat(calc.ars_slope.toFixed(4))
       });
     }
     
@@ -564,9 +864,45 @@ async function run() {
     await new Promise(resolve => setTimeout(resolve, 80));
   }
 
+  // Calculate RS Rating (1-99) for each stock based on composite rank
+  const N = results.length;
+  if (N > 0) {
+    const getRanks = (key, customValFn) => {
+      const sorted = [...results]
+        .map((s, idx) => ({ idx, val: customValFn ? customValFn(s) : s[key] }))
+        .sort((a, b) => a.val - b.val);
+      const ranks = new Array(N);
+      sorted.forEach((item, r) => {
+        ranks[item.idx] = r / (N - 1 || 1);
+      });
+      return ranks;
+    };
+
+    const ranksArs = getRanks('ars');
+    const ranksSrs = getRanks('srs');
+    const ranksVol = getRanks('vol_ratio');
+    const ranksDays = getRanks(null, s => s.signDays * (s.ars >= 0 ? 1 : -1));
+
+    const composites = results.map((s, idx) => {
+      const composite = (ranksArs[idx] * 0.4) + (ranksSrs[idx] * 0.3) + (ranksVol[idx] * 0.15) + (ranksDays[idx] * 0.15);
+      return { idx, composite };
+    });
+
+    composites.sort((a, b) => a.composite - b.composite);
+
+    composites.forEach((item, r) => {
+      const rating = Math.round(1 + (r / (N - 1 || 1)) * 98);
+      results[item.idx].rs_rating = rating;
+    });
+  }
+
+  console.log('Fetching latest FII/DII flows...');
+  const fiiDii = await fetchFiiDiiData();
+
   const payload = {
     updated: new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}) + ' IST · ' + new Date().toLocaleDateString('en-IN', {day:'2-digit',month:'short'}),
     bhavDate: bhav.date,
+    fii_dii: fiiDii,
     stocks: results
   };
 

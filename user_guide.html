@@ -289,7 +289,7 @@
       </div>
       <div>
         <strong>TARGET MARKET</strong>
-        NSE India (Nifty 200)
+        NSE India (Nifty 300)
       </div>
     </div>
   </div>
@@ -298,7 +298,7 @@
   <div class="content">
     
     <h1>1. Platform Overview</h1>
-    <p><strong>Adaptive Alpha</strong> is a premium technical screener dashboard engineered to identify market leaders, breakouts, and sector rotation trends within the NSE India universe. The platform utilizes advanced price-volume calculation models to analyze momentum relative to the broader market index (NIFTY 50).</p>
+    <p><strong>Adaptive Alpha</strong> is a premium technical screener dashboard engineered to identify market leaders, breakouts, and sector rotation trends within the NSE India universe (covering Nifty 50, Nifty Next 50, Nifty Midcap 100, and Nifty Smallcap 100). The platform utilizes advanced price-volume calculation models to analyze momentum relative to the broader market index (NIFTY 50).</p>
     <p>By shifting from standard trend metrics to adaptive relative strength, the application filters out market noise and equips analysts with high-probability long candidates matching institutional accumulation models.</p>
 
     <div class="note-box">
@@ -321,6 +321,18 @@
       <li><strong style="color: #db9b94;">ARS &gt; -5% (Muted Coral):</strong> Mild underperformance / consolidating range.</li>
       <li><strong style="color: #f45662;">ARS &lt; -5% (Vibrant Red):</strong> Strong underperformance / lagging trend.</li>
     </ul>
+
+    <h2>RS Rating (1–99 Score)</h2>
+    <p>A composite percentile rank modeled on Investor's Business Daily (IBD) that aggregates a stock's momentum relative to the entire universe. It combines Adaptive Relative Strength (ARS), Shorter-term Relative Strength (SRS), Volume Ratio, and Days in Trend. A score of 90+ represents the top 10% momentum leaders in the market.</p>
+
+    <h2>5D Slope (ARS Momentum Slope)</h2>
+    <p>Displays the change in Adaptive Relative Strength (ARS) over the last 5 trading days. A positive slope indicates the trend is accelerating upward, while a negative slope indicates the momentum is flattening or decelerating.</p>
+
+    <h2>Moving Average Status (MA+ / MA-)</h2>
+    <p>A filter tag indicating whether a stock is in a structural uptrend. <strong>MA+</strong> means the stock is trading above both its 50-day and 200-day Simple Moving Averages. <strong>MA-</strong> means the stock is trading below either moving average, suggesting overhead resistance.</p>
+
+    <h2>7D Trend (Sparklines)</h2>
+    <p>A mini line chart rendered directly inside the table that visualizes the stock's relative strength trajectory over the last 7 trading days. The line is colored emerald green if the stock is in a positive outperformance state (ARS > 0%) and red if it is in an underperformance state (ARS < 0%). An animated trace draws the sparkline automatically when data renders.</p>
 
     <h2>Shorter-term Relative Strength (SRS)</h2>
     <p>SRS isolates near-term strength by calculating the relative performance over a fixed rolling window of <strong>63 trading days</strong> (approximately 3 calendar months). This helps spot near-term leaders before they reflect in the long-term ARS metric.</p>
@@ -437,10 +449,28 @@
       <li><strong>Intraday Live Scan:</strong> Clicking the <strong>"↻ Live Data"</strong> button fetches current intraday prices directly from Yahoo Finance and recalculates all momentum metrics in the browser.</li>
     </ol>
 
-    <h2>One-Click Charts</h2>
-    <p>To inspect a setup visually, click anywhere on a stock row. The platform will open the daily TradingView chart for that stock in a new tab: 
-      <code>https://www.tradingview.com/chart/?symbol=NSE:SYMBOL</code>
-    </p>
+    <h2>Interactive Sidebar & Breadth Gauge</h2>
+    <p>Clicking any stock row populates the right-hand panel with a detailed scorecard of the stock's metrics and a custom animated SVG Relative Strength Vector Chart. Click the close button (✕) in the sidebar header to return to the Market Briefing summary view. The welcome view features a speedometer-style <strong>NIFTY Breadth Gauge</strong> indicating the percentage of stocks in a structural uptrend (trading above both 50-day and 200-day moving averages).</p>
+
+    <h2>Brand Logo Icons</h2>
+    <p>The main stock table and the sidebar scorecard display official brand logos next to each ticker name. These logos are retrieved dynamically using cached logoids from TradingView's SVG CDN repository, falling back automatically to a circular icon showing the first letter of the stock symbol in case of network issues or missing assets.</p>
+
+    <h2>Sector Rotation Clock (RRG-style)</h2>
+    <p>Clicking on the "Sector View" tab displays a circular relative rotation scatter-plot diagram. Sectors are mapped with long-term strength (average ARS) on the horizontal axis and short-term strength (average SRS) on the vertical axis, visually dividing them into Leading, Weakening, Lagging, and Improving quadrants.</p>
+
+    <h2>Mobile Optimization & Card View</h2>
+    <p>On screen sizes below 768px (smartphones), the screener automatically transitions into a stacked card layout. Each row is rendered as an individual card, showing labels and metrics dynamically while maintaining all tap-selection, sparklines, and column sorting capabilities.</p>
+
+    <h2>Guided Onboarding Tour</h2>
+    <p>First-time visitors are presented with a step-by-step guided tour explaining filters, columns, RRG vectors, and sharing options. The tour can be restarted manually at any time by clicking the <code>Guide Tour</code> link in the footer.</p>
+
+    <h2>Client Communication & Utility Tools</h2>
+    <ul>
+      <li><strong>Watchlist (localStorage):</strong> Click the star icon (☆) next to a stock name to add it to a persistent watchlist. Toggle the <code>⭐ Watchlist</code> chip in the filter bar to see only pinned stocks.</li>
+      <li><strong>CSV Export:</strong> Click the <code>📥 Export</code> button next to the search box to download the currently filtered and sorted table view as a standard CSV spreadsheet file.</li>
+      <li><strong>WhatsApp Summary:</strong> Click the <code>📋 Share</code> button to compile and copy a formatted, client-ready markdown message containing overall market verdict, top 5 outperforming stocks, and fresh breakout list to the clipboard.</li>
+      <li><strong>Theme Toggle:</strong> Click the Sun/Moon button (🌙 / ☀️) in the topbar to transition between Light and Dark mode instantly. The selected theme state is saved in the browser and will restore on subsequent visits.</li>
+    </ul>
 
     <h1 class="page-break">6. Support and Operations</h1>
     <p>The data pipeline updates automatically after market hours on trading days. If the daily GitHub Actions pipeline runs into formatting changes on the NSE exchange servers, it uses fallback parsing to ensure data continuity.</p>
