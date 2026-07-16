@@ -1,3 +1,0 @@
-// (archived) nifty50_screener_part1.txt
-//@version=5
-// Nifty 50 Screener Part 1 (archived)
