@@ -865,9 +865,6 @@
       border: 0.5px solid var(--border);
     }
 
-    /* ── MODAL CHART TABS (ARS History / Live TV Chart) ── */
-
-
     /* ── VOLUME SPURT TOAST NOTIFICATION ── */
     .vol-toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; background: var(--bg3); border: 1px solid rgba(94,150,255,0.4); border-radius: 8px; padding: 12px 16px; min-width: 240px; max-width: 300px; box-shadow: 0 8px 32px rgba(0,0,0,0.55); animation: toast-in 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; }
     .vol-toast.hiding { animation: toast-out 0.25s ease-in forwards; }
@@ -2673,7 +2670,7 @@ const tourSteps = [
   {
     target: '#screener-right',
     title: 'Interactive Sidebar Scorecard',
-    desc: 'By default, this welcome panel displays key EOD metrics, leaders, and rotational snapshots. Click any row to view its live chart and SVG Relative Strength vector.',
+    desc: 'By default, this welcome panel displays key EOD metrics, leaders, and rotational snapshots. Click any row to view its ARS history chart and SVG Relative Strength vector.',
     pos: 'left'
   },
   {
@@ -3470,7 +3467,7 @@ function openStockModal(sym) {
   ['D','W','M'].forEach(t => {
     const btn = document.getElementById(`tf-${t.toLowerCase()}`);
     if (btn) btn.classList.toggle('active', t === 'D');
-  });\n
+  });
   // Render ARS chart with 150ms delay to allow modal layout to settle
   setTimeout(() => {
     renderModalChart(d);
@@ -3614,7 +3611,7 @@ async function renderModalChart(d) {
             // Cache candles so D/W/M switching is instant — no re-fetch needed
             modalStockCandles = stockCandles;
             modalBenchCandles = benchCandles;
-            // If user already switched TF before live data arrived, update chart now
+            // If user already switched TF before Yahoo data arrived, apply that TF now
             if (activeARSTF !== 'D') switchARSTimeframe(activeARSTF);
           }
         }
