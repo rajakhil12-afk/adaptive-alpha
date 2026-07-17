@@ -209,6 +209,55 @@
 
   .error-banner { background: var(--amber-dim); border: 1px solid rgba(255,183,77,0.2); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 14px; font-family: var(--font-sans); font-size: 12px; color: var(--amber); display: none; }
 
+  /* Stale-data toast — floats bottom-right, non-intrusive */
+  #stale-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: rgba(18, 22, 30, 0.92);
+    border: 1px solid rgba(210,153,34,0.35);
+    border-left: 3px solid var(--amber);
+    border-radius: 8px;
+    padding: 9px 12px 9px 14px;
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    color: var(--muted);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    max-width: 320px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: auto;
+  }
+  #stale-toast.toast-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #stale-toast.toast-hiding {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  #stale-toast .toast-icon { color: var(--amber); font-size: 13px; flex-shrink: 0; }
+  #stale-toast .toast-msg  { flex: 1; line-height: 1.45; }
+  #stale-toast .toast-close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 2px;
+    line-height: 1;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+  }
+  #stale-toast .toast-close:hover { opacity: 1; }
+
   #search-box { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); color: #ffffff; font-family: var(--font-sans); font-size: 12px; padding: 6px 12px; width: 140px; transition: all 0.15s ease; }
   #search-box:focus { outline: none; border-color: var(--up); box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.15); width: 180px; }
 
@@ -343,9 +392,7 @@
       to { stroke-dashoffset: 0; }
     }
   
-    .tv-live-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: linear-gradient(135deg, #26a69a, #10b981); color: #ffffff; border: none; border-radius: var(--radius); padding: 10px 14px; font-family: var(--font-sans); font-size: 11px; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(38,166,154,0.25); }
-    .tv-live-btn:hover { background: linear-gradient(135deg, #2bbbad, #059669); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(38,166,154,0.35); }
-    .tv-live-btn:active { transform: translateY(0); }
+
   
     .chart-disclaimer { font-family: var(--font-sans); font-size: 10px; line-height: 1.3; color: var(--muted); text-align: center; margin: 0; }
   
@@ -819,10 +866,7 @@
     }
 
     /* ── MODAL CHART TABS (ARS History / Live TV Chart) ── */
-    .modal-chart-tabs { display: flex; gap: 0; margin-bottom: 6px; border-bottom: 1px solid var(--border); }
-    .modal-chart-tab { padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; background: none; border-top: none; border-left: none; border-right: none; border-radius: 0; font-family: var(--font-sans); }
-    .modal-chart-tab:hover { color: var(--text); background: none; border-color: transparent; box-shadow: none; }
-    .modal-chart-tab.active { color: var(--up); border-bottom-color: var(--up); }
+
 
     /* ── VOLUME SPURT TOAST NOTIFICATION ── */
     .vol-toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; background: var(--bg3); border: 1px solid rgba(94,150,255,0.4); border-radius: 8px; padding: 12px 16px; min-width: 240px; max-width: 300px; box-shadow: 0 8px 32px rgba(0,0,0,0.55); animation: toast-in 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; }
@@ -877,10 +921,6 @@
           </div>
         </div>
         <div class="modal-history-wrap" style="display: flex; flex-direction: column;">
-          <div class="modal-chart-tabs">
-            <button class="modal-chart-tab active" id="m-tab-ars" onclick="switchModalTab('ars')">ARS (120d)</button>
-            <button class="modal-chart-tab" id="m-tab-tv" onclick="switchModalTab('tv')">📊 Live Chart</button>
-          </div>
           <!-- ARS History panel with timeframe toggle -->
           <div id="m-ars-panel" style="width:100%;height:140px;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border);padding:5px 8px 6px;box-sizing:border-box;display:flex;flex-direction:column;gap:4px;">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
@@ -894,10 +934,6 @@
             <div style="position:relative;flex:1;min-height:0;">
               <canvas id="ars-chart" style="width:100%;height:100%;"></canvas>
             </div>
-          </div>
-          <!-- TradingView Live Chart panel -->
-          <div id="m-tv-panel" style="display:none;width:100%;height:120px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);">
-            <iframe id="tv-iframe" src="" style="width:100%;height:100%;border:none;display:block;" scrolling="no" allowtransparency="true"></iframe>
           </div>
         </div>
       </div>
@@ -1452,7 +1488,7 @@ let arsChartInstance = null;
 let latestFiiDiiData = null;
 let cachedSimFiiDii  = null; // Stable simulated FII/DII — generated once, not on every render
 let toastShown       = false; // Volume spurt toast fires only once per session
-let currentTVSym     = null;  // Tracks which stock the TV iframe is loaded for
+
 let modalStockCandles = null; // Candles cached for active modal stock (avoids re-fetching on TF switch)
 let modalBenchCandles = null;
 let activeARSTF      = 'D';   // Active ARS timeframe: D | W | M
@@ -1841,6 +1877,7 @@ function renderSectorsSkeleton() {
 async function loadData() {
   const universe = getUniverse();
   allData = [];
+  hideStaleToast(); // dismiss stale-data notice the moment user requests live data
   renderTickerStripSkeleton();
   renderSectorsSkeleton();
   showProgress(`Fetching NIFTY benchmark data…`, 0);
@@ -3058,38 +3095,7 @@ function renderAll() {
   if (!toastShown) setTimeout(showVolumeSpurtToast, 1800);
 }
 
-// ── MODAL TAB SWITCHER: ARS History ↔ Live TV Chart ──
-function switchModalTab(tab) {
-  const arsPanel = document.getElementById('m-ars-panel');
-  const tvPanel  = document.getElementById('m-tv-panel');
-  const arsTab   = document.getElementById('m-tab-ars');
-  const tvTab    = document.getElementById('m-tab-tv');
-  if (!arsPanel || !tvPanel) return;
-  if (tab === 'ars') {
-    arsPanel.style.display = '';
-    tvPanel.style.display  = 'none';
-    arsTab.classList.add('active');
-    tvTab.classList.remove('active');
-  } else {
-    arsPanel.style.display = 'none';
-    tvPanel.style.display  = '';
-    arsTab.classList.remove('active');
-    tvTab.classList.add('active');
-    loadTVWidget(currentTVSym);
-  }
-}
 
-function loadTVWidget(sym) {
-  if (!sym) return;
-  const iframe = document.getElementById('tv-iframe');
-  if (!iframe) return;
-  const isDark = !document.body.classList.contains('light-theme');
-  const theme  = isDark ? 'dark' : 'light';
-  const bg     = isDark ? '0a0e14' : 'f0f3f7';
-  // Only reload iframe if symbol changed (prevents flicker)
-  const newSrc = `https://s.tradingview.com/widgetembed/?symbol=NSE%3A${encodeURIComponent(sym)}&interval=D&theme=${theme}&style=1&locale=in&toolbar_bg=%23${bg}&hide_top_toolbar=0&hide_side_toolbar=1&allow_symbol_change=0&saveimage=0&calendar=0`;
-  if (iframe.src !== newSrc) iframe.src = newSrc;
-}
 
 // ── VOLUME SPURT TOAST ──
 function showVolumeSpurtToast() {
@@ -3319,63 +3325,43 @@ async function initScreener() {
       filterActiveUniverse();
       document.getElementById('ts').textContent = payload.updated;
       
-      // Parse bhavDate to verify if data is stale
+      // Parse bhavDate — show a subtle dismissible toast if data is stale
       const bhavDateStr = payload.bhavDate;
       const banner = document.getElementById('err-banner');
+      banner.style.display = 'none'; // err-banner reserved for real fetch errors only
       if (bhavDateStr) {
         const parts = bhavDateStr.split('-');
         const bDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
         const today = new Date();
-        
         const bMidnight = new Date(bDate.getFullYear(), bDate.getMonth(), bDate.getDate());
         const tMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         const diffDays = Math.round((tMidnight - bMidnight) / (1000 * 60 * 60 * 24));
-        
-        const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon … 6=Sat
+        const dayOfWeek = today.getDay();
         let isStale = false;
-        let warningMsg = '';
+        let toastMsg = '';
 
-        // Weekends: NSE is closed — data is always expected to be old. Never warn.
-        if (dayOfWeek === 0 || dayOfWeek === 6) {
-          isStale = false;
-        } else {
-          // Weekday logic
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
           const isPastUpdateHour = today.getHours() > 16 || (today.getHours() === 16 && today.getMinutes() >= 30);
-
-          // maxAllowedDiff: how many calendar days old is acceptable?
-          // Mon: up to 4 days (Fri data + holiday buffer)
-          // Tue–Fri before 4:30 PM: up to 3 days (yesterday + 2-day holiday buffer)
-          // Tue–Fri after  4:30 PM: up to 2 days (today's close expected; 1-day holiday buffer)
           let maxAllowedDiff;
-          if (dayOfWeek === 1) {
-            maxAllowedDiff = 4; // Mon morning: Fri, Thu (if holiday), even Wed
-          } else if (!isPastUpdateHour) {
-            maxAllowedDiff = 3; // Before close: previous session always fine
-          } else {
-            maxAllowedDiff = 2; // After close: today's data expected; 1-day buffer for holidays
-          }
+          if (dayOfWeek === 1)          maxAllowedDiff = 4;
+          else if (!isPastUpdateHour)   maxAllowedDiff = 3;
+          else                          maxAllowedDiff = 2;
 
           if (diffDays > maxAllowedDiff) {
             isStale = true;
-            if (isPastUpdateHour) {
-              warningMsg = `⚠️ Data may be outdated (last update: ${bhavDateStr}). Today's EOD update is scheduled for 4:30 PM IST.`;
-            } else {
-              warningMsg = `⚠️ Stale Data: Showing EOD data from ${bhavDateStr}. Today's update will arrive after market close (4:30 PM IST).`;
-            }
+            toastMsg = isPastUpdateHour
+              ? `EOD update pending (last: ${bhavDateStr})`
+              : `Showing ${bhavDateStr} data &mdash; updates at 4:30 PM IST`;
           }
         }
-        
+
         if (isStale) {
-          banner.textContent = warningMsg;
-          banner.style.display = 'block';
-          banner.style.background = 'var(--amber-dim)';
-          banner.style.border = '1px solid rgba(255,183,77,0.2)';
-          banner.style.color = 'var(--amber)';
+          showStaleToast(toastMsg);
         } else {
-          banner.style.display = 'none';
+          hideStaleToast();
         }
       } else {
-        banner.style.display = 'none';
+        hideStaleToast();
       }
 
       renderAll();
@@ -3479,14 +3465,12 @@ function openStockModal(sym) {
   activeARSTF = 'D';
   modalStockCandles = null;
   modalBenchCandles = null;
-  currentTVSym = sym;
+
   // Reset D/W/M button active CSS state so it always opens showing D as active
   ['D','W','M'].forEach(t => {
     const btn = document.getElementById(`tf-${t.toLowerCase()}`);
     if (btn) btn.classList.toggle('active', t === 'D');
-  });
-  switchModalTab('ars');
-
+  });\n
   // Render ARS chart with 150ms delay to allow modal layout to settle
   setTimeout(() => {
     renderModalChart(d);
@@ -3775,6 +3759,40 @@ async function loadFiiDiiData() {
 
 loadFiiDiiData();
 initScreener();
+
+let _staleToastTimer = null;
+function showStaleToast(msg) {
+  const toast = document.getElementById('stale-toast');
+  const msgEl = document.getElementById('stale-toast-msg');
+  if (!toast || !msgEl) return;
+  msgEl.innerHTML = msg;
+  toast.style.display = 'flex';
+  // Trigger animation on next frame
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => toast.classList.add('toast-visible'));
+  });
+  // Auto-dismiss after 6 seconds
+  clearTimeout(_staleToastTimer);
+  _staleToastTimer = setTimeout(() => hideStaleToast(), 6000);
+}
+function hideStaleToast() {
+  const toast = document.getElementById('stale-toast');
+  if (!toast) return;
+  clearTimeout(_staleToastTimer);
+  toast.classList.remove('toast-visible');
+  toast.classList.add('toast-hiding');
+  setTimeout(() => {
+    toast.style.display = 'none';
+    toast.classList.remove('toast-hiding');
+  }, 400);
+}
 </script>
+<!-- Stale-data toast: floats bottom-right, auto-dismisses, non-intrusive -->
+<div id="stale-toast">
+  <span class="toast-icon">⏱</span>
+  <span class="toast-msg" id="stale-toast-msg"></span>
+  <button class="toast-close" onclick="hideStaleToast()" title="Dismiss">✕</button>
+</div>
+
 </body>
 </html>
