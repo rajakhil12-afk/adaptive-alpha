@@ -681,10 +681,11 @@
       object-fit: contain;
       image-rendering: -webkit-optimize-contrast;
       image-rendering: crisp-edges;
-      display: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
     .sym-logo.loaded {
-      display: block;
+      opacity: 1;
     }
     .sym-logo-fallback {
       width: 100%;
@@ -976,8 +977,9 @@
     .tf-btn { font-size: 8.5px; font-weight: 700; padding: 1px 7px; border-radius: 3px; font-family: var(--font-num); letter-spacing: 0.3px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; }
     .tf-btn.active { background: rgba(38,166,154,0.12); color: var(--up); border-color: rgba(38,166,154,0.4); }
     .tf-btn:hover:not(.active) { border-color: var(--border-lt); color: var(--text); background: transparent; box-shadow: none; }
-  </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Trendlyne Widgets Script -->
+  <script async src="https://cdn-static.trendlyne.com/static/js/webwidgets/tl-widgets.js" charset="utf-8"></script>
 </head>
 <body><!-- ═══════ STOCK DETAILS POPUP MODAL ═══════ -->
 <div class="modal-overlay" id="stock-modal">
@@ -1023,6 +1025,23 @@
           </div>
         </div>
       </div>
+
+      <!-- Trendlyne Widgets Section -->
+      <div class="trendlyne-section" style="margin-top: 14px; background: var(--bg3); border-radius: var(--radius); border: 1px solid var(--border); padding: 10px; box-sizing: border-box;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 11px; font-weight: 700; color: var(--text);">Trendlyne® Insights</span>
+          <div class="tl-tab-group" style="display: flex; gap: 4px;">
+            <button class="tf-btn active" id="tl-tab-swot" onclick="switchTLTab('swot')">SWOT</button>
+            <button class="tf-btn" id="tl-tab-tech" onclick="switchTLTab('tech')">Technicals</button>
+            <button class="tf-btn" id="tl-tab-qvt" onclick="switchTLTab('qvt')">QVT</button>
+          </div>
+        </div>
+
+        <div id="tl-widget-container" style="min-height: 180px; width: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+          <!-- Active widget blockquote gets dynamically inserted here -->
+        </div>
+      </div>
+
       <div class="modal-actions" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; gap: 8px;">
         <button class="btn-star-modal btn" id="m-star-btn" onclick="toggleWatchFromModal()">☆ Add to Watchlist</button>
         <button class="btn-tv btn" onclick="openTVFromModal()">↗ Open in TradingView</button>
@@ -2308,6 +2327,9 @@ function renderTable() {
     }
     prevDataMap[d.sym] = d.ars;
   });
+  
+  // Ensure cached or fast-loading images update their loaded class
+  setTimeout(fixLogos, 0);
 }
 
 function makeSparkline(d) {
@@ -2346,8 +2368,10 @@ function getLogoHtml(d) {
   if (d.logoid) {
     const logoUrl = `https://s3-symbol-logo.tradingview.com/${d.logoid}.svg`;
     return `<div class="sym-logo-container">
-      <img src="${logoUrl}" class="sym-logo" onload="this.classList.add('loaded')" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-      <div class="sym-logo-fallback" style="display:none">${d.sym.substring(0,1)}</div>
+      <img src="${logoUrl}" class="sym-logo" loading="eager" decoding="async"
+        onload="this.classList.add('loaded');this.nextElementSibling.style.display='none';"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <div class="sym-logo-fallback">${d.sym.substring(0,1)}</div>
     </div>`;
   } else {
     return `<div class="sym-logo-container">
@@ -2355,6 +2379,23 @@ function getLogoHtml(d) {
     </div>`;
   }
 }
+
+// Post-render sweep: fix logos that loaded before onload could fire (cached images)
+function fixLogos() {
+  document.querySelectorAll('.sym-logo:not(.loaded)').forEach(img => {
+    if (img.complete && img.naturalWidth > 0) {
+      img.classList.add('loaded');
+      if (img.nextElementSibling) img.nextElementSibling.style.display = 'none';
+    }
+  });
+}
+
+// Re-check logos when user switches back to this browser tab
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    fixLogos();
+  }
+});
 
 function rowHtml(d) {
   const cls   = arsClass(d.ars, d.breakout);
@@ -3674,11 +3715,60 @@ function openStockModal(sym) {
   // Render ARS chart with 150ms delay to allow modal layout to settle
   setTimeout(() => {
     renderModalChart(d);
+    loadTrendlyneWidget(d.sym, activeTLTab);
   }, 150);
 }
 
 function closeModal() {
   document.getElementById('stock-modal').classList.remove('open');
+}
+
+let activeTLTab = 'swot';
+
+function switchTLTab(tab) {
+  activeTLTab = tab;
+  ['swot', 'tech', 'qvt'].forEach(t => {
+    const btn = document.getElementById(`tl-tab-${t}`);
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+  if (selectedSym) {
+    loadTrendlyneWidget(selectedSym, tab);
+  }
+}
+
+function loadTrendlyneWidget(sym, type) {
+  const container = document.getElementById('tl-widget-container');
+  if (!container || !sym) return;
+
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const theme = isDark ? 'dark' : 'light';
+  
+  const widgetEndpointMap = {
+    'swot': 'swot-widget',
+    'tech': 'technical-widget',
+    'qvt': 'qvt-widget'
+  };
+  
+  const endpoint = widgetEndpointMap[type] || 'swot-widget';
+  const getUrl = `https://trendlyne.com/web-widget/${endpoint}/Poppins/${sym}/?posCol=00A25B&primaryCol=006AFF&negCol=EB3B00&neuCol=F7941E`;
+
+  container.innerHTML = `<blockquote class="trendlyne-widgets" data-get-url="${getUrl}" data-theme="${theme}"></blockquote>`;
+
+  // Re-trigger Trendlyne parser or reload script if needed
+  if (window.TrendlyneWidgets && typeof window.TrendlyneWidgets.init === 'function') {
+    window.TrendlyneWidgets.init();
+  } else {
+    // Fallback: refresh/re-inject the script tag if window object isn't exposed
+    const existingScript = document.getElementById('tl-script-instance');
+    if (existingScript) existingScript.remove();
+    
+    const script = document.createElement('script');
+    script.id = 'tl-script-instance';
+    script.async = true;
+    script.src = 'https://cdn-static.trendlyne.com/static/js/webwidgets/tl-widgets.js';
+    script.charset = 'utf-8';
+    document.body.appendChild(script);
+  }
 }
 
 function toggleWatchFromModal() {
