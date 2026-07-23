@@ -691,7 +691,7 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
   const hi52Max = Math.max(...hiSlice.map(c => c.c));
   const hi52_prox = hi52Max > 0 ? (sToday.c - hi52Max) / hi52Max : -0.1;
 
-  let signSince = null, signDays = null;
+  let signSince = null, signDays = null, signPrice = null;
   if (ars !== null) {
     const todaySign = ars >= 0;
     const maxLookback = Math.min(sLen - sStartIdx - 1, bLen - bStartIdx - 1, 1500);
@@ -716,6 +716,7 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
     if (flipIdx !== null && stockCandles[flipIdx]) {
       signSince = stockCandles[flipIdx].t;
       signDays  = daysCount;
+      signPrice = stockCandles[flipIdx].c;
     } else {
       signSince = sStart.t;
       signDays  = sLen - 1 - sStartIdx;
@@ -748,6 +749,7 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
     prev: arsPrev, 
     signSince, 
     signDays, 
+    signPrice,
     breakout: ars > 0 && arsPrev <= 0, 
     trending: ars > arsPrev,
     ma_status,
@@ -916,6 +918,7 @@ async function run() {
         trending: calc.trending,
         signDays: calc.signDays,
         signSince: calc.signSince,
+        signPrice: calc.signPrice ? parseFloat(calc.signPrice.toFixed(2)) : null,
         st14: { trend: st14.trend, signal: st14.signal, val: st14.val },
         st10: { trend: st10.trend, signal: st10.signal, val: st10.val },
         ma_status: calc.ma_status,
