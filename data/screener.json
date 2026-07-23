@@ -1,11 +1,7 @@
 {
-  "updated": "01:52 pm IST · 23 Jul",
+  "updated": "04:54 pm IST · 23 Jul",
   "bhavDate": "2026-07-23",
-  "fii_dii": {
-    "date": "23-Jul-2026",
-    "fii": -2999.23,
-    "dii": 2947.14
-  },
+  "fii_dii": null,
   "stocks": [
     {
       "sym": "ADANIENT",
@@ -3326,7 +3322,7 @@
       "breakout": false,
       "trending": true,
       "signDays": 1,
-      "signSince": 1784814653,
+      "signSince": 1784825465,
       "signPrice": 494.05,
       "st14": {
         "trend": "sell",
@@ -4602,7 +4598,7 @@
       "breakout": false,
       "trending": false,
       "signDays": 1,
-      "signSince": 1784814653,
+      "signSince": 1784825465,
       "signPrice": 1209.6,
       "st14": {
         "trend": "buy",
