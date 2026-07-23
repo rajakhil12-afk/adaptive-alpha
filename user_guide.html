@@ -281,7 +281,7 @@
     <div class="meta">
       <div>
         <strong>DOCUMENT VERSION</strong>
-        v8.1 (Enterprise)
+        v9.1 (Enterprise)
       </div>
       <div>
         <strong>CALCULATION METHOD</strong>
@@ -443,10 +443,10 @@
     <h1 class="page-break">5. Engine Data &amp; TradingView Integration</h1>
     
     <h2>Hybrid Data Architecture</h2>
-    <p>The dashboard is powered by a dual-engine data architecture designed for instant access and accuracy:</p>
+    <p>The dashboard is powered by a dual-engine data architecture designed for instant access, accuracy, and resilience:</p>
     <ol>
-      <li><strong>Precalculated closing database:</strong> The system automatically fetches a daily pre-calculated dataset generated at the close of every market day. This downloads in under 50ms on startup.</li>
-      <li><strong>Intraday Live Scan:</strong> Clicking the <strong>"↻ Live Data"</strong> button fetches current intraday prices directly from Yahoo Finance and recalculates all momentum metrics in the browser.</li>
+      <li><strong>Precalculated closing database:</strong> A GitHub Actions pipeline (Node.js 24) runs every weekday at 4:30 PM IST. It downloads the official NSE UDiFF Bhavcopy, fetches 6-year historical data from Yahoo Finance with automatic retry logic (3 attempts per stock, 5 for the benchmark), calculates all indicators, and commits the results to <code>data/screener.json</code>. If the NSE Bhavcopy download fails, the pipeline gracefully continues using Yahoo Finance data only.</li>
+      <li><strong>Intraday Live Scan:</strong> Clicking the <strong>"↻ Live Data"</strong> button fetches current intraday prices directly from Yahoo Finance and recalculates all momentum metrics client-side in the browser.</li>
     </ol>
 
     <h2>Interactive Sidebar & Breadth Gauge</h2>
@@ -473,8 +473,8 @@
     </ul>
 
     <h1 class="page-break">6. Support and Operations</h1>
-    <p>The data pipeline updates automatically after market hours on trading days. If the daily GitHub Actions pipeline runs into formatting changes on the NSE exchange servers, it uses fallback parsing to ensure data continuity.</p>
-    <p>For custom additions to the constituent list (adding new symbols or modifying sector weights), developers can update the universe arrays directly inside the core scripts.</p>
+    <p>The data pipeline updates automatically every weekday at 4:30 PM IST via GitHub Actions (Node.js 24, Ubuntu). The pipeline includes built-in retry logic (3 attempts with exponential backoff for each stock, 5 attempts for the NIFTY benchmark), graceful fallback when NSE Bhavcopy is unavailable, and global error handlers to prevent silent crashes. If all retries fail, the workflow retries the entire script up to 3 times with 60-second intervals.</p>
+    <p>For custom additions to the constituent list (adding new symbols or modifying sector weights), developers can update the universe arrays (<code>N50</code>, <code>EXTRA</code>, <code>MIDCAP100</code>, <code>SMALLCAP100</code>) directly inside <code>scripts/update_data.js</code>.</p>
 
   </div>
 

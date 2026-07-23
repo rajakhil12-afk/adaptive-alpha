@@ -1,4 +1,4 @@
-# Adaptive Alpha — Institutional Momentum & Rotation Screener
+# Adaptive Alpha — Institutional Momentum & Rotation Screener (v9.1)
 
 **Adaptive Alpha** is a premium, client-ready technical momentum screener and sector rotation dashboard for the **NSE India** stock universe (Nifty 50 + Nifty Midcap 100 + Nifty Smallcap 100 + curated extras, ~200+ stocks). Designed with a high-end TradingView-inspired dark slate aesthetic, the platform helps analysts and traders identify market leaders, explosive volume breakouts, and industry rotation trends in real time.
 
@@ -63,11 +63,12 @@ The app uses a two-layer data engine:
 ### Layer 1 — Static EOD Pipeline (GitHub Actions)
 Runs automatically every weekday at **4:30 PM IST** (11:30 UTC):
 
-1. Downloads official **NSE UDiFF Bhavcopy** (with fallback to legacy archive URL).
-2. Fetches 6-year historical series from **Yahoo Finance** for each stock and the NIFTY 50 index.
+1. Downloads official **NSE UDiFF Bhavcopy** (with fallback to legacy archive URL). If NSE is unavailable, the pipeline gracefully continues with Yahoo Finance data only.
+2. Fetches 6-year historical series from **Yahoo Finance** for each stock and the NIFTY 50 index, with **automatic retry logic** (3 attempts per stock with exponential backoff, 5 attempts for the benchmark).
 3. Calculates ARS, SRS, RS Rating, Supertrend, MA Status, ARS Slope for all ~200+ stocks.
 4. Fetches latest **FII/DII flow** data.
 5. Writes `data/screener.json` and commits it — triggering an instant GitHub Pages redeploy.
+6. **Global error handlers** (`unhandledRejection`, `uncaughtException`) ensure no silent crashes — every failure is logged with detailed diagnostics.
 
 A **monthly keep-alive workflow** (`keepalive.yml`) runs on the 1st of every month to re-enable any workflows that GitHub may have paused due to inactivity.
 
@@ -101,7 +102,7 @@ Clicking **"↻ Live Data"** in the dashboard pulls real-time price series from 
 ## 💻 Local Development
 
 ### Prerequisites
-* **Node.js** v20 or higher (v24 recommended)
+* **Node.js** v24 or higher
 * `unzip` utility (pre-installed on macOS/Linux; on Windows, PowerShell is used automatically)
 
 ### Setup & Run
@@ -145,7 +146,14 @@ GitHub auto-disables scheduled workflows on repos with no commits for 60+ days. 
 | `screener_update.yml` | Mon–Fri at 4:30 PM IST | Downloads NSE data, calculates indicators, updates `screener.json` |
 | `keepalive.yml` | 1st of every month | Re-enables any paused workflows; commits heartbeat file |
 
-Both workflows use **Node.js 24** on `ubuntu-latest`.
+Both workflows use **Node.js 24** on `ubuntu-latest` with **GitHub Actions v5** (`actions/checkout@v5`, `actions/setup-node@v5`).
+
+The screener pipeline includes built-in resilience:
+* **3 retry attempts** per Yahoo Finance fetch with exponential backoff
+* **5 retry attempts** for the NIFTY 50 benchmark fetch
+* **Graceful Bhavcopy fallback** — continues with Yahoo-only data if NSE is unavailable
+* **Workflow-level retry** — the entire script is retried up to 3 times with 60-second intervals
+* **Global error handlers** — `unhandledRejection` and `uncaughtException` prevent silent crashes
 
 ---
 
