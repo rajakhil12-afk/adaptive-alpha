@@ -1,0 +1,48 @@
+name: Keep Workflows Alive
+
+on:
+  schedule:
+    # Run on the 1st of every month at midnight UTC
+    - cron: '0 0 1 * *'
+  workflow_dispatch: # Allow manual trigger any time
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # needed to push the heartbeat commit
+      actions: write   # needed to re-enable disabled workflows
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - name: Re-enable any disabled scheduled workflows
+        # GitHub auto-disables scheduled workflows after 60 days of repo inactivity.
+        # This step uses the GitHub API to re-enable them proactively.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Checking for disabled workflows..."
+          WORKFLOWS=$(gh api repos/$REPO/actions/workflows --jq '.workflows[] | select(.state=="disabled_inactivity") | .id')
+          if [ -z "$WORKFLOWS" ]; then
+            echo "All workflows are active. Nothing to re-enable."
+          else
+            for WF_ID in $WORKFLOWS; do
+              WF_NAME=$(gh api repos/$REPO/actions/workflows/$WF_ID --jq '.name')
+              echo "Re-enabling workflow: $WF_NAME (ID: $WF_ID)"
+              gh api --method PUT repos/$REPO/actions/workflows/$WF_ID/enable
+              echo "Done."
+            done
+          fi
+
+      - name: Heartbeat commit to keep repo active
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          echo "Keep-alive ping: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > .github/keepalive.txt
+          git add .github/keepalive.txt
+          git commit -m "ci: monthly keep-alive ping [skip ci]"
+          git push
