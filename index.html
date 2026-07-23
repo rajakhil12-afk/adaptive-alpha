@@ -732,6 +732,95 @@
       background: rgba(227, 179, 65, 0.08) !important;
     }
 
+    /* ── WEEKLY BREAKOUTS SECTION ── */
+    .bo-section-title {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 700; color: var(--fg);
+      padding: 12px 14px 8px; letter-spacing: 0.3px;
+    }
+    .bo-section-title .bo-icon { font-size: 16px; }
+    .bo-section-title .bo-count-pill {
+      font-size: 10px; font-weight: 600;
+      background: rgba(210,153,34,0.14); color: var(--gold);
+      padding: 1px 7px; border-radius: 8px;
+      font-family: var(--font-num);
+    }
+    .bo-divider {
+      height: 1px; margin: 6px 14px 2px;
+      background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
+      opacity: 0.25;
+    }
+    .bo-weekly-grid {
+      display: grid;
+      grid-template-columns: 32px 1fr 72px 80px 80px 80px 68px 40px;
+      align-items: center;
+      padding: 0 14px;
+      font-size: 11px;
+      font-family: var(--font-num);
+    }
+    .bo-weekly-header {
+      font-size: 9.5px; font-weight: 700;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.5px; padding: 8px 0 5px;
+      border-bottom: 1px solid var(--border);
+    }
+    .bo-weekly-row {
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+    .bo-weekly-row:hover {
+      background: rgba(227, 179, 65, 0.06);
+    }
+    .bo-weekly-row .bo-sym {
+      font-weight: 700; color: var(--fg); font-size: 11.5px;
+    }
+    .bo-weekly-row .bo-name {
+      font-size: 9px; color: var(--muted); font-family: var(--font-main);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .bo-weekly-row .bo-gain-pos { color: var(--up); font-weight: 600; }
+    .bo-weekly-row .bo-gain-neg { color: var(--down); font-weight: 600; }
+    .bo-weekly-row .bo-date {
+      font-size: 10px; color: var(--muted-lt); font-family: var(--font-main);
+    }
+    .bo-weekly-row .bo-new-tag {
+      font-size: 8px; font-weight: 700; color: var(--gold);
+      background: rgba(227,179,65,0.15); border-radius: 3px;
+      padding: 1px 5px; margin-left: 4px;
+    }
+    @media (max-width: 700px) {
+      .bo-weekly-grid {
+        grid-template-columns: 28px 1fr 60px 70px 70px 56px;
+        font-size: 10px;
+      }
+      .bo-weekly-grid .bo-col-bo-price,
+      .bo-weekly-grid .bo-col-rs { display: none; }
+    }
+
+    /* ── BREAKDOWN ROW STYLES ── */
+    .bo-breakdown-row:hover {
+      background: rgba(239, 83, 80, 0.06) !important;
+    }
+    .bo-breakdown-divider {
+      height: 1px; margin: 6px 14px 2px;
+      background: linear-gradient(90deg, var(--down) 0%, transparent 100%);
+      opacity: 0.25;
+    }
+    .bo-section-title-down {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 700; color: var(--fg);
+      padding: 12px 14px 8px; letter-spacing: 0.3px;
+    }
+    .bo-section-title-down .bo-icon { font-size: 16px; }
+    .bo-section-title-down .bo-count-pill-down {
+      font-size: 10px; font-weight: 600;
+      background: rgba(239,83,80,0.14); color: var(--down);
+      padding: 1px 7px; border-radius: 8px;
+      font-family: var(--font-num);
+    }
+
     /* ── STOCK DETAILS POPUP MODAL ── */
     .modal-overlay {
       position: fixed;
@@ -1791,7 +1880,7 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
   const hi52Max = Math.max(...hiSlice.map(c => c.c));
   const hi52    = hi52Max > 0 ? (sToday.c - hi52Max) / hi52Max : null;
 
-  let signSince = null, signDays = null;
+  let signSince = null, signDays = null, signPrice = null;
   if (ars !== null) {
     const todaySign = ars >= 0;
     const maxLookback = Math.min(sLen - sStartIdx - 1, bLen - bStartIdx - 1, 1500);
@@ -1816,6 +1905,7 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
     if (flipIdx !== null && stockCandles[flipIdx]) {
       signSince = stockCandles[flipIdx].t;
       signDays  = daysCount;
+      signPrice = stockCandles[flipIdx].c;
     } else {
       signSince = sStart.t;
       signDays  = sLen - 1 - sStartIdx;
@@ -1839,7 +1929,7 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
   const ars5 = sStart.c && bStart.c && bStart.c !== 0 ? ((sPrev5.c / sStart.c) / (bPrev5.c / bStart.c)) - 1 : 0;
   const ars_slope = ars - ars5;
 
-  return { ars, srs, vol, hi52, price: sToday.c, prev: arsPrev, signSince, signDays, ma_status, ars_slope };
+  return { ars, srs, vol, hi52, price: sToday.c, prev: arsPrev, signSince, signDays, signPrice, ma_status, ars_slope };
 }
 
 // Render skeleton loaders for strip and Sector View
@@ -1879,6 +1969,16 @@ async function loadData() {
   renderSectorsSkeleton();
   showProgress(`Fetching NIFTY benchmark data…`, 0);
   document.getElementById('err-banner').style.display = 'none';
+
+  // ── Clear stale tab content from any previous scan ──
+  const boBody = document.getElementById('bo-body');
+  if (boBody) boBody.innerHTML = '';
+  const wlBody = document.getElementById('wl-body');
+  if (wlBody) wlBody.innerHTML = '';
+  const hmGrid = document.getElementById('heatmap-grid');
+  if (hmGrid) hmGrid.innerHTML = '';
+  const boCount = document.getElementById('bo-count');
+  if (boCount) boCount.textContent = '0';
   const cutoffTs = new Date('2021-01-01').getTime() / 1000;
   let benchData = null;
   try { benchData = await fetchYahoo('^NSEI', '6y'); } catch(_) {}
@@ -1924,6 +2024,7 @@ async function loadData() {
       trending, 
       signSince: calc.signSince, 
       signDays: calc.signDays,
+      signPrice: calc.signPrice ?? null,
       st14,
       st10,
       ma_status: calc.ma_status ?? 'MA-',
@@ -2018,6 +2119,7 @@ function generateSampleData(universe) {
     const simSma200 = price * (1 - Math.random() * 0.12);
     const ma_status = (price > simSma50 && price > simSma200) ? 'MA+' : 'MA-';
     const ars_slope = parseFloat(((Math.random() - 0.45) * 0.04).toFixed(4));
+    const simSignPrice = parseFloat((price * (0.94 + Math.random() * 0.06)).toFixed(2));
     return { 
       sym: s.sym, 
       name: s.name, 
@@ -2031,6 +2133,7 @@ function generateSampleData(universe) {
       trending: Math.random() > (ars > 0 ? 0.35 : 0.65), 
       signDays: simDays, 
       signSince: Math.round(simSinceMs/1000),
+      signPrice: (ars > 0 && simDays <= 7) ? simSignPrice : null,
       st14: { trend: isSTBuy ? "buy" : "sell", signal: Math.random() > 0.95 ? "buy_signal" : null, val: price * 0.95 },
       st10: { trend: isSTBuy ? "buy" : "sell", signal: null, val: price * 0.96 },
       ma_status,
@@ -3138,8 +3241,10 @@ function updateBadgeCounts() {
 
   const boCountEl = document.getElementById('bo-count');
   if (boCountEl) {
-    const breakouts = allData.filter(d => d.breakout);
-    boCountEl.textContent = breakouts.length;
+    const todayBo = allData.filter(d => d.breakout);
+    const weekBo = allData.filter(d => d.ars > 0 && d.signDays != null && d.signDays <= 5 && !d.breakout);
+    const weekBd = allData.filter(d => d.ars < 0 && d.signDays != null && d.signDays <= 5);
+    boCountEl.textContent = todayBo.length + weekBo.length + weekBd.length;
   }
 }
 
@@ -3186,42 +3291,140 @@ function renderBreakoutsTab() {
   const container = document.getElementById('bo-body');
   if (!container) return;
 
-  const boData = allData.filter(d => d.breakout);
-  if (boData.length === 0) {
+  const todayData = allData.filter(d => d.breakout);
+  const weeklyData = allData.filter(d => d.ars > 0 && d.signDays != null && d.signDays <= 5 && !d.breakout);
+  const breakdownData = allData.filter(d => d.ars < 0 && d.signDays != null && d.signDays <= 5);
+
+  if (todayData.length === 0 && weeklyData.length === 0 && breakdownData.length === 0) {
     container.innerHTML = `
       <div class="empty-watch">
         <div class="big">🔥</div>
-        <div>No fresh breakout stocks detected in today's EOD data scan.</div>
+        <div>No fresh breakout or breakdown stocks detected in today's EOD data scan.</div>
       </div>
     `;
     return;
   }
 
-  const sorted = sortData(boData);
+  let html = '';
 
-  container.innerHTML = `
-    <div class="tbl-wrap">
-      <div class="tbl-header COL" style="border-bottom: 2px solid var(--gold);">
-        <div class="th" title="Select for compare" style="cursor:default;"></div>
-        <div class="th sorted" onclick="setSortCol('alpha')" id="th-bo-sym">Ticker <span class="sort-arrow">↕</span></div>
-        <div class="th" onclick="setSortCol('ars-desc')" id="th-bo-ars">ARS <span class="sort-arrow">↕</span></div>
-        <div class="th" onclick="setSortCol('srs-desc')" id="th-bo-srs">SRS <span class="sort-arrow">↕</span></div>
-        <div class="th" onclick="setSortCol('52w-desc')" id="th-bo-52w">52W <span class="sort-arrow">↕</span></div>
-        <div class="th" onclick="setSortCol('days-desc')" id="th-bo-days">Days ↕</div>
-        <div class="th" onclick="setSortCol('vol-desc')" id="th-bo-vol">Vol ↕</div>
-        <div class="th" onclick="setSortCol('st-desc')" id="th-bo-st">Supertrend ↕</div>
-        <div class="th">Price ₹</div>
-        <div class="th" onclick="setSortCol('rs-desc')" id="th-bo-rs">RS ↕</div>
-        <div class="th">TV</div>
+  // ── Section 1: Today's Fresh Breakouts ──
+  html += `<div class="bo-section-title"><span class="bo-icon">🔥</span> Today's Fresh Breakouts <span class="bo-count-pill">${todayData.length}</span></div>`;
+  if (todayData.length > 0) {
+    const sorted = sortData(todayData);
+    html += `
+      <div class="tbl-wrap">
+        <div class="tbl-header COL" style="border-bottom: 2px solid var(--gold);">
+          <div class="th" title="Select for compare" style="cursor:default;"></div>
+          <div class="th sorted" onclick="setSortCol('alpha')" id="th-bo-sym">Ticker <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('ars-desc')" id="th-bo-ars">ARS <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('srs-desc')" id="th-bo-srs">SRS <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('52w-desc')" id="th-bo-52w">52W <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('days-desc')" id="th-bo-days">Days ↕</div>
+          <div class="th" onclick="setSortCol('vol-desc')" id="th-bo-vol">Vol ↕</div>
+          <div class="th" onclick="setSortCol('st-desc')" id="th-bo-st">Supertrend ↕</div>
+          <div class="th">Price ₹</div>
+          <div class="th" onclick="setSortCol('rs-desc')" id="th-bo-rs">RS ↕</div>
+          <div class="th">TV</div>
+        </div>
+        <div class="tbl-body">
+          ${sorted.map(d => {
+            let row = rowHtml(d);
+            return row.replace('tbl-row', 'tbl-row breakout-row-highlight');
+          }).join('')}
+        </div>
       </div>
-      <div class="tbl-body">
-        ${sorted.map(d => {
-          let row = rowHtml(d);
-          return row.replace('tbl-row', 'tbl-row breakout-row-highlight');
-        }).join('')}
+    `;
+  } else {
+    html += `<div style="padding:8px 14px;font-size:11px;color:var(--muted)">No fresh breakouts today.</div>`;
+  }
+
+  // ── Section 2: This Week's Breakouts (positive) ──
+  html += `<div class="bo-divider"></div>`;
+  html += `<div class="bo-section-title"><span class="bo-icon">📅</span> This Week's Breakouts <span class="bo-count-pill">${weeklyData.length}</span></div>`;
+  if (weeklyData.length > 0) {
+    const weeklySorted = [...weeklyData].sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
+    html += `
+      <div class="bo-weekly-grid bo-weekly-header">
+        <div>★</div>
+        <div>Ticker</div>
+        <div>ARS</div>
+        <div class="bo-col-bo-price">BO Price</div>
+        <div>Current ₹</div>
+        <div>Gain</div>
+        <div>BO Date</div>
+        <div class="bo-col-rs">RS</div>
       </div>
-    </div>
-  `;
+      ${weeklySorted.map(d => {
+        const boPrice = d.signPrice ?? d.price;
+        const gain = boPrice > 0 ? ((d.price - boPrice) / boPrice * 100) : 0;
+        const gainStr = gain >= 0 ? `+${gain.toFixed(1)}%` : `${gain.toFixed(1)}%`;
+        const gainCls = gain >= 0 ? 'bo-gain-pos' : 'bo-gain-neg';
+        const boDateStr = d.signSince ? new Date(d.signSince * 1000).toLocaleDateString('en-IN', {day:'2-digit', month:'short'}) : '—';
+        const isPinned = pinnedStocks.includes(d.sym);
+        const daysAgo = d.signDays ?? 0;
+        const daysLabel = daysAgo === 1 ? '1d ago' : `${daysAgo}d ago`;
+        return `
+          <div class="bo-weekly-grid bo-weekly-row" onclick="openStockModal('${d.sym}')">
+            <div><span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${d.sym}')">${isPinned ? '★' : '☆'}</span></div>
+            <div><span class="bo-sym">${d.sym}</span><br><span class="bo-name">${d.name}</span></div>
+            <div style="color:var(--up);font-weight:600">${(d.ars * 100).toFixed(1)}%</div>
+            <div class="bo-col-bo-price" style="color:var(--muted-lt)">₹${boPrice.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
+            <div style="font-weight:600">₹${d.price.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
+            <div class="${gainCls}">${gainStr}</div>
+            <div class="bo-date">${boDateStr} <span style="opacity:0.6;font-size:9px">(${daysLabel})</span></div>
+            <div class="bo-col-rs" style="color:var(--gold);font-weight:600">${d.rs_rating ?? '—'}</div>
+          </div>
+        `;
+      }).join('')}
+    `;
+  } else {
+    html += `<div style="padding:8px 14px;font-size:11px;color:var(--muted)">No additional breakouts this week.</div>`;
+  }
+
+  // ── Section 3: This Week's Breakdowns (negative) ──
+  html += `<div class="bo-breakdown-divider"></div>`;
+  html += `<div class="bo-section-title-down"><span class="bo-icon">📉</span> This Week's Breakdowns <span class="bo-count-pill-down">${breakdownData.length}</span></div>`;
+  if (breakdownData.length > 0) {
+    const bdSorted = [...breakdownData].sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
+    html += `
+      <div class="bo-weekly-grid bo-weekly-header">
+        <div>★</div>
+        <div>Ticker</div>
+        <div>ARS</div>
+        <div class="bo-col-bo-price">BD Price</div>
+        <div>Current ₹</div>
+        <div>Drop</div>
+        <div>BD Date</div>
+        <div class="bo-col-rs">RS</div>
+      </div>
+      ${bdSorted.map(d => {
+        const bdPrice = d.signPrice ?? d.price;
+        const drop = bdPrice > 0 ? ((d.price - bdPrice) / bdPrice * 100) : 0;
+        const dropStr = drop >= 0 ? `+${drop.toFixed(1)}%` : `${drop.toFixed(1)}%`;
+        const dropCls = drop >= 0 ? 'bo-gain-pos' : 'bo-gain-neg';
+        const bdDateStr = d.signSince ? new Date(d.signSince * 1000).toLocaleDateString('en-IN', {day:'2-digit', month:'short'}) : '—';
+        const isPinned = pinnedStocks.includes(d.sym);
+        const daysAgo = d.signDays ?? 0;
+        const daysLabel = daysAgo === 1 ? '1d ago' : `${daysAgo}d ago`;
+        return `
+          <div class="bo-weekly-grid bo-weekly-row bo-breakdown-row" onclick="openStockModal('${d.sym}')">
+            <div><span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${d.sym}')">${isPinned ? '★' : '☆'}</span></div>
+            <div><span class="bo-sym">${d.sym}</span><br><span class="bo-name">${d.name}</span></div>
+            <div style="color:var(--down);font-weight:600">${(d.ars * 100).toFixed(1)}%</div>
+            <div class="bo-col-bo-price" style="color:var(--muted-lt)">₹${bdPrice.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
+            <div style="font-weight:600">₹${d.price.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
+            <div class="${dropCls}">${dropStr}</div>
+            <div class="bo-date">${bdDateStr} <span style="opacity:0.6;font-size:9px">(${daysLabel})</span></div>
+            <div class="bo-col-rs" style="color:var(--muted);font-weight:600">${d.rs_rating ?? '—'}</div>
+          </div>
+        `;
+      }).join('')}
+    `;
+  } else {
+    html += `<div style="padding:8px 14px;font-size:11px;color:var(--muted)">No breakdowns this week.</div>`;
+  }
+
+  container.innerHTML = html;
 }
 
 function renderHeatmapTab() {
