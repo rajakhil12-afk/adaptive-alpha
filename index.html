@@ -1027,19 +1027,22 @@
         </div>
       </div>
 
-      <!-- Trendlyne Widgets Section -->
-      <div class="trendlyne-section" style="margin-top: 14px; background: var(--bg3); border-radius: var(--radius); border: 1px solid var(--border); padding: 10px; box-sizing: border-box;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <span style="font-size: 11px; font-weight: 700; color: var(--text);">Trendlyne® Insights</span>
-          <div class="tl-tab-group" style="display: flex; gap: 4px;">
-            <button class="tf-btn active" id="tl-tab-swot" onclick="switchTLTab('swot')">SWOT</button>
-            <button class="tf-btn" id="tl-tab-tech" onclick="switchTLTab('tech')">Technicals</button>
-            <button class="tf-btn" id="tl-tab-qvt" onclick="switchTLTab('qvt')">QVT</button>
-          </div>
+      <!-- Trendlyne & Native Insights Section -->
+      <div class="trendlyne-section" style="margin-top: 14px; background: var(--bg3); border-radius: var(--radius); border: 1px solid var(--border); padding: 12px; box-sizing: border-box;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 11px; font-weight: 700; color: var(--text);">Stock Health & Trendlyne Insights</span>
+          <span style="font-size: 9px; color: var(--muted); font-family: var(--font-num);">1-Click External Deep-Links</span>
         </div>
 
-        <div id="tl-widget-container" style="min-height: 180px; width: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-          <!-- Active widget blockquote gets dynamically inserted here -->
+        <!-- Quick Links Buttons -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px;">
+          <a id="tl-btn-swot" href="#" target="_blank" class="btn" style="text-decoration: none; font-size: 10px; padding: 6px 4px; text-align: center; background: rgba(38,166,154,0.1); border-color: rgba(38,166,154,0.3); color: var(--up); font-weight: 600;">SWOT Analysis ↗</a>
+          <a id="tl-btn-tech" href="#" target="_blank" class="btn" style="text-decoration: none; font-size: 10px; padding: 6px 4px; text-align: center; background: rgba(94,150,255,0.1); border-color: rgba(94,150,255,0.3); color: #7da9ff; font-weight: 600;">Technicals ↗</a>
+          <a id="tl-btn-qvt" href="#" target="_blank" class="btn" style="text-decoration: none; font-size: 10px; padding: 6px 4px; text-align: center; background: rgba(255,183,77,0.1); border-color: rgba(255,183,77,0.3); color: var(--amber); font-weight: 600;">QVT Score ↗</a>
+        </div>
+
+        <div id="tl-widget-container" style="background: var(--bg2); border-radius: var(--radius); padding: 10px; font-size: 11px;">
+          <!-- Dynamic Native Scorecard renders here -->
         </div>
       </div>
 
@@ -3724,71 +3727,47 @@ function closeModal() {
   document.getElementById('stock-modal').classList.remove('open');
 }
 
-let activeTLTab = 'swot';
-
-function switchTLTab(tab) {
-  activeTLTab = tab;
-  ['swot', 'tech', 'qvt'].forEach(t => {
-    const btn = document.getElementById(`tl-tab-${t}`);
-    if (btn) btn.classList.toggle('active', t === tab);
-  });
-  if (selectedSym) {
-    loadTrendlyneWidget(selectedSym, tab);
-  }
-}
-
 function loadTrendlyneWidget(sym, type) {
   const container = document.getElementById('tl-widget-container');
   if (!container || !sym) return;
 
-  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-  const theme = isDark ? 'dark' : 'light';
-  
-  const widgetEndpointMap = {
-    'swot': 'swot-widget',
-    'tech': 'technical-widget',
-    'qvt': 'qvt-widget'
-  };
-  
-  const endpoint = widgetEndpointMap[type] || 'swot-widget';
-  const getUrl = `https://trendlyne.com/web-widget/${endpoint}/Poppins/${sym}/?posCol=00A25B&primaryCol=006AFF&negCol=EB3B00&neuCol=F7941E`;
+  const d = allData.find(s => s.sym === sym);
+  if (!d) return;
 
-  // Show loading indicator
+  // Set direct deep-links
+  const swotUrl = `https://trendlyne.com/equity/swot/${encodeURIComponent(sym)}/`;
+  const techUrl = `https://trendlyne.com/equity/technical/${encodeURIComponent(sym)}/`;
+  const qvtUrl = `https://trendlyne.com/equity/qvt/${encodeURIComponent(sym)}/`;
+
+  const btnSwot = document.getElementById('tl-btn-swot');
+  const btnTech = document.getElementById('tl-btn-tech');
+  const btnQvt = document.getElementById('tl-btn-qvt');
+
+  if (btnSwot) btnSwot.href = swotUrl;
+  if (btnTech) btnTech.href = techUrl;
+  if (btnQvt) btnQvt.href = qvtUrl;
+
+  // Render Native Momentum & Technical Scorecard instantly
+  const isSuperBuy = d.st14 && d.st14.trend === 'buy';
+  const is52W = d.hi52_prox >= -0.05;
+  const isVol = d.vol_ratio >= 1.5;
+
   container.innerHTML = `
-    <div class="tl-loader" style="padding: 30px; text-align: center; color: var(--muted); font-size: 11px; font-family: var(--font-sans);">
-      <div style="margin-bottom: 6px; font-weight: 600; color: var(--text);">Loading Trendlyne ${type.toUpperCase()} Insights for ${sym}...</div>
-      <div style="font-size: 9px; opacity: 0.7;">Fetching score & analysis from Trendlyne</div>
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <div style="display: flex; justify-content: space-between; font-size: 10.5px; border-bottom: 1px solid var(--border); padding-bottom: 4px;">
+        <span style="color: var(--muted);">Relative Strength (RS Rating):</span>
+        <span style="font-weight: 700; color: ${d.rs_rating >= 70 ? 'var(--up)' : 'var(--amber)'};">${d.rs_rating ?? '—'} / 99</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 10.5px; border-bottom: 1px solid var(--border); padding-bottom: 4px;">
+        <span style="color: var(--muted);">Moving Average Alignment:</span>
+        <span style="font-weight: 700; color: ${d.ma_status === 'MA+' ? 'var(--up)' : 'var(--down)'};">${d.ma_status === 'MA+' ? 'Bullish (Above 50 & 200 SMA)' : 'Consolidating (Below SMA)'}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 10.5px;">
+        <span style="color: var(--muted);">Institutional Footprint:</span>
+        <span style="font-weight: 700; color: ${isVol ? '#7da9ff' : 'var(--text)'};">${isVol ? 'Heavy Buying (' + d.vol_ratio.toFixed(1) + '× Vol)' : 'Average Volume'}</span>
+      </div>
     </div>
-    <blockquote class="trendlyne-widgets" data-get-url="${getUrl}" data-theme="${theme}" style="display:none;"></blockquote>
   `;
-
-  const triggerParser = () => {
-    const bq = container.querySelector('blockquote.trendlyne-widgets');
-    if (bq) bq.style.display = 'block';
-    const loader = container.querySelector('.tl-loader');
-    if (loader) loader.style.display = 'none';
-
-    if (window.TrendlyneWidgets && typeof window.TrendlyneWidgets.init === 'function') {
-      window.TrendlyneWidgets.init();
-    } else if (window.TLWidgets && typeof window.TLWidgets.load === 'function') {
-      window.TLWidgets.load();
-    }
-  };
-
-  // Check if script is already present
-  let script = document.getElementById('tl-script-instance');
-  if (!script) {
-    script = document.createElement('script');
-    script.id = 'tl-script-instance';
-    script.async = true;
-    script.src = 'https://cdn-static.trendlyne.com/static/js/webwidgets/tl-widgets.js';
-    script.charset = 'utf-8';
-    script.onload = triggerParser;
-    document.body.appendChild(script);
-  } else {
-    // Delay slightly to allow DOM blockquote insertion before parser run
-    setTimeout(triggerParser, 100);
-  }
 }
 
 function toggleWatchFromModal() {
