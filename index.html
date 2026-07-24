@@ -3753,22 +3753,41 @@ function loadTrendlyneWidget(sym, type) {
   const endpoint = widgetEndpointMap[type] || 'swot-widget';
   const getUrl = `https://trendlyne.com/web-widget/${endpoint}/Poppins/${sym}/?posCol=00A25B&primaryCol=006AFF&negCol=EB3B00&neuCol=F7941E`;
 
-  container.innerHTML = `<blockquote class="trendlyne-widgets" data-get-url="${getUrl}" data-theme="${theme}"></blockquote>`;
+  // Show loading indicator
+  container.innerHTML = `
+    <div class="tl-loader" style="padding: 30px; text-align: center; color: var(--muted); font-size: 11px; font-family: var(--font-sans);">
+      <div style="margin-bottom: 6px; font-weight: 600; color: var(--text);">Loading Trendlyne ${type.toUpperCase()} Insights for ${sym}...</div>
+      <div style="font-size: 9px; opacity: 0.7;">Fetching score & analysis from Trendlyne</div>
+    </div>
+    <blockquote class="trendlyne-widgets" data-get-url="${getUrl}" data-theme="${theme}" style="display:none;"></blockquote>
+  `;
 
-  // Re-trigger Trendlyne parser or reload script if needed
-  if (window.TrendlyneWidgets && typeof window.TrendlyneWidgets.init === 'function') {
-    window.TrendlyneWidgets.init();
-  } else {
-    // Fallback: refresh/re-inject the script tag if window object isn't exposed
-    const existingScript = document.getElementById('tl-script-instance');
-    if (existingScript) existingScript.remove();
-    
-    const script = document.createElement('script');
+  const triggerParser = () => {
+    const bq = container.querySelector('blockquote.trendlyne-widgets');
+    if (bq) bq.style.display = 'block';
+    const loader = container.querySelector('.tl-loader');
+    if (loader) loader.style.display = 'none';
+
+    if (window.TrendlyneWidgets && typeof window.TrendlyneWidgets.init === 'function') {
+      window.TrendlyneWidgets.init();
+    } else if (window.TLWidgets && typeof window.TLWidgets.load === 'function') {
+      window.TLWidgets.load();
+    }
+  };
+
+  // Check if script is already present
+  let script = document.getElementById('tl-script-instance');
+  if (!script) {
+    script = document.createElement('script');
     script.id = 'tl-script-instance';
     script.async = true;
     script.src = 'https://cdn-static.trendlyne.com/static/js/webwidgets/tl-widgets.js';
     script.charset = 'utf-8';
+    script.onload = triggerParser;
     document.body.appendChild(script);
+  } else {
+    // Delay slightly to allow DOM blockquote insertion before parser run
+    setTimeout(triggerParser, 100);
   }
 }
 
