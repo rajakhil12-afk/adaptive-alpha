@@ -1,5 +1,5 @@
 {
-  "updated": "01:40 pm IST · 27 Jul",
+  "updated": "01:54 pm IST · 27 Jul",
   "bhavDate": "2026-07-27",
   "fii_dii": {
     "date": "27-Jul-2026",
@@ -310,7 +310,7 @@
       "breakout": false,
       "trending": false,
       "signDays": 1,
-      "signSince": 1785159556,
+      "signSince": 1785160334,
       "signPrice": 1409.4,
       "st14": {
         "trend": "buy",
@@ -1963,7 +1963,7 @@
       "breakout": false,
       "trending": false,
       "signDays": 1,
-      "signSince": 1785159556,
+      "signSince": 1785160334,
       "signPrice": 2552.4,
       "st14": {
         "trend": "sell",
@@ -3326,7 +3326,7 @@
       "breakout": false,
       "trending": false,
       "signDays": 1,
-      "signSince": 1785159556,
+      "signSince": 1785160334,
       "signPrice": 494,
       "st14": {
         "trend": "sell",
@@ -5240,7 +5240,7 @@
       "breakout": false,
       "trending": false,
       "signDays": 1,
-      "signSince": 1785159556,
+      "signSince": 1785160334,
       "signPrice": 1678.9,
       "st14": {
         "trend": "buy",
