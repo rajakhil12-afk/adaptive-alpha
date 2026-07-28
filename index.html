@@ -1033,22 +1033,19 @@
         </div>
       </div>
 
-      <!-- Trendlyne & Native Insights Section -->
+      <!-- Trendlyne Widgets Section -->
       <div class="trendlyne-section" style="margin-top: 14px; background: var(--bg3); border-radius: var(--radius); border: 1px solid var(--border); padding: 12px; box-sizing: border-box;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <span style="font-size: 11px; font-weight: 700; color: var(--text);">Stock Health & Trendlyne Insights</span>
-          <span style="font-size: 9px; color: var(--muted); font-family: var(--font-num);">1-Click External Deep-Links</span>
+          <span style="font-size: 11px; font-weight: 700; color: var(--text);">Trendlyne® Analysis</span>
+          <div class="tl-tab-group" style="display: flex; gap: 4px;">
+            <button class="tf-btn active" id="tl-tab-swot" onclick="switchTLTab('swot')">SWOT</button>
+            <button class="tf-btn" id="tl-tab-tech" onclick="switchTLTab('tech')">Technicals</button>
+            <button class="tf-btn" id="tl-tab-qvt" onclick="switchTLTab('qvt')">QVT Score</button>
+          </div>
         </div>
 
-        <!-- Quick Links Buttons -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px;">
-          <a id="tl-btn-swot" href="#" target="_blank" class="btn" style="text-decoration: none; font-size: 10px; padding: 6px 4px; text-align: center; background: rgba(38,166,154,0.1); border-color: rgba(38,166,154,0.3); color: var(--up); font-weight: 600;">SWOT Analysis ↗</a>
-          <a id="tl-btn-tech" href="#" target="_blank" class="btn" style="text-decoration: none; font-size: 10px; padding: 6px 4px; text-align: center; background: rgba(94,150,255,0.1); border-color: rgba(94,150,255,0.3); color: #7da9ff; font-weight: 600;">Technicals ↗</a>
-          <a id="tl-btn-qvt" href="#" target="_blank" class="btn" style="text-decoration: none; font-size: 10px; padding: 6px 4px; text-align: center; background: rgba(255,183,77,0.1); border-color: rgba(255,183,77,0.3); color: var(--amber); font-weight: 600;">QVT Score ↗</a>
-        </div>
-
-        <div id="tl-widget-container" style="background: var(--bg2); border-radius: var(--radius); padding: 10px; font-size: 11px;">
-          <!-- Dynamic Native Scorecard renders here -->
+        <div id="tl-widget-container" style="min-height: 200px; width: 100%; border-radius: var(--radius); overflow: hidden; background: var(--bg2);">
+          <!-- Widget iframe / fallback renders here -->
         </div>
       </div>
 
@@ -3725,7 +3722,7 @@ function openStockModal(sym) {
   // Render ARS chart with 150ms delay to allow modal layout to settle
   setTimeout(() => {
     renderModalChart(d);
-    loadTrendlyneWidget(d.sym, activeTLTab);
+    loadTrendlyneWidget(d.sym);
   }, 150);
 }
 
@@ -3733,44 +3730,46 @@ function closeModal() {
   document.getElementById('stock-modal').classList.remove('open');
 }
 
-function loadTrendlyneWidget(sym, type) {
+let activeTLTab = 'swot';
+
+function switchTLTab(tab) {
+  activeTLTab = tab;
+  ['swot', 'tech', 'qvt'].forEach(t => {
+    const btn = document.getElementById(`tl-tab-${t}`);
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+  if (selectedSym) {
+    loadTrendlyneWidget(selectedSym, tab);
+  }
+}
+
+function loadTrendlyneWidget(sym, type = activeTLTab) {
   const container = document.getElementById('tl-widget-container');
   if (!container || !sym) return;
 
-  const d = allData.find(s => s.sym === sym);
-  if (!d) return;
-
-  // Set direct deep-links
-  const swotUrl = `https://trendlyne.com/equity/swot/${encodeURIComponent(sym)}/`;
-  const techUrl = `https://trendlyne.com/equity/technical/${encodeURIComponent(sym)}/`;
-  const qvtUrl = `https://trendlyne.com/equity/qvt/${encodeURIComponent(sym)}/`;
-
-  const btnSwot = document.getElementById('tl-btn-swot');
-  const btnTech = document.getElementById('tl-btn-tech');
-  const btnQvt = document.getElementById('tl-btn-qvt');
-
-  if (btnSwot) btnSwot.href = swotUrl;
-  if (btnTech) btnTech.href = techUrl;
-  if (btnQvt) btnQvt.href = qvtUrl;
-
-  // Render Native Momentum & Technical Scorecard instantly
-  const isSuperBuy = d.st14 && d.st14.trend === 'buy';
-  const is52W = d.hi52_prox >= -0.05;
-  const isVol = d.vol_ratio >= 1.5;
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const theme = isDark ? 'dark' : 'light';
+  
+  const widgetEndpointMap = {
+    'swot': 'swot-widget',
+    'tech': 'technical-widget',
+    'qvt': 'qvt-widget'
+  };
+  
+  const endpoint = widgetEndpointMap[type] || 'swot-widget';
+  const cleanSym = encodeURIComponent(sym.replace(/[-_]/g, ''));
+  const widgetUrl = `https://trendlyne.com/web-widget/${endpoint}/Poppins/${cleanSym}/?posCol=00A25B&primaryCol=006AFF&negCol=EB3B00&neuCol=F7941E&data-theme=${theme}`;
+  const directLink = `https://trendlyne.com/equity/${cleanSym}/`;
 
   container.innerHTML = `
-    <div style="display: flex; flex-direction: column; gap: 6px;">
-      <div style="display: flex; justify-content: space-between; font-size: 10.5px; border-bottom: 1px solid var(--border); padding-bottom: 4px;">
-        <span style="color: var(--muted);">Relative Strength (RS Rating):</span>
-        <span style="font-weight: 700; color: ${d.rs_rating >= 70 ? 'var(--up)' : 'var(--amber)'};">${d.rs_rating ?? '—'} / 99</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; font-size: 10.5px; border-bottom: 1px solid var(--border); padding-bottom: 4px;">
-        <span style="color: var(--muted);">Moving Average Alignment:</span>
-        <span style="font-weight: 700; color: ${d.ma_status === 'MA+' ? 'var(--up)' : 'var(--down)'};">${d.ma_status === 'MA+' ? 'Bullish (Above 50 & 200 SMA)' : 'Consolidating (Below SMA)'}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; font-size: 10.5px;">
-        <span style="color: var(--muted);">Institutional Footprint:</span>
-        <span style="font-weight: 700; color: ${isVol ? '#7da9ff' : 'var(--text)'};">${isVol ? 'Heavy Buying (' + d.vol_ratio.toFixed(1) + '× Vol)' : 'Average Volume'}</span>
+    <div style="position: relative; width: 100%; min-height: 200px; background: var(--bg2); border-radius: var(--radius); overflow: hidden;">
+      <iframe src="${widgetUrl}" 
+        style="width: 100%; height: 210px; border: none; background: transparent; display: block;"
+        onload="const l=document.getElementById('tl-fallback-${sym}'); if(l) l.style.display='none';"
+      ></iframe>
+      <div id="tl-fallback-${sym}" style="padding: 16px; text-align: center; color: var(--muted); font-size: 11px; background: var(--bg2);">
+        <div style="font-weight: 600; color: var(--text); margin-bottom: 4px;">Opening Trendlyne ${type.toUpperCase()} Card...</div>
+        <a href="${directLink}" target="_blank" style="color: var(--up); text-decoration: none; font-weight: 600; font-size: 10.5px;">View ${sym} on Trendlyne ↗</a>
       </div>
     </div>
   `;
