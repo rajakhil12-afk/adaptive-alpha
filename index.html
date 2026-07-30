@@ -3730,6 +3730,16 @@ function closeModal() {
   document.getElementById('stock-modal').classList.remove('open');
 }
 
+// Global listener to close modal on Escape key press
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' || e.key === 'Esc') {
+    const modal = document.getElementById('stock-modal');
+    if (modal && modal.classList.contains('open')) {
+      closeModal();
+    }
+  }
+});
+
 let activeTLTab = 'swot';
 
 function switchTLTab(tab) {
