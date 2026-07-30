@@ -150,6 +150,29 @@ async function run() {
     msg += `\n`;
   }
 
+  // Add 30-Day Historical Performance Summary if available
+  const history = rawData.breakout_history || [];
+  if (history.length > 0) {
+    const winners = history.filter(h => (h.gainPct || 0) > 0);
+    const winRate = ((winners.length / history.length) * 100).toFixed(0);
+    const avgGain = (history.reduce((acc, h) => acc + (h.gainPct || 0), 0) / history.length).toFixed(1);
+
+    msg += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    msg += `📊 <b>30-DAY PERFORMANCE TRACKER</b>\n`;
+    msg += `• Tracked Picks: <code>${history.length}</code> | Win Rate: <code>${winRate}%</code>\n`;
+    msg += `• Avg Return: <code>${avgGain >= 0 ? '+' : ''}${avgGain}%</code>\n\n`;
+
+    // Highlight top outperformers from past breakouts
+    const sortedPerformers = [...history].sort((a, b) => (b.gainPct || 0) - (a.gainPct || 0)).slice(0, 3);
+    if (sortedPerformers.length > 0 && sortedPerformers[0].gainPct > 0) {
+      msg += `🏆 <b>Top Active Runners:</b>\n`;
+      sortedPerformers.forEach(p => {
+        msg += `• <b>${escapeHtml(p.sym)}</b>: <b>+${p.gainPct}%</b> (Peak: +${p.maxGainPct}%)\n`;
+      });
+      msg += `\n`;
+    }
+  }
+
   msg += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
   msg += `📈 <i>Check screener dashboard for interactive charts!</i>`;
 

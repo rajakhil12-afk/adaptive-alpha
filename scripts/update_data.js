@@ -994,11 +994,66 @@ async function run() {
   console.log('Fetching latest FII/DII flows...');
   const fiiDii = await fetchFiiDiiData();
 
+  // Track 30-Day Breakout History Log
+  const historyJson = path.join(dataDir, 'breakout_history.json');
+  let breakoutHistory = [];
+  try {
+    if (fs.existsSync(historyJson)) {
+      breakoutHistory = JSON.parse(fs.readFileSync(historyJson, 'utf8') || '[]');
+    }
+  } catch (e) {}
+
+  const todayStr = bhav.date || new Date().toISOString().split('T')[0];
+  const freshBo = results.filter(s => s.breakout);
+
+  // Add new breakouts for today if not already logged
+  freshBo.forEach(stock => {
+    const exists = breakoutHistory.some(h => h.sym === stock.sym && h.triggerDate === todayStr);
+    if (!exists) {
+      breakoutHistory.push({
+        sym: stock.sym,
+        name: stock.name,
+        ind: stock.ind,
+        triggerDate: todayStr,
+        triggerPrice: stock.price,
+        maxPrice: stock.price,
+        currentPrice: stock.price,
+        volRatioAtTrigger: stock.vol_ratio,
+        rsRatingAtTrigger: stock.rs_rating
+      });
+    }
+  });
+
+  // Update current prices & max run-ups for all logged historical breakouts
+  const stockPriceMap = new Map(results.map(s => [s.sym, s.price]));
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 45); // Keep up to 45 days of active records
+
+  breakoutHistory = breakoutHistory.filter(h => new Date(h.triggerDate) >= thirtyDaysAgo);
+
+  breakoutHistory.forEach(h => {
+    if (stockPriceMap.has(h.sym)) {
+      const latestP = stockPriceMap.get(h.sym);
+      h.currentPrice = latestP;
+      if (latestP > (h.maxPrice || 0)) {
+        h.maxPrice = latestP;
+      }
+      const gainPct = ((latestP - h.triggerPrice) / h.triggerPrice) * 100;
+      const maxGainPct = (((h.maxPrice || latestP) - h.triggerPrice) / h.triggerPrice) * 100;
+      h.gainPct = parseFloat(gainPct.toFixed(2));
+      h.maxGainPct = parseFloat(maxGainPct.toFixed(2));
+    }
+  });
+
+  fs.writeFileSync(historyJson, JSON.stringify(breakoutHistory, null, 2));
+  console.log(`Saved ${breakoutHistory.length} active entries in breakout_history.json`);
+
   const payload = {
     updated: new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}) + ' IST · ' + new Date().toLocaleDateString('en-IN', {day:'2-digit',month:'short'}),
     bhavDate: bhav.date,
     fii_dii: fiiDii,
-    stocks: results
+    stocks: results,
+    breakout_history: breakoutHistory
   };
 
   fs.writeFileSync(outputJson, JSON.stringify(payload, null, 2));
