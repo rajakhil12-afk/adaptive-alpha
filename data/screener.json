@@ -1,5 +1,5 @@
 {
-  "updated": "07:15 am IST · 30 Jul",
+  "updated": "07:25 am IST · 30 Jul",
   "bhavDate": "2026-07-29",
   "fii_dii": {
     "date": "29-Jul-2026",
@@ -12,8 +12,8 @@
       "name": "Adani Enterprises",
       "ind": "Metals & Mining",
       "logoid": "adani",
-      "ars": 2.5515,
-      "srs": 0.2103,
+      "ars": 2.5535,
+      "srs": 0.211,
       "vol_ratio": 0.99,
       "hi52_prox": -0.0584,
       "price": 3024.5,
@@ -33,7 +33,7 @@
         "val": 2974.27
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0478,
+      "ars_slope": -0.0457,
       "rs_rating": 96
     },
     {
@@ -41,8 +41,8 @@
       "name": "Adani Ports",
       "ind": "Services",
       "logoid": "adani",
-      "ars": 0.9684,
-      "srs": 0.0321,
+      "ars": 0.9696,
+      "srs": 0.0327,
       "vol_ratio": 2.89,
       "hi52_prox": -0.0868,
       "price": 1719.7,
@@ -62,7 +62,7 @@
         "val": 1828.76
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1523,
+      "ars_slope": -0.1512,
       "rs_rating": 77
     },
     {
@@ -70,8 +70,8 @@
       "name": "Apollo Hospitals",
       "ind": "Healthcare",
       "logoid": "apollo-hospitals",
-      "ars": 1.1339,
-      "srs": 0.1638,
+      "ars": 1.1351,
+      "srs": 0.1645,
       "vol_ratio": 0.63,
       "hi52_prox": -0.0003,
       "price": 8935,
@@ -91,7 +91,7 @@
         "val": 8592.14
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0398,
+      "ars_slope": -0.0386,
       "rs_rating": 86
     },
     {
@@ -99,8 +99,8 @@
       "name": "Asian Paints",
       "ind": "Consumer Durables",
       "logoid": "asian-paints",
-      "ars": -0.4268,
-      "srs": 0.1207,
+      "ars": -0.4265,
+      "srs": 0.1214,
       "vol_ratio": 3.52,
       "hi52_prox": -0.0708,
       "price": 2758.4,
@@ -120,7 +120,7 @@
         "val": 2614.56
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0085,
+      "ars_slope": 0.0088,
       "rs_rating": 37
     },
     {
@@ -128,8 +128,8 @@
       "name": "Axis Bank",
       "ind": "Financial Services",
       "logoid": "axis-bank",
-      "ars": 0.1422,
-      "srs": -0.0311,
+      "ars": 0.1428,
+      "srs": -0.0306,
       "vol_ratio": 1.28,
       "hi52_prox": -0.1195,
       "price": 1235.4,
@@ -149,7 +149,7 @@
         "val": 1306.25
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0238,
+      "ars_slope": -0.0231,
       "rs_rating": 39
     },
     {
@@ -157,8 +157,8 @@
       "name": "Bajaj Auto",
       "ind": "Automobile",
       "logoid": "bajaj-auto",
-      "ars": 0.8783,
-      "srs": 0.1131,
+      "ars": 0.8794,
+      "srs": 0.1137,
       "vol_ratio": 0.9,
       "hi52_prox": -0.0032,
       "price": 11338,
@@ -178,7 +178,7 @@
         "val": 10677.03
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0252,
+      "ars_slope": -0.0241,
       "rs_rating": 73
     },
     {
@@ -186,8 +186,8 @@
       "name": "Bajaj Finance",
       "ind": "Financial Services",
       "logoid": "bajaj-finance",
-      "ars": 0.1517,
-      "srs": 0.1037,
+      "ars": 0.1523,
+      "srs": 0.1044,
       "vol_ratio": 0.79,
       "hi52_prox": -0.0363,
       "price": 1054.4,
@@ -207,7 +207,7 @@
         "val": 997.09
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0049,
+      "ars_slope": -0.0042,
       "rs_rating": 48
     },
     {
@@ -215,8 +215,8 @@
       "name": "Bajaj Finserv",
       "ind": "Financial Services",
       "logoid": "bajaj-finserv-mutual-fund",
-      "ars": 0.2512,
-      "srs": 0.0956,
+      "ars": 0.2519,
+      "srs": 0.0962,
       "vol_ratio": 0.82,
       "hi52_prox": -0.1159,
       "price": 1924.4,
@@ -236,7 +236,7 @@
         "val": 1818.61
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0088,
+      "ars_slope": 0.0096,
       "rs_rating": 53
     },
     {
@@ -244,8 +244,8 @@
       "name": "Bharat Electronics",
       "ind": "Capital Goods",
       "logoid": "bharat-electronics",
-      "ars": 4.3048,
-      "srs": -0.1109,
+      "ars": 4.3079,
+      "srs": -0.1103,
       "vol_ratio": 2.59,
       "hi52_prox": -0.1727,
       "price": 387.55,
@@ -265,7 +265,7 @@
         "val": 408.37
       },
       "ma_status": "MA-",
-      "ars_slope": -0.3454,
+      "ars_slope": -0.3423,
       "rs_rating": 82
     },
     {
@@ -273,8 +273,8 @@
       "name": "Bharti Airtel",
       "ind": "Telecom",
       "logoid": "airtel",
-      "ars": 1.2243,
-      "srs": 0.0617,
+      "ars": 1.2256,
+      "srs": 0.0623,
       "vol_ratio": 1.06,
       "hi52_prox": -0.0983,
       "price": 1950.2,
@@ -294,7 +294,7 @@
         "val": 1861.04
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0185,
+      "ars_slope": -0.0172,
       "rs_rating": 80
     },
     {
@@ -302,8 +302,8 @@
       "name": "Cipla",
       "ind": "Healthcare",
       "logoid": "cipla",
-      "ars": 0.0286,
-      "srs": 0.0985,
+      "ars": 0.0292,
+      "srs": 0.0991,
       "vol_ratio": 1.51,
       "hi52_prox": -0.1138,
       "price": 1474.3,
@@ -323,7 +323,7 @@
         "val": 1386.1
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0389,
+      "ars_slope": 0.0395,
       "rs_rating": 54
     },
     {
@@ -331,8 +331,8 @@
       "name": "Coal India",
       "ind": "Oil Gas",
       "logoid": "coal-india",
-      "ars": 0.7472,
-      "srs": -0.1502,
+      "ars": 0.7482,
+      "srs": -0.1497,
       "vol_ratio": 1.67,
       "hi52_prox": -0.1487,
       "price": 410.05,
@@ -352,7 +352,7 @@
         "val": 430.59
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1058,
+      "ars_slope": -0.1048,
       "rs_rating": 47
     },
     {
@@ -360,8 +360,8 @@
       "name": "Dr Reddy's",
       "ind": "Healthcare",
       "logoid": "dr-reddys",
-      "ars": -0.3715,
-      "srs": -0.1411,
+      "ars": -0.3712,
+      "srs": -0.1406,
       "vol_ratio": 0.47,
       "hi52_prox": -0.1697,
       "price": 1142.3,
@@ -381,7 +381,7 @@
         "val": 1230.64
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0342,
+      "ars_slope": -0.0338,
       "rs_rating": 4
     },
     {
@@ -389,8 +389,8 @@
       "name": "Eicher Motors",
       "ind": "Automobile",
       "logoid": "eicher-motors",
-      "ars": 0.7644,
-      "srs": 0.0884,
+      "ars": 0.7654,
+      "srs": 0.089,
       "vol_ratio": 1,
       "hi52_prox": -0.0502,
       "price": 7779,
@@ -410,7 +410,7 @@
         "val": 7343.96
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0016,
+      "ars_slope": 0.0026,
       "rs_rating": 67
     },
     {
@@ -418,8 +418,8 @@
       "name": "Grasim Industries",
       "ind": "Construction Materials",
       "logoid": "grasim",
-      "ars": 0.9311,
-      "srs": 0.108,
+      "ars": 0.9322,
+      "srs": 0.1087,
       "vol_ratio": 0.59,
       "hi52_prox": -0.0313,
       "price": 3113,
@@ -439,7 +439,7 @@
         "val": 3055.38
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0691,
+      "ars_slope": -0.0679,
       "rs_rating": 77
     },
     {
@@ -447,8 +447,8 @@
       "name": "HCL Tech",
       "ind": "IT",
       "logoid": "hcl-technologies",
-      "ars": -0.1843,
-      "srs": 0.1138,
+      "ars": -0.1839,
+      "srs": 0.1145,
       "vol_ratio": 0.66,
       "hi52_prox": -0.2228,
       "price": 1344.3,
@@ -468,7 +468,7 @@
         "val": 1249.12
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0466,
+      "ars_slope": 0.0471,
       "rs_rating": 35
     },
     {
@@ -476,8 +476,8 @@
       "name": "HDFC Bank",
       "ind": "Financial Services",
       "logoid": "hdfc-bank",
-      "ars": -0.3944,
-      "srs": -0.0451,
+      "ars": -0.394,
+      "srs": -0.0446,
       "vol_ratio": 0.64,
       "hi52_prox": -0.2613,
       "price": 748.2,
@@ -497,7 +497,7 @@
         "val": 779.07
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0103,
+      "ars_slope": -0.01,
       "rs_rating": 8
     },
     {
@@ -505,8 +505,8 @@
       "name": "HDFC Life",
       "ind": "Financial Services",
       "logoid": "hdfc-life",
-      "ars": -0.5267,
-      "srs": -0.0588,
+      "ars": -0.5265,
+      "srs": -0.0583,
       "vol_ratio": 0.35,
       "hi52_prox": -0.3011,
       "price": 556.7,
@@ -526,7 +526,7 @@
         "val": 587.06
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0037,
+      "ars_slope": -0.0034,
       "rs_rating": 4
     },
     {
@@ -534,8 +534,8 @@
       "name": "Hindalco",
       "ind": "Metals & Mining",
       "logoid": "hindalco",
-      "ars": 1.3288,
-      "srs": -0.0819,
+      "ars": 1.3301,
+      "srs": -0.0813,
       "vol_ratio": 0.65,
       "hi52_prox": -0.1629,
       "price": 962.45,
@@ -555,7 +555,7 @@
         "val": 995.61
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0259,
+      "ars_slope": -0.0246,
       "rs_rating": 56
     },
     {
@@ -563,8 +563,8 @@
       "name": "HUL",
       "ind": "FMCG",
       "logoid": "unilever",
-      "ars": -0.4884,
-      "srs": -0.0878,
+      "ars": -0.4881,
+      "srs": -0.0873,
       "vol_ratio": 2.2,
       "hi52_prox": -0.2135,
       "price": 2117.8,
@@ -584,7 +584,7 @@
         "val": 2221.29
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0202,
+      "ars_slope": -0.0199,
       "rs_rating": 11
     },
     {
@@ -592,8 +592,8 @@
       "name": "ICICI Bank",
       "ind": "Financial Services",
       "logoid": "icici-bank",
-      "ars": 0.5721,
-      "srs": 0.1255,
+      "ars": 0.573,
+      "srs": 0.1261,
       "vol_ratio": 0.85,
       "hi52_prox": -0.0339,
       "price": 1437.9,
@@ -613,7 +613,7 @@
         "val": 1387.79
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0251,
+      "ars_slope": -0.0242,
       "rs_rating": 76
     },
     {
@@ -621,8 +621,8 @@
       "name": "ITC",
       "ind": "FMCG",
       "logoid": "itc",
-      "ars": -0.1983,
-      "srs": -0.0848,
+      "ars": -0.1978,
+      "srs": -0.0842,
       "vol_ratio": 1.22,
       "hi52_prox": -0.321,
       "price": 286.25,
@@ -642,7 +642,7 @@
         "val": 288.09
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0006,
+      "ars_slope": -0.0001,
       "rs_rating": 21
     },
     {
@@ -650,8 +650,8 @@
       "name": "Infosys",
       "ind": "IT",
       "logoid": "infosys",
-      "ars": -0.4713,
-      "srs": -0.0162,
+      "ars": -0.4709,
+      "srs": -0.0157,
       "vol_ratio": 2.2,
       "hi52_prox": -0.3161,
       "price": 1155.6,
@@ -671,7 +671,7 @@
         "val": 1062.09
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0407,
+      "ars_slope": 0.041,
       "rs_rating": 23
     },
     {
@@ -679,8 +679,8 @@
       "name": "IndiGo",
       "ind": "Services",
       "logoid": "interglobe-aviatio",
-      "ars": 0.7759,
-      "srs": 0.2313,
+      "ars": 0.777,
+      "srs": 0.232,
       "vol_ratio": 0.64,
       "hi52_prox": -0.1428,
       "price": 5276.5,
@@ -700,7 +700,7 @@
         "val": 5355.49
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0542,
+      "ars_slope": 0.0552,
       "rs_rating": 74
     },
     {
@@ -708,8 +708,8 @@
       "name": "JSW Steel",
       "ind": "Metals & Mining",
       "logoid": "jsw",
-      "ars": 0.8893,
-      "srs": 0.0042,
+      "ars": 0.8904,
+      "srs": 0.0048,
       "vol_ratio": 0.9,
       "hi52_prox": -0.0276,
       "price": 1276.6,
@@ -729,7 +729,7 @@
         "val": 1289.11
       },
       "ma_status": "MA+",
-      "ars_slope": -0.02,
+      "ars_slope": -0.0189,
       "rs_rating": 68
     },
     {
@@ -737,8 +737,8 @@
       "name": "Jio Financial",
       "ind": "Financial Services",
       "logoid": "jio-fin-services-ltd",
-      "ars": -0.4219,
-      "srs": -0.0182,
+      "ars": -0.4216,
+      "srs": -0.0176,
       "vol_ratio": 2.19,
       "hi52_prox": -0.2528,
       "price": 249.48,
@@ -758,7 +758,7 @@
         "val": 232.63
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0279,
+      "ars_slope": 0.0282,
       "rs_rating": 26
     },
     {
@@ -766,8 +766,8 @@
       "name": "Kotak Bank",
       "ind": "Financial Services",
       "logoid": "kotak-mahindra-ast",
-      "ars": -0.4357,
-      "srs": 0.0443,
+      "ars": -0.4354,
+      "srs": 0.0449,
       "vol_ratio": 0.53,
       "hi52_prox": -0.1234,
       "price": 390.2,
@@ -787,7 +787,7 @@
         "val": 398.91
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0003,
+      "ars_slope": 0.0001,
       "rs_rating": 14
     },
     {
@@ -795,8 +795,8 @@
       "name": "L&T",
       "ind": "Construction",
       "logoid": "larsen-and-toubro",
-      "ars": 0.7481,
-      "srs": -0.0464,
+      "ars": 0.7491,
+      "srs": -0.0459,
       "vol_ratio": 1.44,
       "hi52_prox": -0.1102,
       "price": 3931.4,
@@ -816,7 +816,7 @@
         "val": 3956.86
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0309,
+      "ars_slope": 0.0319,
       "rs_rating": 64
     },
     {
@@ -824,11 +824,11 @@
       "name": "Mahindra & Mahindra",
       "ind": "Automobile",
       "logoid": "mahindra",
-      "ars": 1.5677,
-      "srs": 0.0441,
-      "vol_ratio": 0.64,
-      "hi52_prox": -0.1424,
-      "price": 3261,
+      "ars": 1.5679,
+      "srs": 0.0442,
+      "vol_ratio": 0.65,
+      "hi52_prox": -0.1428,
+      "price": 3259.4,
       "breakout": false,
       "trending": false,
       "signDays": 1050,
@@ -845,7 +845,7 @@
         "val": 3040.76
       },
       "ma_status": "MA-",
-      "ars_slope": -0.022,
+      "ars_slope": -0.0217,
       "rs_rating": 69
     },
     {
@@ -853,8 +853,8 @@
       "name": "Maruti Suzuki",
       "ind": "Automobile",
       "logoid": "maruti-suzuki-india",
-      "ars": 0.0459,
-      "srs": 0.0216,
+      "ars": 0.0465,
+      "srs": 0.0222,
       "vol_ratio": 1.28,
       "hi52_prox": -0.1934,
       "price": 13948,
@@ -874,7 +874,7 @@
         "val": 14211.17
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0224,
+      "ars_slope": 0.0231,
       "rs_rating": 42
     },
     {
@@ -882,8 +882,8 @@
       "name": "Max Healthcare",
       "ind": "Healthcare",
       "logoid": "max-healthcare",
-      "ars": 3.498,
-      "srs": 0.1132,
+      "ars": 3.5006,
+      "srs": 0.1139,
       "vol_ratio": 0.86,
       "hi52_prox": -0.1321,
       "price": 1111.4,
@@ -903,7 +903,7 @@
         "val": 1063.37
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0428,
+      "ars_slope": 0.0454,
       "rs_rating": 94
     },
     {
@@ -911,8 +911,8 @@
       "name": "NTPC",
       "ind": "Power",
       "logoid": "ntpc",
-      "ars": 1,
-      "srs": -0.1459,
+      "ars": 1.0012,
+      "srs": -0.1454,
       "vol_ratio": 0.88,
       "hi52_prox": -0.1626,
       "price": 343.5,
@@ -932,7 +932,7 @@
         "val": 359.37
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0669,
+      "ars_slope": -0.0657,
       "rs_rating": 43
     },
     {
@@ -940,8 +940,8 @@
       "name": "Nestle India",
       "ind": "FMCG",
       "logoid": "nestle",
-      "ars": -0.0602,
-      "srs": 0.0262,
+      "ars": -0.0597,
+      "srs": 0.0268,
       "vol_ratio": 1.31,
       "hi52_prox": 0,
       "price": 1503.3,
@@ -961,7 +961,7 @@
         "val": 1408.62
       },
       "ma_status": "MA+",
-      "ars_slope": 0.018,
+      "ars_slope": 0.0186,
       "rs_rating": 31
     },
     {
@@ -969,8 +969,8 @@
       "name": "ONGC",
       "ind": "Oil Gas",
       "logoid": "oil-and-natural-gas",
-      "ars": 0.4747,
-      "srs": -0.1907,
+      "ars": 0.4755,
+      "srs": -0.1902,
       "vol_ratio": 0.72,
       "hi52_prox": -0.2093,
       "price": 238.31,
@@ -990,7 +990,7 @@
         "val": 250.23
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1156,
+      "ars_slope": -0.1148,
       "rs_rating": 32
     },
     {
@@ -998,8 +998,8 @@
       "name": "Power Grid",
       "ind": "Power",
       "logoid": "power-grid",
-      "ars": 0.5304,
-      "srs": -0.1182,
+      "ars": 0.5312,
+      "srs": -0.1177,
       "vol_ratio": 1.43,
       "hi52_prox": -0.1186,
       "price": 282.85,
@@ -1019,7 +1019,7 @@
         "val": 295.81
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0663,
+      "ars_slope": -0.0655,
       "rs_rating": 47
     },
     {
@@ -1027,8 +1027,8 @@
       "name": "Reliance",
       "ind": "Oil Gas",
       "logoid": "reliance-industrial-infrastructure",
-      "ars": -0.1978,
-      "srs": -0.1326,
+      "ars": -0.1973,
+      "srs": -0.1321,
       "vol_ratio": 0.8,
       "hi52_prox": -0.1987,
       "price": 1275.9,
@@ -1048,7 +1048,7 @@
         "val": 1333.56
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0123,
+      "ars_slope": -0.0119,
       "rs_rating": 9
     },
     {
@@ -1056,8 +1056,8 @@
       "name": "SBI Life",
       "ind": "Financial Services",
       "logoid": "sbi-life-insurance",
-      "ars": 0.2205,
-      "srs": 0.0362,
+      "ars": 0.2212,
+      "srs": 0.0368,
       "vol_ratio": 1.52,
       "hi52_prox": -0.1018,
       "price": 1894.9,
@@ -1077,7 +1077,7 @@
         "val": 1785.06
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0355,
+      "ars_slope": 0.0362,
       "rs_rating": 55
     },
     {
@@ -1085,8 +1085,8 @@
       "name": "Shriram Finance",
       "ind": "Financial Services",
       "logoid": "shriram",
-      "ars": 1.8132,
-      "srs": 0.1086,
+      "ars": 1.8148,
+      "srs": 0.1092,
       "vol_ratio": 0.75,
       "hi52_prox": -0.0542,
       "price": 1044.7,
@@ -1106,7 +1106,7 @@
         "val": 1001.21
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0902,
+      "ars_slope": -0.0886,
       "rs_rating": 82
     },
     {
@@ -1114,8 +1114,8 @@
       "name": "State Bank of India",
       "ind": "Financial Services",
       "logoid": "state-bank",
-      "ars": 1.0924,
-      "srs": -0.0563,
+      "ars": 1.0936,
+      "srs": -0.0557,
       "vol_ratio": 0.48,
       "hi52_prox": -0.1744,
       "price": 1013.7,
@@ -1135,7 +1135,7 @@
         "val": 999.17
       },
       "ma_status": "MA-",
-      "ars_slope": -0.036,
+      "ars_slope": -0.0348,
       "rs_rating": 52
     },
     {
@@ -1143,8 +1143,8 @@
       "name": "Sun Pharma",
       "ind": "Healthcare",
       "logoid": "sun-pharmaceutical",
-      "ars": 0.9247,
-      "srs": 0.0946,
+      "ars": 0.9258,
+      "srs": 0.0952,
       "vol_ratio": 1.13,
       "hi52_prox": 0,
       "price": 1989.9,
@@ -1164,7 +1164,7 @@
         "val": 1904.01
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0109,
+      "ars_slope": 0.012,
       "rs_rating": 80
     },
     {
@@ -1172,8 +1172,8 @@
       "name": "TCS",
       "ind": "IT",
       "logoid": "tata",
-      "ars": -0.5181,
-      "srs": 0.0009,
+      "ars": -0.5179,
+      "srs": 0.0015,
       "vol_ratio": 1.4,
       "hi52_prox": -0.2642,
       "price": 2446.6,
@@ -1193,7 +1193,7 @@
         "val": 2270.56
       },
       "ma_status": "MA-",
-      "ars_slope": 0.032,
+      "ars_slope": 0.0323,
       "rs_rating": 20
     },
     {
@@ -1201,8 +1201,8 @@
       "name": "Tata Consumer",
       "ind": "FMCG",
       "logoid": "tata",
-      "ars": 0.0509,
-      "srs": -0.0604,
+      "ars": 0.0516,
+      "srs": -0.0599,
       "vol_ratio": 0.83,
       "hi52_prox": -0.1376,
       "price": 1096.1,
@@ -1222,7 +1222,7 @@
         "val": 1150.32
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0306,
+      "ars_slope": -0.03,
       "rs_rating": 28
     },
     {
@@ -1230,8 +1230,8 @@
       "name": "Tata Steel",
       "ind": "Metals & Mining",
       "logoid": "tata",
-      "ars": 0.6794,
-      "srs": -0.1224,
+      "ars": 0.6804,
+      "srs": -0.1218,
       "vol_ratio": 1.17,
       "hi52_prox": -0.1531,
       "price": 187.27,
@@ -1251,7 +1251,7 @@
         "val": 192.33
       },
       "ma_status": "MA-",
-      "ars_slope": -0.003,
+      "ars_slope": -0.002,
       "rs_rating": 50
     },
     {
@@ -1259,8 +1259,8 @@
       "name": "Tech Mahindra",
       "ind": "IT",
       "logoid": "mahindra-tech",
-      "ars": -0.0304,
-      "srs": 0.1099,
+      "ars": -0.0298,
+      "srs": 0.1105,
       "vol_ratio": 0.81,
       "hi52_prox": -0.0702,
       "price": 1644.2,
@@ -1280,7 +1280,7 @@
         "val": 1517.34
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0324,
+      "ars_slope": 0.033,
       "rs_rating": 41
     },
     {
@@ -1288,8 +1288,8 @@
       "name": "Titan",
       "ind": "Consumer Durables",
       "logoid": "titan-company",
-      "ars": 0.7947,
-      "srs": 0.1057,
+      "ars": 0.7957,
+      "srs": 0.1064,
       "vol_ratio": 0.93,
       "hi52_prox": 0,
       "price": 4850.2,
@@ -1309,7 +1309,7 @@
         "val": 4646.11
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0247,
+      "ars_slope": 0.0258,
       "rs_rating": 78
     },
     {
@@ -1317,8 +1317,8 @@
       "name": "Trent",
       "ind": "Consumer Services",
       "logoid": "trent",
-      "ars": 1.569,
-      "srs": 0.0782,
+      "ars": 1.5705,
+      "srs": 0.0788,
       "vol_ratio": 0.7,
       "hi52_prox": -0.4565,
       "price": 3005.2,
@@ -1338,7 +1338,7 @@
         "val": 3085.36
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0664,
+      "ars_slope": 0.0679,
       "rs_rating": 79
     },
     {
@@ -1346,13 +1346,13 @@
       "name": "UltraTech Cement",
       "ind": "Construction Materials",
       "logoid": "ultratech-cement",
-      "ars": 0.3078,
-      "srs": 0.015,
+      "ars": 0.3086,
+      "srs": 0.0156,
       "vol_ratio": 0.97,
       "hi52_prox": -0.0808,
       "price": 11998,
       "breakout": false,
-      "trending": false,
+      "trending": true,
       "signDays": 866,
       "signSince": 1675050300,
       "signPrice": 6887.7,
@@ -1367,7 +1367,7 @@
         "val": 11407.39
       },
       "ma_status": "MA+",
-      "ars_slope": -0.014,
+      "ars_slope": -0.0132,
       "rs_rating": 52
     },
     {
@@ -1375,8 +1375,8 @@
       "name": "Wipro",
       "ind": "IT",
       "logoid": "wipro",
-      "ars": -0.4543,
-      "srs": -0.0903,
+      "ars": -0.454,
+      "srs": -0.0897,
       "vol_ratio": 1.63,
       "hi52_prox": -0.3266,
       "price": 183.61,
@@ -1396,7 +1396,7 @@
         "val": 174.08
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0166,
+      "ars_slope": 0.0169,
       "rs_rating": 13
     },
     {
@@ -1404,8 +1404,8 @@
       "name": "ABB India",
       "ind": "Capital Goods",
       "logoid": "abb",
-      "ars": 2.4202,
-      "srs": 0.0057,
+      "ars": 2.4222,
+      "srs": 0.0063,
       "vol_ratio": 1.36,
       "hi52_prox": -0.0466,
       "price": 7310.5,
@@ -1425,7 +1425,7 @@
         "val": 6936.35
       },
       "ma_status": "MA+",
-      "ars_slope": -0.1558,
+      "ars_slope": -0.1539,
       "rs_rating": 89
     },
     {
@@ -1433,8 +1433,8 @@
       "name": "Adani Energy Sol",
       "ind": "Power",
       "logoid": "adani-transmiss-in",
-      "ars": 1.215,
-      "srs": 0.1863,
+      "ars": 1.2163,
+      "srs": 0.187,
       "vol_ratio": 0.82,
       "hi52_prox": -0.0424,
       "price": 1667.8,
@@ -1454,7 +1454,7 @@
         "val": 1581.58
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0622,
+      "ars_slope": -0.061,
       "rs_rating": 81
     },
     {
@@ -1462,8 +1462,8 @@
       "name": "Adani Green",
       "ind": "Power",
       "logoid": "adani",
-      "ars": -0.2571,
-      "srs": 0.0582,
+      "ars": -0.2567,
+      "srs": 0.0588,
       "vol_ratio": 0.59,
       "hi52_prox": -0.1442,
       "price": 1373.1,
@@ -1483,7 +1483,7 @@
         "val": 1516.08
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0174,
+      "ars_slope": -0.0169,
       "rs_rating": 23
     },
     {
@@ -1491,8 +1491,8 @@
       "name": "Adani Power",
       "ind": "Power",
       "logoid": "adani",
-      "ars": 11.0474,
-      "srs": -0.0831,
+      "ars": 11.0544,
+      "srs": -0.0826,
       "vol_ratio": 0.44,
       "hi52_prox": -0.1582,
       "price": 209.52,
@@ -1512,7 +1512,7 @@
         "val": 225.79
       },
       "ma_status": "MA-",
-      "ars_slope": -0.3795,
+      "ars_slope": -0.3725,
       "rs_rating": 69
     },
     {
@@ -1520,8 +1520,8 @@
       "name": "Ambuja Cements",
       "ind": "Construction Materials",
       "logoid": "ambuja-cements",
-      "ars": 0.0008,
-      "srs": -0.0253,
+      "ars": 0.0014,
+      "srs": -0.0247,
       "vol_ratio": 1.96,
       "hi52_prox": -0.2955,
       "price": 435.3,
@@ -1541,7 +1541,7 @@
         "val": 413.21
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0078,
+      "ars_slope": -0.0072,
       "rs_rating": 37
     },
     {
@@ -1549,8 +1549,8 @@
       "name": "Avenue Supermarts",
       "ind": "Consumer Services",
       "logoid": "avenue-supermarts",
-      "ars": -0.2043,
-      "srs": -0.1254,
+      "ars": -0.2038,
+      "srs": -0.1249,
       "vol_ratio": 0.86,
       "hi52_prox": -0.2032,
       "price": 3848.1,
@@ -1570,7 +1570,7 @@
         "val": 4133.85
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0539,
+      "ars_slope": -0.0535,
       "rs_rating": 15
     },
     {
@@ -1578,8 +1578,8 @@
       "name": "Bajaj Holdings",
       "ind": "Financial Services",
       "logoid": "bajaj-holdings-and-investment-lt",
-      "ars": 1.0244,
-      "srs": 0.0607,
+      "ars": 1.0256,
+      "srs": 0.0614,
       "vol_ratio": 0.45,
       "hi52_prox": -0.2461,
       "price": 10949,
@@ -1599,7 +1599,7 @@
         "val": 10298.76
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0616,
+      "ars_slope": 0.0627,
       "rs_rating": 64
     },
     {
@@ -1607,8 +1607,8 @@
       "name": "Bank of Baroda",
       "ind": "Financial Services",
       "logoid": "bank-of-baroda",
-      "ars": 1.1759,
-      "srs": -0.0869,
+      "ars": 1.1772,
+      "srs": -0.0864,
       "vol_ratio": 0.79,
       "hi52_prox": -0.25,
       "price": 243.35,
@@ -1628,7 +1628,7 @@
         "val": 260.02
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0381,
+      "ars_slope": -0.0368,
       "rs_rating": 51
     },
     {
@@ -1636,8 +1636,8 @@
       "name": "BPCL",
       "ind": "Oil Gas",
       "logoid": "bharat-petroleum",
-      "ars": -0.0415,
-      "srs": 0.0508,
+      "ars": -0.0409,
+      "srs": 0.0514,
       "vol_ratio": 0.71,
       "hi52_prox": -0.1826,
       "price": 317.4,
@@ -1657,7 +1657,7 @@
         "val": 296.99
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0071,
+      "ars_slope": -0.0066,
       "rs_rating": 33
     },
     {
@@ -1665,8 +1665,8 @@
       "name": "Bosch India",
       "ind": "Automobile",
       "logoid": "bosch",
-      "ars": 0.8237,
-      "srs": 0.1348,
+      "ars": 0.8248,
+      "srs": 0.1354,
       "vol_ratio": 1.69,
       "hi52_prox": -0.0278,
       "price": 41065,
@@ -1686,7 +1686,7 @@
         "val": 39478.94
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0558,
+      "ars_slope": -0.0548,
       "rs_rating": 83
     },
     {
@@ -1694,8 +1694,8 @@
       "name": "Britannia",
       "ind": "FMCG",
       "logoid": "britannia",
-      "ars": -0.1081,
-      "srs": -0.0415,
+      "ars": -0.1076,
+      "srs": -0.041,
       "vol_ratio": 1.58,
       "hi52_prox": -0.1243,
       "price": 5517.5,
@@ -1715,7 +1715,7 @@
         "val": 5227.62
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0111,
+      "ars_slope": -0.0106,
       "rs_rating": 28
     },
     {
@@ -1723,8 +1723,8 @@
       "name": "CG Power",
       "ind": "Capital Goods",
       "logoid": "cg-power-and-industrial-solutions",
-      "ars": 9.7143,
-      "srs": 0.0284,
+      "ars": 9.7205,
+      "srs": 0.029,
       "vol_ratio": 0.96,
       "hi52_prox": -0.1505,
       "price": 829.5,
@@ -1744,7 +1744,7 @@
         "val": 907.05
       },
       "ma_status": "MA-",
-      "ars_slope": -0.9106,
+      "ars_slope": -0.9044,
       "rs_rating": 92
     },
     {
@@ -1752,8 +1752,8 @@
       "name": "Canara Bank",
       "ind": "Financial Services",
       "logoid": "canara-bank",
-      "ars": 1.698,
-      "srs": -0.0787,
+      "ars": 1.6996,
+      "srs": -0.0781,
       "vol_ratio": 0.64,
       "hi52_prox": -0.2153,
       "price": 124.72,
@@ -1773,7 +1773,7 @@
         "val": 131.62
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0878,
+      "ars_slope": -0.0862,
       "rs_rating": 57
     },
     {
@@ -1781,8 +1781,8 @@
       "name": "Chola Finance",
       "ind": "Financial Services",
       "logoid": "cholamandalam",
-      "ars": 1.5277,
-      "srs": 0.0938,
+      "ars": 1.5292,
+      "srs": 0.0944,
       "vol_ratio": 1.68,
       "hi52_prox": -0.0272,
       "price": 1802.9,
@@ -1802,7 +1802,7 @@
         "val": 1839.34
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0759,
+      "ars_slope": 0.0773,
       "rs_rating": 88
     },
     {
@@ -1810,8 +1810,8 @@
       "name": "Cummins India",
       "ind": "Capital Goods",
       "logoid": "cummins",
-      "ars": 4.3402,
-      "srs": 0.0124,
+      "ars": 4.3433,
+      "srs": 0.0129,
       "vol_ratio": 1.04,
       "hi52_prox": -0.1069,
       "price": 5383,
@@ -1831,7 +1831,7 @@
         "val": 5732.74
       },
       "ma_status": "MA-",
-      "ars_slope": -0.3161,
+      "ars_slope": -0.313,
       "rs_rating": 90
     },
     {
@@ -1839,8 +1839,8 @@
       "name": "DLF",
       "ind": "Realty",
       "logoid": "dlf",
-      "ars": 0.6218,
-      "srs": 0.1357,
+      "ars": 0.6227,
+      "srs": 0.1364,
       "vol_ratio": 0.78,
       "hi52_prox": -0.1889,
       "price": 670.25,
@@ -1860,7 +1860,7 @@
         "val": 625.45
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0165,
+      "ars_slope": 0.0174,
       "rs_rating": 75
     },
     {
@@ -1868,8 +1868,8 @@
       "name": "Divi's Labs",
       "ind": "Healthcare",
       "logoid": "divis",
-      "ars": 0.1664,
-      "srs": 0.1908,
+      "ars": 0.1671,
+      "srs": 0.1915,
       "vol_ratio": 2.46,
       "hi52_prox": 0,
       "price": 7784.5,
@@ -1889,7 +1889,7 @@
         "val": 7267.3
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0393,
+      "ars_slope": 0.04,
       "rs_rating": 72
     },
     {
@@ -1897,8 +1897,8 @@
       "name": "GAIL",
       "ind": "Oil Gas",
       "logoid": "gail",
-      "ars": 0.2252,
-      "srs": 0.0671,
+      "ars": 0.2259,
+      "srs": 0.0677,
       "vol_ratio": 1.18,
       "hi52_prox": -0.0549,
       "price": 175.12,
@@ -1918,7 +1918,7 @@
         "val": 165.84
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0074,
+      "ars_slope": -0.0067,
       "rs_rating": 57
     },
     {
@@ -1926,8 +1926,8 @@
       "name": "Godrej Consumer",
       "ind": "FMCG",
       "logoid": "godrej",
-      "ars": -0.1598,
-      "srs": 0.0034,
+      "ars": -0.1593,
+      "srs": 0.004,
       "vol_ratio": 0.63,
       "hi52_prox": -0.1615,
       "price": 1076.5,
@@ -1947,7 +1947,7 @@
         "val": 1022.15
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0093,
+      "ars_slope": -0.0088,
       "rs_rating": 22
     },
     {
@@ -1955,8 +1955,8 @@
       "name": "HDFC AMC",
       "ind": "Financial Services",
       "logoid": "hdfc",
-      "ars": -0.022,
-      "srs": -0.0818,
+      "ars": -0.0215,
+      "srs": -0.0813,
       "vol_ratio": 0.5,
       "hi52_prox": -0.1372,
       "price": 2541.9,
@@ -1976,7 +1976,7 @@
         "val": 2727
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0049,
+      "ars_slope": -0.0044,
       "rs_rating": 18
     },
     {
@@ -1984,8 +1984,8 @@
       "name": "HAL",
       "ind": "Capital Goods",
       "logoid": "hindustan-aeronautics-limited",
-      "ars": 5.1819,
-      "srs": 0.0527,
+      "ars": 5.1855,
+      "srs": 0.0533,
       "vol_ratio": 0.8,
       "hi52_prox": -0.0659,
       "price": 4592,
@@ -2005,7 +2005,7 @@
         "val": 4357.91
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0897,
+      "ars_slope": -0.0862,
       "rs_rating": 91
     },
     {
@@ -2013,8 +2013,8 @@
       "name": "Hindustan Zinc",
       "ind": "Metals & Mining",
       "logoid": "hindustan-zinc",
-      "ars": 0.2948,
-      "srs": -0.1042,
+      "ars": 0.2956,
+      "srs": -0.1037,
       "vol_ratio": 0.83,
       "hi52_prox": -0.262,
       "price": 536.7,
@@ -2034,7 +2034,7 @@
         "val": 554.25
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0205,
+      "ars_slope": -0.0198,
       "rs_rating": 30
     },
     {
@@ -2042,8 +2042,8 @@
       "name": "Hyundai India",
       "ind": "Automobile",
       "logoid": "hyundai",
-      "ars": -0.3683,
-      "srs": 0.0906,
+      "ars": -0.368,
+      "srs": 0.0912,
       "vol_ratio": 0.52,
       "hi52_prox": -0.2906,
       "price": 1992.9,
@@ -2063,7 +2063,7 @@
         "val": 1863.08
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0037,
+      "ars_slope": 0.0041,
       "rs_rating": 22
     },
     {
@@ -2071,8 +2071,8 @@
       "name": "Indian Hotels",
       "ind": "Consumer Services",
       "logoid": "indian-hotels",
-      "ars": 2.5422,
-      "srs": 0.1548,
+      "ars": 2.5442,
+      "srs": 0.1555,
       "vol_ratio": 0.47,
       "hi52_prox": -0.085,
       "price": 738.2,
@@ -2092,7 +2092,7 @@
         "val": 703.85
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0003,
+      "ars_slope": 0.0024,
       "rs_rating": 87
     },
     {
@@ -2100,8 +2100,8 @@
       "name": "Indian Oil",
       "ind": "Oil Gas",
       "logoid": "indian-oil",
-      "ars": 0.3247,
-      "srs": -0.0204,
+      "ars": 0.3254,
+      "srs": -0.0198,
       "vol_ratio": 0.59,
       "hi52_prox": -0.2526,
       "price": 140.11,
@@ -2121,7 +2121,7 @@
         "val": 135.71
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0225,
+      "ars_slope": -0.0217,
       "rs_rating": 38
     },
     {
@@ -2129,8 +2129,8 @@
       "name": "IRFC",
       "ind": "Financial Services",
       "logoid": "indian-railway-finance-corporation",
-      "ars": 1.0727,
-      "srs": -0.1509,
+      "ars": 1.0739,
+      "srs": -0.1504,
       "vol_ratio": 1.37,
       "hi52_prox": -0.3331,
       "price": 89.13,
@@ -2150,7 +2150,7 @@
         "val": 91.4
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0117,
+      "ars_slope": 0.0129,
       "rs_rating": 46
     },
     {
@@ -2158,8 +2158,8 @@
       "name": "Jindal Steel",
       "ind": "Metals & Mining",
       "logoid": "jindal",
-      "ars": 1.3242,
-      "srs": -0.1415,
+      "ars": 1.3255,
+      "srs": -0.141,
       "vol_ratio": 1.53,
       "hi52_prox": -0.1553,
       "price": 1088.7,
@@ -2179,7 +2179,7 @@
         "val": 1101.05
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0591,
+      "ars_slope": 0.0605,
       "rs_rating": 62
     },
     {
@@ -2187,8 +2187,8 @@
       "name": "Lodha",
       "ind": "Realty",
       "logoid": "macrotech-developers",
-      "ars": 2.2635,
-      "srs": 0.4176,
+      "ars": 2.2654,
+      "srs": 0.4185,
       "vol_ratio": 1.16,
       "hi52_prox": 0,
       "price": 1316.35,
@@ -2208,7 +2208,7 @@
         "val": 1173.79
       },
       "ma_status": "MA+",
-      "ars_slope": 0.3692,
+      "ars_slope": 0.3711,
       "rs_rating": 98
     },
     {
@@ -2216,8 +2216,8 @@
       "name": "Mazagoan Dock",
       "ind": "Capital Goods",
       "logoid": "mazagon-dock-shipbuilders-limi",
-      "ars": 10.6931,
-      "srs": -0.121,
+      "ars": 10.6998,
+      "srs": -0.1205,
       "vol_ratio": 0.41,
       "hi52_prox": -0.23,
       "price": 2307.8,
@@ -2237,7 +2237,7 @@
         "val": 2427.63
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1684,
+      "ars_slope": -0.1616,
       "rs_rating": 58
     },
     {
@@ -2245,8 +2245,8 @@
       "name": "Muthoot Finance",
       "ind": "Financial Services",
       "logoid": "muthoot-finance",
-      "ars": 0.4345,
-      "srs": -0.1234,
+      "ars": 0.4353,
+      "srs": -0.1228,
       "vol_ratio": 0.65,
       "hi52_prox": -0.2624,
       "price": 3017.9,
@@ -2266,7 +2266,7 @@
         "val": 2886.4
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0349,
+      "ars_slope": -0.034,
       "rs_rating": 27
     },
     {
@@ -2274,8 +2274,8 @@
       "name": "Pidilite",
       "ind": "Chemicals",
       "logoid": "pidilite",
-      "ars": 0.0617,
-      "srs": 0.1785,
+      "ars": 0.0623,
+      "srs": 0.1792,
       "vol_ratio": 1.14,
       "hi52_prox": 0,
       "price": 1629.9,
@@ -2295,7 +2295,7 @@
         "val": 1536.63
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0053,
+      "ars_slope": -0.0047,
       "rs_rating": 63
     },
     {
@@ -2303,8 +2303,8 @@
       "name": "PFC",
       "ind": "Financial Services",
       "logoid": "power-finance",
-      "ars": 1.6762,
-      "srs": -0.0523,
+      "ars": 1.6778,
+      "srs": -0.0517,
       "vol_ratio": 1.22,
       "hi52_prox": -0.1128,
       "price": 427.1,
@@ -2324,7 +2324,7 @@
         "val": 429.56
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0597,
+      "ars_slope": 0.0613,
       "rs_rating": 68
     },
     {
@@ -2332,8 +2332,8 @@
       "name": "Punjab National Bank",
       "ind": "Financial Services",
       "logoid": "punjab-natl-bank",
-      "ars": 0.8409,
-      "srs": 0.0103,
+      "ars": 0.8419,
+      "srs": 0.0109,
       "vol_ratio": 0.39,
       "hi52_prox": -0.1608,
       "price": 111.08,
@@ -2353,7 +2353,7 @@
         "val": 105.28
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0278,
+      "ars_slope": -0.0268,
       "rs_rating": 47
     },
     {
@@ -2361,8 +2361,8 @@
       "name": "REC Ltd",
       "ind": "Financial Services",
       "logoid": "rec",
-      "ars": 1.1365,
-      "srs": 0.0531,
+      "ars": 1.1377,
+      "srs": 0.0537,
       "vol_ratio": 1.25,
       "hi52_prox": -0.0646,
       "price": 374.25,
@@ -2382,7 +2382,7 @@
         "val": 352.26
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0527,
+      "ars_slope": 0.0539,
       "rs_rating": 76
     },
     {
@@ -2390,8 +2390,8 @@
       "name": "Samvardhana Motherson",
       "ind": "Automobile",
       "logoid": "motherson",
-      "ars": 0.878,
-      "srs": 0.2081,
+      "ars": 0.8791,
+      "srs": 0.2088,
       "vol_ratio": 0.93,
       "hi52_prox": -0.0376,
       "price": 146,
@@ -2411,7 +2411,7 @@
         "val": 138.71
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0288,
+      "ars_slope": -0.0277,
       "rs_rating": 81
     },
     {
@@ -2419,8 +2419,8 @@
       "name": "Shree Cement",
       "ind": "Construction Materials",
       "logoid": "shree-cement",
-      "ars": -0.3541,
-      "srs": 0.1028,
+      "ars": -0.3537,
+      "srs": 0.1034,
       "vol_ratio": 0.8,
       "hi52_prox": -0.1441,
       "price": 26825,
@@ -2440,7 +2440,7 @@
         "val": 25357.61
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0093,
+      "ars_slope": -0.0089,
       "rs_rating": 27
     },
     {
@@ -2448,8 +2448,8 @@
       "name": "Siemens India",
       "ind": "Capital Goods",
       "logoid": "siemens",
-      "ars": 1.2396,
-      "srs": -0.0464,
+      "ars": 1.2409,
+      "srs": -0.0459,
       "vol_ratio": 0.68,
       "hi52_prox": -0.0588,
       "price": 3650.8,
@@ -2469,7 +2469,7 @@
         "val": 3726.06
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0402,
+      "ars_slope": -0.0389,
       "rs_rating": 62
     },
     {
@@ -2477,8 +2477,8 @@
       "name": "Solar Industries",
       "ind": "Chemicals",
       "logoid": "solar-industries",
-      "ars": 8.5391,
-      "srs": 0.1648,
+      "ars": 8.5446,
+      "srs": 0.1655,
       "vol_ratio": 0.59,
       "hi52_prox": -0.0507,
       "price": 18080,
@@ -2498,7 +2498,7 @@
         "val": 17383.17
       },
       "ma_status": "MA-",
-      "ars_slope": -0.5918,
+      "ars_slope": -0.5862,
       "rs_rating": 96
     },
     {
@@ -2506,8 +2506,8 @@
       "name": "TVS Motor",
       "ind": "Automobile",
       "logoid": "tvs",
-      "ars": 3.7896,
-      "srs": 0.1597,
+      "ars": 3.7924,
+      "srs": 0.1604,
       "vol_ratio": 1.63,
       "hi52_prox": 0,
       "price": 4075.6,
@@ -2527,7 +2527,7 @@
         "val": 3800.54
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0987,
+      "ars_slope": 0.1014,
       "rs_rating": 97
     },
     {
@@ -2535,8 +2535,8 @@
       "name": "Tata Capital",
       "ind": "Financial Services",
       "logoid": "tata",
-      "ars": -0.3687,
-      "srs": 0.0963,
+      "ars": -0.3683,
+      "srs": 0.097,
       "vol_ratio": 5.32,
       "hi52_prox": -0.0198,
       "price": 361.8,
@@ -2556,7 +2556,7 @@
         "val": 337.6
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0246,
+      "ars_slope": 0.025,
       "rs_rating": 40
     },
     {
@@ -2564,8 +2564,8 @@
       "name": "Tata Power",
       "ind": "Power",
       "logoid": "tata",
-      "ars": 1.8128,
-      "srs": -0.1499,
+      "ars": 1.8144,
+      "srs": -0.1494,
       "vol_ratio": 1.11,
       "hi52_prox": -0.1831,
       "price": 377.25,
@@ -2585,7 +2585,7 @@
         "val": 392.8
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0432,
+      "ars_slope": -0.0416,
       "rs_rating": 63
     },
     {
@@ -2593,8 +2593,8 @@
       "name": "Torrent Pharma",
       "ind": "Healthcare",
       "logoid": "torrent-pharmaceuticals",
-      "ars": 1.0132,
-      "srs": 0.1595,
+      "ars": 1.0144,
+      "srs": 0.1601,
       "vol_ratio": 0.94,
       "hi52_prox": -0.0369,
       "price": 4878.5,
@@ -2614,7 +2614,7 @@
         "val": 4667.07
       },
       "ma_status": "MA+",
-      "ars_slope": -0.102,
+      "ars_slope": -0.1008,
       "rs_rating": 80
     },
     {
@@ -2622,8 +2622,8 @@
       "name": "Union Bank",
       "ind": "Financial Services",
       "logoid": "union-bank-of-india",
-      "ars": 2.0737,
-      "srs": 0.0391,
+      "ars": 2.0755,
+      "srs": 0.0397,
       "vol_ratio": 0.64,
       "hi52_prox": -0.1542,
       "price": 171.08,
@@ -2643,7 +2643,7 @@
         "val": 159.13
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0073,
+      "ars_slope": -0.0055,
       "rs_rating": 76
     },
     {
@@ -2651,8 +2651,8 @@
       "name": "United Spirits",
       "ind": "FMCG",
       "logoid": "united-spirits",
-      "ars": 0.492,
-      "srs": 0.1288,
+      "ars": 0.4929,
+      "srs": 0.1295,
       "vol_ratio": 1.73,
       "hi52_prox": -0.0029,
       "price": 1504.4,
@@ -2672,7 +2672,7 @@
         "val": 1408.14
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0738,
+      "ars_slope": 0.0747,
       "rs_rating": 83
     },
     {
@@ -2680,8 +2680,8 @@
       "name": "Varun Beverages",
       "ind": "FMCG",
       "logoid": "varun-beverages-ltd",
-      "ars": 2.1957,
-      "srs": -0.1222,
+      "ars": 2.1975,
+      "srs": -0.1217,
       "vol_ratio": 1.57,
       "hi52_prox": -0.178,
       "price": 447.2,
@@ -2701,7 +2701,7 @@
         "val": 485.15
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1448,
+      "ars_slope": -0.143,
       "rs_rating": 71
     },
     {
@@ -2709,8 +2709,8 @@
       "name": "Vedanta",
       "ind": "Metals & Mining",
       "logoid": "vedanta",
-      "ars": -0.049,
-      "srs": -0.1071,
+      "ars": -0.0484,
+      "srs": -0.1066,
       "vol_ratio": 0.42,
       "hi52_prox": -0.6641,
       "price": 264.5,
@@ -2730,7 +2730,7 @@
         "val": 277.48
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0178,
+      "ars_slope": -0.0172,
       "rs_rating": 12
     },
     {
@@ -2738,8 +2738,8 @@
       "name": "Zydus Life",
       "ind": "Healthcare",
       "logoid": "cadila-healthcare",
-      "ars": 0.3534,
-      "srs": 0.2376,
+      "ars": 0.3542,
+      "srs": 0.2383,
       "vol_ratio": 0.87,
       "hi52_prox": -0.0313,
       "price": 1122.7,
@@ -2759,7 +2759,7 @@
         "val": 1085.93
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0139,
+      "ars_slope": -0.0131,
       "rs_rating": 70
     },
     {
@@ -2767,8 +2767,8 @@
       "name": "Indian Bank",
       "ind": "Financial Services",
       "logoid": "indian-bank",
-      "ars": 4.403,
-      "srs": -0.0085,
+      "ars": 4.4061,
+      "srs": -0.0079,
       "vol_ratio": 0.24,
       "hi52_prox": -0.1652,
       "price": 827.7,
@@ -2788,7 +2788,7 @@
         "val": 778.98
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0964,
+      "ars_slope": -0.0932,
       "rs_rating": 74
     },
     {
@@ -2796,8 +2796,8 @@
       "name": "BSE Ltd",
       "ind": "Financial Services",
       "logoid": "bse",
-      "ars": 28.0046,
-      "srs": -0.0509,
+      "ars": 28.0214,
+      "srs": -0.0503,
       "vol_ratio": 0.78,
       "hi52_prox": -0.1957,
       "price": 3541.4,
@@ -2817,7 +2817,7 @@
         "val": 3793.1
       },
       "ma_status": "MA-",
-      "ars_slope": -0.8453,
+      "ars_slope": -0.8284,
       "rs_rating": 81
     },
     {
@@ -2825,8 +2825,8 @@
       "name": "Hitachi Energy India",
       "ind": "Capital Goods",
       "logoid": "abb-power-products",
-      "ars": 12.9929,
-      "srs": -0.0609,
+      "ars": 13.001,
+      "srs": -0.0604,
       "vol_ratio": 0.99,
       "hi52_prox": -0.1761,
       "price": 31675,
@@ -2846,7 +2846,7 @@
         "val": 34461.78
       },
       "ma_status": "MA-",
-      "ars_slope": -0.4274,
+      "ars_slope": -0.4193,
       "rs_rating": 84
     },
     {
@@ -2854,8 +2854,8 @@
       "name": "Indus Towers",
       "ind": "Telecom",
       "logoid": "bharti-infratel",
-      "ars": -0.0541,
-      "srs": -0.0631,
+      "ars": -0.0536,
+      "srs": -0.0625,
       "vol_ratio": 0.57,
       "hi52_prox": -0.1917,
       "price": 386.15,
@@ -2875,7 +2875,7 @@
         "val": 410.07
       },
       "ma_status": "MA-",
-      "ars_slope": -0.039,
+      "ars_slope": -0.0385,
       "rs_rating": 19
     },
     {
@@ -2883,8 +2883,8 @@
       "name": "LG Electronics India",
       "ind": "Consumer Durables",
       "logoid": "lg-display",
-      "ars": -0.4819,
-      "srs": -0.0437,
+      "ars": -0.4816,
+      "srs": -0.0432,
       "vol_ratio": 0.35,
       "hi52_prox": -0.1016,
       "price": 1518.2,
@@ -2904,7 +2904,7 @@
         "val": 1488.8
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0131,
+      "ars_slope": -0.0128,
       "rs_rating": 7
     },
     {
@@ -2912,8 +2912,8 @@
       "name": "Lupin",
       "ind": "Healthcare",
       "logoid": "lupin",
-      "ars": 0.41,
-      "srs": 0.0363,
+      "ars": 0.4108,
+      "srs": 0.0369,
       "vol_ratio": 1.41,
       "hi52_prox": -0.027,
       "price": 2447,
@@ -2933,7 +2933,7 @@
         "val": 2531.59
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0039,
+      "ars_slope": 0.0047,
       "rs_rating": 61
     },
     {
@@ -2941,8 +2941,8 @@
       "name": "Polycab India",
       "ind": "Capital Goods",
       "logoid": "polycab",
-      "ars": 4.039,
-      "srs": 0.1095,
+      "ars": 4.0419,
+      "srs": 0.1102,
       "vol_ratio": 0.63,
       "hi52_prox": -0.1027,
       "price": 9047,
@@ -2962,7 +2962,7 @@
         "val": 9633.26
       },
       "ma_status": "MA-",
-      "ars_slope": -0.117,
+      "ars_slope": -0.1141,
       "rs_rating": 92
     },
     {
@@ -2970,8 +2970,8 @@
       "name": "Groww (BillionBrains)",
       "ind": "Financial Services",
       "logoid": "growwamc-growwdefnc",
-      "ars": -0.1493,
-      "srs": -0.1244,
+      "ars": -0.1488,
+      "srs": -0.1239,
       "vol_ratio": 0.95,
       "hi52_prox": -0.1257,
       "price": 193.71,
@@ -2991,7 +2991,7 @@
         "val": 189.97
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0549,
+      "ars_slope": -0.0544,
       "rs_rating": 17
     },
     {
@@ -2999,8 +2999,8 @@
       "name": "Hero MotoCorp",
       "ind": "Automobile",
       "logoid": "hero-motocorp",
-      "ars": -0.0429,
-      "srs": 0.0044,
+      "ars": -0.0423,
+      "srs": 0.005,
       "vol_ratio": 1.04,
       "hi52_prox": -0.1892,
       "price": 5149.1,
@@ -3020,7 +3020,7 @@
         "val": 4846.54
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0131,
+      "ars_slope": 0.0137,
       "rs_rating": 33
     },
     {
@@ -3028,8 +3028,8 @@
       "name": "Aditya Birla Capital",
       "ind": "Financial Services",
       "logoid": "aditya-birla-capital",
-      "ars": 1.5736,
-      "srs": 0.1447,
+      "ars": 1.5751,
+      "srs": 0.1453,
       "vol_ratio": 0.86,
       "hi52_prox": -0.0297,
       "price": 397.6,
@@ -3049,7 +3049,7 @@
         "val": 379.1
       },
       "ma_status": "MA+",
-      "ars_slope": -0.067,
+      "ars_slope": -0.0655,
       "rs_rating": 87
     },
     {
@@ -3057,8 +3057,8 @@
       "name": "ICICI Lombard",
       "ind": "Financial Services",
       "logoid": "icici-lombard-gen",
-      "ars": -0.3741,
-      "srs": -0.0699,
+      "ars": -0.3737,
+      "srs": -0.0693,
       "vol_ratio": 0.39,
       "hi52_prox": -0.1929,
       "price": 1648.8,
@@ -3078,7 +3078,7 @@
         "val": 1761.19
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0138,
+      "ars_slope": 0.0141,
       "rs_rating": 6
     },
     {
@@ -3086,8 +3086,8 @@
       "name": "Bharat Forge",
       "ind": "Capital Goods",
       "logoid": "bharat-forge",
-      "ars": 1.3274,
-      "srs": 0.1479,
+      "ars": 1.3287,
+      "srs": 0.1486,
       "vol_ratio": 0.9,
       "hi52_prox": -0.017,
       "price": 2171.5,
@@ -3107,7 +3107,7 @@
         "val": 2035.2
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0579,
+      "ars_slope": -0.0566,
       "rs_rating": 86
     },
     {
@@ -3115,8 +3115,8 @@
       "name": "Ashok Leyland",
       "ind": "Automobile",
       "logoid": "ashok-leyland",
-      "ars": 0.8385,
-      "srs": -0.0227,
+      "ars": 0.8396,
+      "srs": -0.0221,
       "vol_ratio": 0.97,
       "hi52_prox": -0.2546,
       "price": 157.96,
@@ -3136,7 +3136,7 @@
         "val": 161.25
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0529,
+      "ars_slope": 0.054,
       "rs_rating": 61
     },
     {
@@ -3144,8 +3144,8 @@
       "name": "Oracle Financial Serv",
       "ind": "IT",
       "logoid": "oracle",
-      "ars": 1.0322,
-      "srs": 0.1682,
+      "ars": 1.0334,
+      "srs": 0.1688,
       "vol_ratio": 0.71,
       "hi52_prox": -0.0292,
       "price": 11427,
@@ -3165,7 +3165,7 @@
         "val": 11787.12
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0685,
+      "ars_slope": 0.0697,
       "rs_rating": 77
     },
     {
@@ -3173,8 +3173,8 @@
       "name": "Bharat Heavy Electric",
       "ind": "Capital Goods",
       "logoid": "bharat-heavy-electricals",
-      "ars": 5.0377,
-      "srs": 0.0688,
+      "ars": 5.0412,
+      "srs": 0.0694,
       "vol_ratio": 0.64,
       "hi52_prox": -0.0695,
       "price": 405.15,
@@ -3194,7 +3194,7 @@
         "val": 381.78
       },
       "ma_status": "MA+",
-      "ars_slope": -0.1782,
+      "ars_slope": -0.1747,
       "rs_rating": 86
     },
     {
@@ -3202,8 +3202,8 @@
       "name": "IDFC First Bank",
       "ind": "Financial Services",
       "logoid": "idfc-first-bank",
-      "ars": 0.311,
-      "srs": 0.2152,
+      "ars": 0.3118,
+      "srs": 0.2159,
       "vol_ratio": 0.73,
       "hi52_prox": -0.0122,
       "price": 85.02,
@@ -3223,7 +3223,7 @@
         "val": 79.71
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0564,
+      "ars_slope": 0.0571,
       "rs_rating": 65
     },
     {
@@ -3231,8 +3231,8 @@
       "name": "Yes Bank",
       "ind": "Financial Services",
       "logoid": "yes-bank",
-      "ars": -0.2682,
-      "srs": 0.1382,
+      "ars": -0.2678,
+      "srs": 0.1389,
       "vol_ratio": 0.65,
       "hi52_prox": -0.1036,
       "price": 22.84,
@@ -3252,7 +3252,7 @@
         "val": 24.03
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0164,
+      "ars_slope": -0.0159,
       "rs_rating": 31
     },
     {
@@ -3260,8 +3260,8 @@
       "name": "Suzlon Energy",
       "ind": "Power",
       "logoid": "suzlon-energy",
-      "ars": 3.4482,
-      "srs": -0.1412,
+      "ars": 3.4508,
+      "srs": -0.1407,
       "vol_ratio": 2.81,
       "hi52_prox": -0.2805,
       "price": 47.45,
@@ -3281,7 +3281,7 @@
         "val": 52.08
       },
       "ma_status": "MA-",
-      "ars_slope": -0.5531,
+      "ars_slope": -0.5505,
       "rs_rating": 69
     },
     {
@@ -3289,8 +3289,8 @@
       "name": "NBCC India",
       "ind": "Construction",
       "logoid": "nbcc-india",
-      "ars": 1.7054,
-      "srs": 0.017,
+      "ars": 1.7069,
+      "srs": 0.0176,
       "vol_ratio": 0.5,
       "hi52_prox": -0.2288,
       "price": 94.6,
@@ -3310,7 +3310,7 @@
         "val": 100.76
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0074,
+      "ars_slope": -0.0058,
       "rs_rating": 61
     },
     {
@@ -3318,8 +3318,8 @@
       "name": "IRCTC",
       "ind": "Services",
       "logoid": "indian-rail-tour-corp-ltd",
-      "ars": -0.0102,
-      "srs": -0.1115,
+      "ars": -0.0096,
+      "srs": -0.111,
       "vol_ratio": 1.01,
       "hi52_prox": -0.3266,
       "price": 496,
@@ -3339,7 +3339,7 @@
         "val": 514.15
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0142,
+      "ars_slope": -0.0136,
       "rs_rating": 24
     },
     {
@@ -3347,8 +3347,8 @@
       "name": "SAIL",
       "ind": "Metals & Mining",
       "logoid": "steel-authority-of-india",
-      "ars": 0.3234,
-      "srs": -0.0865,
+      "ars": 0.3242,
+      "srs": -0.086,
       "vol_ratio": 3,
       "hi52_prox": -0.1703,
       "price": 170.96,
@@ -3368,7 +3368,7 @@
         "val": 173.35
       },
       "ma_status": "MA-",
-      "ars_slope": 0.055,
+      "ars_slope": 0.0557,
       "rs_rating": 41
     },
     {
@@ -3376,8 +3376,8 @@
       "name": "HUDCO",
       "ind": "Financial Services",
       "logoid": "housing-urban-dev",
-      "ars": 1.7392,
-      "srs": -0.1209,
+      "ars": 1.7408,
+      "srs": -0.1204,
       "vol_ratio": 0.77,
       "hi52_prox": -0.1997,
       "price": 195.21,
@@ -3397,7 +3397,7 @@
         "val": 209.85
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0947,
+      "ars_slope": -0.0931,
       "rs_rating": 50
     },
     {
@@ -3405,8 +3405,8 @@
       "name": "GMR Airports",
       "ind": "Services",
       "logoid": "gmr",
-      "ars": 1.5774,
-      "srs": 0.1047,
+      "ars": 1.5789,
+      "srs": 0.1054,
       "vol_ratio": 0.58,
       "hi52_prox": -0.0685,
       "price": 107.1,
@@ -3426,7 +3426,7 @@
         "val": 106.62
       },
       "ma_status": "MA+",
-      "ars_slope": -0.1141,
+      "ars_slope": -0.1127,
       "rs_rating": 78
     },
     {
@@ -3434,8 +3434,8 @@
       "name": "Marico",
       "ind": "FMCG",
       "logoid": "marico",
-      "ars": 0.2479,
-      "srs": 0.1278,
+      "ars": 0.2486,
+      "srs": 0.1284,
       "vol_ratio": 1.53,
       "hi52_prox": -0.0052,
       "price": 878.7,
@@ -3455,7 +3455,7 @@
         "val": 830.03
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0003,
+      "ars_slope": 0.0011,
       "rs_rating": 67
     },
     {
@@ -3463,8 +3463,8 @@
       "name": "JSW Energy",
       "ind": "Power",
       "logoid": "jsw-energy",
-      "ars": 3.7113,
-      "srs": -0.0327,
+      "ars": 3.7141,
+      "srs": -0.0322,
       "vol_ratio": 0.53,
       "hi52_prox": -0.0936,
       "price": 545.7,
@@ -3484,7 +3484,7 @@
         "val": 583.81
       },
       "ma_status": "MA-",
-      "ars_slope": -0.227,
+      "ars_slope": -0.2243,
       "rs_rating": 73
     },
     {
@@ -3492,8 +3492,8 @@
       "name": "Mankind Pharma",
       "ind": "Healthcare",
       "logoid": "mankind-pharma-limited",
-      "ars": 0.0513,
-      "srs": 0.1422,
+      "ars": 0.0519,
+      "srs": 0.1429,
       "vol_ratio": 0.85,
       "hi52_prox": -0.0255,
       "price": 2592.7,
@@ -3513,7 +3513,7 @@
         "val": 2416.91
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0047,
+      "ars_slope": -0.0041,
       "rs_rating": 53
     },
     {
@@ -3521,8 +3521,8 @@
       "name": "Coforge",
       "ind": "IT",
       "logoid": "coforge-limited",
-      "ars": 0.8166,
-      "srs": 0.4812,
+      "ars": 0.8176,
+      "srs": 0.4821,
       "vol_ratio": 2.16,
       "hi52_prox": -0.133,
       "price": 1714.9,
@@ -3542,7 +3542,7 @@
         "val": 1547.7
       },
       "ma_status": "MA+",
-      "ars_slope": 0.2633,
+      "ars_slope": 0.2644,
       "rs_rating": 90
     },
     {
@@ -3550,8 +3550,8 @@
       "name": "Persistent Systems",
       "ind": "IT",
       "logoid": "persistent-systems-ltd",
-      "ars": 3.2234,
-      "srs": 0.1391,
+      "ars": 3.2258,
+      "srs": 0.1398,
       "vol_ratio": 0.8,
       "hi52_prox": -0.1646,
       "price": 5483.3,
@@ -3571,7 +3571,7 @@
         "val": 5023.23
       },
       "ma_status": "MA+",
-      "ars_slope": 0.3002,
+      "ars_slope": 0.3026,
       "rs_rating": 94
     },
     {
@@ -3579,8 +3579,8 @@
       "name": "Paytm (One97)",
       "ind": "Financial Services",
       "logoid": "one-97-communications",
-      "ars": -0.5086,
-      "srs": 0.2073,
+      "ars": -0.5083,
+      "srs": 0.208,
       "vol_ratio": 1.14,
       "hi52_prox": -0.0408,
       "price": 1330,
@@ -3600,7 +3600,7 @@
         "val": 1248.21
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0147,
+      "ars_slope": 0.015,
       "rs_rating": 34
     },
     {
@@ -3608,8 +3608,8 @@
       "name": "PB Fintech",
       "ind": "Financial Services",
       "logoid": "pb-fintech",
-      "ars": -0.2271,
-      "srs": -0.0382,
+      "ars": -0.2267,
+      "srs": -0.0376,
       "vol_ratio": 0.19,
       "hi52_prox": -0.1768,
       "price": 1611.2,
@@ -3629,7 +3629,7 @@
         "val": 1659.36
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0166,
+      "ars_slope": 0.0171,
       "rs_rating": 10
     },
     {
@@ -3637,8 +3637,8 @@
       "name": "Info Edge",
       "ind": "IT",
       "logoid": "info-edge",
-      "ars": -0.2432,
-      "srs": 0.2758,
+      "ars": -0.2428,
+      "srs": 0.2766,
       "vol_ratio": 0.6,
       "hi52_prox": -0.1313,
       "price": 1247.85,
@@ -3658,7 +3658,7 @@
         "val": 1144.21
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0223,
+      "ars_slope": 0.0227,
       "rs_rating": 38
     },
     {
@@ -3666,8 +3666,8 @@
       "name": "Aurobindo Pharma",
       "ind": "Healthcare",
       "logoid": "aurobindo",
-      "ars": -0.0112,
-      "srs": 0.1387,
+      "ars": -0.0106,
+      "srs": 0.1394,
       "vol_ratio": 1.16,
       "hi52_prox": -0.0184,
       "price": 1590.7,
@@ -3687,7 +3687,7 @@
         "val": 1490.86
       },
       "ma_status": "MA+",
-      "ars_slope": 0.018,
+      "ars_slope": 0.0186,
       "rs_rating": 54
     },
     {
@@ -3695,8 +3695,8 @@
       "name": "Alkem Labs",
       "ind": "Healthcare",
       "logoid": "alkem",
-      "ars": 0.1087,
-      "srs": 0.0449,
+      "ars": 0.1093,
+      "srs": 0.0455,
       "vol_ratio": 0.39,
       "hi52_prox": -0.0369,
       "price": 5672.5,
@@ -3716,7 +3716,7 @@
         "val": 5359.22
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0029,
+      "ars_slope": -0.0023,
       "rs_rating": 32
     },
     {
@@ -3724,8 +3724,8 @@
       "name": "Biocon",
       "ind": "Healthcare",
       "logoid": "biocon",
-      "ars": -0.4662,
-      "srs": 0.1923,
+      "ars": -0.4659,
+      "srs": 0.193,
       "vol_ratio": 0.49,
       "hi52_prox": -0.0218,
       "price": 431.1,
@@ -3745,7 +3745,7 @@
         "val": 402.12
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0184,
+      "ars_slope": -0.0181,
       "rs_rating": 24
     },
     {
@@ -3753,13 +3753,13 @@
       "name": "Laurus Labs",
       "ind": "Healthcare",
       "logoid": "laurus-labs",
-      "ars": 1.907,
-      "srs": 0.519,
+      "ars": 1.9086,
+      "srs": 0.5199,
       "vol_ratio": 1.29,
       "hi52_prox": 0,
       "price": 1781.3,
       "breakout": false,
-      "trending": false,
+      "trending": true,
       "signDays": 289,
       "signSince": 1749095100,
       "signPrice": 640.65,
@@ -3774,7 +3774,7 @@
         "val": 1650.01
       },
       "ma_status": "MA+",
-      "ars_slope": 0.3007,
+      "ars_slope": 0.3024,
       "rs_rating": 95
     },
     {
@@ -3782,8 +3782,8 @@
       "name": "Gland Pharma",
       "ind": "Healthcare",
       "logoid": "gland-pharma",
-      "ars": -0.3809,
-      "srs": 0.3936,
+      "ars": -0.3806,
+      "srs": 0.3944,
       "vol_ratio": 1.66,
       "hi52_prox": -0.0025,
       "price": 2543.7,
@@ -3803,7 +3803,7 @@
         "val": 2328.1
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0298,
+      "ars_slope": 0.0302,
       "rs_rating": 49
     },
     {
@@ -3811,8 +3811,8 @@
       "name": "Colgate-Palmolive",
       "ind": "FMCG",
       "logoid": "colgate-palmolive",
-      "ars": -0.2085,
-      "srs": 0.028,
+      "ars": -0.208,
+      "srs": 0.0286,
       "vol_ratio": 5.31,
       "hi52_prox": -0.121,
       "price": 2166.4,
@@ -3832,7 +3832,7 @@
         "val": 2029.01
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0076,
+      "ars_slope": 0.008,
       "rs_rating": 35
     },
     {
@@ -3840,8 +3840,8 @@
       "name": "P&G Hygiene",
       "ind": "FMCG",
       "logoid": "procter-and-gamble",
-      "ars": -0.5497,
-      "srs": -0.1571,
+      "ars": -0.5494,
+      "srs": -0.1566,
       "vol_ratio": 6.52,
       "hi52_prox": -0.4021,
       "price": 8598.5,
@@ -3861,7 +3861,7 @@
         "val": 9071.37
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0296,
+      "ars_slope": -0.0294,
       "rs_rating": 8
     },
     {
@@ -3869,8 +3869,8 @@
       "name": "Dabur India",
       "ind": "FMCG",
       "logoid": "dabur",
-      "ars": -0.5318,
-      "srs": -0.0229,
+      "ars": -0.5315,
+      "srs": -0.0223,
       "vol_ratio": 1.13,
       "hi52_prox": -0.2153,
       "price": 433.7,
@@ -3890,7 +3890,7 @@
         "val": 444.61
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0007,
+      "ars_slope": -0.0004,
       "rs_rating": 14
     },
     {
@@ -3898,8 +3898,8 @@
       "name": "Emami",
       "ind": "FMCG",
       "logoid": "emami",
-      "ars": -0.4449,
-      "srs": -0.1105,
+      "ars": -0.4445,
+      "srs": -0.1099,
       "vol_ratio": 0.78,
       "hi52_prox": -0.3491,
       "price": 407.85,
@@ -3919,7 +3919,7 @@
         "val": 389.57
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0218,
+      "ars_slope": -0.0215,
       "rs_rating": 8
     },
     {
@@ -3927,8 +3927,8 @@
       "name": "Patanjali Foods",
       "ind": "FMCG",
       "logoid": "ruchi-soya-industries",
-      "ars": -0.0816,
-      "srs": -0.2214,
+      "ars": -0.0811,
+      "srs": -0.2209,
       "vol_ratio": 1.86,
       "hi52_prox": -0.436,
       "price": 357.15,
@@ -3948,7 +3948,7 @@
         "val": 373.26
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0342,
+      "ars_slope": 0.0348,
       "rs_rating": 20
     },
     {
@@ -3956,8 +3956,8 @@
       "name": "Federal Bank",
       "ind": "Financial Services",
       "logoid": "fed-bank",
-      "ars": 2.0438,
-      "srs": 0.2355,
+      "ars": 2.0456,
+      "srs": 0.2362,
       "vol_ratio": 0.79,
       "hi52_prox": 0,
       "price": 359.15,
@@ -3977,7 +3977,7 @@
         "val": 341.9
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0148,
+      "ars_slope": -0.013,
       "rs_rating": 93
     },
     {
@@ -3985,8 +3985,8 @@
       "name": "IDBI Bank",
       "ind": "Financial Services",
       "logoid": "idbi-bank",
-      "ars": 0.5023,
-      "srs": 0.1178,
+      "ars": 0.5032,
+      "srs": 0.1185,
       "vol_ratio": 0.38,
       "hi52_prox": -0.2747,
       "price": 84.14,
@@ -4006,7 +4006,7 @@
         "val": 78.22
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0443,
+      "ars_slope": -0.0434,
       "rs_rating": 57
     },
     {
@@ -4014,8 +4014,8 @@
       "name": "RBL Bank",
       "ind": "Financial Services",
       "logoid": "rbl-bank",
-      "ars": -0.0736,
-      "srs": 0.0969,
+      "ars": -0.073,
+      "srs": 0.0976,
       "vol_ratio": 0.64,
       "hi52_prox": -0.025,
       "price": 371.15,
@@ -4035,7 +4035,7 @@
         "val": 347.68
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0228,
+      "ars_slope": 0.0233,
       "rs_rating": 29
     },
     {
@@ -4043,8 +4043,8 @@
       "name": "AU Small Finance Bank",
       "ind": "Financial Services",
       "logoid": "au-small-finance-b",
-      "ars": 0.3734,
-      "srs": 0.0205,
+      "ars": 0.3742,
+      "srs": 0.0211,
       "vol_ratio": 0.8,
       "hi52_prox": -0.0278,
       "price": 1042.3,
@@ -4064,7 +4064,7 @@
         "val": 963.37
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0582,
+      "ars_slope": 0.0589,
       "rs_rating": 45
     },
     {
@@ -4072,8 +4072,8 @@
       "name": "Bandhan Bank",
       "ind": "Financial Services",
       "logoid": "bandhan-bank",
-      "ars": -0.7499,
-      "srs": -0.1649,
+      "ars": -0.7497,
+      "srs": -0.1645,
       "vol_ratio": 0.9,
       "hi52_prox": -0.1991,
       "price": 173.58,
@@ -4093,7 +4093,7 @@
         "val": 194.8
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0068,
+      "ars_slope": 0.0069,
       "rs_rating": 2
     },
     {
@@ -4101,8 +4101,8 @@
       "name": "LIC Housing Finance",
       "ind": "Financial Services",
       "logoid": "lic-housing",
-      "ars": -0.1547,
-      "srs": -0.0076,
+      "ars": -0.1542,
+      "srs": -0.007,
       "vol_ratio": 1.43,
       "hi52_prox": -0.0881,
       "price": 553.45,
@@ -4122,7 +4122,7 @@
         "val": 567.63
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0076,
+      "ars_slope": 0.0081,
       "rs_rating": 30
     },
     {
@@ -4130,8 +4130,8 @@
       "name": "Sundaram Finance",
       "ind": "Financial Services",
       "logoid": "sundaram-finance",
-      "ars": 0.4043,
-      "srs": -0.0173,
+      "ars": 0.4051,
+      "srs": -0.0168,
       "vol_ratio": 0.52,
       "hi52_prox": -0.1973,
       "price": 4480.1,
@@ -4151,7 +4151,7 @@
         "val": 4319.27
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0066,
+      "ars_slope": -0.0057,
       "rs_rating": 36
     },
     {
@@ -4159,8 +4159,8 @@
       "name": "M&M Financial",
       "ind": "Financial Services",
       "logoid": "mahindra-finance",
-      "ars": 0.2708,
-      "srs": 0.2892,
+      "ars": 0.2715,
+      "srs": 0.2899,
       "vol_ratio": 1.09,
       "hi52_prox": -0.0263,
       "price": 393.75,
@@ -4180,7 +4180,7 @@
         "val": 347.84
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0536,
+      "ars_slope": 0.0543,
       "rs_rating": 71
     },
     {
@@ -4188,8 +4188,8 @@
       "name": "Max Financial Services",
       "ind": "Financial Services",
       "logoid": "max-financial",
-      "ars": 0.2646,
-      "srs": -0.0496,
+      "ars": 0.2654,
+      "srs": -0.0491,
       "vol_ratio": 1.58,
       "hi52_prox": -0.1898,
       "price": 1515.1,
@@ -4209,7 +4209,7 @@
         "val": 1618.19
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0302,
+      "ars_slope": -0.0294,
       "rs_rating": 43
     },
     {
@@ -4217,8 +4217,8 @@
       "name": "GIC Re",
       "ind": "Financial Services",
       "logoid": "general-insurance",
-      "ars": 0.4766,
-      "srs": -0.1278,
+      "ars": 0.4774,
+      "srs": -0.1273,
       "vol_ratio": 0.63,
       "hi52_prox": -0.1231,
       "price": 358.95,
@@ -4238,7 +4238,7 @@
         "val": 373.42
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0308,
+      "ars_slope": -0.03,
       "rs_rating": 28
     },
     {
@@ -4246,8 +4246,8 @@
       "name": "New India Assurance",
       "ind": "Financial Services",
       "logoid": "the-new-india-assu",
-      "ars": -0.2676,
-      "srs": 0.0165,
+      "ars": -0.2672,
+      "srs": 0.0171,
       "vol_ratio": 0.58,
       "hi52_prox": -0.2262,
       "price": 164.13,
@@ -4267,7 +4267,7 @@
         "val": 180.76
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0635,
+      "ars_slope": -0.063,
       "rs_rating": 20
     },
     {
@@ -4275,8 +4275,8 @@
       "name": "Star Health Insurance",
       "ind": "Financial Services",
       "logoid": "star-health-and-al-ins-co-l",
-      "ars": -0.6192,
-      "srs": 0.1332,
+      "ars": -0.6189,
+      "srs": 0.1338,
       "vol_ratio": 2.08,
       "hi52_prox": -0.0073,
       "price": 598.85,
@@ -4296,7 +4296,7 @@
         "val": 556.85
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0053,
+      "ars_slope": 0.0055,
       "rs_rating": 31
     },
     {
@@ -4304,8 +4304,8 @@
       "name": "Sona BLW Precision",
       "ind": "Automobile",
       "logoid": "sona-blw-precision",
-      "ars": 0.1504,
-      "srs": 0.2454,
+      "ars": 0.1511,
+      "srs": 0.2461,
       "vol_ratio": 0.68,
       "hi52_prox": -0.0167,
       "price": 720.5,
@@ -4325,7 +4325,7 @@
         "val": 673.83
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0199,
+      "ars_slope": -0.0192,
       "rs_rating": 59
     },
     {
@@ -4333,8 +4333,8 @@
       "name": "Balkrishna Industries",
       "ind": "Automobile",
       "logoid": "balkrishna",
-      "ars": -0.2689,
-      "srs": -0.0609,
+      "ars": -0.2685,
+      "srs": -0.0604,
       "vol_ratio": 0.84,
       "hi52_prox": -0.2455,
       "price": 2081.7,
@@ -4354,7 +4354,7 @@
         "val": 2186.92
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0117,
+      "ars_slope": 0.0122,
       "rs_rating": 17
     },
     {
@@ -4362,13 +4362,13 @@
       "name": "Exide Industries",
       "ind": "Automobile",
       "logoid": "exide",
-      "ars": 0.313,
-      "srs": 0.2069,
+      "ars": 0.3138,
+      "srs": 0.2076,
       "vol_ratio": 0.58,
       "hi52_prox": -0.0272,
       "price": 435.65,
       "breakout": false,
-      "trending": false,
+      "trending": true,
       "signDays": 73,
       "signSince": 1776743100,
       "signPrice": 333.1,
@@ -4383,7 +4383,7 @@
         "val": 409.52
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0367,
+      "ars_slope": -0.0359,
       "rs_rating": 59
     },
     {
@@ -4391,8 +4391,8 @@
       "name": "MRF",
       "ind": "Automobile",
       "logoid": "mrf",
-      "ars": 0.0181,
-      "srs": 0.0291,
+      "ars": 0.0187,
+      "srs": 0.0297,
       "vol_ratio": 0.72,
       "hi52_prox": -0.1731,
       "price": 134200,
@@ -4412,7 +4412,7 @@
         "val": 128335.82
       },
       "ma_status": "MA-",
-      "ars_slope": -0.009,
+      "ars_slope": -0.0084,
       "rs_rating": 34
     },
     {
@@ -4420,8 +4420,8 @@
       "name": "Apollo Tyres",
       "ind": "Automobile",
       "logoid": "apollo-tyres",
-      "ars": 0.3596,
-      "srs": 0.0329,
+      "ars": 0.3604,
+      "srs": 0.0335,
       "vol_ratio": 0.5,
       "hi52_prox": -0.2101,
       "price": 424.1,
@@ -4441,7 +4441,7 @@
         "val": 447.34
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0331,
+      "ars_slope": -0.0323,
       "rs_rating": 45
     },
     {
@@ -4449,8 +4449,8 @@
       "name": "Escorts Kubota",
       "ind": "Capital Goods",
       "logoid": "escorts",
-      "ars": 0.351,
-      "srs": -0.0743,
+      "ars": 0.3518,
+      "srs": -0.0738,
       "vol_ratio": 1.29,
       "hi52_prox": -0.2386,
       "price": 3016.8,
@@ -4470,7 +4470,7 @@
         "val": 2847.13
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0064,
+      "ars_slope": 0.0072,
       "rs_rating": 45
     },
     {
@@ -4478,8 +4478,8 @@
       "name": "Voltas",
       "ind": "Consumer Durables",
       "logoid": "voltas",
-      "ars": -0.089,
-      "srs": -0.0868,
+      "ars": -0.0885,
+      "srs": -0.0862,
       "vol_ratio": 0.44,
       "hi52_prox": -0.1588,
       "price": 1313.3,
@@ -4499,7 +4499,7 @@
         "val": 1279.71
       },
       "ma_status": "MA-",
-      "ars_slope": -0.013,
+      "ars_slope": -0.0124,
       "rs_rating": 12
     },
     {
@@ -4507,8 +4507,8 @@
       "name": "Crompton Greaves",
       "ind": "Consumer Durables",
       "logoid": "crompton-greaves-consumer-elec",
-      "ars": -0.5969,
-      "srs": -0.0349,
+      "ars": -0.5966,
+      "srs": -0.0344,
       "vol_ratio": 2.27,
       "hi52_prox": -0.2115,
       "price": 264.25,
@@ -4528,7 +4528,7 @@
         "val": 267.18
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0059,
+      "ars_slope": 0.0061,
       "rs_rating": 17
     },
     {
@@ -4536,8 +4536,8 @@
       "name": "Havells India",
       "ind": "Consumer Durables",
       "logoid": "havells",
-      "ars": -0.216,
-      "srs": -0.0082,
+      "ars": -0.2155,
+      "srs": -0.0076,
       "vol_ratio": 0.42,
       "hi52_prox": -0.234,
       "price": 1237,
@@ -4557,7 +4557,7 @@
         "val": 1157.85
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0049,
+      "ars_slope": 0.0054,
       "rs_rating": 16
     },
     {
@@ -4565,8 +4565,8 @@
       "name": "Dixon Technologies",
       "ind": "Consumer Durables",
       "logoid": "dixon-technologie",
-      "ars": 2.0219,
-      "srs": 0.2446,
+      "ars": 2.0236,
+      "srs": 0.2454,
       "vol_ratio": 0.65,
       "hi52_prox": -0.2213,
       "price": 14275,
@@ -4586,7 +4586,7 @@
         "val": 13153.33
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0408,
+      "ars_slope": 0.0425,
       "rs_rating": 89
     },
     {
@@ -4594,8 +4594,8 @@
       "name": "Kajaria Ceramics",
       "ind": "Construction Materials",
       "logoid": "kajaria-ceramics",
-      "ars": -0.0165,
-      "srs": 0.0131,
+      "ars": -0.0159,
+      "srs": 0.0137,
       "vol_ratio": 0.89,
       "hi52_prox": -0.0759,
       "price": 1209.7,
@@ -4615,7 +4615,7 @@
         "val": 1160.33
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0345,
+      "ars_slope": -0.0339,
       "rs_rating": 34
     },
     {
@@ -4623,8 +4623,8 @@
       "name": "JK Cement",
       "ind": "Construction Materials",
       "logoid": "jk-cements",
-      "ars": 0.6919,
-      "srs": 0.0615,
+      "ars": 0.6928,
+      "srs": 0.0621,
       "vol_ratio": 0.6,
       "hi52_prox": -0.2516,
       "price": 5642,
@@ -4644,7 +4644,7 @@
         "val": 5204.58
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0677,
+      "ars_slope": -0.0667,
       "rs_rating": 60
     },
     {
@@ -4652,8 +4652,8 @@
       "name": "Ramco Cements",
       "ind": "Construction Materials",
       "logoid": "ramco-cements",
-      "ars": -0.3315,
-      "srs": -0.0198,
+      "ars": -0.3311,
+      "srs": -0.0192,
       "vol_ratio": 0.5,
       "hi52_prox": -0.2352,
       "price": 921.5,
@@ -4673,7 +4673,7 @@
         "val": 884.84
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0015,
+      "ars_slope": -0.0012,
       "rs_rating": 11
     },
     {
@@ -4681,8 +4681,8 @@
       "name": "Oberoi Realty",
       "ind": "Realty",
       "logoid": "oberoi-realty",
-      "ars": 0.7949,
-      "srs": 0.0941,
+      "ars": 0.7959,
+      "srs": 0.0947,
       "vol_ratio": 0.38,
       "hi52_prox": -0.0598,
       "price": 1836.5,
@@ -4702,7 +4702,7 @@
         "val": 1960.94
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0478,
+      "ars_slope": -0.0468,
       "rs_rating": 62
     },
     {
@@ -4710,8 +4710,8 @@
       "name": "Godrej Properties",
       "ind": "Realty",
       "logoid": "godrej-properties",
-      "ars": -0.1288,
-      "srs": 0.1685,
+      "ars": -0.1283,
+      "srs": 0.1692,
       "vol_ratio": 0.9,
       "hi52_prox": -0.0708,
       "price": 2156,
@@ -4731,7 +4731,7 @@
         "val": 1960.96
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0149,
+      "ars_slope": 0.0154,
       "rs_rating": 44
     },
     {
@@ -4739,8 +4739,8 @@
       "name": "Phoenix Mills",
       "ind": "Realty",
       "logoid": "phoenix-mills",
-      "ars": 1.8056,
-      "srs": 0.0632,
+      "ars": 1.8072,
+      "srs": 0.0638,
       "vol_ratio": 2.42,
       "hi52_prox": -0.113,
       "price": 1910.5,
@@ -4760,7 +4760,7 @@
         "val": 2068.33
       },
       "ma_status": "MA-",
-      "ars_slope": -0.2385,
+      "ars_slope": -0.2369,
       "rs_rating": 90
     },
     {
@@ -4768,8 +4768,8 @@
       "name": "Prestige Estates",
       "ind": "Realty",
       "logoid": "prestige-estates-projects",
-      "ars": 2.6164,
-      "srs": 0.1765,
+      "ars": 2.6185,
+      "srs": 0.1772,
       "vol_ratio": 1.04,
       "hi52_prox": -0.0626,
       "price": 1673,
@@ -4789,7 +4789,7 @@
         "val": 1547.59
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0445,
+      "ars_slope": -0.0424,
       "rs_rating": 95
     },
     {
@@ -4797,8 +4797,8 @@
       "name": "Petronet LNG",
       "ind": "Oil Gas",
       "logoid": "petronet-lng",
-      "ars": -0.3604,
-      "srs": -0.0041,
+      "ars": -0.36,
+      "srs": -0.0035,
       "vol_ratio": 0.59,
       "hi52_prox": -0.1432,
       "price": 277.1,
@@ -4818,7 +4818,7 @@
         "val": 290.44
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0177,
+      "ars_slope": -0.0173,
       "rs_rating": 13
     },
     {
@@ -4826,8 +4826,8 @@
       "name": "Mahanagar Gas",
       "ind": "Oil Gas",
       "logoid": "mahanagar-gas",
-      "ars": -0.3988,
-      "srs": -0.032,
+      "ars": -0.3984,
+      "srs": -0.0314,
       "vol_ratio": 1.5,
       "hi52_prox": -0.2176,
       "price": 1105,
@@ -4847,7 +4847,7 @@
         "val": 1151.86
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0098,
+      "ars_slope": 0.0102,
       "rs_rating": 22
     },
     {
@@ -4855,8 +4855,8 @@
       "name": "Indraprastha Gas",
       "ind": "Oil Gas",
       "logoid": "indraprastha-gas",
-      "ars": -0.6522,
-      "srs": -0.0839,
+      "ars": -0.652,
+      "srs": -0.0833,
       "vol_ratio": 0.45,
       "hi52_prox": -0.3053,
       "price": 152.91,
@@ -4876,7 +4876,7 @@
         "val": 158.5
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0028,
+      "ars_slope": -0.0026,
       "rs_rating": 2
     },
     {
@@ -4884,8 +4884,8 @@
       "name": "Oil India",
       "ind": "Oil Gas",
       "logoid": "oil-india",
-      "ars": 2.5646,
-      "srs": -0.0923,
+      "ars": 2.5667,
+      "srs": -0.0917,
       "vol_ratio": 0.5,
       "hi52_prox": -0.1358,
       "price": 447.9,
@@ -4905,7 +4905,7 @@
         "val": 424.85
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0917,
+      "ars_slope": -0.0896,
       "rs_rating": 60
     },
     {
@@ -4913,8 +4913,8 @@
       "name": "NHPC",
       "ind": "Power",
       "logoid": "nhpc",
-      "ars": 0.9449,
-      "srs": -0.0696,
+      "ars": 0.946,
+      "srs": -0.069,
       "vol_ratio": 0.79,
       "hi52_prox": -0.1209,
       "price": 77.9,
@@ -4934,7 +4934,7 @@
         "val": 76.13
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0954,
+      "ars_slope": -0.0943,
       "rs_rating": 50
     },
     {
@@ -4942,8 +4942,8 @@
       "name": "SJVN",
       "ind": "Power",
       "logoid": "sjvn",
-      "ars": 0.5859,
-      "srs": -0.1403,
+      "ars": 0.5868,
+      "srs": -0.1398,
       "vol_ratio": 1.13,
       "hi52_prox": -0.3066,
       "price": 69.02,
@@ -4963,7 +4963,7 @@
         "val": 70.85
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0023,
+      "ars_slope": 0.0032,
       "rs_rating": 36
     },
     {
@@ -4971,8 +4971,8 @@
       "name": "Torrent Power",
       "ind": "Power",
       "logoid": "torrent-power",
-      "ars": 1.5724,
-      "srs": -0.1743,
+      "ars": 1.5739,
+      "srs": -0.1738,
       "vol_ratio": 0.35,
       "hi52_prox": -0.1926,
       "price": 1431.1,
@@ -4992,7 +4992,7 @@
         "val": 1488.53
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0451,
+      "ars_slope": -0.0436,
       "rs_rating": 39
     },
     {
@@ -5000,8 +5000,8 @@
       "name": "NMDC",
       "ind": "Metals & Mining",
       "logoid": "nmdc",
-      "ars": 0.6609,
-      "srs": -0.0415,
+      "ars": 0.6618,
+      "srs": -0.0409,
       "vol_ratio": 1.46,
       "hi52_prox": -0.1061,
       "price": 85.85,
@@ -5021,7 +5021,7 @@
         "val": 87.86
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0328,
+      "ars_slope": 0.0338,
       "rs_rating": 55
     },
     {
@@ -5029,8 +5029,8 @@
       "name": "National Aluminium",
       "ind": "Metals & Mining",
       "logoid": "national-aluminum",
-      "ars": 3.4824,
-      "srs": -0.1592,
+      "ars": 3.485,
+      "srs": -0.1587,
       "vol_ratio": 0.8,
       "hi52_prox": -0.2193,
       "price": 344.7,
@@ -5050,7 +5050,7 @@
         "val": 365.45
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0994,
+      "ars_slope": -0.0968,
       "rs_rating": 66
     },
     {
@@ -5058,8 +5058,8 @@
       "name": "APL Apollo Tubes",
       "ind": "Metals & Mining",
       "logoid": "apl-apollo-tubes",
-      "ars": 1.5084,
-      "srs": -0.007,
+      "ars": 1.5098,
+      "srs": -0.0065,
       "vol_ratio": 0.75,
       "hi52_prox": -0.1802,
       "price": 1869.8,
@@ -5079,7 +5079,7 @@
         "val": 1884.24
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0072,
+      "ars_slope": 0.0086,
       "rs_rating": 73
     },
     {
@@ -5087,8 +5087,8 @@
       "name": "Lloyds Metals",
       "ind": "Metals & Mining",
       "logoid": "lloyds-metals-and-energy-ltd",
-      "ars": 1.1002,
-      "srs": 0.1351,
+      "ars": 1.1014,
+      "srs": 0.1358,
       "vol_ratio": 1.45,
       "hi52_prox": 0,
       "price": 2051.3,
@@ -5108,7 +5108,7 @@
         "val": 1863.27
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0873,
+      "ars_slope": 0.0886,
       "rs_rating": 84
     },
     {
@@ -5116,8 +5116,8 @@
       "name": "UNO Minda",
       "ind": "Automobile",
       "logoid": "minda-industries",
-      "ars": 2.3853,
-      "srs": 0.0449,
+      "ars": 2.3873,
+      "srs": 0.0455,
       "vol_ratio": 0.62,
       "hi52_prox": -0.1446,
       "price": 1168.7,
@@ -5137,7 +5137,7 @@
         "val": 1084.11
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0494,
+      "ars_slope": 0.0514,
       "rs_rating": 83
     },
     {
@@ -5145,8 +5145,8 @@
       "name": "Supreme Industries",
       "ind": "Chemicals",
       "logoid": "supreme-industries",
-      "ars": 0.1893,
-      "srs": -0.0447,
+      "ars": 0.19,
+      "srs": -0.0441,
       "vol_ratio": 1.37,
       "hi52_prox": -0.2498,
       "price": 3479.3,
@@ -5166,7 +5166,7 @@
         "val": 3230.66
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0126,
+      "ars_slope": -0.0119,
       "rs_rating": 44
     },
     {
@@ -5174,8 +5174,8 @@
       "name": "SRF Limited",
       "ind": "Chemicals",
       "logoid": "srf",
-      "ars": 0.3419,
-      "srs": 0.0441,
+      "ars": 0.3427,
+      "srs": 0.0447,
       "vol_ratio": 0.26,
       "hi52_prox": -0.1712,
       "price": 2643.8,
@@ -5195,7 +5195,7 @@
         "val": 2883.53
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1401,
+      "ars_slope": -0.1393,
       "rs_rating": 46
     },
     {
@@ -5203,8 +5203,8 @@
       "name": "UPL Limited",
       "ind": "Chemicals",
       "logoid": "upl",
-      "ars": -0.2514,
-      "srs": -0.0582,
+      "ars": -0.251,
+      "srs": -0.0577,
       "vol_ratio": 0.57,
       "hi52_prox": -0.2436,
       "price": 609.15,
@@ -5224,7 +5224,7 @@
         "val": 570.41
       },
       "ma_status": "MA-",
-      "ars_slope": -0.011,
+      "ars_slope": -0.0106,
       "rs_rating": 10
     },
     {
@@ -5232,8 +5232,8 @@
       "name": "Deepak Nitrite",
       "ind": "Chemicals",
       "logoid": "deepak-nitrite",
-      "ars": -0.0223,
-      "srs": -0.041,
+      "ars": -0.0218,
+      "srs": -0.0404,
       "vol_ratio": 0.31,
       "hi52_prox": -0.1291,
       "price": 1674.6,
@@ -5253,7 +5253,7 @@
         "val": 1564.61
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0306,
+      "ars_slope": -0.0301,
       "rs_rating": 19
     },
     {
@@ -5261,8 +5261,8 @@
       "name": "Tata Chemicals",
       "ind": "Chemicals",
       "logoid": "tata",
-      "ars": -0.184,
-      "srs": -0.1651,
+      "ars": -0.1836,
+      "srs": -0.1646,
       "vol_ratio": 1.25,
       "hi52_prox": -0.3244,
       "price": 679.05,
@@ -5282,7 +5282,7 @@
         "val": 727.02
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0304,
+      "ars_slope": -0.0299,
       "rs_rating": 16
     },
     {
@@ -5290,8 +5290,8 @@
       "name": "Aarti Industries",
       "ind": "Chemicals",
       "logoid": "aarti-industries",
-      "ars": -0.5557,
-      "srs": -0.0484,
+      "ars": -0.5555,
+      "srs": -0.0479,
       "vol_ratio": 0.33,
       "hi52_prox": -0.0538,
       "price": 485.5,
@@ -5311,7 +5311,7 @@
         "val": 454.85
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0179,
+      "ars_slope": -0.0176,
       "rs_rating": 5
     },
     {
@@ -5319,8 +5319,8 @@
       "name": "Navin Fluorine",
       "ind": "Chemicals",
       "logoid": "navin-fluorine-international-l",
-      "ars": 0.6605,
-      "srs": 0.1075,
+      "ars": 0.6615,
+      "srs": 0.1081,
       "vol_ratio": 0.86,
       "hi52_prox": -0.0365,
       "price": 7594.5,
@@ -5340,7 +5340,7 @@
         "val": 7247.05
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0737,
+      "ars_slope": -0.0728,
       "rs_rating": 65
     },
     {
@@ -5348,8 +5348,8 @@
       "name": "Container Corp",
       "ind": "Services",
       "logoid": "container",
-      "ars": -0.2482,
-      "srs": 0.0279,
+      "ars": -0.2478,
+      "srs": 0.0285,
       "vol_ratio": 0.56,
       "hi52_prox": -0.1217,
       "price": 525.85,
@@ -5369,7 +5369,7 @@
         "val": 482.92
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0509,
+      "ars_slope": 0.0514,
       "rs_rating": 21
     },
     {
@@ -5377,8 +5377,8 @@
       "name": "Indian Energy Exch",
       "ind": "Financial Services",
       "logoid": "indian-energy-exchange",
-      "ars": 0.0544,
-      "srs": 0.0662,
+      "ars": 0.055,
+      "srs": 0.0668,
       "vol_ratio": 1.13,
       "hi52_prox": -0.133,
       "price": 134.19,
@@ -5398,7 +5398,7 @@
         "val": 123.07
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0664,
+      "ars_slope": 0.067,
       "rs_rating": 46
     },
     {
@@ -5406,8 +5406,8 @@
       "name": "MCX India",
       "ind": "Financial Services",
       "logoid": "multi-commodity-exchange-of-india-limited",
-      "ars": 3.4823,
-      "srs": -0.0721,
+      "ars": 3.4849,
+      "srs": -0.0715,
       "vol_ratio": 0.48,
       "hi52_prox": -0.2104,
       "price": 2717.5,
@@ -5427,7 +5427,7 @@
         "val": 2936.66
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1411,
+      "ars_slope": -0.1385,
       "rs_rating": 55
     },
     {
@@ -5435,8 +5435,8 @@
       "name": "CDSL",
       "ind": "Financial Services",
       "logoid": "central-depository",
-      "ars": 1.9292,
-      "srs": 0.0557,
+      "ars": 1.9309,
+      "srs": 0.0563,
       "vol_ratio": 0.55,
       "hi52_prox": -0.1844,
       "price": 1350,
@@ -5456,7 +5456,7 @@
         "val": 1428.5
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0309,
+      "ars_slope": -0.0292,
       "rs_rating": 79
     },
     {
@@ -5464,8 +5464,8 @@
       "name": "Angel One",
       "ind": "Financial Services",
       "logoid": "angel-broking",
-      "ars": 4.1822,
-      "srs": -0.0221,
+      "ars": 4.1852,
+      "srs": -0.0216,
       "vol_ratio": 0.56,
       "hi52_prox": -0.1474,
       "price": 302.5,
@@ -5485,7 +5485,7 @@
         "val": 329.85
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1569,
+      "ars_slope": -0.1539,
       "rs_rating": 74
     },
     {
@@ -5493,8 +5493,8 @@
       "name": "KPIT Technologies",
       "ind": "IT",
       "logoid": "kpit-technologies",
-      "ars": 1.56,
-      "srs": -0.1733,
+      "ars": 1.5615,
+      "srs": -0.1728,
       "vol_ratio": 4.55,
       "hi52_prox": -0.5092,
       "price": 638.75,
@@ -5514,7 +5514,7 @@
         "val": 574.31
       },
       "ma_status": "MA-",
-      "ars_slope": 0.3116,
+      "ars_slope": 0.3131,
       "rs_rating": 65
     },
     {
@@ -5522,8 +5522,8 @@
       "name": "Mphasis",
       "ind": "IT",
       "logoid": "mphasis",
-      "ars": -0.1099,
-      "srs": 0.0317,
+      "ars": -0.1093,
+      "srs": 0.0323,
       "vol_ratio": 1.14,
       "hi52_prox": -0.2131,
       "price": 2361.3,
@@ -5543,7 +5543,7 @@
         "val": 2209.25
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0332,
+      "ars_slope": 0.0337,
       "rs_rating": 35
     },
     {
@@ -5551,8 +5551,8 @@
       "name": "Tata Elxsi",
       "ind": "IT",
       "logoid": "tata",
-      "ars": 0.1341,
-      "srs": -0.1256,
+      "ars": 0.1348,
+      "srs": -0.1251,
       "vol_ratio": 1.34,
       "hi52_prox": -0.3979,
       "price": 3673.4,
@@ -5572,7 +5572,7 @@
         "val": 3707.82
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0691,
+      "ars_slope": 0.0697,
       "rs_rating": 40
     },
     {
@@ -5580,8 +5580,8 @@
       "name": "Jubilant FoodWorks",
       "ind": "Consumer Services",
       "logoid": "jubilant-foodworks",
-      "ars": -0.5456,
-      "srs": -0.0853,
+      "ars": -0.5453,
+      "srs": -0.0848,
       "vol_ratio": 0.97,
       "hi52_prox": -0.337,
       "price": 440.1,
@@ -5601,7 +5601,7 @@
         "val": 408.49
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0157,
+      "ars_slope": 0.016,
       "rs_rating": 7
     },
     {
@@ -5609,8 +5609,8 @@
       "name": "PVR Inox",
       "ind": "Consumer Services",
       "logoid": "pvr",
-      "ars": -0.5095,
-      "srs": 0.0608,
+      "ars": -0.5092,
+      "srs": 0.0615,
       "vol_ratio": 0.96,
       "hi52_prox": -0.0814,
       "price": 1140,
@@ -5630,7 +5630,7 @@
         "val": 1032.55
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0556,
+      "ars_slope": 0.0559,
       "rs_rating": 21
     },
     {
@@ -5638,8 +5638,8 @@
       "name": "Delhivery",
       "ind": "Services",
       "logoid": "delhivery-limited",
-      "ars": -0.4946,
-      "srs": 0.0003,
+      "ars": -0.4943,
+      "srs": 0.0009,
       "vol_ratio": 0.79,
       "hi52_prox": -0.0967,
       "price": 470,
@@ -5659,7 +5659,7 @@
         "val": 503.53
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0043,
+      "ars_slope": -0.004,
       "rs_rating": 14
     },
     {
@@ -5667,8 +5667,8 @@
       "name": "ZF Commercial Vehicle",
       "ind": "Automobile",
       "logoid": "wabco",
-      "ars": 0.4726,
-      "srs": -0.0297,
+      "ars": 0.4735,
+      "srs": -0.0292,
       "vol_ratio": 0.48,
       "hi52_prox": -0.1103,
       "price": 2389.7,
@@ -5688,7 +5688,7 @@
         "val": 2568.02
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0129,
+      "ars_slope": -0.012,
       "rs_rating": 40
     },
     {
@@ -5696,8 +5696,8 @@
       "name": "Blue Star",
       "ind": "Consumer Durables",
       "logoid": "blue-star",
-      "ars": 1.4034,
-      "srs": -0.0613,
+      "ars": 1.4048,
+      "srs": -0.0607,
       "vol_ratio": 0.51,
       "hi52_prox": -0.1666,
       "price": 1680.8,
@@ -5717,7 +5717,7 @@
         "val": 1617.62
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0148,
+      "ars_slope": -0.0134,
       "rs_rating": 48
     },
     {
@@ -5725,8 +5725,8 @@
       "name": "Whirlpool India",
       "ind": "Consumer Durables",
       "logoid": "whirlpool",
-      "ars": -0.826,
-      "srs": -0.2113,
+      "ars": -0.8259,
+      "srs": -0.2108,
       "vol_ratio": 1.3,
       "hi52_prox": -0.4448,
       "price": 788.85,
@@ -5746,7 +5746,7 @@
         "val": 810.19
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0009,
+      "ars_slope": 0.001,
       "rs_rating": 3
     },
     {
@@ -5754,8 +5754,8 @@
       "name": "Aarti Industries",
       "ind": "Chemicals",
       "logoid": "aarti-industries",
-      "ars": -0.5557,
-      "srs": -0.0484,
+      "ars": -0.5555,
+      "srs": -0.0479,
       "vol_ratio": 0.33,
       "hi52_prox": -0.0538,
       "price": 485.5,
@@ -5775,7 +5775,7 @@
         "val": 454.85
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0179,
+      "ars_slope": -0.0176,
       "rs_rating": 5
     },
     {
@@ -5783,8 +5783,8 @@
       "name": "Aditya Birla Real Estate",
       "ind": "Realty",
       "logoid": "century-text",
-      "ars": 0.9842,
-      "srs": -0.0593,
+      "ars": 0.9853,
+      "srs": -0.0587,
       "vol_ratio": 0.4,
       "hi52_prox": -0.3012,
       "price": 1405.6,
@@ -5804,7 +5804,7 @@
         "val": 1307.85
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0407,
+      "ars_slope": -0.0395,
       "rs_rating": 48
     },
     {
@@ -5812,8 +5812,8 @@
       "name": "Aegis Logistics",
       "ind": "Oil Gas",
       "logoid": "aegis-logistics",
-      "ars": 1.8985,
-      "srs": 0.7758,
+      "ars": 1.9002,
+      "srs": 0.7769,
       "vol_ratio": 0.21,
       "hi52_prox": -0.0898,
       "price": 1282.6,
@@ -5833,7 +5833,7 @@
         "val": 1152.69
       },
       "ma_status": "MA+",
-      "ars_slope": -0.2517,
+      "ars_slope": -0.2501,
       "rs_rating": 84
     },
     {
@@ -5841,8 +5841,8 @@
       "name": "Afcons Infrastructure",
       "ind": "Construction",
       "logoid": "afcons-infrastructure-ltd",
-      "ars": -0.6561,
-      "srs": -0.1778,
+      "ars": -0.6559,
+      "srs": -0.1773,
       "vol_ratio": 0.16,
       "hi52_prox": -0.3928,
       "price": 282.75,
@@ -5862,7 +5862,7 @@
         "val": 304.8
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0076,
+      "ars_slope": -0.0074,
       "rs_rating": 1
     },
     {
@@ -5870,8 +5870,8 @@
       "name": "Affle 3i",
       "ind": "IT",
       "logoid": "affle",
-      "ars": 0.2336,
-      "srs": 0.1574,
+      "ars": 0.2343,
+      "srs": 0.1581,
       "vol_ratio": 1.23,
       "hi52_prox": -0.2294,
       "price": 1654.3,
@@ -5891,7 +5891,7 @@
         "val": 1491.19
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0953,
+      "ars_slope": 0.096,
       "rs_rating": 66
     },
     {
@@ -5899,8 +5899,8 @@
       "name": "Amara Raja Energy & Mobility",
       "ind": "Automobile",
       "logoid": "amara-raja",
-      "ars": -0.4496,
-      "srs": -0.0074,
+      "ars": -0.4492,
+      "srs": -0.0068,
       "vol_ratio": 0.47,
       "hi52_prox": -0.1605,
       "price": 882.9,
@@ -5920,7 +5920,7 @@
         "val": 842.22
       },
       "ma_status": "MA+",
-      "ars_slope": -0.006,
+      "ars_slope": -0.0056,
       "rs_rating": 9
     },
     {
@@ -5928,8 +5928,8 @@
       "name": "Amber Enterprises India",
       "ind": "Consumer Durables",
       "logoid": "amber-enterprises-india",
-      "ars": 0.7912,
-      "srs": -0.0813,
+      "ars": 0.7923,
+      "srs": -0.0807,
       "vol_ratio": 0.92,
       "hi52_prox": -0.1618,
       "price": 7411.5,
@@ -5949,7 +5949,7 @@
         "val": 7868.15
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0494,
+      "ars_slope": -0.0484,
       "rs_rating": 42
     },
     {
@@ -5957,8 +5957,8 @@
       "name": "Anand Rathi Wealth",
       "ind": "Financial Services",
       "logoid": "anand-rathi-wealth-limited",
-      "ars": 7.0448,
-      "srs": 0.124,
+      "ars": 7.0494,
+      "srs": 0.1247,
       "vol_ratio": 0.45,
       "hi52_prox": -0.0521,
       "price": 2035,
@@ -5978,7 +5978,7 @@
         "val": 1938.98
       },
       "ma_status": "MA+",
-      "ars_slope": -0.3274,
+      "ars_slope": -0.3227,
       "rs_rating": 88
     },
     {
@@ -5986,8 +5986,8 @@
       "name": "Anant Raj",
       "ind": "Realty",
       "logoid": "anant-raj-ltd",
-      "ars": 12.1755,
-      "srs": 0.1955,
+      "ars": 12.1831,
+      "srs": 0.1962,
       "vol_ratio": 0.46,
       "hi52_prox": -0.1661,
       "price": 613.4,
@@ -6007,7 +6007,7 @@
         "val": 556.06
       },
       "ma_status": "MA+",
-      "ars_slope": 0.3327,
+      "ars_slope": 0.3403,
       "rs_rating": 96
     },
     {
@@ -6015,8 +6015,8 @@
       "name": "Angel One",
       "ind": "Financial Services",
       "logoid": "angel-broking",
-      "ars": 4.1822,
-      "srs": -0.0221,
+      "ars": 4.1852,
+      "srs": -0.0216,
       "vol_ratio": 0.56,
       "hi52_prox": -0.1474,
       "price": 302.5,
@@ -6036,7 +6036,7 @@
         "val": 329.85
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1569,
+      "ars_slope": -0.1539,
       "rs_rating": 75
     },
     {
@@ -6044,8 +6044,8 @@
       "name": "Aptus Value Housing Finance India",
       "ind": "Financial Services",
       "logoid": "aptus-value",
-      "ars": -0.5314,
-      "srs": 0.0725,
+      "ars": -0.5312,
+      "srs": 0.0731,
       "vol_ratio": 0.42,
       "hi52_prox": -0.2158,
       "price": 281.85,
@@ -6065,7 +6065,7 @@
         "val": 302.68
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0134,
+      "ars_slope": -0.0131,
       "rs_rating": 11
     },
     {
@@ -6073,8 +6073,8 @@
       "name": "Aster DM Healthcare",
       "ind": "Healthcare",
       "logoid": "aster-dm-healthcare",
-      "ars": 1.821,
-      "srs": 0.1611,
+      "ars": 1.8227,
+      "srs": 0.1618,
       "vol_ratio": 1.26,
       "hi52_prox": -0.0076,
       "price": 818.35,
@@ -6094,7 +6094,7 @@
         "val": 761.04
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0145,
+      "ars_slope": 0.0161,
       "rs_rating": 93
     },
     {
@@ -6102,8 +6102,8 @@
       "name": "Ather Energy",
       "ind": "Automobile",
       "logoid": "ather-energy-limited",
-      "ars": 1.3773,
-      "srs": 0.327,
+      "ars": 1.3787,
+      "srs": 0.3278,
       "vol_ratio": 0.72,
       "hi52_prox": -0.039,
       "price": 1246.1,
@@ -6123,7 +6123,7 @@
         "val": 1125.38
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0185,
+      "ars_slope": -0.0171,
       "rs_rating": 85
     },
     {
@@ -6131,8 +6131,8 @@
       "name": "BEML",
       "ind": "Capital Goods",
       "logoid": "beml-limited",
-      "ars": 1.5012,
-      "srs": -0.0352,
+      "ars": 1.5026,
+      "srs": -0.0346,
       "vol_ratio": 1.12,
       "hi52_prox": -0.2031,
       "price": 1781.4,
@@ -6152,7 +6152,7 @@
         "val": 1852.28
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0266,
+      "ars_slope": 0.0281,
       "rs_rating": 72
     },
     {
@@ -6160,8 +6160,8 @@
       "name": "BLS International Services",
       "ind": "Consumer Services",
       "logoid": "bls-international",
-      "ars": 5.5613,
-      "srs": -0.1355,
+      "ars": 5.5651,
+      "srs": -0.135,
       "vol_ratio": 0.96,
       "hi52_prox": -0.3986,
       "price": 241.9,
@@ -6181,7 +6181,7 @@
         "val": 250.41
       },
       "ma_status": "MA-",
-      "ars_slope": 0.1918,
+      "ars_slope": 0.1957,
       "rs_rating": 70
     },
     {
@@ -6189,8 +6189,8 @@
       "name": "Bandhan Bank",
       "ind": "Financial Services",
       "logoid": "bandhan-bank",
-      "ars": -0.7499,
-      "srs": -0.1649,
+      "ars": -0.7497,
+      "srs": -0.1645,
       "vol_ratio": 0.9,
       "hi52_prox": -0.1991,
       "price": 173.58,
@@ -6210,7 +6210,7 @@
         "val": 194.8
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0068,
+      "ars_slope": 0.0069,
       "rs_rating": 3
     },
     {
@@ -6218,8 +6218,8 @@
       "name": "Brainbees Solutions",
       "ind": "Consumer Services",
       "logoid": "brainbees-solutions-ltd",
-      "ars": -0.8174,
-      "srs": -0.1059,
+      "ars": -0.8173,
+      "srs": -0.1054,
       "vol_ratio": 0.41,
       "hi52_prox": -0.4747,
       "price": 215.03,
@@ -6239,7 +6239,7 @@
         "val": 225.33
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0036,
+      "ars_slope": 0.0037,
       "rs_rating": 2
     },
     {
@@ -6247,8 +6247,8 @@
       "name": "Brigade Enterprises",
       "ind": "Realty",
       "logoid": "brigade-enterprise",
-      "ars": 0.7397,
-      "srs": -0.0545,
+      "ars": 0.7407,
+      "srs": -0.054,
       "vol_ratio": 0.26,
       "hi52_prox": -0.2776,
       "price": 564.25,
@@ -6268,7 +6268,7 @@
         "val": 513.12
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0857,
+      "ars_slope": 0.0867,
       "rs_rating": 38
     },
     {
@@ -6276,8 +6276,8 @@
       "name": "CESC",
       "ind": "Power",
       "logoid": "cesc",
-      "ars": 0.525,
-      "srs": -0.1785,
+      "ars": 0.5259,
+      "srs": -0.178,
       "vol_ratio": 0.52,
       "hi52_prox": -0.1741,
       "price": 164.12,
@@ -6297,7 +6297,7 @@
         "val": 171.87
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0143,
+      "ars_slope": -0.0134,
       "rs_rating": 25
     },
     {
@@ -6305,8 +6305,8 @@
       "name": "Capri Global Capital",
       "ind": "Financial Services",
       "logoid": "capri-global-capit",
-      "ars": -0.5662,
-      "srs": 0.1565,
+      "ars": -0.5659,
+      "srs": 0.1572,
       "vol_ratio": 1.01,
       "hi52_prox": -0.1249,
       "price": 226.55,
@@ -6326,7 +6326,7 @@
         "val": 255.83
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0414,
+      "ars_slope": -0.0412,
       "rs_rating": 29
     },
     {
@@ -6334,8 +6334,8 @@
       "name": "Castrol India",
       "ind": "Oil Gas",
       "logoid": "castrol-india",
-      "ars": -0.1257,
-      "srs": -0.0046,
+      "ars": -0.1252,
+      "srs": -0.0041,
       "vol_ratio": 0.71,
       "hi52_prox": -0.1686,
       "price": 184.95,
@@ -6355,7 +6355,7 @@
         "val": 181.45
       },
       "ma_status": "MA-",
-      "ars_slope": -0.02,
+      "ars_slope": -0.0195,
       "rs_rating": 25
     },
     {
@@ -6363,8 +6363,8 @@
       "name": "Central Depository Services (India)",
       "ind": "Financial Services",
       "logoid": "central-depository",
-      "ars": 1.9292,
-      "srs": 0.0557,
+      "ars": 1.9309,
+      "srs": 0.0563,
       "vol_ratio": 0.55,
       "hi52_prox": -0.1844,
       "price": 1350,
@@ -6384,7 +6384,7 @@
         "val": 1428.5
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0309,
+      "ars_slope": -0.0292,
       "rs_rating": 79
     },
     {
@@ -6392,8 +6392,8 @@
       "name": "Chambal Fertilizers & Chemicals",
       "ind": "Chemicals",
       "logoid": "chambal-fertilisers-and-chemical",
-      "ars": 0.1432,
-      "srs": 0.0251,
+      "ars": 0.1439,
+      "srs": 0.0257,
       "vol_ratio": 1.74,
       "hi52_prox": -0.2076,
       "price": 451.45,
@@ -6413,7 +6413,7 @@
         "val": 456.68
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0195,
+      "ars_slope": 0.0202,
       "rs_rating": 51
     },
     {
@@ -6421,8 +6421,8 @@
       "name": "Cholamandalam Financial Holdings",
       "ind": "Financial Services",
       "logoid": "cholamandalam-fin",
-      "ars": 0.5692,
-      "srs": -0.0974,
+      "ars": 0.5701,
+      "srs": -0.0969,
       "vol_ratio": 2.06,
       "hi52_prox": -0.2485,
       "price": 1517.7,
@@ -6442,7 +6442,7 @@
         "val": 1630.76
       },
       "ma_status": "MA-",
-      "ars_slope": -0.027,
+      "ars_slope": -0.0261,
       "rs_rating": 49
     },
     {
@@ -6450,8 +6450,8 @@
       "name": "City Union Bank",
       "ind": "Financial Services",
       "logoid": "city-union-bank",
-      "ars": -0.0247,
-      "srs": 0.1238,
+      "ars": -0.0242,
+      "srs": 0.1244,
       "vol_ratio": 2.28,
       "hi52_prox": -0.039,
       "price": 228.86,
@@ -6471,7 +6471,7 @@
         "val": 207.28
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0053,
+      "ars_slope": 0.0058,
       "rs_rating": 60
     },
     {
@@ -6479,8 +6479,8 @@
       "name": "Cohance Lifesciences",
       "ind": "Healthcare",
       "logoid": "suven-pharmaceuticals-ltd",
-      "ars": -0.4626,
-      "srs": -0.1123,
+      "ars": -0.4623,
+      "srs": -0.1117,
       "vol_ratio": 0.41,
       "hi52_prox": -0.5771,
       "price": 431.3,
@@ -6500,7 +6500,7 @@
         "val": 403.52
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0185,
+      "ars_slope": -0.0182,
       "rs_rating": 6
     },
     {
@@ -6508,13 +6508,13 @@
       "name": "Computer Age Management Services",
       "ind": "Financial Services",
       "logoid": "computer-age-management-services-ltd",
-      "ars": 0.2771,
-      "srs": 0.0671,
+      "ars": 0.2778,
+      "srs": 0.0677,
       "vol_ratio": 0.49,
       "hi52_prox": -0.0525,
       "price": 792.4,
       "breakout": false,
-      "trending": false,
+      "trending": true,
       "signDays": 101,
       "signSince": 1772682300,
       "signPrice": 652.35,
@@ -6529,7 +6529,7 @@
         "val": 806.5
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0084,
+      "ars_slope": 0.0092,
       "rs_rating": 39
     },
     {
@@ -6537,8 +6537,8 @@
       "name": "CreditAccess Grameen",
       "ind": "Financial Services",
       "logoid": "creditaccess-grameen",
-      "ars": 0.1928,
-      "srs": 0.1982,
+      "ars": 0.1935,
+      "srs": 0.1989,
       "vol_ratio": 0.36,
       "hi52_prox": -0.0004,
       "price": 1590.4,
@@ -6558,7 +6558,7 @@
         "val": 1449.84
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0445,
+      "ars_slope": 0.0452,
       "rs_rating": 49
     },
     {
@@ -6566,8 +6566,8 @@
       "name": "Crompton Greaves Consumer Electricals",
       "ind": "Consumer Durables",
       "logoid": "crompton-greaves-consumer-elec",
-      "ars": -0.5969,
-      "srs": -0.0349,
+      "ars": -0.5966,
+      "srs": -0.0344,
       "vol_ratio": 2.27,
       "hi52_prox": -0.2115,
       "price": 264.25,
@@ -6587,7 +6587,7 @@
         "val": 267.18
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0059,
+      "ars_slope": 0.0061,
       "rs_rating": 18
     },
     {
@@ -6595,8 +6595,8 @@
       "name": "Data Patterns (India)",
       "ind": "Capital Goods",
       "logoid": "data-patterns-india-ltd",
-      "ars": 2.389,
-      "srs": 0.0812,
+      "ars": 2.391,
+      "srs": 0.0818,
       "vol_ratio": 0.67,
       "hi52_prox": -0.0883,
       "price": 4436.6,
@@ -6616,7 +6616,7 @@
         "val": 4023.08
       },
       "ma_status": "MA+",
-      "ars_slope": -0.3314,
+      "ars_slope": -0.3295,
       "rs_rating": 82
     },
     {
@@ -6624,8 +6624,8 @@
       "name": "Deepak Fertilisers & Petrochemicals Corp.",
       "ind": "Chemicals",
       "logoid": "deepak-fertilisers-and-petrochem",
-      "ars": 4.9212,
-      "srs": 0.2785,
+      "ars": 4.9247,
+      "srs": 0.2793,
       "vol_ratio": 1.3,
       "hi52_prox": -0.0228,
       "price": 1626.3,
@@ -6645,7 +6645,7 @@
         "val": 1510.58
       },
       "ma_status": "MA+",
-      "ars_slope": -0.007,
+      "ars_slope": -0.0035,
       "rs_rating": 99
     },
     {
@@ -6653,8 +6653,8 @@
       "name": "Delhivery",
       "ind": "Services",
       "logoid": "delhivery-limited",
-      "ars": -0.4946,
-      "srs": 0.0003,
+      "ars": -0.4943,
+      "srs": 0.0009,
       "vol_ratio": 0.79,
       "hi52_prox": -0.0967,
       "price": 470,
@@ -6674,7 +6674,7 @@
         "val": 503.53
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0043,
+      "ars_slope": -0.004,
       "rs_rating": 15
     },
     {
@@ -6682,8 +6682,8 @@
       "name": "Devyani International",
       "ind": "Consumer Services",
       "logoid": "devyani-international",
-      "ars": -0.4473,
-      "srs": -0.0332,
+      "ars": -0.447,
+      "srs": -0.0326,
       "vol_ratio": 6.68,
       "hi52_prox": -0.3734,
       "price": 118.36,
@@ -6703,7 +6703,7 @@
         "val": 107.4
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0302,
+      "ars_slope": 0.0306,
       "rs_rating": 24
     },
     {
@@ -6711,8 +6711,8 @@
       "name": "Dr. Lal Path Labs",
       "ind": "Healthcare",
       "logoid": "dr-lal-pathlabs",
-      "ars": -0.098,
-      "srs": 0.1901,
+      "ars": -0.0974,
+      "srs": 0.1908,
       "vol_ratio": 1.97,
       "hi52_prox": 0,
       "price": 1882.5,
@@ -6732,7 +6732,7 @@
         "val": 1707.3
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0788,
+      "ars_slope": 0.0793,
       "rs_rating": 54
     },
     {
@@ -6740,8 +6740,8 @@
       "name": "Firstsource Solutions",
       "ind": "Services",
       "logoid": "firstsource-solutions",
-      "ars": 0.6898,
-      "srs": 0.3549,
+      "ars": 0.6907,
+      "srs": 0.3557,
       "vol_ratio": 7.88,
       "hi52_prox": -0.2188,
       "price": 293.58,
@@ -6761,7 +6761,7 @@
         "val": 262.47
       },
       "ma_status": "MA+",
-      "ars_slope": 0.1896,
+      "ars_slope": 0.1906,
       "rs_rating": 91
     },
     {
@@ -6769,8 +6769,8 @@
       "name": "Five-Star Business Finance",
       "ind": "Financial Services",
       "logoid": "five-star-business-finance-ltd",
-      "ars": -0.3308,
-      "srs": 0.1743,
+      "ars": -0.3304,
+      "srs": 0.1749,
       "vol_ratio": 1.1,
       "hi52_prox": -0.176,
       "price": 568.55,
@@ -6790,7 +6790,7 @@
         "val": 514.58
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0288,
+      "ars_slope": 0.0292,
       "rs_rating": 41
     },
     {
@@ -6798,8 +6798,8 @@
       "name": "Force Motors",
       "ind": "Automobile",
       "logoid": "force-motors",
-      "ars": 6.2973,
-      "srs": -0.1081,
+      "ars": 6.3015,
+      "srs": -0.1076,
       "vol_ratio": 0.85,
       "hi52_prox": -0.3275,
       "price": 17334,
@@ -6819,7 +6819,7 @@
         "val": 16931.59
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1663,
+      "ars_slope": -0.1621,
       "rs_rating": 67
     },
     {
@@ -6827,8 +6827,8 @@
       "name": "Garden Reach Shipbuilders & Engineers",
       "ind": "Capital Goods",
       "logoid": "garden-reach-shipbuilders-and-en",
-      "ars": 6.5033,
-      "srs": -0.0598,
+      "ars": 6.5076,
+      "srs": -0.0593,
       "vol_ratio": 2.17,
       "hi52_prox": -0.1512,
       "price": 2626.1,
@@ -6848,7 +6848,7 @@
         "val": 2737.55
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0129,
+      "ars_slope": 0.0172,
       "rs_rating": 85
     },
     {
@@ -6856,8 +6856,8 @@
       "name": "Gland Pharma",
       "ind": "Healthcare",
       "logoid": "gland-pharma",
-      "ars": -0.3809,
-      "srs": 0.3936,
+      "ars": -0.3806,
+      "srs": 0.3944,
       "vol_ratio": 1.66,
       "hi52_prox": -0.0025,
       "price": 2543.7,
@@ -6877,7 +6877,7 @@
         "val": 2328.1
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0298,
+      "ars_slope": 0.0302,
       "rs_rating": 50
     },
     {
@@ -6885,8 +6885,8 @@
       "name": "Godawari Power & Ispat",
       "ind": "Capital Goods",
       "logoid": "godawari-pow-and-isp-ltd",
-      "ars": 0.1659,
-      "srs": -0.1807,
+      "ars": 0.1666,
+      "srs": -0.1802,
       "vol_ratio": 1.12,
       "hi52_prox": -0.1767,
       "price": 251.8,
@@ -6906,7 +6906,7 @@
         "val": 254.85
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0284,
+      "ars_slope": 0.0291,
       "rs_rating": 26
     },
     {
@@ -6914,8 +6914,8 @@
       "name": "Great Eastern Shipping Co.",
       "ind": "Services",
       "logoid": "great-eastern-shipping",
-      "ars": 1.9208,
-      "srs": -0.1353,
+      "ars": 1.9225,
+      "srs": -0.1348,
       "vol_ratio": 0.73,
       "hi52_prox": -0.2029,
       "price": 1370.7,
@@ -6935,7 +6935,7 @@
         "val": 1495.63
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1935,
+      "ars_slope": -0.1918,
       "rs_rating": 52
     },
     {
@@ -6943,8 +6943,8 @@
       "name": "Gujarat Mineral Development Corporation",
       "ind": "Metals & Mining",
       "logoid": "gujarat-mineral-development-co",
-      "ars": 5.0325,
-      "srs": -0.215,
+      "ars": 5.036,
+      "srs": -0.2145,
       "vol_ratio": 1.34,
       "hi52_prox": -0.231,
       "price": 574.25,
@@ -6964,7 +6964,7 @@
         "val": 603.41
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0103,
+      "ars_slope": 0.0138,
       "rs_rating": 68
     },
     {
@@ -6972,8 +6972,8 @@
       "name": "HBL Engineering",
       "ind": "Capital Goods",
       "logoid": "hbl-power-systems",
-      "ars": 9.2729,
-      "srs": -0.118,
+      "ars": 9.2789,
+      "srs": -0.1175,
       "vol_ratio": 0.81,
       "hi52_prox": -0.3556,
       "price": 708.05,
@@ -6993,7 +6993,7 @@
         "val": 756.74
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1425,
+      "ars_slope": -0.1365,
       "rs_rating": 71
     },
     {
@@ -7001,8 +7001,8 @@
       "name": "Himadri Speciality Chemical",
       "ind": "Chemicals",
       "logoid": "himadri-speciality",
-      "ars": 9.023,
-      "srs": 0.2601,
+      "ars": 9.0288,
+      "srs": 0.2608,
       "vol_ratio": 0.51,
       "hi52_prox": -0.0387,
       "price": 769.9,
@@ -7022,7 +7022,7 @@
         "val": 698.29
       },
       "ma_status": "MA+",
-      "ars_slope": -0.1619,
+      "ars_slope": -0.156,
       "rs_rating": 95
     },
     {
@@ -7030,8 +7030,8 @@
       "name": "Hindustan Copper",
       "ind": "Metals & Mining",
       "logoid": "hindustan-copper",
-      "ars": 3.4898,
-      "srs": -0.1052,
+      "ars": 3.4924,
+      "srs": -0.1047,
       "vol_ratio": 0.84,
       "hi52_prox": -0.3639,
       "price": 483.45,
@@ -7051,7 +7051,7 @@
         "val": 514.33
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1613,
+      "ars_slope": -0.1587,
       "rs_rating": 72
     },
     {
@@ -7059,8 +7059,8 @@
       "name": "IDBI Bank",
       "ind": "Financial Services",
       "logoid": "idbi-bank",
-      "ars": 0.5023,
-      "srs": 0.1178,
+      "ars": 0.5032,
+      "srs": 0.1185,
       "vol_ratio": 0.38,
       "hi52_prox": -0.2747,
       "price": 84.14,
@@ -7080,7 +7080,7 @@
         "val": 78.22
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0443,
+      "ars_slope": -0.0434,
       "rs_rating": 58
     },
     {
@@ -7088,8 +7088,8 @@
       "name": "IFCI",
       "ind": "Financial Services",
       "logoid": "ifci",
-      "ars": 3.3745,
-      "srs": 0.2115,
+      "ars": 3.377,
+      "srs": 0.2122,
       "vol_ratio": 1.04,
       "hi52_prox": -0.2084,
       "price": 71.3,
@@ -7109,7 +7109,7 @@
         "val": 76.8
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0702,
+      "ars_slope": -0.0677,
       "rs_rating": 94
     },
     {
@@ -7117,8 +7117,8 @@
       "name": "IIFL Finance",
       "ind": "Financial Services",
       "logoid": "iifl",
-      "ars": 1.9284,
-      "srs": 0.2897,
+      "ars": 1.9301,
+      "srs": 0.2905,
       "vol_ratio": 1.07,
       "hi52_prox": -0.1053,
       "price": 595.1,
@@ -7138,7 +7138,7 @@
         "val": 535.85
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0703,
+      "ars_slope": 0.072,
       "rs_rating": 97
     },
     {
@@ -7146,8 +7146,8 @@
       "name": "IRCON International",
       "ind": "Construction",
       "logoid": "ircon-international",
-      "ars": 0.6707,
-      "srs": -0.1814,
+      "ars": 0.6717,
+      "srs": -0.1809,
       "vol_ratio": 1.43,
       "hi52_prox": -0.3227,
       "price": 126.67,
@@ -7167,7 +7167,7 @@
         "val": 133.46
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0141,
+      "ars_slope": -0.0131,
       "rs_rating": 37
     },
     {
@@ -7175,8 +7175,8 @@
       "name": "ITI",
       "ind": "Telecom",
       "logoid": "indian-tel-ind-iti",
-      "ars": 0.2566,
-      "srs": -0.0776,
+      "ars": 0.2573,
+      "srs": -0.0771,
       "vol_ratio": 0.38,
       "hi52_prox": -0.2229,
       "price": 277.15,
@@ -7196,7 +7196,7 @@
         "val": 296.02
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0392,
+      "ars_slope": -0.0385,
       "rs_rating": 25
     },
     {
@@ -7204,8 +7204,8 @@
       "name": "Indraprastha Gas",
       "ind": "Oil Gas",
       "logoid": "indraprastha-gas",
-      "ars": -0.6522,
-      "srs": -0.0839,
+      "ars": -0.652,
+      "srs": -0.0833,
       "vol_ratio": 0.45,
       "hi52_prox": -0.3053,
       "price": 152.91,
@@ -7225,7 +7225,7 @@
         "val": 158.5
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0028,
+      "ars_slope": -0.0026,
       "rs_rating": 3
     },
     {
@@ -7233,8 +7233,8 @@
       "name": "Inox Wind",
       "ind": "Capital Goods",
       "logoid": "inox-wind",
-      "ars": 1.7503,
-      "srs": -0.2453,
+      "ars": 1.7519,
+      "srs": -0.2448,
       "vol_ratio": 2.39,
       "hi52_prox": -0.5129,
       "price": 76.6,
@@ -7254,7 +7254,7 @@
         "val": 82.8
       },
       "ma_status": "MA-",
-      "ars_slope": -0.053,
+      "ars_slope": -0.0514,
       "rs_rating": 64
     },
     {
@@ -7262,8 +7262,8 @@
       "name": "Inventurus Knowledge Solutions",
       "ind": "IT",
       "logoid": "inventurus-knowledge-solutions",
-      "ars": -0.4649,
-      "srs": 0.0936,
+      "ars": -0.4646,
+      "srs": 0.0942,
       "vol_ratio": 0.2,
       "hi52_prox": -0.0565,
       "price": 1819.2,
@@ -7283,7 +7283,7 @@
         "val": 1733.2
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0087,
+      "ars_slope": -0.0084,
       "rs_rating": 17
     },
     {
@@ -7291,8 +7291,8 @@
       "name": "JBM Auto",
       "ind": "Automobile",
       "logoid": "jbm-auto-ltd",
-      "ars": 5.9881,
-      "srs": 0.0695,
+      "ars": 5.9921,
+      "srs": 0.0701,
       "vol_ratio": 0.66,
       "hi52_prox": -0.0886,
       "price": 676,
@@ -7312,7 +7312,7 @@
         "val": 652.61
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0498,
+      "ars_slope": 0.0539,
       "rs_rating": 91
     },
     {
@@ -7320,8 +7320,8 @@
       "name": "JM Financial",
       "ind": "Financial Services",
       "logoid": "jm-financial",
-      "ars": -0.1763,
-      "srs": -0.1184,
+      "ars": -0.1758,
+      "srs": -0.1179,
       "vol_ratio": 0.5,
       "hi52_prox": -0.3614,
       "price": 123.26,
@@ -7341,7 +7341,7 @@
         "val": 119.65
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0228,
+      "ars_slope": -0.0223,
       "rs_rating": 9
     },
     {
@@ -7349,8 +7349,8 @@
       "name": "JSW Cement",
       "ind": "Construction Materials",
       "logoid": "jsw",
-      "ars": -0.477,
-      "srs": 0.0758,
+      "ars": -0.4767,
+      "srs": 0.0764,
       "vol_ratio": 1.41,
       "hi52_prox": -0.1678,
       "price": 132.46,
@@ -7370,7 +7370,7 @@
         "val": 132.09
       },
       "ma_status": "MA-",
-      "ars_slope": -0.029,
+      "ars_slope": -0.0287,
       "rs_rating": 30
     },
     {
@@ -7378,8 +7378,8 @@
       "name": "Jyoti CNC Automation",
       "ind": "Capital Goods",
       "logoid": "jyoti-cnc-automation-ltd",
-      "ars": 0.0929,
-      "srs": 0.0913,
+      "ars": 0.0935,
+      "srs": 0.0919,
       "vol_ratio": 0.82,
       "hi52_prox": -0.2133,
       "price": 822.8,
@@ -7399,7 +7399,7 @@
         "val": 744.98
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0232,
+      "ars_slope": 0.0238,
       "rs_rating": 44
     },
     {
@@ -7407,8 +7407,8 @@
       "name": "Karur Vysya Bank",
       "ind": "Financial Services",
       "logoid": "karur-vysya-bank",
-      "ars": 4.1224,
-      "srs": 0.1526,
+      "ars": 4.1253,
+      "srs": 0.1533,
       "vol_ratio": 0.21,
       "hi52_prox": -0.0006,
       "price": 340.1,
@@ -7428,7 +7428,7 @@
         "val": 309.07
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0793,
+      "ars_slope": -0.0764,
       "rs_rating": 85
     },
     {
@@ -7436,8 +7436,8 @@
       "name": "Kaynes Technology India",
       "ind": "Capital Goods",
       "logoid": "kaynes-technology-india-limite",
-      "ars": 2.0415,
-      "srs": -0.117,
+      "ars": 2.0432,
+      "srs": -0.1165,
       "vol_ratio": 3.91,
       "hi52_prox": -0.5208,
       "price": 3638.6,
@@ -7457,7 +7457,7 @@
         "val": 3280.21
       },
       "ma_status": "MA-",
-      "ars_slope": 0.2833,
+      "ars_slope": 0.2851,
       "rs_rating": 70
     },
     {
@@ -7465,8 +7465,8 @@
       "name": "Kec International",
       "ind": "Construction",
       "logoid": "kec-international",
-      "ars": -0.2595,
-      "srs": -0.1802,
+      "ars": -0.2591,
+      "srs": -0.1798,
       "vol_ratio": 1.27,
       "hi52_prox": -0.4597,
       "price": 477.55,
@@ -7486,7 +7486,7 @@
         "val": 503.08
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0063,
+      "ars_slope": -0.0059,
       "rs_rating": 13
     },
     {
@@ -7494,8 +7494,8 @@
       "name": "Kfin Technologies",
       "ind": "Financial Services",
       "logoid": "kfin-technologies-limited",
-      "ars": 0.5039,
-      "srs": 0.0924,
+      "ars": 0.5048,
+      "srs": 0.093,
       "vol_ratio": 0.71,
       "hi52_prox": -0.1924,
       "price": 948.8,
@@ -7515,7 +7515,7 @@
         "val": 863.3
       },
       "ma_status": "MA-",
-      "ars_slope": 0.1024,
+      "ars_slope": 0.1033,
       "rs_rating": 58
     },
     {
@@ -7523,8 +7523,8 @@
       "name": "Manappuram Finance",
       "ind": "Financial Services",
       "logoid": "manappuram-finance",
-      "ars": 0.2768,
-      "srs": 0.2508,
+      "ars": 0.2775,
+      "srs": 0.2515,
       "vol_ratio": 1.4,
       "hi52_prox": 0,
       "price": 370.15,
@@ -7544,7 +7544,7 @@
         "val": 340.42
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0467,
+      "ars_slope": 0.0474,
       "rs_rating": 75
     },
     {
@@ -7552,8 +7552,8 @@
       "name": "Mangalore Refinery & Petrochemicals",
       "ind": "Oil Gas",
       "logoid": "mangalore-ref-and-pet",
-      "ars": 1.6215,
-      "srs": -0.0299,
+      "ars": 1.623,
+      "srs": -0.0293,
       "vol_ratio": 0.24,
       "hi52_prox": -0.2097,
       "price": 163.41,
@@ -7573,7 +7573,7 @@
         "val": 154.47
       },
       "ma_status": "MA-",
-      "ars_slope": -0.2318,
+      "ars_slope": -0.2303,
       "rs_rating": 53
     },
     {
@@ -7581,8 +7581,8 @@
       "name": "Meesho",
       "ind": "Consumer Services",
       "logoid": "meesho-ltd",
-      "ars": -0.3915,
-      "srs": -0.0757,
+      "ars": -0.3911,
+      "srs": -0.0751,
       "vol_ratio": 0.63,
       "hi52_prox": -0.2381,
       "price": 179.47,
@@ -7602,7 +7602,7 @@
         "val": 172.11
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0471,
+      "ars_slope": -0.0467,
       "rs_rating": 10
     },
     {
@@ -7610,8 +7610,8 @@
       "name": "NATCO Pharma",
       "ind": "Healthcare",
       "logoid": "natco-pharma",
-      "ars": -0.442,
-      "srs": -0.1648,
+      "ars": -0.4416,
+      "srs": -0.1643,
       "vol_ratio": 0.35,
       "hi52_prox": -0.2239,
       "price": 935.95,
@@ -7631,7 +7631,7 @@
         "val": 891.66
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0003,
+      "ars_slope": 0.0007,
       "rs_rating": 1
     },
     {
@@ -7639,8 +7639,8 @@
       "name": "NBCC (India)",
       "ind": "Construction",
       "logoid": "nbcc-india",
-      "ars": 1.7054,
-      "srs": 0.017,
+      "ars": 1.7069,
+      "srs": 0.0176,
       "vol_ratio": 0.5,
       "hi52_prox": -0.2288,
       "price": 94.6,
@@ -7660,7 +7660,7 @@
         "val": 100.76
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0074,
+      "ars_slope": -0.0058,
       "rs_rating": 63
     },
     {
@@ -7668,8 +7668,8 @@
       "name": "Narayana Hrudayalaya",
       "ind": "Healthcare",
       "logoid": "narayana-hrudayalaya",
-      "ars": 1.6564,
-      "srs": 0.1658,
+      "ars": 1.6579,
+      "srs": 0.1665,
       "vol_ratio": 0.66,
       "hi52_prox": -0.0011,
       "price": 2070.6,
@@ -7689,7 +7689,7 @@
         "val": 1940.47
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0853,
+      "ars_slope": 0.0869,
       "rs_rating": 87
     },
     {
@@ -7697,8 +7697,8 @@
       "name": "Navin Fluorine International",
       "ind": "Chemicals",
       "logoid": "navin-fluorine-international-l",
-      "ars": 0.6605,
-      "srs": 0.1075,
+      "ars": 0.6615,
+      "srs": 0.1081,
       "vol_ratio": 0.86,
       "hi52_prox": -0.0365,
       "price": 7594.5,
@@ -7718,7 +7718,7 @@
         "val": 7247.05
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0737,
+      "ars_slope": -0.0728,
       "rs_rating": 66
     },
     {
@@ -7726,8 +7726,8 @@
       "name": "Netweb Technologies India",
       "ind": "IT",
       "logoid": "netweb-tech-india-ltd",
-      "ars": 1.7646,
-      "srs": 0.1052,
+      "ars": 1.7662,
+      "srs": 0.1058,
       "vol_ratio": 1.88,
       "hi52_prox": -0.1462,
       "price": 4364.1,
@@ -7747,7 +7747,7 @@
         "val": 4624.26
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0269,
+      "ars_slope": 0.0285,
       "rs_rating": 88
     },
     {
@@ -7755,8 +7755,8 @@
       "name": "Neuland Laboratories",
       "ind": "Healthcare",
       "logoid": "neuland-laboritie",
-      "ars": 9.4189,
-      "srs": 0.3059,
+      "ars": 9.4249,
+      "srs": 0.3066,
       "vol_ratio": 1.21,
       "hi52_prox": 0,
       "price": 19697,
@@ -7776,7 +7776,7 @@
         "val": 17960.88
       },
       "ma_status": "MA+",
-      "ars_slope": 0.4721,
+      "ars_slope": 0.4781,
       "rs_rating": 99
     },
     {
@@ -7784,8 +7784,8 @@
       "name": "Nuvama Wealth Management",
       "ind": "Financial Services",
       "logoid": "nuvama-wealth-manage-ltd",
-      "ars": 1.0168,
-      "srs": 0.3672,
+      "ars": 1.018,
+      "srs": 0.368,
       "vol_ratio": 0.5,
       "hi52_prox": -0.0772,
       "price": 1827.2,
@@ -7805,7 +7805,7 @@
         "val": 1777.53
       },
       "ma_status": "MA+",
-      "ars_slope": -0.1719,
+      "ars_slope": -0.1707,
       "rs_rating": 78
     },
     {
@@ -7813,8 +7813,8 @@
       "name": "Ola Electric Mobility",
       "ind": "Automobile",
       "logoid": "ola-electric-mobility-ltd",
-      "ars": -0.7572,
-      "srs": 0.0447,
+      "ars": -0.757,
+      "srs": 0.0453,
       "vol_ratio": 0.74,
       "hi52_prox": -0.4434,
       "price": 38.4,
@@ -7834,7 +7834,7 @@
         "val": 42.09
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0067,
+      "ars_slope": 0.0068,
       "rs_rating": 15
     },
     {
@@ -7842,8 +7842,8 @@
       "name": "PG Electroplast",
       "ind": "Consumer Durables",
       "logoid": "pg-electroplast-ltd",
-      "ars": 24.6324,
-      "srs": 0.1397,
+      "ars": 24.6473,
+      "srs": 0.1404,
       "vol_ratio": 1,
       "hi52_prox": -0.2454,
       "price": 612.45,
@@ -7863,7 +7863,7 @@
         "val": 554.59
       },
       "ma_status": "MA+",
-      "ars_slope": 1.0559,
+      "ars_slope": 1.0708,
       "rs_rating": 98
     },
     {
@@ -7871,8 +7871,8 @@
       "name": "PNB Housing Finance",
       "ind": "Financial Services",
       "logoid": "pnb-housing-finance",
-      "ars": 1.0012,
-      "srs": 0.0048,
+      "ars": 1.0023,
+      "srs": 0.0054,
       "vol_ratio": 0.6,
       "hi52_prox": -0.0588,
       "price": 1056.3,
@@ -7892,7 +7892,7 @@
         "val": 1019
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0868,
+      "ars_slope": -0.0857,
       "rs_rating": 56
     },
     {
@@ -7900,8 +7900,8 @@
       "name": "Physicswallah",
       "ind": "Consumer Services",
       "logoid": "physicswallah-ltd",
-      "ars": -0.5299,
-      "srs": 0.1505,
+      "ars": -0.5296,
+      "srs": 0.1512,
       "vol_ratio": 0.44,
       "hi52_prox": -0.1848,
       "price": 126.55,
@@ -7921,7 +7921,7 @@
         "val": 144.85
       },
       "ma_status": "MA+",
-      "ars_slope": -0.034,
+      "ars_slope": -0.0337,
       "rs_rating": 23
     },
     {
@@ -7929,8 +7929,8 @@
       "name": "Pine Labs",
       "ind": "Financial Services",
       "logoid": "pine-labs-limited",
-      "ars": -0.6675,
-      "srs": -0.2649,
+      "ars": -0.6673,
+      "srs": -0.2645,
       "vol_ratio": 2.01,
       "hi52_prox": -0.4235,
       "price": 144.64,
@@ -7950,7 +7950,7 @@
         "val": 161.54
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0127,
+      "ars_slope": -0.0125,
       "rs_rating": 7
     },
     {
@@ -7958,8 +7958,8 @@
       "name": "Piramal Finance",
       "ind": "Financial Services",
       "logoid": "piramal",
-      "ars": -0.1093,
-      "srs": 0.0169,
+      "ars": -0.1088,
+      "srs": 0.0175,
       "vol_ratio": 0.7,
       "hi52_prox": -0.07,
       "price": 2043.3,
@@ -7979,7 +7979,7 @@
         "val": 2225.71
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0622,
+      "ars_slope": -0.0617,
       "rs_rating": 27
     },
     {
@@ -7987,8 +7987,8 @@
       "name": "Piramal Pharma",
       "ind": "Healthcare",
       "logoid": "piramal-pharma-limited",
-      "ars": -0.3918,
-      "srs": 0.2142,
+      "ars": -0.3914,
+      "srs": 0.2149,
       "vol_ratio": 1.39,
       "hi52_prox": -0.0605,
       "price": 195.68,
@@ -8008,7 +8008,7 @@
         "val": 175.23
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0359,
+      "ars_slope": 0.0362,
       "rs_rating": 42
     },
     {
@@ -8016,8 +8016,8 @@
       "name": "Poonawalla Fincorp",
       "ind": "Financial Services",
       "logoid": "poonawalla-fincorp",
-      "ars": 5.7827,
-      "srs": 0.0959,
+      "ars": 5.7866,
+      "srs": 0.0966,
       "vol_ratio": 0.75,
       "hi52_prox": -0.1123,
       "price": 481.6,
@@ -8037,7 +8037,7 @@
         "val": 440.14
       },
       "ma_status": "MA+",
-      "ars_slope": 0.1145,
+      "ars_slope": 0.1184,
       "rs_rating": 93
     },
     {
@@ -8045,8 +8045,8 @@
       "name": "RBL Bank",
       "ind": "Financial Services",
       "logoid": "rbl-bank",
-      "ars": -0.0736,
-      "srs": 0.0969,
+      "ars": -0.073,
+      "srs": 0.0976,
       "vol_ratio": 0.64,
       "hi52_prox": -0.025,
       "price": 371.15,
@@ -8066,7 +8066,7 @@
         "val": 347.68
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0228,
+      "ars_slope": 0.0233,
       "rs_rating": 29
     },
     {
@@ -8074,8 +8074,8 @@
       "name": "Redington",
       "ind": "Services",
       "logoid": "redington-india",
-      "ars": 1.4827,
-      "srs": 0.2893,
+      "ars": 1.4841,
+      "srs": 0.2901,
       "vol_ratio": 2.07,
       "hi52_prox": -0.041,
       "price": 287.45,
@@ -8095,7 +8095,7 @@
         "val": 260.76
       },
       "ma_status": "MA+",
-      "ars_slope": 0.1779,
+      "ars_slope": 0.1793,
       "rs_rating": 98
     },
     {
@@ -8103,8 +8103,8 @@
       "name": "Reliance Power",
       "ind": "Power",
       "logoid": "reliance-group",
-      "ars": 2.8822,
-      "srs": -0.1843,
+      "ars": 2.8844,
+      "srs": -0.1838,
       "vol_ratio": 0.55,
       "hi52_prox": -0.5806,
       "price": 23.56,
@@ -8124,7 +8124,7 @@
         "val": 23.33
       },
       "ma_status": "MA-",
-      "ars_slope": -0.051,
+      "ars_slope": -0.0488,
       "rs_rating": 51
     },
     {
@@ -8132,8 +8132,8 @@
       "name": "Sagility",
       "ind": "IT",
       "logoid": "sagility-india-ltd",
-      "ars": -0.1174,
-      "srs": 0.0729,
+      "ars": -0.1169,
+      "srs": 0.0735,
       "vol_ratio": 1.76,
       "hi52_prox": -0.1779,
       "price": 44.87,
@@ -8153,7 +8153,7 @@
         "val": 40.44
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0549,
+      "ars_slope": 0.0554,
       "rs_rating": 43
     },
     {
@@ -8161,8 +8161,8 @@
       "name": "Sai Life Sciences",
       "ind": "Healthcare",
       "logoid": "sai-life-sciences-ltd",
-      "ars": -0.0075,
-      "srs": 0.21,
+      "ars": -0.0069,
+      "srs": 0.2107,
       "vol_ratio": 1.04,
       "hi52_prox": 0,
       "price": 1315.9,
@@ -8182,7 +8182,7 @@
         "val": 1219.01
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0399,
+      "ars_slope": 0.0404,
       "rs_rating": 56
     },
     {
@@ -8190,8 +8190,8 @@
       "name": "Sarda Energy and Minerals",
       "ind": "Metals & Mining",
       "logoid": "sarda-energy-and-minerals-ltd",
-      "ars": 7.8946,
-      "srs": -0.1196,
+      "ars": 7.8998,
+      "srs": -0.1191,
       "vol_ratio": 1.98,
       "hi52_prox": -0.1638,
       "price": 523.6,
@@ -8211,7 +8211,7 @@
         "val": 530.02
       },
       "ma_status": "MA+",
-      "ars_slope": 0.2556,
+      "ars_slope": 0.2607,
       "rs_rating": 83
     },
     {
@@ -8219,8 +8219,8 @@
       "name": "Signatureglobal (India)",
       "ind": "Realty",
       "logoid": "signatureglobal-india-ltd",
-      "ars": 0.0308,
-      "srs": -0.0621,
+      "ars": 0.0314,
+      "srs": -0.0616,
       "vol_ratio": 0.36,
       "hi52_prox": -0.329,
       "price": 819.6,
@@ -8240,7 +8240,7 @@
         "val": 754.55
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0304,
+      "ars_slope": 0.031,
       "rs_rating": 19
     },
     {
@@ -8248,8 +8248,8 @@
       "name": "Sona BLW Precision Forgings",
       "ind": "Automobile",
       "logoid": "sona-blw-precision",
-      "ars": 0.1504,
-      "srs": 0.2454,
+      "ars": 0.1511,
+      "srs": 0.2461,
       "vol_ratio": 0.68,
       "hi52_prox": -0.0167,
       "price": 720.5,
@@ -8269,7 +8269,7 @@
         "val": 673.83
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0199,
+      "ars_slope": -0.0192,
       "rs_rating": 59
     },
     {
@@ -8277,8 +8277,8 @@
       "name": "Star Health and Allied Insurance Company",
       "ind": "Financial Services",
       "logoid": "star-health-and-al-ins-co-l",
-      "ars": -0.6192,
-      "srs": 0.1332,
+      "ars": -0.6189,
+      "srs": 0.1338,
       "vol_ratio": 2.08,
       "hi52_prox": -0.0073,
       "price": 598.85,
@@ -8298,7 +8298,7 @@
         "val": 556.85
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0053,
+      "ars_slope": 0.0055,
       "rs_rating": 32
     },
     {
@@ -8306,8 +8306,8 @@
       "name": "Swan Corp",
       "ind": "Chemicals",
       "logoid": "swan-energy-ltd",
-      "ars": 0.3195,
-      "srs": -0.1034,
+      "ars": 0.3203,
+      "srs": -0.1029,
       "vol_ratio": 0.66,
       "hi52_prox": -0.3657,
       "price": 310.25,
@@ -8327,7 +8327,7 @@
         "val": 331.17
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0153,
+      "ars_slope": -0.0145,
       "rs_rating": 33
     },
     {
@@ -8335,8 +8335,8 @@
       "name": "Syngene International",
       "ind": "Healthcare",
       "logoid": "syngene",
-      "ars": -0.6222,
-      "srs": -0.1368,
+      "ars": -0.622,
+      "srs": -0.1363,
       "vol_ratio": 1.27,
       "hi52_prox": -0.4263,
       "price": 414.25,
@@ -8356,7 +8356,7 @@
         "val": 434.89
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0033,
+      "ars_slope": 0.0035,
       "rs_rating": 6
     },
     {
@@ -8364,8 +8364,8 @@
       "name": "Tata Chemicals",
       "ind": "Chemicals",
       "logoid": "tata",
-      "ars": -0.184,
-      "srs": -0.1651,
+      "ars": -0.1836,
+      "srs": -0.1646,
       "vol_ratio": 1.25,
       "hi52_prox": -0.3244,
       "price": 679.05,
@@ -8385,7 +8385,7 @@
         "val": 727.02
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0304,
+      "ars_slope": -0.0299,
       "rs_rating": 16
     },
     {
@@ -8393,8 +8393,8 @@
       "name": "Tata Technologies",
       "ind": "IT",
       "logoid": "tata",
-      "ars": -0.6739,
-      "srs": 0.2494,
+      "ars": -0.6737,
+      "srs": 0.2501,
       "vol_ratio": 0.58,
       "hi52_prox": -0.0477,
       "price": 742.4,
@@ -8414,7 +8414,7 @@
         "val": 682.66
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0147,
+      "ars_slope": 0.0149,
       "rs_rating": 26
     },
     {
@@ -8422,8 +8422,8 @@
       "name": "Tenneco Clean Air India",
       "ind": "Automobile",
       "logoid": "tenneco-clean-air-india-limited",
-      "ars": -0.3671,
-      "srs": -0.1384,
+      "ars": -0.3667,
+      "srs": -0.1379,
       "vol_ratio": 1.82,
       "hi52_prox": -0.1731,
       "price": 538.6,
@@ -8443,7 +8443,7 @@
         "val": 582.73
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0355,
+      "ars_slope": -0.0351,
       "rs_rating": 18
     },
     {
@@ -8451,8 +8451,8 @@
       "name": "The Ramco Cements",
       "ind": "Construction Materials",
       "logoid": "ramco-cements",
-      "ars": -0.3315,
-      "srs": -0.0198,
+      "ars": -0.3311,
+      "srs": -0.0192,
       "vol_ratio": 0.5,
       "hi52_prox": -0.2352,
       "price": 921.5,
@@ -8472,7 +8472,7 @@
         "val": 884.84
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0015,
+      "ars_slope": -0.0012,
       "rs_rating": 12
     },
     {
@@ -8480,8 +8480,8 @@
       "name": "Triveni Turbine",
       "ind": "Capital Goods",
       "logoid": "triveni-turbine",
-      "ars": 3.3879,
-      "srs": 0.0687,
+      "ars": 3.3905,
+      "srs": 0.0693,
       "vol_ratio": 1,
       "hi52_prox": -0.1694,
       "price": 615.9,
@@ -8501,7 +8501,7 @@
         "val": 670.67
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0637,
+      "ars_slope": -0.0612,
       "rs_rating": 92
     },
     {
@@ -8509,8 +8509,8 @@
       "name": "Urban Company",
       "ind": "Consumer Services",
       "logoid": "urban-company-limited",
-      "ars": -0.5463,
-      "srs": -0.1392,
+      "ars": -0.546,
+      "srs": -0.1387,
       "vol_ratio": 0.62,
       "hi52_prox": -0.2971,
       "price": 131.25,
@@ -8530,7 +8530,7 @@
         "val": 122.98
       },
       "ma_status": "MA+",
-      "ars_slope": -0.007,
+      "ars_slope": -0.0068,
       "rs_rating": 5
     },
     {
@@ -8538,8 +8538,8 @@
       "name": "Welspun Corp",
       "ind": "Capital Goods",
       "logoid": "welspun",
-      "ars": 6.4426,
-      "srs": 0.3325,
+      "ars": 6.4469,
+      "srs": 0.3333,
       "vol_ratio": 0.81,
       "hi52_prox": 0,
       "price": 1697,
@@ -8559,7 +8559,7 @@
         "val": 1531.83
       },
       "ma_status": "MA+",
-      "ars_slope": 0.2441,
+      "ars_slope": 0.2484,
       "rs_rating": 97
     },
     {
@@ -8567,8 +8567,8 @@
       "name": "Whirlpool of India",
       "ind": "Consumer Durables",
       "logoid": "whirlpool",
-      "ars": -0.826,
-      "srs": -0.2113,
+      "ars": -0.8259,
+      "srs": -0.2108,
       "vol_ratio": 1.3,
       "hi52_prox": -0.4448,
       "price": 788.85,
@@ -8588,7 +8588,7 @@
         "val": 810.19
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0009,
+      "ars_slope": 0.001,
       "rs_rating": 4
     },
     {
@@ -8596,8 +8596,8 @@
       "name": "Wockhardt",
       "ind": "Healthcare",
       "logoid": "wockhardt",
-      "ars": 1.2039,
-      "srs": 0.3377,
+      "ars": 1.2051,
+      "srs": 0.3385,
       "vol_ratio": 1.06,
       "hi52_prox": -0.1098,
       "price": 1916.5,
@@ -8617,7 +8617,7 @@
         "val": 2027.45
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0378,
+      "ars_slope": 0.0391,
       "rs_rating": 89
     },
     {
@@ -8625,8 +8625,8 @@
       "name": "Zensar Technolgies",
       "ind": "IT",
       "logoid": "zensar-technologies",
-      "ars": 0.2699,
-      "srs": 0.0355,
+      "ars": 0.2706,
+      "srs": 0.0361,
       "vol_ratio": 0.37,
       "hi52_prox": -0.3763,
       "price": 534.95,
@@ -8646,7 +8646,7 @@
         "val": 465.29
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0674,
+      "ars_slope": 0.0681,
       "rs_rating": 36
     }
   ]
