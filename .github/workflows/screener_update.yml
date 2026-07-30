@@ -38,6 +38,13 @@ jobs:
             sleep 60
           done
 
+      - name: Send Telegram Notification
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          node scripts/send_telegram_notification.js || echo "Telegram notification failed, continuing workflow."
+
       - name: Commit and Push changes
         run: |
           git config --global user.name "github-actions[bot]"
