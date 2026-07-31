@@ -2743,14 +2743,18 @@ function renderSectors() {
     else if (phase === 'WEAKENING') dotColor = '#db9b94';
     else if (phase === 'IMPROVING') dotColor = 'var(--amber)';
     
-    const shortName = ind.length > 12 ? ind.substring(0, 10) + '..' : ind;
+    const shortName = ind.length > 11 ? ind.substring(0, 9) + '..' : ind;
     
+    // Position text label smart to avoid overflowing graph boundaries
+    const textX = cx > 75 ? cx - 3.5 : cx + 3.5;
+    const textAnchor = cx > 75 ? 'end' : 'start';
+
     sectorDots.push(`
-      <circle class="rrg-dot" cx="${cx}" cy="${cy}" r="2" fill="${dotColor}" stroke="var(--border)" stroke-width="0.3"
+      <circle class="rrg-dot" cx="${cx}" cy="${cy}" r="1.8" fill="${dotColor}" stroke="var(--border)" stroke-width="0.3"
               onmouseover="showRrgTooltip(event, '${ind.replace(/'/g,"\\'")}', ${avgArs.toFixed(3)}, ${avgSrs.toFixed(3)})"
               onmouseout="hideRrgTooltip()"
               onclick="toggleSector('${ind.replace(/'/g,"\\'")}')" />
-      <text class="rrg-label" x="${cx + 3.5}" y="${cy + 0.8}">${shortName}</text>
+      <text class="rrg-label" x="${textX}" y="${cy + 0.8}" text-anchor="${textAnchor}">${shortName}</text>
     `);
   });
   
@@ -2766,10 +2770,10 @@ function renderSectors() {
       <rect x="5" y="50" width="45" height="45" fill="rgba(239,83,80,0.01)" pointer-events="none" />
       <rect x="5" y="5" width="45" height="45" fill="rgba(255,183,77,0.01)" pointer-events="none" />
       
-      <text x="92" y="10" text-anchor="end" fill="var(--up)" font-size="3" font-weight="800" opacity="0.8">LEADING</text>
-      <text x="92" y="93" text-anchor="end" fill="#db9b94" font-size="3" font-weight="800" opacity="0.8">WEAKENING</text>
-      <text x="8" y="93" text-anchor="start" fill="var(--down)" font-size="3" font-weight="800" opacity="0.8">LAGGING</text>
-      <text x="8" y="10" text-anchor="start" fill="var(--amber)" font-size="3" font-weight="800" opacity="0.8">IMPROVING</text>
+      <text x="96" y="9" text-anchor="end" fill="var(--up)" font-size="3.2" font-weight="800" opacity="0.85">LEADING</text>
+      <text x="96" y="94" text-anchor="end" fill="#db9b94" font-size="3.2" font-weight="800" opacity="0.85">WEAKENING</text>
+      <text x="4" y="94" text-anchor="start" fill="var(--down)" font-size="3.2" font-weight="800" opacity="0.85">LAGGING</text>
+      <text x="4" y="9" text-anchor="start" fill="var(--amber)" font-size="3.2" font-weight="800" opacity="0.85">IMPROVING</text>
       
       <circle cx="50" cy="50" r="1.2" fill="var(--text)" opacity="0.4" />
       ${sectorDots.join('')}
