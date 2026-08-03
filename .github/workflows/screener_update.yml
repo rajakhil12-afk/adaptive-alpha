@@ -2,8 +2,8 @@ name: Daily Screener Update
 
 on:
   schedule:
-    # Run every Monday to Friday at 11:30 AM UTC (4:30 PM IST)
-    - cron: '30 11 * * 1-5'
+    # Run every Monday to Friday at 1:30 PM UTC (7:00 PM IST)
+    - cron: '30 13 * * 1-5'
   workflow_dispatch: # Enable manual triggers from GitHub UI
 
 jobs:
