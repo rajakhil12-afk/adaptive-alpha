@@ -1,10 +1,10 @@
 {
-  "updated": "01:58 pm IST · 03 Aug",
+  "updated": "10:51 pm IST · 03 Aug",
   "bhavDate": "2026-08-03",
   "fii_dii": {
-    "date": "31-Jul-2026",
-    "fii": 277.48,
-    "dii": 2260.37
+    "date": "03-Aug-2026",
+    "fii": 922.26,
+    "dii": 1571.18
   },
   "stocks": [
     {
@@ -63,7 +63,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.1474,
-      "rs_rating": 53
+      "rs_rating": 52
     },
     {
       "sym": "APOLLOHOSP",
@@ -71,27 +71,27 @@
       "ind": "Healthcare",
       "logoid": "apollo-hospitals",
       "ars": 1.0667,
-      "srs": 0.1065,
-      "vol_ratio": 0.95,
+      "srs": 0.0957,
+      "vol_ratio": 0.94,
       "hi52_prox": -0.0187,
       "price": 8820,
       "breakout": false,
       "trending": false,
-      "signDays": 1382,
+      "signDays": 1383,
       "signSince": 1609472700,
       "signPrice": null,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 8568.16
+        "val": 8614.77
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 8583.39
+        "val": 8627.14
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0727,
+      "ars_slope": -0.0871,
       "rs_rating": 90
     },
     {
@@ -100,27 +100,27 @@
       "ind": "Consumer Durables",
       "logoid": "asian-paints",
       "ars": -0.4271,
-      "srs": 0.086,
-      "vol_ratio": 0.98,
+      "srs": 0.0811,
+      "vol_ratio": 0.96,
       "hi52_prox": -0.0534,
       "price": 2810,
       "breakout": false,
       "trending": false,
-      "signDays": 951,
-      "signSince": 1664423100,
-      "signPrice": 3384.8,
+      "signDays": 946,
+      "signSince": 1665373500,
+      "signPrice": 3277.95,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 2642.34
+        "val": 2645.78
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 2639.25
+        "val": 2644.57
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0024,
+      "ars_slope": -0.003,
       "rs_rating": 32
     },
     {
@@ -158,28 +158,28 @@
       "ind": "Automobile",
       "logoid": "bajaj-auto",
       "ars": 0.9271,
-      "srs": 0.1186,
-      "vol_ratio": 0.56,
+      "srs": 0.0884,
+      "vol_ratio": 0.55,
       "hi52_prox": 0,
       "price": 11856,
       "breakout": false,
       "trending": false,
       "signDays": 707,
-      "signSince": 1695613500,
-      "signPrice": 5005.45,
+      "signSince": 1695699900,
+      "signPrice": 5069.2,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 11156.47
+        "val": 11157.06
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 11152.79
+        "val": 11154.84
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0503,
-      "rs_rating": 69
+      "ars_slope": 0.0184,
+      "rs_rating": 66
     },
     {
       "sym": "BAJFINANCE",
@@ -237,7 +237,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0673,
-      "rs_rating": 77
+      "rs_rating": 78
     },
     {
       "sym": "BEL",
@@ -324,7 +324,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0117,
-      "rs_rating": 39
+      "rs_rating": 40
     },
     {
       "sym": "COALINDIA",
@@ -419,28 +419,28 @@
       "ind": "Construction Materials",
       "logoid": "grasim",
       "ars": 0.9841,
-      "srs": 0.0889,
-      "vol_ratio": 0.77,
+      "srs": 0.072,
+      "vol_ratio": 0.79,
       "hi52_prox": 0,
       "price": 3260,
       "breakout": false,
       "trending": false,
-      "signDays": 1382,
+      "signDays": 1383,
       "signSince": 1609472700,
       "signPrice": null,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 3094.5
+        "val": 3095.63
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 3096.62
+        "val": 3097.58
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0284,
-      "rs_rating": 82
+      "ars_slope": 0.026,
+      "rs_rating": 81
     },
     {
       "sym": "HCLTECH",
@@ -527,7 +527,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0198,
-      "rs_rating": 3
+      "rs_rating": 4
     },
     {
       "sym": "HINDALCO",
@@ -535,13 +535,13 @@
       "ind": "Metals & Mining",
       "logoid": "hindalco",
       "ars": 1.3619,
-      "srs": -0.0738,
-      "vol_ratio": 1.19,
+      "srs": -0.0825,
+      "vol_ratio": 1.18,
       "hi52_prox": -0.1346,
       "price": 994.9,
       "breakout": false,
       "trending": false,
-      "signDays": 1362,
+      "signDays": 1363,
       "signSince": 1612237500,
       "signPrice": 255.35,
       "st14": {
@@ -555,7 +555,7 @@
         "val": 995.61
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0451,
+      "ars_slope": 0.0668,
       "rs_rating": 71
     },
     {
@@ -614,7 +614,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0185,
-      "rs_rating": 72
+      "rs_rating": 73
     },
     {
       "sym": "ITC",
@@ -643,7 +643,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0189,
-      "rs_rating": 25
+      "rs_rating": 26
     },
     {
       "sym": "INFY",
@@ -672,7 +672,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0173,
-      "rs_rating": 13
+      "rs_rating": 12
     },
     {
       "sym": "INDIGO",
@@ -759,7 +759,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0414,
-      "rs_rating": 31
+      "rs_rating": 32
     },
     {
       "sym": "KOTAKBANK",
@@ -767,15 +767,15 @@
       "ind": "Financial Services",
       "logoid": "kotak-mahindra-ast",
       "ars": -0.436,
-      "srs": 0.0276,
-      "vol_ratio": 0.7,
+      "srs": 0.02,
+      "vol_ratio": 0.74,
       "hi52_prox": -0.107,
       "price": 397.5,
       "breakout": false,
       "trending": false,
-      "signDays": 1382,
-      "signSince": 1609472700,
-      "signPrice": null,
+      "signDays": 1359,
+      "signSince": 1612755900,
+      "signPrice": 391.43,
       "st14": {
         "trend": "sell",
         "signal": null,
@@ -787,8 +787,8 @@
         "val": 398.91
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0005,
-      "rs_rating": 16
+      "ars_slope": -0.0004,
+      "rs_rating": 17
     },
     {
       "sym": "LT",
@@ -846,7 +846,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0656,
-      "rs_rating": 77
+      "rs_rating": 76
     },
     {
       "sym": "MARUTI",
@@ -854,28 +854,28 @@
       "ind": "Automobile",
       "logoid": "maruti-suzuki-india",
       "ars": 0.041,
-      "srs": 0.0039,
+      "srs": 0.0004,
       "vol_ratio": 2.03,
       "hi52_prox": -0.1817,
       "price": 14150,
       "breakout": false,
       "trending": false,
-      "signDays": 54,
-      "signSince": 1779248700,
-      "signPrice": 13003,
+      "signDays": 46,
+      "signSince": 1780371900,
+      "signPrice": 13022,
       "st14": {
-        "trend": "sell",
+        "trend": "buy",
         "signal": null,
-        "val": 14226.18
+        "val": 13366.38
       },
       "st10": {
-        "trend": "sell",
+        "trend": "buy",
         "signal": null,
-        "val": 14211.17
+        "val": 13378.25
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0019,
-      "rs_rating": 50
+      "ars_slope": -0.0073,
+      "rs_rating": 49
     },
     {
       "sym": "MAXHEALTH",
@@ -933,7 +933,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0229,
-      "rs_rating": 40
+      "rs_rating": 41
     },
     {
       "sym": "NESTLEIND",
@@ -991,7 +991,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0283,
-      "rs_rating": 34
+      "rs_rating": 33
     },
     {
       "sym": "POWERGRID",
@@ -1057,27 +1057,27 @@
       "ind": "Financial Services",
       "logoid": "sbi-life-insurance",
       "ars": 0.2102,
-      "srs": 0.0029,
-      "vol_ratio": 0.92,
+      "srs": -0.0042,
+      "vol_ratio": 0.97,
       "hi52_prox": -0.0922,
       "price": 1915,
       "breakout": false,
       "trending": false,
-      "signDays": 327,
+      "signDays": 328,
       "signSince": 1744343100,
       "signPrice": 1521.9,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 1806.89
+        "val": 1809.75
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 1809.65
+        "val": 1813.51
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0078,
+      "ars_slope": -0.0224,
       "rs_rating": 46
     },
     {
@@ -1136,7 +1136,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0022,
-      "rs_rating": 69
+      "rs_rating": 68
     },
     {
       "sym": "SUNPHARMA",
@@ -1165,7 +1165,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0734,
-      "rs_rating": 81
+      "rs_rating": 82
     },
     {
       "sym": "TCS",
@@ -1310,7 +1310,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0025,
-      "rs_rating": 78
+      "rs_rating": 79
     },
     {
       "sym": "TRENT",
@@ -1318,15 +1318,15 @@
       "ind": "Consumer Services",
       "logoid": "trent",
       "ars": 1.5581,
-      "srs": 0.0383,
-      "vol_ratio": 0.63,
+      "srs": 0.0372,
+      "vol_ratio": 0.9,
       "hi52_prox": -0.4484,
       "price": 3050,
       "breakout": false,
       "trending": true,
-      "signDays": 1319,
-      "signSince": 1617767100,
-      "signPrice": 722.05,
+      "signDays": 1353,
+      "signSince": 1613447100,
+      "signPrice": 750.25,
       "st14": {
         "trend": "sell",
         "signal": null,
@@ -1338,8 +1338,8 @@
         "val": 3085.36
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0137,
-      "rs_rating": 78
+      "ars_slope": 0.0203,
+      "rs_rating": 84
     },
     {
       "sym": "ULTRACEMCO",
@@ -1347,28 +1347,28 @@
       "ind": "Construction Materials",
       "logoid": "ultratech-cement",
       "ars": 0.2892,
-      "srs": -0.0296,
-      "vol_ratio": 0.55,
+      "srs": -0.0338,
+      "vol_ratio": 0.53,
       "hi52_prox": -0.0765,
       "price": 12054,
       "breakout": false,
       "trending": false,
-      "signDays": 868,
+      "signDays": 869,
       "signSince": 1675050300,
       "signPrice": 6887.7,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 11440.27
+        "val": 11453.5
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 11454.59
+        "val": 11473.03
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0227,
-      "rs_rating": 39
+      "ars_slope": -0.031,
+      "rs_rating": 38
     },
     {
       "sym": "WIPRO",
@@ -1397,7 +1397,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0049,
-      "rs_rating": 14
+      "rs_rating": 13
     },
     {
       "sym": "ABB",
@@ -1405,27 +1405,27 @@
       "ind": "Capital Goods",
       "logoid": "abb",
       "ars": 2.4891,
-      "srs": 0.0303,
-      "vol_ratio": 2.35,
+      "srs": 0.0295,
+      "vol_ratio": 2.32,
       "hi52_prox": -0.0087,
       "price": 7601,
       "breakout": false,
       "trending": false,
-      "signDays": 1382,
+      "signDays": 1383,
       "signSince": 1609472700,
       "signPrice": null,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 6961.22
+        "val": 6951.33
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 6955.61
+        "val": 6940.08
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0164,
+      "ars_slope": 0.0563,
       "rs_rating": 96
     },
     {
@@ -1455,7 +1455,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.073,
-      "rs_rating": 71
+      "rs_rating": 72
     },
     {
       "sym": "ADANIGREEN",
@@ -1513,7 +1513,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0764,
-      "rs_rating": 72
+      "rs_rating": 74
     },
     {
       "sym": "AMBUJACEM",
@@ -1542,7 +1542,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0094,
-      "rs_rating": 41
+      "rs_rating": 42
     },
     {
       "sym": "DMART",
@@ -1550,15 +1550,15 @@
       "ind": "Consumer Services",
       "logoid": "avenue-supermarts",
       "ars": -0.1854,
-      "srs": -0.1181,
+      "srs": -0.1089,
       "vol_ratio": 0.73,
       "hi52_prox": -0.1686,
       "price": 4015,
       "breakout": false,
       "trending": false,
       "signDays": 84,
-      "signSince": 1775533500,
-      "signPrice": 4466,
+      "signSince": 1775619900,
+      "signPrice": 4368.8,
       "st14": {
         "trend": "sell",
         "signal": null,
@@ -1570,7 +1570,7 @@
         "val": 4170.4
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0291,
+      "ars_slope": 0.0089,
       "rs_rating": 15
     },
     {
@@ -1579,28 +1579,28 @@
       "ind": "Financial Services",
       "logoid": "bajaj-holdings-and-investment-lt",
       "ars": 1.1042,
-      "srs": 0.0641,
-      "vol_ratio": 0.82,
+      "srs": 0.0656,
+      "vol_ratio": 0.78,
       "hi52_prox": -0.2013,
       "price": 11599,
       "breakout": false,
       "trending": false,
-      "signDays": 1268,
+      "signDays": 1269,
       "signSince": 1624333500,
       "signPrice": 3545.05,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 10857.08
+        "val": 10862.48
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 10879.47
+        "val": 10885.73
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0795,
-      "rs_rating": 80
+      "ars_slope": 0.0756,
+      "rs_rating": 79
     },
     {
       "sym": "BANKBARODA",
@@ -1629,7 +1629,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0026,
-      "rs_rating": 50
+      "rs_rating": 51
     },
     {
       "sym": "BPCL",
@@ -1658,7 +1658,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0014,
-      "rs_rating": 39
+      "rs_rating": 40
     },
     {
       "sym": "BOSCHLTD",
@@ -1666,15 +1666,15 @@
       "ind": "Automobile",
       "logoid": "bosch",
       "ars": 0.7996,
-      "srs": 0.0972,
-      "vol_ratio": 0.62,
+      "srs": 0.061,
+      "vol_ratio": 0.64,
       "hi52_prox": -0.0223,
       "price": 41300,
       "breakout": false,
       "trending": false,
       "signDays": 733,
-      "signSince": 1692157500,
-      "signPrice": 18185.75,
+      "signSince": 1692243900,
+      "signPrice": 18210.15,
       "st14": {
         "trend": "buy",
         "signal": null,
@@ -1686,8 +1686,8 @@
         "val": 39478.94
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0561,
-      "rs_rating": 66
+      "ars_slope": -0.0588,
+      "rs_rating": 63
     },
     {
       "sym": "BRITANNIA",
@@ -1695,27 +1695,27 @@
       "ind": "FMCG",
       "logoid": "britannia",
       "ars": -0.1228,
-      "srs": -0.0689,
-      "vol_ratio": 0.92,
+      "srs": -0.0738,
+      "vol_ratio": 0.86,
       "hi52_prox": -0.1221,
       "price": 5531,
       "breakout": false,
       "trending": false,
-      "signDays": 222,
+      "signDays": 223,
       "signSince": 1757648700,
       "signPrice": 6247,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 5249.17
+        "val": 5237.79
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 5251.15
+        "val": 5236.62
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0045,
+      "ars_slope": -0.0199,
       "rs_rating": 22
     },
     {
@@ -1745,7 +1745,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.5751,
-      "rs_rating": 85
+      "rs_rating": 86
     },
     {
       "sym": "CANBK",
@@ -1774,7 +1774,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0248,
-      "rs_rating": 60
+      "rs_rating": 61
     },
     {
       "sym": "CHOLAFIN",
@@ -1861,7 +1861,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.038,
-      "rs_rating": 58
+      "rs_rating": 59
     },
     {
       "sym": "DIVISLAB",
@@ -1890,7 +1890,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.1351,
-      "rs_rating": 79
+      "rs_rating": 80
     },
     {
       "sym": "GAIL",
@@ -1919,7 +1919,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0448,
-      "rs_rating": 57
+      "rs_rating": 58
     },
     {
       "sym": "GODREJCP",
@@ -1948,7 +1948,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.012,
-      "rs_rating": 38
+      "rs_rating": 39
     },
     {
       "sym": "HDFCAMC",
@@ -2035,7 +2035,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0071,
-      "rs_rating": 26
+      "rs_rating": 25
     },
     {
       "sym": "HYUNDAI",
@@ -2122,7 +2122,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0201,
-      "rs_rating": 51
+      "rs_rating": 50
     },
     {
       "sym": "IRFC",
@@ -2151,7 +2151,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0062,
-      "rs_rating": 47
+      "rs_rating": 46
     },
     {
       "sym": "JINDALSTEL",
@@ -2180,7 +2180,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0101,
-      "rs_rating": 56
+      "rs_rating": 57
     },
     {
       "sym": "LODHA",
@@ -2275,28 +2275,28 @@
       "ind": "Chemicals",
       "logoid": "pidilite",
       "ars": 0.0497,
-      "srs": 0.1249,
+      "srs": 0.1025,
       "vol_ratio": 0.64,
       "hi52_prox": 0,
       "price": 1642.5,
       "breakout": false,
       "trending": false,
-      "signDays": 40,
+      "signDays": 41,
       "signSince": 1780976700,
       "signPrice": 1481.8,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 1554.7
+        "val": 1551.76
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 1557.63
+        "val": 1553.73
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0135,
-      "rs_rating": 49
+      "ars_slope": -0.0189,
+      "rs_rating": 47
     },
     {
       "sym": "PFC",
@@ -2325,7 +2325,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0739,
-      "rs_rating": 61
+      "rs_rating": 62
     },
     {
       "sym": "PNB",
@@ -2354,7 +2354,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0369,
-      "rs_rating": 57
+      "rs_rating": 56
     },
     {
       "sym": "RECLTD",
@@ -2412,7 +2412,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0297,
-      "rs_rating": 85
+      "rs_rating": 86
     },
     {
       "sym": "SHREECEM",
@@ -2449,27 +2449,27 @@
       "ind": "Capital Goods",
       "logoid": "siemens",
       "ars": 1.3474,
-      "srs": -0.0117,
-      "vol_ratio": 1.7,
+      "srs": -0.0193,
+      "vol_ratio": 1.65,
       "hi52_prox": 0,
       "price": 3900,
       "breakout": false,
       "trending": false,
-      "signDays": 1362,
+      "signDays": 1363,
       "signSince": 1612151100,
       "signPrice": 989.83,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 3607.95
+        "val": 3604.71
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 3609.08
+        "val": 3604.73
       },
       "ma_status": "MA+",
-      "ars_slope": 0.037,
+      "ars_slope": 0.0599,
       "rs_rating": 83
     },
     {
@@ -2478,13 +2478,13 @@
       "ind": "Chemicals",
       "logoid": "solar-industries",
       "ars": 8.6589,
-      "srs": 0.1541,
-      "vol_ratio": 0.46,
+      "srs": 0.1434,
+      "vol_ratio": 0.48,
       "hi52_prox": -0.0203,
       "price": 18659,
       "breakout": false,
       "trending": false,
-      "signDays": 1381,
+      "signDays": 1382,
       "signSince": 1609472700,
       "signPrice": null,
       "st14": {
@@ -2495,10 +2495,10 @@
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 17383.17
+        "val": 17394.77
       },
       "ma_status": "MA+",
-      "ars_slope": -0.2967,
+      "ars_slope": -0.0915,
       "rs_rating": 95
     },
     {
@@ -2507,28 +2507,28 @@
       "ind": "Automobile",
       "logoid": "tvs",
       "ars": 4.0606,
-      "srs": 0.1811,
-      "vol_ratio": 1.22,
+      "srs": 0.1528,
+      "vol_ratio": 1.13,
       "hi52_prox": 0,
       "price": 4389,
       "breakout": false,
       "trending": false,
-      "signDays": 1088,
-      "signSince": 1646970300,
-      "signPrice": 581.6,
+      "signDays": 1079,
+      "signSince": 1648439100,
+      "signPrice": 607.4,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 4087.18
+        "val": 4097.33
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 4081.23
+        "val": 4096.12
       },
       "ma_status": "MA+",
-      "ars_slope": 0.4461,
-      "rs_rating": 98
+      "ars_slope": 0.3067,
+      "rs_rating": 97
     },
     {
       "sym": "TATACAP",
@@ -2623,28 +2623,28 @@
       "ind": "Financial Services",
       "logoid": "union-bank-of-india",
       "ars": 2.0672,
-      "srs": 0.0038,
-      "vol_ratio": 0.46,
+      "srs": 0.0127,
+      "vol_ratio": 0.47,
       "hi52_prox": -0.1398,
       "price": 174,
       "breakout": false,
       "trending": false,
-      "signDays": 975,
+      "signDays": 976,
       "signSince": 1661399100,
       "signPrice": 42.3,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 160.16
+        "val": 160.69
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 160.6
+        "val": 161.3
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0287,
-      "rs_rating": 68
+      "ars_slope": 0.0053,
+      "rs_rating": 71
     },
     {
       "sym": "UNITDSPR",
@@ -2652,28 +2652,28 @@
       "ind": "FMCG",
       "logoid": "united-spirits",
       "ars": 0.4888,
-      "srs": 0.1544,
+      "srs": 0.1639,
       "vol_ratio": 0.39,
       "hi52_prox": -0.0012,
       "price": 1530,
       "breakout": false,
       "trending": false,
-      "signDays": 849,
-      "signSince": 1677210300,
-      "signPrice": 743.4,
+      "signDays": 848,
+      "signSince": 1677555900,
+      "signPrice": 740.6,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 1437.66
+        "val": 1439.85
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 1438.69
+        "val": 1441.88
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0001,
-      "rs_rating": 63
+      "ars_slope": -0.027,
+      "rs_rating": 64
     },
     {
       "sym": "VBL",
@@ -2739,15 +2739,15 @@
       "ind": "Healthcare",
       "logoid": "cadila-healthcare",
       "ars": 0.3259,
-      "srs": 0.1625,
-      "vol_ratio": 1.2,
+      "srs": 0.1607,
+      "vol_ratio": 1.24,
       "hi52_prox": -0.0328,
       "price": 1121,
       "breakout": false,
       "trending": false,
-      "signDays": 132,
-      "signSince": 1769053500,
-      "signPrice": 885.3,
+      "signDays": 134,
+      "signSince": 1768967100,
+      "signPrice": 876.25,
       "st14": {
         "trend": "buy",
         "signal": null,
@@ -2759,7 +2759,7 @@
         "val": 1085.93
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0274,
+      "ars_slope": -0.0164,
       "rs_rating": 74
     },
     {
@@ -2768,28 +2768,28 @@
       "ind": "Financial Services",
       "logoid": "indian-bank",
       "ars": 4.4119,
-      "srs": -0.051,
-      "vol_ratio": 0.5,
+      "srs": -0.0443,
+      "vol_ratio": 0.53,
       "hi52_prox": -0.1478,
       "price": 845,
       "breakout": false,
       "trending": false,
-      "signDays": 1363,
+      "signDays": 1364,
       "signSince": 1612151100,
       "signPrice": 94.7,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 783.89
+        "val": 787.2
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 787.52
+        "val": 791.73
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0846,
-      "rs_rating": 73
+      "ars_slope": -0.1045,
+      "rs_rating": 75
     },
     {
       "sym": "BSE",
@@ -2818,7 +2818,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0405,
-      "rs_rating": 84
+      "rs_rating": 85
     },
     {
       "sym": "POWERINDIA",
@@ -2826,15 +2826,15 @@
       "ind": "Capital Goods",
       "logoid": "abb-power-products",
       "ars": 12.8699,
-      "srs": -0.0667,
+      "srs": -0.1067,
       "vol_ratio": 0.5,
       "hi52_prox": -0.1676,
       "price": 32000,
       "breakout": false,
       "trending": false,
       "signDays": 1323,
-      "signSince": 1617162300,
-      "signPrice": 1366.95,
+      "signSince": 1617248700,
+      "signPrice": 1382.7,
       "st14": {
         "trend": "sell",
         "signal": null,
@@ -2846,8 +2846,8 @@
         "val": 34461.78
       },
       "ma_status": "MA-",
-      "ars_slope": -0.2485,
-      "rs_rating": 75
+      "ars_slope": -0.0606,
+      "rs_rating": 70
     },
     {
       "sym": "INDUSTOWER",
@@ -2855,13 +2855,13 @@
       "ind": "Telecom",
       "logoid": "bharti-infratel",
       "ars": -0.05,
-      "srs": -0.0574,
-      "vol_ratio": 0.41,
+      "srs": -0.0448,
+      "vol_ratio": 0.45,
       "hi52_prox": -0.1726,
       "price": 395.3,
       "breakout": false,
       "trending": false,
-      "signDays": 12,
+      "signDays": 13,
       "signSince": 1784259900,
       "signPrice": 403.5,
       "st14": {
@@ -2875,8 +2875,8 @@
         "val": 410.07
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0112,
-      "rs_rating": 17
+      "ars_slope": 0.0032,
+      "rs_rating": 20
     },
     {
       "sym": "LGEINDIA",
@@ -2905,7 +2905,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0036,
-      "rs_rating": 26
+      "rs_rating": 25
     },
     {
       "sym": "LUPIN",
@@ -2913,13 +2913,13 @@
       "ind": "Healthcare",
       "logoid": "lupin",
       "ars": 0.3529,
-      "srs": -0.0463,
-      "vol_ratio": 1.89,
+      "srs": -0.053,
+      "vol_ratio": 1.86,
       "hi52_prox": -0.0484,
       "price": 2393,
       "breakout": false,
       "trending": false,
-      "signDays": 519,
+      "signDays": 520,
       "signSince": 1720064700,
       "signPrice": 1759.3,
       "st14": {
@@ -2933,8 +2933,8 @@
         "val": 2531.59
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0538,
-      "rs_rating": 52
+      "ars_slope": -0.0455,
+      "rs_rating": 50
     },
     {
       "sym": "POLYCAB",
@@ -2942,13 +2942,13 @@
       "ind": "Capital Goods",
       "logoid": "polycab",
       "ars": 3.9369,
-      "srs": 0.0451,
-      "vol_ratio": 0.42,
+      "srs": -0.0231,
+      "vol_ratio": 0.41,
       "hi52_prox": -0.104,
       "price": 9034,
       "breakout": false,
       "trending": false,
-      "signDays": 1382,
+      "signDays": 1383,
       "signSince": 1609472700,
       "signPrice": null,
       "st14": {
@@ -2959,11 +2959,11 @@
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 9618.79
+        "val": 9612.69
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1466,
-      "rs_rating": 86
+      "ars_slope": -0.2095,
+      "rs_rating": 77
     },
     {
       "sym": "GROWW",
@@ -3007,7 +3007,7 @@
       "breakout": false,
       "trending": false,
       "signDays": 1,
-      "signSince": 1785765413,
+      "signSince": 1785777549,
       "signPrice": 5460,
       "st14": {
         "trend": "buy",
@@ -3029,27 +3029,27 @@
       "ind": "Financial Services",
       "logoid": "aditya-birla-capital",
       "ars": 1.6949,
-      "srs": 0.1187,
-      "vol_ratio": 3.3,
+      "srs": 0.1196,
+      "vol_ratio": 3.06,
       "hi52_prox": 0,
       "price": 424.35,
       "breakout": false,
       "trending": false,
-      "signDays": 950,
-      "signSince": 1664509500,
-      "signPrice": 111.8,
+      "signDays": 941,
+      "signSince": 1665978300,
+      "signPrice": 110.4,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 391.07
+        "val": 391.47
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 390.52
+        "val": 391.07
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0693,
+      "ars_slope": 0.129,
       "rs_rating": 94
     },
     {
@@ -3058,15 +3058,15 @@
       "ind": "Financial Services",
       "logoid": "icici-lombard-gen",
       "ars": -0.3761,
-      "srs": -0.099,
+      "srs": -0.1186,
       "vol_ratio": 0.56,
       "hi52_prox": -0.1801,
       "price": 1675,
       "breakout": false,
       "trending": false,
       "signDays": 1374,
-      "signSince": 1610595900,
-      "signPrice": 1554.7,
+      "signSince": 1610682300,
+      "signPrice": 1550.85,
       "st14": {
         "trend": "sell",
         "signal": null,
@@ -3078,7 +3078,7 @@
         "val": 1761.19
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0225,
+      "ars_slope": -0.0236,
       "rs_rating": 6
     },
     {
@@ -3166,7 +3166,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0645,
-      "rs_rating": 67
+      "rs_rating": 68
     },
     {
       "sym": "BHEL",
@@ -3319,8 +3319,8 @@
       "ind": "Services",
       "logoid": "indian-rail-tour-corp-ltd",
       "ars": 0.0054,
-      "srs": -0.1272,
-      "vol_ratio": 2.68,
+      "srs": -0.1206,
+      "vol_ratio": 2.73,
       "hi52_prox": -0.3029,
       "price": 513.5,
       "breakout": false,
@@ -3339,7 +3339,7 @@
         "val": 514.15
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0068,
+      "ars_slope": 0.0231,
       "rs_rating": 32
     },
     {
@@ -3369,7 +3369,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0473,
-      "rs_rating": 27
+      "rs_rating": 28
     },
     {
       "sym": "HUDCO",
@@ -3377,13 +3377,13 @@
       "ind": "Financial Services",
       "logoid": "housing-urban-dev",
       "ars": 1.745,
-      "srs": -0.1272,
-      "vol_ratio": 0.91,
+      "srs": -0.1487,
+      "vol_ratio": 0.92,
       "hi52_prox": -0.1826,
       "price": 199.38,
       "breakout": false,
       "trending": false,
-      "signDays": 807,
+      "signDays": 808,
       "signSince": 1683085500,
       "signPrice": 53.65,
       "st14": {
@@ -3397,8 +3397,8 @@
         "val": 209.85
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1286,
-      "rs_rating": 55
+      "ars_slope": -0.019,
+      "rs_rating": 51
     },
     {
       "sym": "GMRAIRPORT",
@@ -3406,28 +3406,28 @@
       "ind": "Services",
       "logoid": "gmr",
       "ars": 1.4922,
-      "srs": 0.0356,
-      "vol_ratio": 0.37,
+      "srs": 0.0209,
+      "vol_ratio": 0.39,
       "hi52_prox": -0.082,
       "price": 105.55,
       "breakout": false,
       "trending": false,
-      "signDays": 1207,
+      "signDays": 1208,
       "signSince": 1632109500,
       "signPrice": 30.68,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 112.63
+        "val": 112.37
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 112.31
+        "val": 111.97
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1406,
-      "rs_rating": 68
+      "ars_slope": -0.1396,
+      "rs_rating": 67
     },
     {
       "sym": "MARICO",
@@ -3435,28 +3435,28 @@
       "ind": "FMCG",
       "logoid": "marico",
       "ars": 0.2275,
-      "srs": 0.0526,
-      "vol_ratio": 1.3,
+      "srs": 0.0307,
+      "vol_ratio": 1.29,
       "hi52_prox": -0.005,
       "price": 880.95,
       "breakout": false,
       "trending": false,
-      "signDays": 123,
+      "signDays": 124,
       "signSince": 1770263100,
       "signPrice": 748.3,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 833.27
+        "val": 833.31
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 834.07
+        "val": 834.19
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0077,
-      "rs_rating": 59
+      "ars_slope": -0.0431,
+      "rs_rating": 55
     },
     {
       "sym": "JSWENERGY",
@@ -3464,13 +3464,13 @@
       "ind": "Power",
       "logoid": "jsw-energy",
       "ars": 3.8199,
-      "srs": -0.0246,
-      "vol_ratio": 1.16,
+      "srs": -0.0381,
+      "vol_ratio": 1.22,
       "hi52_prox": -0.0549,
       "price": 569,
       "breakout": false,
       "trending": true,
-      "signDays": 1347,
+      "signDays": 1348,
       "signSince": 1614051900,
       "signPrice": 73.4,
       "st14": {
@@ -3484,8 +3484,8 @@
         "val": 581.47
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0124,
-      "rs_rating": 89
+      "ars_slope": 0.0601,
+      "rs_rating": 88
     },
     {
       "sym": "MANKIND",
@@ -3500,7 +3500,7 @@
       "breakout": false,
       "trending": false,
       "signDays": 1,
-      "signSince": 1785765413,
+      "signSince": 1785777549,
       "signPrice": 2483,
       "st14": {
         "trend": "buy",
@@ -3543,7 +3543,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0284,
-      "rs_rating": 79
+      "rs_rating": 78
     },
     {
       "sym": "PERSISTENT",
@@ -3551,28 +3551,28 @@
       "ind": "IT",
       "logoid": "persistent-systems-ltd",
       "ars": 3.213,
-      "srs": 0.0825,
-      "vol_ratio": 1.77,
+      "srs": 0.089,
+      "vol_ratio": 1.75,
       "hi52_prox": -0.1506,
       "price": 5575,
       "breakout": false,
       "trending": false,
-      "signDays": 1363,
+      "signDays": 1364,
       "signSince": 1612151100,
       "signPrice": 773.33,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 5072.56
+        "val": 5059.45
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 5077.56
+        "val": 5054.25
       },
       "ma_status": "MA+",
-      "ars_slope": 0.1027,
-      "rs_rating": 97
+      "ars_slope": -0.0223,
+      "rs_rating": 98
     },
     {
       "sym": "PAYTM",
@@ -3601,7 +3601,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0216,
-      "rs_rating": 40
+      "rs_rating": 41
     },
     {
       "sym": "POLICYBZR",
@@ -3609,13 +3609,13 @@
       "ind": "Financial Services",
       "logoid": "pb-fintech",
       "ars": -0.2234,
-      "srs": -0.0561,
-      "vol_ratio": 0.41,
+      "srs": -0.0462,
+      "vol_ratio": 0.5,
       "hi52_prox": -0.157,
       "price": 1650,
       "breakout": false,
       "trending": false,
-      "signDays": 390,
+      "signDays": 391,
       "signSince": 1736307900,
       "signPrice": 2002.85,
       "st14": {
@@ -3629,8 +3629,8 @@
         "val": 1659.36
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0218,
-      "rs_rating": 12
+      "ars_slope": 0.0072,
+      "rs_rating": 14
     },
     {
       "sym": "NAUKRI",
@@ -3638,28 +3638,28 @@
       "ind": "IT",
       "logoid": "info-edge",
       "ars": -0.245,
-      "srs": 0.2587,
-      "vol_ratio": 0.3,
+      "srs": 0.2581,
+      "vol_ratio": 0.39,
       "hi52_prox": -0.105,
       "price": 1268.8,
       "breakout": false,
       "trending": false,
-      "signDays": 368,
+      "signDays": 369,
       "signSince": 1738899900,
       "signPrice": 1572.02,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 1169.09
+        "val": 1167.2
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 1171.5
+        "val": 1169.02
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0213,
-      "rs_rating": 33
+      "ars_slope": -0.0044,
+      "rs_rating": 34
     },
     {
       "sym": "AUROPHARMA",
@@ -3667,15 +3667,15 @@
       "ind": "Healthcare",
       "logoid": "aurobindo",
       "ars": -0.0518,
-      "srs": 0.0199,
-      "vol_ratio": 1.67,
+      "srs": 0.0236,
+      "vol_ratio": 1.69,
       "hi52_prox": -0.0406,
       "price": 1554.7,
       "breakout": false,
       "trending": false,
-      "signDays": 17,
-      "signSince": 1783655100,
-      "signPrice": 1564.7,
+      "signDays": 4,
+      "signSince": 1785383100,
+      "signPrice": 1576.3,
       "st14": {
         "trend": "buy",
         "signal": null,
@@ -3687,8 +3687,8 @@
         "val": 1490.86
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0274,
-      "rs_rating": 45
+      "ars_slope": -0.0273,
+      "rs_rating": 47
     },
     {
       "sym": "ALKEM",
@@ -3696,27 +3696,27 @@
       "ind": "Healthcare",
       "logoid": "alkem",
       "ars": 0.0944,
-      "srs": -0.0002,
-      "vol_ratio": 0.92,
+      "srs": -0.0062,
+      "vol_ratio": 0.95,
       "hi52_prox": -0.0311,
       "price": 5707,
       "breakout": false,
       "trending": false,
-      "signDays": 111,
+      "signDays": 112,
       "signSince": 1771818300,
       "signPrice": 5490.5,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 5426.3
+        "val": 5433.41
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 5425.77
+        "val": 5434.66
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0169,
+      "ars_slope": -0.0245,
       "rs_rating": 43
     },
     {
@@ -3725,15 +3725,15 @@
       "ind": "Healthcare",
       "logoid": "biocon",
       "ars": -0.4812,
-      "srs": 0.0923,
-      "vol_ratio": 0.5,
+      "srs": 0.0875,
+      "vol_ratio": 0.51,
       "hi52_prox": -0.0311,
       "price": 427,
       "breakout": false,
       "trending": false,
-      "signDays": 1375,
-      "signSince": 1610509500,
-      "signPrice": 462.8,
+      "signDays": 1377,
+      "signSince": 1610423100,
+      "signPrice": 471.75,
       "st14": {
         "trend": "buy",
         "signal": null,
@@ -3745,8 +3745,8 @@
         "val": 402.12
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0284,
-      "rs_rating": 18
+      "ars_slope": -0.0237,
+      "rs_rating": 17
     },
     {
       "sym": "LAURUSLABS",
@@ -3783,27 +3783,27 @@
       "ind": "Healthcare",
       "logoid": "gland-pharma",
       "ars": -0.3841,
-      "srs": 0.3861,
-      "vol_ratio": 1.01,
+      "srs": 0.3424,
+      "vol_ratio": 1.1,
       "hi52_prox": 0,
       "price": 2579.2,
       "breakout": false,
       "trending": false,
-      "signDays": 1011,
+      "signDays": 1012,
       "signSince": 1656647100,
       "signPrice": 2652.9,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 2351.76
+        "val": 2360.08
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 2357.42
+        "val": 2368.42
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0175,
+      "ars_slope": 0.0172,
       "rs_rating": 44
     },
     {
@@ -3812,13 +3812,13 @@
       "ind": "FMCG",
       "logoid": "colgate-palmolive",
       "ars": -0.2554,
-      "srs": -0.0626,
+      "srs": -0.0669,
       "vol_ratio": 1.33,
       "hi52_prox": -0.1573,
       "price": 2077,
       "breakout": false,
       "trending": false,
-      "signDays": 319,
+      "signDays": 320,
       "signSince": 1745552700,
       "signPrice": 2671.4,
       "st14": {
@@ -3832,7 +3832,7 @@
         "val": 2007.83
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0462,
+      "ars_slope": -0.0468,
       "rs_rating": 23
     },
     {
@@ -3841,28 +3841,28 @@
       "ind": "FMCG",
       "logoid": "procter-and-gamble",
       "ars": -0.5556,
-      "srs": -0.1542,
-      "vol_ratio": 0.77,
+      "srs": -0.1489,
+      "vol_ratio": 0.76,
       "hi52_prox": -0.3985,
       "price": 8649,
       "breakout": false,
       "trending": false,
       "signDays": 620,
-      "signSince": 1706759100,
-      "signPrice": 17024.35,
+      "signSince": 1706845500,
+      "signPrice": 16896.7,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 9074.92
+        "val": 9057.53
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 9087.4
+        "val": 9070.71
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0327,
-      "rs_rating": 4
+      "ars_slope": -0.0316,
+      "rs_rating": 5
     },
     {
       "sym": "DABUR",
@@ -3870,15 +3870,15 @@
       "ind": "FMCG",
       "logoid": "dabur",
       "ars": -0.549,
-      "srs": -0.1109,
-      "vol_ratio": 1.07,
+      "srs": -0.118,
+      "vol_ratio": 1.04,
       "hi52_prox": -0.2296,
       "price": 425.8,
       "breakout": false,
       "trending": false,
       "signDays": 1217,
-      "signSince": 1630640700,
-      "signPrice": 641.25,
+      "signSince": 1630899900,
+      "signPrice": 634.8,
       "st14": {
         "trend": "sell",
         "signal": null,
@@ -3890,8 +3890,8 @@
         "val": 444.61
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0163,
-      "rs_rating": 8
+      "ars_slope": -0.0133,
+      "rs_rating": 9
     },
     {
       "sym": "EMAMILTD",
@@ -3899,13 +3899,13 @@
       "ind": "FMCG",
       "logoid": "emami",
       "ars": -0.4578,
-      "srs": -0.1259,
-      "vol_ratio": 0.76,
+      "srs": -0.1301,
+      "vol_ratio": 0.78,
       "hi52_prox": -0.352,
       "price": 406,
       "breakout": false,
       "trending": false,
-      "signDays": 469,
+      "signDays": 470,
       "signSince": 1726458300,
       "signPrice": 751.95,
       "st14": {
@@ -3919,8 +3919,8 @@
         "val": 389.57
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0288,
-      "rs_rating": 8
+      "ars_slope": -0.0191,
+      "rs_rating": 7
     },
     {
       "sym": "PATANJALI",
@@ -3928,13 +3928,13 @@
       "ind": "FMCG",
       "logoid": "ruchi-soya-industries",
       "ars": -0.0817,
-      "srs": -0.2297,
-      "vol_ratio": 0.55,
-      "hi52_prox": -0.4252,
+      "srs": -0.2302,
+      "vol_ratio": 0.54,
+      "hi52_prox": -0.4172,
       "price": 364,
       "breakout": false,
       "trending": false,
-      "signDays": 14,
+      "signDays": 15,
       "signSince": 1784087100,
       "signPrice": 347.9,
       "st14": {
@@ -3948,7 +3948,7 @@
         "val": 373.26
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0149,
+      "ars_slope": 0.025,
       "rs_rating": 8
     },
     {
@@ -4007,7 +4007,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0601,
-      "rs_rating": 54
+      "rs_rating": 55
     },
     {
       "sym": "RBLBANK",
@@ -4123,7 +4123,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0665,
-      "rs_rating": 18
+      "rs_rating": 19
     },
     {
       "sym": "SUNDARMFIN",
@@ -4152,7 +4152,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0826,
-      "rs_rating": 66
+      "rs_rating": 67
     },
     {
       "sym": "M&MFIN",
@@ -4160,27 +4160,27 @@
       "ind": "Financial Services",
       "logoid": "mahindra-finance",
       "ars": 0.284,
-      "srs": 0.206,
+      "srs": 0.2019,
       "vol_ratio": 0.73,
       "hi52_prox": 0,
       "price": 405.5,
       "breakout": false,
       "trending": false,
-      "signDays": 29,
+      "signDays": 30,
       "signSince": 1782272700,
       "signPrice": 310.85,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 361.72
+        "val": 360.99
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 360
+        "val": 359.28
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0973,
+      "ars_slope": 0.063,
       "rs_rating": 63
     },
     {
@@ -4189,28 +4189,28 @@
       "ind": "Financial Services",
       "logoid": "max-financial",
       "ars": 0.2632,
-      "srs": -0.0914,
-      "vol_ratio": 0.69,
+      "srs": -0.1205,
+      "vol_ratio": 0.73,
       "hi52_prox": -0.1751,
       "price": 1542.5,
       "breakout": false,
       "trending": false,
-      "signDays": 328,
+      "signDays": 329,
       "signSince": 1744170300,
       "signPrice": 1164.55,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 1622.89
+        "val": 1621.85
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 1618.19
+        "val": 1616.89
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0144,
-      "rs_rating": 30
+      "ars_slope": -0.0107,
+      "rs_rating": 29
     },
     {
       "sym": "GICRE",
@@ -4218,27 +4218,27 @@
       "ind": "Financial Services",
       "logoid": "general-insurance",
       "ars": 0.4451,
-      "srs": -0.1284,
-      "vol_ratio": 1.14,
+      "srs": -0.1271,
+      "vol_ratio": 1.21,
       "hi52_prox": -0.1253,
       "price": 358.05,
       "breakout": false,
       "trending": false,
-      "signDays": 750,
+      "signDays": 751,
       "signSince": 1690170300,
       "signPrice": 198.45,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 374.56
+        "val": 374.39
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 372.43
+        "val": 372.37
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0517,
+      "ars_slope": -0.0454,
       "rs_rating": 42
     },
     {
@@ -4297,7 +4297,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0065,
-      "rs_rating": 25
+      "rs_rating": 26
     },
     {
       "sym": "SONACOMS",
@@ -4355,7 +4355,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.1426,
-      "rs_rating": 40
+      "rs_rating": 41
     },
     {
       "sym": "EXIDEIND",
@@ -4363,15 +4363,15 @@
       "ind": "Automobile",
       "logoid": "exide",
       "ars": 0.315,
-      "srs": 0.231,
-      "vol_ratio": 0.56,
+      "srs": 0.1879,
+      "vol_ratio": 0.55,
       "hi52_prox": -0.0177,
       "price": 444.7,
       "breakout": false,
       "trending": false,
-      "signDays": 75,
-      "signSince": 1776743100,
-      "signPrice": 333.1,
+      "signDays": 84,
+      "signSince": 1775619900,
+      "signPrice": 314.15,
       "st14": {
         "trend": "buy",
         "signal": null,
@@ -4383,8 +4383,8 @@
         "val": 409.52
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0114,
-      "rs_rating": 60
+      "ars_slope": 0.0224,
+      "rs_rating": 59
     },
     {
       "sym": "MRF",
@@ -4392,14 +4392,14 @@
       "ind": "Automobile",
       "logoid": "mrf",
       "ars": -0.0046,
-      "srs": -0.0011,
-      "vol_ratio": 0.66,
+      "srs": 0.0018,
+      "vol_ratio": 0.72,
       "hi52_prox": -0.176,
       "price": 133730,
       "breakout": false,
       "trending": false,
       "signDays": 1,
-      "signSince": 1785765413,
+      "signSince": 1785777549,
       "signPrice": 133730,
       "st14": {
         "trend": "buy",
@@ -4412,7 +4412,7 @@
         "val": 128335.82
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0191,
+      "ars_slope": -0.0278,
       "rs_rating": 33
     },
     {
@@ -4421,15 +4421,15 @@
       "ind": "Automobile",
       "logoid": "apollo-tyres",
       "ars": 0.3733,
-      "srs": 0.0301,
-      "vol_ratio": 0.99,
+      "srs": 0.0366,
+      "vol_ratio": 0.94,
       "hi52_prox": -0.1868,
       "price": 436.6,
       "breakout": false,
       "trending": false,
-      "signDays": 993,
-      "signSince": 1658979900,
-      "signPrice": 218.15,
+      "signDays": 995,
+      "signSince": 1658893500,
+      "signPrice": 212.3,
       "st14": {
         "trend": "sell",
         "signal": null,
@@ -4441,7 +4441,7 @@
         "val": 447.34
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0095,
+      "ars_slope": -0.0031,
       "rs_rating": 64
     },
     {
@@ -4471,7 +4471,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0123,
-      "rs_rating": 55
+      "rs_rating": 56
     },
     {
       "sym": "VOLTAS",
@@ -4500,7 +4500,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0196,
-      "rs_rating": 17
+      "rs_rating": 16
     },
     {
       "sym": "CROMPTON",
@@ -4529,7 +4529,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0163,
-      "rs_rating": 5
+      "rs_rating": 4
     },
     {
       "sym": "HAVELLS",
@@ -4558,7 +4558,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0046,
-      "rs_rating": 25
+      "rs_rating": 24
     },
     {
       "sym": "DIXON",
@@ -4595,13 +4595,13 @@
       "ind": "Construction Materials",
       "logoid": "kajaria-ceramics",
       "ars": -0.031,
-      "srs": 0.0646,
-      "vol_ratio": 2.11,
+      "srs": 0.0763,
+      "vol_ratio": 1.87,
       "hi52_prox": -0.0721,
       "price": 1214.7,
       "breakout": false,
       "trending": false,
-      "signDays": 5,
+      "signDays": 6,
       "signSince": 1785210300,
       "signPrice": 1209.1,
       "st14": {
@@ -4615,7 +4615,7 @@
         "val": 1160.33
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0358,
+      "ars_slope": -0.0268,
       "rs_rating": 54
     },
     {
@@ -4653,28 +4653,28 @@
       "ind": "Construction Materials",
       "logoid": "ramco-cements",
       "ars": -0.3272,
-      "srs": -0.0157,
-      "vol_ratio": 1.15,
+      "srs": -0.0413,
+      "vol_ratio": 1.16,
       "hi52_prox": -0.2155,
       "price": 945.25,
       "breakout": false,
       "trending": false,
       "signDays": 1126,
-      "signSince": 1642045500,
-      "signPrice": 1020.15,
+      "signSince": 1642131900,
+      "signPrice": 1011.9,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 884.11
+        "val": 886.64
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 887.07
+        "val": 890.2
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0031,
-      "rs_rating": 22
+      "ars_slope": 0.0052,
+      "rs_rating": 21
     },
     {
       "sym": "OBEROIRLTY",
@@ -4682,28 +4682,28 @@
       "ind": "Realty",
       "logoid": "oberoi-realty",
       "ars": 0.7846,
-      "srs": 0.0828,
-      "vol_ratio": 0.39,
+      "srs": 0.0817,
+      "vol_ratio": 0.42,
       "hi52_prox": -0.0473,
       "price": 1861.1,
       "breakout": false,
       "trending": false,
-      "signDays": 1204,
+      "signDays": 1205,
       "signSince": 1632282300,
       "signPrice": 750.7,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 1961.31
+        "val": 1959.01
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 1960.55
+        "val": 1953.69
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0297,
-      "rs_rating": 64
+      "ars_slope": -0.0266,
+      "rs_rating": 65
     },
     {
       "sym": "GODREJPROP",
@@ -4732,7 +4732,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0461,
-      "rs_rating": 29
+      "rs_rating": 30
     },
     {
       "sym": "PHOENIXLTD",
@@ -4740,15 +4740,15 @@
       "ind": "Realty",
       "logoid": "phoenix-mills",
       "ars": 1.8168,
-      "srs": 0.0349,
-      "vol_ratio": 0.45,
+      "srs": 0.0403,
+      "vol_ratio": 0.51,
       "hi52_prox": -0.0924,
       "price": 1955,
       "breakout": false,
       "trending": false,
       "signDays": 1088,
-      "signSince": 1646797500,
-      "signPrice": 449.42,
+      "signSince": 1646883900,
+      "signPrice": 464.4,
       "st14": {
         "trend": "sell",
         "signal": null,
@@ -4760,8 +4760,8 @@
         "val": 2060.64
       },
       "ma_status": "MA+",
-      "ars_slope": -0.2128,
-      "rs_rating": 71
+      "ars_slope": -0.1928,
+      "rs_rating": 75
     },
     {
       "sym": "PRESTIGE",
@@ -4769,15 +4769,15 @@
       "ind": "Realty",
       "logoid": "prestige-estates-projects",
       "ars": 2.5419,
-      "srs": 0.1173,
-      "vol_ratio": 0.47,
+      "srs": 0.096,
+      "vol_ratio": 0.5,
       "hi52_prox": -0.0643,
       "price": 1670,
       "breakout": false,
       "trending": false,
-      "signDays": 1254,
-      "signSince": 1626061500,
-      "signPrice": 304.2,
+      "signDays": 1252,
+      "signSince": 1626320700,
+      "signPrice": 318.35,
       "st14": {
         "trend": "buy",
         "signal": null,
@@ -4789,7 +4789,7 @@
         "val": 1547.59
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0593,
+      "ars_slope": -0.1418,
       "rs_rating": 87
     },
     {
@@ -4819,7 +4819,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0044,
-      "rs_rating": 16
+      "rs_rating": 17
     },
     {
       "sym": "MGL",
@@ -4827,13 +4827,13 @@
       "ind": "Oil Gas",
       "logoid": "mahanagar-gas",
       "ars": -0.4044,
-      "srs": -0.0691,
-      "vol_ratio": 0.54,
+      "srs": -0.0793,
+      "vol_ratio": 0.48,
       "hi52_prox": -0.2101,
       "price": 1115.7,
       "breakout": false,
       "trending": false,
-      "signDays": 459,
+      "signDays": 460,
       "signSince": 1727408700,
       "signPrice": 1946.6,
       "st14": {
@@ -4847,8 +4847,8 @@
         "val": 1151.86
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0096,
-      "rs_rating": 9
+      "ars_slope": 0.0011,
+      "rs_rating": 8
     },
     {
       "sym": "IGL",
@@ -4935,7 +4935,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0384,
-      "rs_rating": 65
+      "rs_rating": 66
     },
     {
       "sym": "SJVN",
@@ -4972,28 +4972,28 @@
       "ind": "Power",
       "logoid": "torrent-power",
       "ars": 1.4544,
-      "srs": -0.2186,
-      "vol_ratio": 0.96,
+      "srs": -0.2088,
+      "vol_ratio": 1,
       "hi52_prox": -0.2148,
       "price": 1391.7,
       "breakout": false,
       "trending": false,
-      "signDays": 1350,
+      "signDays": 1351,
       "signSince": 1613619900,
       "signPrice": 372.8,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 1481.34
+        "val": 1482.83
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 1472.09
+        "val": 1474.74
       },
       "ma_status": "MA-",
-      "ars_slope": -0.1676,
-      "rs_rating": 52
+      "ars_slope": -0.1526,
+      "rs_rating": 53
     },
     {
       "sym": "NMDC",
@@ -5146,28 +5146,28 @@
       "ind": "Chemicals",
       "logoid": "supreme-industries",
       "ars": 0.1839,
-      "srs": -0.0735,
-      "vol_ratio": 0.72,
+      "srs": -0.0623,
+      "vol_ratio": 0.75,
       "hi52_prox": -0.2389,
       "price": 3530,
       "breakout": false,
       "trending": false,
-      "signDays": 931,
+      "signDays": 932,
       "signSince": 1667187900,
       "signPrice": 2170.3,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 3241.79
+        "val": 3251.74
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 3240.79
+        "val": 3255.02
       },
       "ma_status": "MA-",
-      "ars_slope": 0.028,
-      "rs_rating": 33
+      "ars_slope": 0.0082,
+      "rs_rating": 36
     },
     {
       "sym": "SRF",
@@ -5175,28 +5175,28 @@
       "ind": "Chemicals",
       "logoid": "srf",
       "ars": 0.3172,
-      "srs": -0.0531,
+      "srs": -0.0708,
       "vol_ratio": 0.25,
       "hi52_prox": -0.1708,
       "price": 2645,
       "breakout": false,
       "trending": false,
-      "signDays": 1313,
+      "signDays": 1314,
       "signSince": 1618544700,
       "signPrice": 1225.45,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 2850.28
+        "val": 2843.12
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 2850.27
+        "val": 2836.43
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0384,
-      "rs_rating": 37
+      "ars_slope": -0.0368,
+      "rs_rating": 33
     },
     {
       "sym": "UPL",
@@ -5233,28 +5233,28 @@
       "ind": "Chemicals",
       "logoid": "deepak-nitrite",
       "ars": -0.0183,
-      "srs": -0.0841,
+      "srs": -0.1003,
       "vol_ratio": 1.05,
       "hi52_prox": -0.0926,
       "price": 1713.8,
       "breakout": false,
       "trending": false,
-      "signDays": 8,
-      "signSince": 1784778300,
-      "signPrice": 1653.8,
+      "signDays": 6,
+      "signSince": 1785210300,
+      "signPrice": 1651.3,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 1573.31
+        "val": 1579.61
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 1577.9
+        "val": 1586.01
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0112,
-      "rs_rating": 28
+      "ars_slope": 0.0051,
+      "rs_rating": 27
     },
     {
       "sym": "TATACHEM",
@@ -5320,13 +5320,13 @@
       "ind": "Chemicals",
       "logoid": "navin-fluorine-international-l",
       "ars": 0.6207,
-      "srs": 0.0443,
-      "vol_ratio": 0.85,
+      "srs": 0.0381,
+      "vol_ratio": 0.82,
       "hi52_prox": -0.0415,
       "price": 7555,
       "breakout": false,
       "trending": false,
-      "signDays": 202,
+      "signDays": 203,
       "signSince": 1760067900,
       "signPrice": 4741.1,
       "st14": {
@@ -5340,8 +5340,8 @@
         "val": 7247.05
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0871,
-      "rs_rating": 62
+      "ars_slope": -0.0432,
+      "rs_rating": 60
     },
     {
       "sym": "CONCOR",
@@ -5349,27 +5349,27 @@
       "ind": "Services",
       "logoid": "container",
       "ars": -0.2636,
-      "srs": -0.025,
-      "vol_ratio": 0.65,
-      "hi52_prox": -0.1028,
+      "srs": -0.0296,
+      "vol_ratio": 0.64,
+      "hi52_prox": -0.0976,
       "price": 525,
       "breakout": false,
       "trending": false,
-      "signDays": 396,
+      "signDays": 397,
       "signSince": 1735703100,
       "signPrice": 623.44,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 488.02
+        "val": 489.03
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 488.33
+        "val": 489.78
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0029,
+      "ars_slope": -0.0201,
       "rs_rating": 17
     },
     {
@@ -5385,7 +5385,7 @@
       "breakout": false,
       "trending": true,
       "signDays": 1,
-      "signSince": 1785765413,
+      "signSince": 1785777549,
       "signPrice": 128,
       "st14": {
         "trend": "buy",
@@ -5399,7 +5399,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0647,
-      "rs_rating": 38
+      "rs_rating": 37
     },
     {
       "sym": "MCX",
@@ -5428,7 +5428,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.2578,
-      "rs_rating": 61
+      "rs_rating": 62
     },
     {
       "sym": "CDSL",
@@ -5515,7 +5515,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0108,
-      "rs_rating": 48
+      "rs_rating": 49
     },
     {
       "sym": "MPHASIS",
@@ -5573,7 +5573,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0194,
-      "rs_rating": 29
+      "rs_rating": 30
     },
     {
       "sym": "JUBLFOOD",
@@ -5610,28 +5610,28 @@
       "ind": "Consumer Services",
       "logoid": "pvr",
       "ars": -0.5181,
-      "srs": 0.0396,
+      "srs": 0.0423,
       "vol_ratio": 1.11,
       "hi52_prox": -0.0803,
       "price": 1141.4,
       "breakout": false,
       "trending": false,
-      "signDays": 853,
+      "signDays": 854,
       "signSince": 1676605500,
       "signPrice": 1655.4,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 1049.51
+        "val": 1051.82
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 1047.1
+        "val": 1050.75
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0077,
-      "rs_rating": 24
+      "ars_slope": -0.0055,
+      "rs_rating": 25
     },
     {
       "sym": "DELHIVERY",
@@ -5689,7 +5689,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0037,
-      "rs_rating": 46
+      "rs_rating": 48
     },
     {
       "sym": "BLUESTARCO",
@@ -5784,28 +5784,28 @@
       "ind": "Realty",
       "logoid": "century-text",
       "ars": 0.9835,
-      "srs": -0.1003,
-      "vol_ratio": 0.85,
+      "srs": -0.1238,
+      "vol_ratio": 0.8,
       "hi52_prox": -0.26,
       "price": 1432.1,
       "breakout": false,
       "trending": false,
       "signDays": 1364,
-      "signSince": 1611891900,
-      "signPrice": 418.9,
+      "signSince": 1612151100,
+      "signPrice": 433.75,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 1304.89
+        "val": 1303.56
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 1310.49
+        "val": 1307.85
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0187,
-      "rs_rating": 58
+      "ars_slope": -0.0066,
+      "rs_rating": 51
     },
     {
       "sym": "AEGISLOG",
@@ -5834,7 +5834,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.17,
-      "rs_rating": 96
+      "rs_rating": 97
     },
     {
       "sym": "AFCONS",
@@ -5892,7 +5892,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0159,
-      "rs_rating": 51
+      "rs_rating": 52
     },
     {
       "sym": "ARE&M",
@@ -5900,28 +5900,28 @@
       "ind": "Automobile",
       "logoid": "amara-raja",
       "ars": -0.4297,
-      "srs": 0.0303,
-      "vol_ratio": 1.77,
+      "srs": 0.0114,
+      "vol_ratio": 1.66,
       "hi52_prox": -0.1135,
       "price": 932.3,
       "breakout": false,
       "trending": false,
-      "signDays": 492,
+      "signDays": 493,
       "signSince": 1723520700,
       "signPrice": 1565.9,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 860.46
+        "val": 863.17
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 861.33
+        "val": 865
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0183,
-      "rs_rating": 32
+      "ars_slope": 0.026,
+      "rs_rating": 30
     },
     {
       "sym": "AMBER",
@@ -5929,15 +5929,15 @@
       "ind": "Consumer Durables",
       "logoid": "amber-enterprises-india",
       "ars": 0.7547,
-      "srs": -0.1682,
-      "vol_ratio": 0.52,
+      "srs": -0.1853,
+      "vol_ratio": 0.53,
       "hi52_prox": -0.1631,
       "price": 7400,
       "breakout": false,
       "trending": false,
-      "signDays": 489,
-      "signSince": 1724039100,
-      "signPrice": 4189.95,
+      "signDays": 491,
+      "signSince": 1723779900,
+      "signPrice": 4143.5,
       "st14": {
         "trend": "sell",
         "signal": null,
@@ -5949,8 +5949,8 @@
         "val": 7868.15
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0277,
-      "rs_rating": 24
+      "ars_slope": -0.0102,
+      "rs_rating": 23
     },
     {
       "sym": "ANANDRATHI",
@@ -5958,13 +5958,13 @@
       "ind": "Financial Services",
       "logoid": "anand-rathi-wealth-limited",
       "ars": 6.985,
-      "srs": 0.1078,
-      "vol_ratio": 0.4,
+      "srs": 0.1091,
+      "vol_ratio": 0.43,
       "hi52_prox": -0.041,
       "price": 2058.7,
       "breakout": false,
       "trending": false,
-      "signDays": 879,
+      "signDays": 880,
       "signSince": 1673495100,
       "signPrice": 188.64,
       "st14": {
@@ -5978,8 +5978,8 @@
         "val": 1938.98
       },
       "ma_status": "MA+",
-      "ars_slope": -0.2326,
-      "rs_rating": 88
+      "ars_slope": -0.1757,
+      "rs_rating": 89
     },
     {
       "sym": "ANANTRAJ",
@@ -6008,7 +6008,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0755,
-      "rs_rating": 97
+      "rs_rating": 98
     },
     {
       "sym": "ANGELONE",
@@ -6066,7 +6066,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0438,
-      "rs_rating": 12
+      "rs_rating": 11
     },
     {
       "sym": "ASTERDM",
@@ -6124,7 +6124,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0594,
-      "rs_rating": 86
+      "rs_rating": 87
     },
     {
       "sym": "BEML",
@@ -6161,13 +6161,13 @@
       "ind": "Consumer Services",
       "logoid": "bls-international",
       "ars": 5.6731,
-      "srs": -0.1485,
-      "vol_ratio": 1.12,
+      "srs": -0.1637,
+      "vol_ratio": 1.1,
       "hi52_prox": -0.3766,
       "price": 250.75,
       "breakout": false,
       "trending": false,
-      "signDays": 1300,
+      "signDays": 1301,
       "signSince": 1620272700,
       "signPrice": 23.89,
       "st14": {
@@ -6178,11 +6178,11 @@
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 230.96
+        "val": 231.55
       },
       "ma_status": "MA-",
-      "ars_slope": 0.1476,
-      "rs_rating": 74
+      "ars_slope": 0.1971,
+      "rs_rating": 71
     },
     {
       "sym": "BANDHANBNK",
@@ -6219,13 +6219,13 @@
       "ind": "Consumer Services",
       "logoid": "brainbees-solutions-ltd",
       "ars": -0.8212,
-      "srs": -0.1289,
-      "vol_ratio": 0.32,
+      "srs": -0.1247,
+      "vol_ratio": 0.34,
       "hi52_prox": -0.4757,
       "price": 214.61,
       "breakout": false,
       "trending": false,
-      "signDays": 491,
+      "signDays": 492,
       "signSince": 1723520700,
       "signPrice": null,
       "st14": {
@@ -6239,7 +6239,7 @@
         "val": 225.33
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0049,
+      "ars_slope": -0.0039,
       "rs_rating": 2
     },
     {
@@ -6248,28 +6248,28 @@
       "ind": "Realty",
       "logoid": "brigade-enterprise",
       "ars": 0.7656,
-      "srs": -0.0634,
-      "vol_ratio": 0.65,
+      "srs": -0.0201,
+      "vol_ratio": 0.69,
       "hi52_prox": -0.2527,
       "price": 583.65,
       "breakout": false,
       "trending": false,
       "signDays": 1259,
-      "signSince": 1625456700,
-      "signPrice": 210.79,
+      "signSince": 1625543100,
+      "signPrice": 214.73,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 531.14
+        "val": 533.4
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 534.03
+        "val": 536.93
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0683,
-      "rs_rating": 49
+      "ars_slope": 0.016,
+      "rs_rating": 57
     },
     {
       "sym": "CESC",
@@ -6335,15 +6335,15 @@
       "ind": "Oil Gas",
       "logoid": "castrol-india",
       "ars": -0.1381,
-      "srs": -0.0275,
+      "srs": -0.0248,
       "vol_ratio": 1.08,
       "hi52_prox": -0.163,
       "price": 185.84,
       "breakout": false,
       "trending": false,
-      "signDays": 245,
-      "signSince": 1754624700,
-      "signPrice": 213.03,
+      "signDays": 248,
+      "signSince": 1754451900,
+      "signPrice": 213.27,
       "st14": {
         "trend": "buy",
         "signal": null,
@@ -6355,8 +6355,8 @@
         "val": 181.45
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0207,
-      "rs_rating": 30
+      "ars_slope": -0.0194,
+      "rs_rating": 31
     },
     {
       "sym": "CDSL",
@@ -6422,13 +6422,13 @@
       "ind": "Financial Services",
       "logoid": "cholamandalam-fin",
       "ars": 0.5973,
-      "srs": -0.1153,
-      "vol_ratio": 1.4,
+      "srs": -0.1265,
+      "vol_ratio": 1.28,
       "hi52_prox": -0.2203,
       "price": 1574.6,
       "breakout": false,
       "trending": false,
-      "signDays": 801,
+      "signDays": 802,
       "signSince": 1683776700,
       "signPrice": 765.25,
       "st14": {
@@ -6442,8 +6442,8 @@
         "val": 1630.76
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0014,
-      "rs_rating": 47
+      "ars_slope": 0.0106,
+      "rs_rating": 45
     },
     {
       "sym": "CUB",
@@ -6472,7 +6472,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.1723,
-      "rs_rating": 23
+      "rs_rating": 24
     },
     {
       "sym": "COHANCE",
@@ -6480,13 +6480,13 @@
       "ind": "Healthcare",
       "logoid": "suven-pharmaceuticals-ltd",
       "ars": -0.48,
-      "srs": -0.1395,
-      "vol_ratio": 0.53,
+      "srs": -0.1459,
+      "vol_ratio": 0.54,
       "hi52_prox": -0.5829,
       "price": 425.35,
       "breakout": false,
       "trending": false,
-      "signDays": 191,
+      "signDays": 192,
       "signSince": 1761709500,
       "signPrice": 786.45,
       "st14": {
@@ -6500,7 +6500,7 @@
         "val": 403.52
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0202,
+      "ars_slope": -0.0174,
       "rs_rating": 5
     },
     {
@@ -6538,28 +6538,28 @@
       "ind": "Financial Services",
       "logoid": "creditaccess-grameen",
       "ars": 0.1466,
-      "srs": 0.0309,
-      "vol_ratio": 0.62,
+      "srs": 0.0178,
+      "vol_ratio": 0.61,
       "hi52_prox": -0.0346,
       "price": 1558.2,
       "breakout": false,
       "trending": false,
-      "signDays": 37,
+      "signDays": 38,
       "signSince": 1781235900,
       "signPrice": 1310.4,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 1442.78
+        "val": 1456.18
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 1439.52
+        "val": 1453.23
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0622,
-      "rs_rating": 41
+      "ars_slope": -0.0512,
+      "rs_rating": 39
     },
     {
       "sym": "CROMPTON",
@@ -6617,7 +6617,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0712,
-      "rs_rating": 84
+      "rs_rating": 83
     },
     {
       "sym": "DEEPAKFERT",
@@ -6625,13 +6625,13 @@
       "ind": "Chemicals",
       "logoid": "deepak-fertilisers-and-petrochem",
       "ars": 4.6299,
-      "srs": 0.1855,
-      "vol_ratio": 0.81,
+      "srs": 0.1464,
+      "vol_ratio": 0.72,
       "hi52_prox": -0.0531,
       "price": 1576,
       "breakout": false,
       "trending": false,
-      "signDays": 1345,
+      "signDays": 1346,
       "signSince": 1614224700,
       "signPrice": 180.25,
       "st14": {
@@ -6645,8 +6645,8 @@
         "val": 1510.58
       },
       "ma_status": "MA+",
-      "ars_slope": -0.3984,
-      "rs_rating": 98
+      "ars_slope": -0.446,
+      "rs_rating": 96
     },
     {
       "sym": "DELHIVERY",
@@ -6712,28 +6712,28 @@
       "ind": "Healthcare",
       "logoid": "dr-lal-pathlabs",
       "ars": -0.1066,
-      "srs": 0.1664,
-      "vol_ratio": 1.4,
-      "hi52_prox": 0,
+      "srs": 0.1818,
+      "vol_ratio": 1.43,
+      "hi52_prox": -0.0025,
       "price": 1900.4,
       "breakout": false,
       "trending": false,
-      "signDays": 1110,
+      "signDays": 1111,
       "signSince": 1644291900,
       "signPrice": 1499.03,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 1730.74
+        "val": 1730.65
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 1729.38
+        "val": 1729.91
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0065,
-      "rs_rating": 51
+      "ars_slope": 0.0172,
+      "rs_rating": 53
     },
     {
       "sym": "FSL",
@@ -6820,7 +6820,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.3053,
-      "rs_rating": 73
+      "rs_rating": 72
     },
     {
       "sym": "GRSE",
@@ -6857,27 +6857,27 @@
       "ind": "Healthcare",
       "logoid": "gland-pharma",
       "ars": -0.3841,
-      "srs": 0.3861,
-      "vol_ratio": 1.01,
+      "srs": 0.3424,
+      "vol_ratio": 1.1,
       "hi52_prox": 0,
       "price": 2579.2,
       "breakout": false,
       "trending": false,
-      "signDays": 1011,
+      "signDays": 1012,
       "signSince": 1656647100,
       "signPrice": 2652.9,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 2351.76
+        "val": 2360.08
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 2357.42
+        "val": 2368.42
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0175,
+      "ars_slope": 0.0172,
       "rs_rating": 45
     },
     {
@@ -6886,13 +6886,13 @@
       "ind": "Capital Goods",
       "logoid": "godawari-pow-and-isp-ltd",
       "ars": 0.1102,
-      "srs": -0.2189,
-      "vol_ratio": 0.85,
+      "srs": -0.2183,
+      "vol_ratio": 0.84,
       "hi52_prox": -0.201,
       "price": 244.37,
       "breakout": false,
       "trending": false,
-      "signDays": 162,
+      "signDays": 163,
       "signSince": 1765338300,
       "signPrice": 235.11,
       "st14": {
@@ -6906,8 +6906,8 @@
         "val": 254.85
       },
       "ma_status": "MA-",
-      "ars_slope": -0.005,
-      "rs_rating": 19
+      "ars_slope": -0.0413,
+      "rs_rating": 18
     },
     {
       "sym": "GESHIP",
@@ -6915,28 +6915,28 @@
       "ind": "Services",
       "logoid": "great-eastern-shipping",
       "ars": 1.9236,
-      "srs": -0.1357,
-      "vol_ratio": 1.44,
+      "srs": -0.123,
+      "vol_ratio": 1.41,
       "hi52_prox": -0.1868,
       "price": 1398.4,
       "breakout": false,
       "trending": false,
-      "signDays": 1091,
+      "signDays": 1092,
       "signSince": 1646711100,
       "signPrice": 324.5,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 1515.36
+        "val": 1502.22
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 1507.5
+        "val": 1494.43
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0953,
-      "rs_rating": 67
+      "ars_slope": -0.0495,
+      "rs_rating": 69
     },
     {
       "sym": "GMDCLTD",
@@ -6965,7 +6965,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.1109,
-      "rs_rating": 59
+      "rs_rating": 60
     },
     {
       "sym": "HBLENGINE",
@@ -7081,7 +7081,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0601,
-      "rs_rating": 56
+      "rs_rating": 57
     },
     {
       "sym": "IFCI",
@@ -7139,7 +7139,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0802,
-      "rs_rating": 98
+      "rs_rating": 99
     },
     {
       "sym": "IRCON",
@@ -7176,15 +7176,15 @@
       "ind": "Telecom",
       "logoid": "indian-tel-ind-iti",
       "ars": 0.2551,
-      "srs": -0.0907,
-      "vol_ratio": 0.57,
+      "srs": -0.0954,
+      "vol_ratio": 0.58,
       "hi52_prox": -0.2089,
       "price": 282.15,
       "breakout": false,
       "trending": false,
-      "signDays": 434,
-      "signSince": 1730778300,
-      "signPrice": 223.91,
+      "signDays": 439,
+      "signSince": 1730259900,
+      "signPrice": 228.65,
       "st14": {
         "trend": "sell",
         "signal": null,
@@ -7196,8 +7196,8 @@
         "val": 294.85
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0129,
-      "rs_rating": 27
+      "ars_slope": -0.0005,
+      "rs_rating": 28
     },
     {
       "sym": "IGL",
@@ -7263,13 +7263,13 @@
       "ind": "IT",
       "logoid": "inventurus-knowledge-solutions",
       "ars": -0.4672,
-      "srs": 0.0793,
-      "vol_ratio": 0.44,
+      "srs": 0.0601,
+      "vol_ratio": 0.46,
       "hi52_prox": -0.0424,
       "price": 1846.4,
       "breakout": false,
       "trending": false,
-      "signDays": 402,
+      "signDays": 403,
       "signSince": 1734579900,
       "signPrice": null,
       "st14": {
@@ -7283,8 +7283,8 @@
         "val": 1733.2
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0121,
-      "rs_rating": 20
+      "ars_slope": -0.0093,
+      "rs_rating": 18
     },
     {
       "sym": "JBMA",
@@ -7292,13 +7292,13 @@
       "ind": "Automobile",
       "logoid": "jbm-auto-ltd",
       "ars": 5.7204,
-      "srs": 0.0431,
-      "vol_ratio": 0.47,
+      "srs": 0.0335,
+      "vol_ratio": 0.46,
       "hi52_prox": -0.1066,
       "price": 662.6,
       "breakout": false,
       "trending": false,
-      "signDays": 1382,
+      "signDays": 1383,
       "signSince": 1609472700,
       "signPrice": null,
       "st14": {
@@ -7312,8 +7312,8 @@
         "val": 652.61
       },
       "ma_status": "MA-",
-      "ars_slope": -0.2431,
-      "rs_rating": 89
+      "ars_slope": -0.1808,
+      "rs_rating": 88
     },
     {
       "sym": "JMFINANCIL",
@@ -7350,13 +7350,13 @@
       "ind": "Construction Materials",
       "logoid": "jsw",
       "ars": -0.4852,
-      "srs": 0.0329,
+      "srs": 0.035,
       "vol_ratio": 0.34,
       "hi52_prox": -0.165,
       "price": 132.9,
       "breakout": false,
       "trending": false,
-      "signDays": 240,
+      "signDays": 241,
       "signSince": 1755143100,
       "signPrice": null,
       "st14": {
@@ -7367,10 +7367,10 @@
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 141.91
+        "val": 141.55
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0227,
+      "ars_slope": -0.022,
       "rs_rating": 15
     },
     {
@@ -7379,27 +7379,27 @@
       "ind": "Capital Goods",
       "logoid": "jyoti-cnc-automation-ltd",
       "ars": 0.1185,
-      "srs": 0.0814,
-      "vol_ratio": 1.8,
-      "hi52_prox": -0.1794,
+      "srs": 0.0807,
+      "vol_ratio": 1.85,
+      "hi52_prox": -0.1761,
       "price": 858.3,
       "breakout": false,
       "trending": false,
-      "signDays": 29,
-      "signSince": 1782272700,
-      "signPrice": 777.85,
+      "signDays": 19,
+      "signSince": 1783568700,
+      "signPrice": 769.05,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 777.63
+        "val": 775.97
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 779.83
+        "val": 777.46
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0371,
+      "ars_slope": 0.0335,
       "rs_rating": 62
     },
     {
@@ -7429,7 +7429,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0189,
-      "rs_rating": 83
+      "rs_rating": 84
     },
     {
       "sym": "KAYNES",
@@ -7458,7 +7458,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.3876,
-      "rs_rating": 53
+      "rs_rating": 54
     },
     {
       "sym": "KEC",
@@ -7466,15 +7466,15 @@
       "ind": "Construction",
       "logoid": "kec-international",
       "ars": -0.2717,
-      "srs": -0.2065,
-      "vol_ratio": 0.83,
+      "srs": -0.239,
+      "vol_ratio": 0.85,
       "hi52_prox": -0.4584,
       "price": 478.75,
       "breakout": false,
       "trending": false,
-      "signDays": 134,
-      "signSince": 1768880700,
-      "signPrice": 660.45,
+      "signDays": 127,
+      "signSince": 1770003900,
+      "signPrice": 615.9,
       "st14": {
         "trend": "sell",
         "signal": null,
@@ -7486,7 +7486,7 @@
         "val": 503.08
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0014,
+      "ars_slope": -0.0036,
       "rs_rating": 9
     },
     {
@@ -7495,13 +7495,13 @@
       "ind": "Financial Services",
       "logoid": "kfin-technologies-limited",
       "ars": 0.4696,
-      "srs": 0.0082,
-      "vol_ratio": 0.31,
+      "srs": -0.0081,
+      "vol_ratio": 0.32,
       "hi52_prox": -0.1956,
       "price": 945,
       "breakout": false,
       "trending": false,
-      "signDays": 592,
+      "signDays": 593,
       "signSince": 1710387900,
       "signPrice": 590.75,
       "st14": {
@@ -7512,11 +7512,11 @@
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 863.3
+        "val": 864.88
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0545,
-      "rs_rating": 42
+      "ars_slope": -0.0938,
+      "rs_rating": 38
     },
     {
       "sym": "MANAPPURAM",
@@ -7524,13 +7524,13 @@
       "ind": "Financial Services",
       "logoid": "manappuram-finance",
       "ars": 0.2353,
-      "srs": 0.1465,
-      "vol_ratio": 3.27,
-      "hi52_prox": -0.0139,
+      "srs": 0.1235,
+      "vol_ratio": 3.18,
+      "hi52_prox": -0.0184,
       "price": 365,
       "breakout": false,
       "trending": false,
-      "signDays": 70,
+      "signDays": 71,
       "signSince": 1777347900,
       "signPrice": 292.75,
       "st14": {
@@ -7544,8 +7544,8 @@
         "val": 342.22
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0221,
-      "rs_rating": 75
+      "ars_slope": -0.027,
+      "rs_rating": 73
     },
     {
       "sym": "MRPL",
@@ -7582,13 +7582,13 @@
       "ind": "Consumer Services",
       "logoid": "meesho-ltd",
       "ars": -0.3627,
-      "srs": -0.0498,
-      "vol_ratio": 1.08,
+      "srs": -0.0618,
+      "vol_ratio": 1.11,
       "hi52_prox": -0.1868,
       "price": 191.57,
       "breakout": false,
       "trending": false,
-      "signDays": 161,
+      "signDays": 162,
       "signSince": 1765338300,
       "signPrice": null,
       "st14": {
@@ -7602,8 +7602,8 @@
         "val": 172.11
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0119,
-      "rs_rating": 21
+      "ars_slope": 0.014,
+      "rs_rating": 22
     },
     {
       "sym": "NATCOPHARM",
@@ -7669,28 +7669,28 @@
       "ind": "Healthcare",
       "logoid": "narayana-hrudayalaya",
       "ars": 1.4163,
-      "srs": 0.0155,
-      "vol_ratio": 4.03,
+      "srs": 0.0069,
+      "vol_ratio": 3.98,
       "hi52_prox": -0.0772,
       "price": 1919.7,
       "breakout": false,
       "trending": false,
-      "signDays": 1160,
+      "signDays": 1161,
       "signSince": 1638157500,
       "signPrice": 567.55,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 2071.39
+        "val": 2066.88
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 2073.7
+        "val": 2067.58
       },
       "ma_status": "MA-",
-      "ars_slope": -0.2529,
-      "rs_rating": 87
+      "ars_slope": -0.2773,
+      "rs_rating": 86
     },
     {
       "sym": "NAVINFLUOR",
@@ -7698,13 +7698,13 @@
       "ind": "Chemicals",
       "logoid": "navin-fluorine-international-l",
       "ars": 0.6207,
-      "srs": 0.0443,
-      "vol_ratio": 0.85,
+      "srs": 0.0381,
+      "vol_ratio": 0.82,
       "hi52_prox": -0.0415,
       "price": 7555,
       "breakout": false,
       "trending": false,
-      "signDays": 202,
+      "signDays": 203,
       "signSince": 1760067900,
       "signPrice": 4741.1,
       "st14": {
@@ -7718,8 +7718,8 @@
         "val": 7247.05
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0871,
-      "rs_rating": 62
+      "ars_slope": -0.0432,
+      "rs_rating": 61
     },
     {
       "sym": "NETWEB",
@@ -7748,7 +7748,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0297,
-      "rs_rating": 86
+      "rs_rating": 88
     },
     {
       "sym": "NEULANDLAB",
@@ -7756,28 +7756,28 @@
       "ind": "Healthcare",
       "logoid": "neuland-laboritie",
       "ars": 9.211,
-      "srs": 0.1246,
-      "vol_ratio": 1.34,
+      "srs": 0.1082,
+      "vol_ratio": 1.35,
       "hi52_prox": -0.0011,
       "price": 19675,
       "breakout": false,
       "trending": false,
-      "signDays": 950,
+      "signDays": 951,
       "signSince": 1664509500,
       "signPrice": 1363.35,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 17950.93
+        "val": 17953.84
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 17957.39
+        "val": 17963.48
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0337,
-      "rs_rating": 99
+      "ars_slope": 0.0996,
+      "rs_rating": 98
     },
     {
       "sym": "NUVAMA",
@@ -7785,28 +7785,28 @@
       "ind": "Financial Services",
       "logoid": "nuvama-wealth-manage-ltd",
       "ars": 0.9122,
-      "srs": 0.2161,
-      "vol_ratio": 0.59,
+      "srs": 0.1658,
+      "vol_ratio": 0.6,
       "hi52_prox": -0.1083,
       "price": 1765.7,
       "breakout": false,
       "trending": false,
-      "signDays": 588,
-      "signSince": 1710906300,
-      "signPrice": 827.55,
+      "signDays": 585,
+      "signSince": 1711511100,
+      "signPrice": 942.71,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 1983.08
+        "val": 1980.88
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 1989.04
+        "val": 1985.02
       },
       "ma_status": "MA+",
-      "ars_slope": -0.2307,
-      "rs_rating": 76
+      "ars_slope": -0.1102,
+      "rs_rating": 74
     },
     {
       "sym": "OLAELEC",
@@ -7872,13 +7872,13 @@
       "ind": "Financial Services",
       "logoid": "pnb-housing-finance",
       "ars": 1.0261,
-      "srs": -0.0037,
-      "vol_ratio": 1.39,
+      "srs": 0.0091,
+      "vol_ratio": 1.48,
       "hi52_prox": -0.0288,
       "price": 1090,
       "breakout": false,
       "trending": false,
-      "signDays": 892,
+      "signDays": 893,
       "signSince": 1672026300,
       "signPrice": 403.97,
       "st14": {
@@ -7892,8 +7892,8 @@
         "val": 1019
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0436,
-      "rs_rating": 74
+      "ars_slope": -0.0262,
+      "rs_rating": 77
     },
     {
       "sym": "PWL",
@@ -7901,28 +7901,28 @@
       "ind": "Consumer Services",
       "logoid": "physicswallah-ltd",
       "ars": -0.5406,
-      "srs": 0.134,
-      "vol_ratio": 0.3,
+      "srs": 0.116,
+      "vol_ratio": 0.37,
       "hi52_prox": -0.1882,
       "price": 126.03,
       "breakout": false,
       "trending": false,
-      "signDays": 177,
+      "signDays": 178,
       "signSince": 1763437500,
       "signPrice": null,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 143.96
+        "val": 143.4
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 143.05
+        "val": 142.34
       },
       "ma_status": "MA+",
-      "ars_slope": -0.0038,
-      "rs_rating": 21
+      "ars_slope": -0.008,
+      "rs_rating": 22
     },
     {
       "sym": "PINELABS",
@@ -7951,7 +7951,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0129,
-      "rs_rating": 7
+      "rs_rating": 8
     },
     {
       "sym": "PIRAMALFIN",
@@ -7959,13 +7959,13 @@
       "ind": "Financial Services",
       "logoid": "piramal",
       "ars": -0.1242,
-      "srs": 0.0306,
+      "srs": 0.0407,
       "vol_ratio": 0.9,
       "hi52_prox": -0.068,
       "price": 2047.8,
       "breakout": false,
       "trending": false,
-      "signDays": 184,
+      "signDays": 185,
       "signSince": 1762487100,
       "signPrice": null,
       "st14": {
@@ -7979,8 +7979,8 @@
         "val": 2219.52
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0271,
-      "rs_rating": 36
+      "ars_slope": -0.0099,
+      "rs_rating": 39
     },
     {
       "sym": "PPLPHARMA",
@@ -8038,7 +8038,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.1252,
-      "rs_rating": 88
+      "rs_rating": 89
     },
     {
       "sym": "RBLBANK",
@@ -8046,28 +8046,28 @@
       "ind": "Financial Services",
       "logoid": "rbl-bank",
       "ars": -0.0695,
-      "srs": 0.1014,
+      "srs": 0.0699,
       "vol_ratio": 0.5,
       "hi52_prox": -0.0018,
       "price": 379.95,
       "breakout": false,
       "trending": false,
-      "signDays": 1339,
-      "signSince": 1614915900,
-      "signPrice": 242.35,
+      "signDays": 1338,
+      "signSince": 1615261500,
+      "signPrice": 245.45,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 352.38
+        "val": 352.47
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 353.52
+        "val": 353.63
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0131,
-      "rs_rating": 31
+      "ars_slope": 0.0079,
+      "rs_rating": 26
     },
     {
       "sym": "REDINGTON",
@@ -8125,7 +8125,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0567,
-      "rs_rating": 70
+      "rs_rating": 69
     },
     {
       "sym": "SAGILITY",
@@ -8154,7 +8154,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0131,
-      "rs_rating": 22
+      "rs_rating": 23
     },
     {
       "sym": "SAILIFE",
@@ -8162,28 +8162,28 @@
       "ind": "Healthcare",
       "logoid": "sai-life-sciences-ltd",
       "ars": -0.0133,
-      "srs": 0.2029,
+      "srs": 0.1913,
       "vol_ratio": 0.84,
       "hi52_prox": 0,
       "price": 1333.4,
       "breakout": false,
       "trending": false,
       "signDays": 1,
-      "signSince": 1785765413,
+      "signSince": 1785777549,
       "signPrice": 1333.4,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 1235.51
+        "val": 1235.63
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 1240.9
+        "val": 1240.83
       },
       "ma_status": "MA+",
-      "ars_slope": 0.0034,
-      "rs_rating": 57
+      "ars_slope": -0.0069,
+      "rs_rating": 58
     },
     {
       "sym": "SARDAEN",
@@ -8191,13 +8191,13 @@
       "ind": "Metals & Mining",
       "logoid": "sarda-energy-and-minerals-ltd",
       "ars": 7.6036,
-      "srs": -0.1462,
-      "vol_ratio": 2.12,
+      "srs": -0.1539,
+      "vol_ratio": 2.09,
       "hi52_prox": -0.1756,
       "price": 516.2,
       "breakout": false,
       "trending": false,
-      "signDays": 1335,
+      "signDays": 1336,
       "signSince": 1615520700,
       "signPrice": 37.07,
       "st14": {
@@ -8211,7 +8211,7 @@
         "val": 530.02
       },
       "ma_status": "MA-",
-      "ars_slope": -0.212,
+      "ars_slope": -0.1758,
       "rs_rating": 82
     },
     {
@@ -8220,13 +8220,13 @@
       "ind": "Realty",
       "logoid": "signatureglobal-india-ltd",
       "ars": 0.0287,
-      "srs": -0.0846,
-      "vol_ratio": 0.33,
-      "hi52_prox": -0.285,
+      "srs": -0.102,
+      "vol_ratio": 0.35,
+      "hi52_prox": -0.2808,
       "price": 833.65,
       "breakout": false,
       "trending": false,
-      "signDays": 6,
+      "signDays": 7,
       "signSince": 1785123900,
       "signPrice": 790.8,
       "st14": {
@@ -8237,11 +8237,11 @@
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 754.55
+        "val": 757.77
       },
       "ma_status": "MA-",
-      "ars_slope": 0.0212,
-      "rs_rating": 17
+      "ars_slope": 0.0091,
+      "rs_rating": 16
     },
     {
       "sym": "SONACOMS",
@@ -8299,7 +8299,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0065,
-      "rs_rating": 26
+      "rs_rating": 27
     },
     {
       "sym": "SWANCORP",
@@ -8307,28 +8307,28 @@
       "ind": "Chemicals",
       "logoid": "swan-energy-ltd",
       "ars": 0.2944,
-      "srs": -0.1362,
-      "vol_ratio": 1.1,
+      "srs": -0.1503,
+      "vol_ratio": 1.14,
       "hi52_prox": -0.3658,
       "price": 310.2,
       "breakout": false,
       "trending": false,
       "signDays": 1091,
-      "signSince": 1646711100,
-      "signPrice": 162,
+      "signSince": 1646797500,
+      "signPrice": 170.45,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 331.85
+        "val": 330.76
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 329.93
+        "val": 329.02
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0506,
-      "rs_rating": 41
+      "ars_slope": -0.0368,
+      "rs_rating": 40
     },
     {
       "sym": "SYNGENE",
@@ -8357,7 +8357,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0181,
-      "rs_rating": 4
+      "rs_rating": 3
     },
     {
       "sym": "TATACHEM",
@@ -8365,28 +8365,28 @@
       "ind": "Chemicals",
       "logoid": "tata",
       "ars": -0.2046,
-      "srs": -0.195,
-      "vol_ratio": 0.89,
+      "srs": -0.1844,
+      "vol_ratio": 0.97,
       "hi52_prox": -0.3288,
       "price": 674.65,
       "breakout": false,
       "trending": false,
-      "signDays": 186,
+      "signDays": 187,
       "signSince": 1762400700,
       "signPrice": 872.85,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 720.41
+        "val": 718.29
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 716.6
+        "val": 713.98
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0553,
-      "rs_rating": 11
+      "ars_slope": -0.0254,
+      "rs_rating": 12
     },
     {
       "sym": "TATATECH",
@@ -8415,7 +8415,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0005,
-      "rs_rating": 28
+      "rs_rating": 29
     },
     {
       "sym": "TENNIND",
@@ -8452,28 +8452,28 @@
       "ind": "Construction Materials",
       "logoid": "ramco-cements",
       "ars": -0.3272,
-      "srs": -0.0157,
-      "vol_ratio": 1.15,
+      "srs": -0.0413,
+      "vol_ratio": 1.16,
       "hi52_prox": -0.2155,
       "price": 945.25,
       "breakout": false,
       "trending": false,
       "signDays": 1126,
-      "signSince": 1642045500,
-      "signPrice": 1020.15,
+      "signSince": 1642131900,
+      "signPrice": 1011.9,
       "st14": {
         "trend": "buy",
         "signal": null,
-        "val": 884.11
+        "val": 886.64
       },
       "st10": {
         "trend": "buy",
         "signal": null,
-        "val": 887.07
+        "val": 890.2
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0031,
-      "rs_rating": 23
+      "ars_slope": 0.0052,
+      "rs_rating": 21
     },
     {
       "sym": "TRITURBINE",
@@ -8481,28 +8481,28 @@
       "ind": "Capital Goods",
       "logoid": "triveni-turbine",
       "ars": 3.2751,
-      "srs": 0.0684,
-      "vol_ratio": 0.56,
+      "srs": 0.0372,
+      "vol_ratio": 0.55,
       "hi52_prox": -0.1752,
       "price": 611.6,
       "breakout": false,
       "trending": false,
-      "signDays": 1365,
-      "signSince": 1611805500,
-      "signPrice": 84.7,
+      "signDays": 1364,
+      "signSince": 1612151100,
+      "signPrice": 84.6,
       "st14": {
         "trend": "sell",
         "signal": null,
-        "val": 667.89
+        "val": 665.3
       },
       "st10": {
         "trend": "sell",
         "signal": null,
-        "val": 661.2
+        "val": 659.42
       },
       "ma_status": "MA-",
-      "ars_slope": -0.2238,
-      "rs_rating": 88
+      "ars_slope": -0.1224,
+      "rs_rating": 85
     },
     {
       "sym": "URBANCO",
@@ -8626,13 +8626,13 @@
       "ind": "IT",
       "logoid": "zensar-technologies",
       "ars": 0.2065,
-      "srs": -0.0394,
-      "vol_ratio": 0.3,
+      "srs": -0.0309,
+      "vol_ratio": 0.31,
       "hi52_prox": -0.3961,
       "price": 518,
       "breakout": false,
       "trending": false,
-      "signDays": 800,
+      "signDays": 801,
       "signSince": 1683863100,
       "signPrice": 339.5,
       "st14": {
@@ -8646,8 +8646,8 @@
         "val": 465.94
       },
       "ma_status": "MA-",
-      "ars_slope": -0.0329,
-      "rs_rating": 30
+      "ars_slope": -0.0551,
+      "rs_rating": 31
     }
   ],
   "breakout_history": []
