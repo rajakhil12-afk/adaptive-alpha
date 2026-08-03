@@ -1049,7 +1049,7 @@ async function run() {
   console.log(`Saved ${breakoutHistory.length} active entries in breakout_history.json`);
 
   const payload = {
-    updated: new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}) + ' IST · ' + new Date().toLocaleDateString('en-IN', {day:'2-digit',month:'short'}),
+    updated: new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true,timeZone:'Asia/Kolkata'}) + ' IST · ' + new Date().toLocaleDateString('en-IN', {day:'2-digit',month:'short',timeZone:'Asia/Kolkata'}),
     bhavDate: bhav.date,
     fii_dii: fiiDii,
     stocks: results,

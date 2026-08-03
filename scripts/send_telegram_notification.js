@@ -22,13 +22,7 @@ const stocks = rawData.stocks || [];
 const updatedTime = rawData.updated || 'Today';
 const fiiDii = rawData.fii_dii;
 
-// Filter breakout stocks
-// 1. Primary: Fresh ARS Crossover (breakout === true)
-// 2. High RS Rating & strong positive momentum (rs_rating >= 85 & hi52_prox >= 0.95 & vol_ratio >= 1.3)
-const freshBreakouts = stocks.filter(s => s.breakout);
-const nearHighBreakouts = stocks.filter(s => !s.breakout && s.rs_rating >= 85 && s.hi52_prox >= 0.95 && s.vol_ratio >= 1.3);
-
-const allBreakouts = [...freshBreakouts, ...nearHighBreakouts];
+// Breakout filtering is done inside run() to include weekly data
 
 // Helper function to send HTML message to Telegram
 function sendTelegramMessage(text) {
@@ -83,8 +77,32 @@ function escapeHtml(text) {
     .replace(/>/g, '&gt;');
 }
 
+// Helper: Get Monday 00:00 IST of the current week (in UTC epoch seconds)
+function getMondayOfCurrentWeek() {
+  // Create date in IST
+  const now = new Date();
+  const istOffset = 5.5 * 60 * 60 * 1000; // IST = UTC + 5:30
+  const istNow = new Date(now.getTime() + istOffset);
+  const day = istNow.getUTCDay(); // 0=Sun, 1=Mon, ...
+  const diff = day === 0 ? 6 : day - 1; // days since Monday
+  const monday = new Date(istNow);
+  monday.setUTCDate(monday.getUTCDate() - diff);
+  monday.setUTCHours(0, 0, 0, 0);
+  // Convert back to UTC epoch seconds
+  return (monday.getTime() - istOffset) / 1000;
+}
+
+// Helper: Categorize a stock into Large/Mid/Small Cap
+function categorizeStock(s) {
+  const N50_SYMS = ['ADANIENT','ADANIPORTS','APOLLOHOSP','ASIANPAINT','AXISBANK','BAJAJ-AUTO','BAJFINANCE','BAJAJFINSV','BEL','BHARTIARTL','CIPLA','COALINDIA','DRREDDY','EICHERMOT','ETERNAL','GRASIM','HCLTECH','HDFCBANK','HDFCLIFE','HINDALCO','HINDUNILVR','ICICIBANK','ITC','INFY','INDIGO','JSWSTEEL','JIOFIN','KOTAKBANK','LT','M_M','MARUTI','MAXHEALTH','NTPC','NESTLEIND','ONGC','POWERGRID','RELIANCE','SBILIFE','SHRIRAMFIN','SBIN','SUNPHARMA','TCS','TATACONSUM','TMPV','TATASTEEL','TECHM','TITAN','TRENT','ULTRACEMCO','WIPRO'];
+  const EXTRA_SYMS = ['ABB','ADANIENSOL','ADANIGREEN','ADANIPOWER','AMBUJACEM','DMART','BAJAJHLDNG','BANKBARODA','BPCL','BOSCHLTD','BRITANNIA','CGPOWER','CANBK','CHOLAFIN','CUMMINSIND','DLF','DIVISLAB','GAIL','GODREJCP','HDFCAMC','HAL','HINDZINC','HYUNDAI','INDHOTEL','IOC','IRFC','JINDALSTEL','LTM','LODHA','MAZDOCK','MUTHOOTFIN','PIDILITIND','PFC','PNB','RECLTD','MOTHERSON','SHREECEM','ENRIN','SIEMENS','SOLARINDS','TVSMOTOR','TATACAP','TMCV','TATAPOWER','TORNTPHARM','UNIONBANK','UNITDSPR','VBL','VEDL','ZYDUSLIFE'];
+  if (N50_SYMS.includes(s.sym) || EXTRA_SYMS.includes(s.sym)) return '🚀 Large Cap';
+  if (s.rs_rating >= 60 || s.price > 1000) return '🔥 Mid Cap';
+  return '⚡ Small Cap';
+}
+
 async function run() {
-  const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' });
   let msg = `⚡ <b>DAILY BREAKOUT REPORT</b> | ${dateStr}\n`;
   msg += `⏰ <i>Updated: ${escapeHtml(updatedTime)}</i>\n\n`;
 
@@ -95,62 +113,84 @@ async function run() {
     msg += `• FII Net: <code>₹${fiiFormatted} Cr</code> | DII Net: <code>₹${diiFormatted} Cr</code>\n\n`;
   }
 
-  if (allBreakouts.length === 0) {
-    msg += `ℹ️ <b>No fresh breakouts detected in today's scan.</b>\n\n`;
-    msg += `Total stocks scanned: ${stocks.length}\n`;
-    await sendTelegramMessage(msg);
-    return;
+  // --- Section 1: Today's Fresh ARS Crossover Breakouts ---
+  const freshBreakouts = stocks.filter(s => s.breakout);
+  // Also include high-momentum near-52W-high stocks as secondary breakouts
+  const nearHighBreakouts = stocks.filter(s => !s.breakout && s.rs_rating >= 85 && s.hi52_prox >= 0.95 && s.vol_ratio >= 1.3);
+  const allTodayBreakouts = [...freshBreakouts, ...nearHighBreakouts];
+
+  if (allTodayBreakouts.length === 0) {
+    msg += `🔥 <b>Today's Fresh Breakouts: 0</b>\n`;
+    msg += `<i>No fresh ARS crossovers detected today.</i>\n\n`;
+  } else {
+    const useDetailedView = allTodayBreakouts.length <= 10;
+    msg += `🔥 <b>Today's Fresh Breakouts: ${allTodayBreakouts.length}</b> (Scanned ${stocks.length} stocks)\n`;
+    msg += `━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+    // Group by market cap
+    const categories = { '🚀 Large Cap': [], '🔥 Mid Cap': [], '⚡ Small Cap': [] };
+    allTodayBreakouts.forEach(s => categories[categorizeStock(s)].push(s));
+
+    for (const [catName, list] of Object.entries(categories)) {
+      if (list.length === 0) continue;
+      msg += `<b>${catName} (${list.length})</b>\n`;
+      list.forEach(s => {
+        const typeTag = s.breakout ? '🌟 ARS Crossover' : '🔥 52W High Prox';
+        const volTag = `${s.vol_ratio}x Vol`;
+        const rsTag = `RS: ${s.rs_rating}`;
+        if (useDetailedView) {
+          msg += `• <b>${escapeHtml(s.sym)}</b> — ₹${s.price.toLocaleString('en-IN')}\n`;
+          msg += `  └ <code>${rsTag}</code> | <code>${volTag}</code> | ${typeTag}\n`;
+        } else {
+          msg += `• <b>${escapeHtml(s.sym)}</b> (₹${s.price}) — <code>${volTag}</code>\n`;
+        }
+      });
+      msg += `\n`;
+    }
   }
 
-  // Group breakouts by market cap category
-  const categories = {
-    '🚀 Large Cap': [],
-    '🔥 Mid Cap': [],
-    '⚡ Small Cap': []
-  };
+  // --- Section 2: This Week's Breakouts (ARS positive, flipped within current Mon-Fri week, not today's fresh) ---
+  const mondayTs = getMondayOfCurrentWeek();
+  const weeklyBreakouts = stocks.filter(s =>
+    !s.breakout && s.ars > 0 && s.signDays != null && s.signDays <= 5 &&
+    s.signSince != null && s.signSince >= mondayTs
+  );
 
-  const N50_SYMS = ['ADANIENT','ADANIPORTS','APOLLOHOSP','ASIANPAINT','AXISBANK','BAJAJ-AUTO','BAJFINANCE','BAJAJFINSV','BEL','BHARTIARTL','CIPLA','COALINDIA','DRREDDY','EICHERMOT','ETERNAL','GRASIM','HCLTECH','HDFCBANK','HDFCLIFE','HINDALCO','HINDUNILVR','ICICIBANK','ITC','INFY','INDIGO','JSWSTEEL','JIOFIN','KOTAKBANK','LT','M_M','MARUTI','MAXHEALTH','NTPC','NESTLEIND','ONGC','POWERGRID','RELIANCE','SBILIFE','SHRIRAMFIN','SBIN','SUNPHARMA','TCS','TATACONSUM','TMPV','TATASTEEL','TECHM','TITAN','TRENT','ULTRACEMCO','WIPRO'];
-  const EXTRA_SYMS = ['ABB','ADANIENSOL','ADANIGREEN','ADANIPOWER','AMBUJACEM','DMART','BAJAJHLDNG','BANKBARODA','BPCL','BOSCHLTD','BRITANNIA','CGPOWER','CANBK','CHOLAFIN','CUMMINSIND','DLF','DIVISLAB','GAIL','GODREJCP','HDFCAMC','HAL','HINDZINC','HYUNDAI','INDHOTEL','IOC','IRFC','JINDALSTEL','LTM','LODHA','MAZDOCK','MUTHOOTFIN','PIDILITIND','PFC','PNB','RECLTD','MOTHERSON','SHREECEM','ENRIN','SIEMENS','SOLARINDS','TVSMOTOR','TATACAP','TMCV','TATAPOWER','TORNTPHARM','UNIONBANK','UNITDSPR','VBL','VEDL','ZYDUSLIFE'];
-
-  allBreakouts.forEach(s => {
-    if (N50_SYMS.includes(s.sym) || EXTRA_SYMS.includes(s.sym)) {
-      categories['🚀 Large Cap'].push(s);
-    } else if (s.rs_rating >= 60 || s.price > 1000) {
-      categories['🔥 Mid Cap'].push(s);
-    } else {
-      categories['⚡ Small Cap'].push(s);
-    }
-  });
-
-  // SMART AUTO-SWITCHING LOGIC
-  const useDetailedView = allBreakouts.length <= 10;
-
-  msg += `🎯 <b>Breakouts Found: ${allBreakouts.length}</b> (Scanned ${stocks.length} stocks)\n`;
-  msg += `━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-
-  for (const [catName, list] of Object.entries(categories)) {
-    if (list.length === 0) continue;
-
-    msg += `<b>${catName} (${list.length})</b>\n`;
-
-    list.forEach(s => {
-      const typeTag = s.breakout ? '🌟 ARS Crossover' : '🔥 52W High Prox';
-      const volTag = `${s.vol_ratio}x Vol`;
-      const rsTag = `RS: ${s.rs_rating}`;
-
-      if (useDetailedView) {
-        // STYLE 1: Full Detailed Format (<= 10 breakouts)
-        msg += `• <b>${escapeHtml(s.sym)}</b> — ₹${s.price.toLocaleString('en-IN')}\n`;
-        msg += `  └ <code>${rsTag}</code> | <code>${volTag}</code> | ${typeTag}\n`;
-      } else {
-        // STYLE 2: Compact Format (> 10 breakouts)
-        msg += `• <b>${escapeHtml(s.sym)}</b> (₹${s.price}) — <code>${volTag}</code>\n`;
-      }
+  if (weeklyBreakouts.length > 0) {
+    msg += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    msg += `🟢 <b>This Week's Breakouts (${weeklyBreakouts.length})</b>\n`;
+    weeklyBreakouts.sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
+    weeklyBreakouts.forEach(s => {
+      const boPrice = s.signPrice ?? s.price;
+      const gain = boPrice > 0 ? ((s.price - boPrice) / boPrice * 100) : 0;
+      const gainStr = gain >= 0 ? `+${gain.toFixed(1)}%` : `${gain.toFixed(1)}%`;
+      const daysLabel = s.signDays === 1 ? '1d ago' : `${s.signDays}d ago`;
+      msg += `• <b>${escapeHtml(s.sym)}</b> — ₹${s.price.toLocaleString('en-IN')} | <code>${gainStr}</code> | ${daysLabel}\n`;
     });
     msg += `\n`;
   }
 
-  // Add 30-Day Historical Performance Summary if available
+  // --- Section 3: This Week's Breakdowns (ARS negative, flipped within current Mon-Fri week) ---
+  const weeklyBreakdowns = stocks.filter(s =>
+    s.ars < 0 && s.signDays != null && s.signDays <= 5 &&
+    s.signSince != null && s.signSince >= mondayTs
+  );
+
+  if (weeklyBreakdowns.length > 0) {
+    msg += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    msg += `🔴 <b>This Week's Breakdowns (${weeklyBreakdowns.length})</b>\n`;
+    weeklyBreakdowns.sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
+    weeklyBreakdowns.forEach(s => {
+      const bdPrice = s.signPrice ?? s.price;
+      const drop = bdPrice > 0 ? ((s.price - bdPrice) / bdPrice * 100) : 0;
+      const dropStr = drop >= 0 ? `+${drop.toFixed(1)}%` : `${drop.toFixed(1)}%`;
+      const daysLabel = s.signDays === 1 ? '1d ago' : `${s.signDays}d ago`;
+      msg += `• <b>${escapeHtml(s.sym)}</b> — ₹${s.price.toLocaleString('en-IN')} | <code>${dropStr}</code> | ${daysLabel}\n`;
+    });
+    msg += `\n`;
+  }
+
+  // --- Section 4: 30-Day Historical Performance Summary ---
   const history = rawData.breakout_history || [];
   if (history.length > 0) {
     const winners = history.filter(h => (h.gainPct || 0) > 0);
@@ -183,3 +223,4 @@ run().catch(err => {
   console.error('Fatal error in Telegram notification script:', err);
   process.exit(1);
 });
+
