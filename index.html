@@ -3287,6 +3287,24 @@ function dismissToast() {
   setTimeout(() => el.remove(), 280);
 }
 
+// Helper: Get Monday 00:00 IST of the current week as Unix epoch seconds
+function getMondayOfCurrentWeekTs() {
+  const now = new Date();
+  const istOffset = 5.5 * 60 * 60 * 1000; // IST = UTC + 5:30
+  const istNow = new Date(now.getTime() + istOffset);
+  const day = istNow.getUTCDay(); // 0=Sun, 1=Mon, ...
+  const diff = day === 0 ? 6 : day - 1; // days since Monday
+  const monday = new Date(istNow);
+  monday.setUTCDate(monday.getUTCDate() - diff);
+  monday.setUTCHours(0, 0, 0, 0);
+  return (monday.getTime() - istOffset) / 1000;
+}
+
+function isThisWeek(d) {
+  const mondayTs = getMondayOfCurrentWeekTs();
+  return d.signDays != null && d.signDays <= 5 && d.signSince != null && d.signSince >= mondayTs;
+}
+
 function updateBadgeCounts() {
   const wlCountEl = document.getElementById('wl-count');
   if (wlCountEl) wlCountEl.textContent = pinnedStocks.length;
@@ -3294,8 +3312,8 @@ function updateBadgeCounts() {
   const boCountEl = document.getElementById('bo-count');
   if (boCountEl) {
     const todayBo = allData.filter(d => d.breakout);
-    const weekBo = allData.filter(d => d.ars > 0 && d.signDays != null && d.signDays <= 5 && !d.breakout);
-    const weekBd = allData.filter(d => d.ars < 0 && d.signDays != null && d.signDays <= 5);
+    const weekBo = allData.filter(d => d.ars > 0 && isThisWeek(d) && !d.breakout);
+    const weekBd = allData.filter(d => d.ars < 0 && isThisWeek(d));
     boCountEl.textContent = todayBo.length + weekBo.length + weekBd.length;
   }
 }
@@ -3344,8 +3362,8 @@ function renderBreakoutsTab() {
   if (!container) return;
 
   const todayData = allData.filter(d => d.breakout);
-  const weeklyData = allData.filter(d => d.ars > 0 && d.signDays != null && d.signDays <= 5 && !d.breakout);
-  const breakdownData = allData.filter(d => d.ars < 0 && d.signDays != null && d.signDays <= 5);
+  const weeklyData = allData.filter(d => d.ars > 0 && isThisWeek(d) && !d.breakout);
+  const breakdownData = allData.filter(d => d.ars < 0 && isThisWeek(d));
 
   if (todayData.length === 0 && weeklyData.length === 0 && breakdownData.length === 0) {
     container.innerHTML = `
