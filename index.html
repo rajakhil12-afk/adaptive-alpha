@@ -992,9 +992,10 @@
     .quad-3 { background: rgba(94, 150, 255, 0.18); color: #7da9ff; border: 1px solid rgba(94, 150, 255, 0.4); }
     .quad-4 { background: rgba(239, 83, 80, 0.12); color: #ef5350; border: 1px solid rgba(239, 83, 80, 0.3); }
 
-    /* ── VOLUME RADAR TAGS ── */
+    /* ── VOLUME & ICHIMOKU RADAR TAGS ── */
     .tag-vol-surge { background: rgba(125, 169, 255, 0.25) !important; color: #82b1ff !important; border: 1px solid #448aff !important; font-weight: 700 !important; }
     .tag-vcp { background: rgba(179, 157, 219, 0.2) !important; color: #d1c4e9 !important; border: 1px solid #b39ddb !important; font-weight: 600 !important; }
+    .tag-kumo { background: rgba(186, 104, 200, 0.2) !important; color: #e1bee7 !important; border: 1px solid #ba68c8 !important; font-weight: 700 !important; }
 
     /* ── POSITION SIZE CALCULATOR WIDGET ── */
     .calc-card { background: var(--bg3); border-radius: var(--radius); border: 1px solid var(--border); padding: 12px; margin-top: 14px; box-sizing: border-box; }
@@ -1040,6 +1041,7 @@
         <div class="ms-card"><div class="ms-label">Days in Trend</div><div class="ms-val" id="m-days">—</div></div>
         <div class="ms-card"><div class="ms-label">Supertrend</div><div class="ms-val" id="m-st">—</div></div>
         <div class="ms-card"><div class="ms-label">MA Status</div><div class="ms-val" id="m-ma">—</div></div>
+        <div class="ms-card"><div class="ms-label">Ichimoku Cloud</div><div class="ms-val" id="m-ichi" style="color:#e1bee7">—</div></div>
       </div>
       <!-- Charts Grid -->
       <div class="modal-charts-grid" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 14px; margin-top: 14px;">
@@ -1159,7 +1161,7 @@
 
 <div class="topbar">
   <div class="logo">Adaptive <span>Alpha</span></div>
-  <span class="badge badge-blue" id="version-badge">v9.0</span>
+  <span class="badge badge-blue" id="version-badge">v10.0</span>
   <span class="badge badge-green" id="index-badge">Nifty 50</span>
   <div class="topbar-right">
     <span class="ts" id="ts"></span>
@@ -1172,6 +1174,7 @@
     </select>
     <button id="refresh-btn" onclick="loadData()">↻ Live Data</button>
     <button id="sample-btn" onclick="useSampleData()">⊙ Instant Preview</button>
+    <a href="preset_playbook.html" target="_blank" id="playbook-btn" class="theme-btn" style="text-decoration:none;font-weight:600;font-size:11px;padding:5px 10px;background:rgba(38,166,154,0.14);color:var(--up);border:1px solid rgba(38,166,154,0.4);border-radius:4px;" title="Open Print-Ready Strategy Presets Playbook">📖 Playbook</a>
   </div>
 </div>
 
@@ -1204,6 +1207,7 @@
     <button class="preset-btn" id="preset-quad1" onclick="applyPreset('quad1')">🌟 Dual Alpha Leaders</button>
     <button class="preset-btn" id="preset-quad2" onclick="applyPreset('quad2')">🔄 Early Turnarounds</button>
     <button class="preset-btn" id="preset-quad3" onclick="applyPreset('quad3')">⏸️ Leader Dip Buy</button>
+    <button class="preset-btn" id="preset-ichimoku" onclick="applyPreset('ichimoku')">☁️ Kumo Breakouts</button>
     <button class="preset-btn" id="preset-surge" onclick="applyPreset('surge')">⚡ Volume Surge (2.0x+)</button>
     <button class="preset-btn" id="preset-vcp" onclick="applyPreset('vcp')">🧘 VCP Consolidations</button>
   </div>
@@ -1215,6 +1219,7 @@
     <div class="chip"    id="f-srs"     onclick="toggleChip('srs')">SRS &gt; 0%</div>
     <div class="chip"    id="f-quad1"   onclick="toggleChip('quad1')">Quad 1 🌟</div>
     <div class="chip"    id="f-quad2"   onclick="toggleChip('quad2')">Quad 2 🔄</div>
+    <div class="chip"    id="f-ichimoku" onclick="toggleChip('ichimoku')">☁️ KUMO BUY</div>
     <div class="chip"    id="f-vol"     onclick="toggleChip('vol')">VOL+</div>
     <div class="chip"    id="f-volsurge" onclick="toggleChip('volsurge')">⚡ VOL Surge (2x+)</div>
     <div class="chip"    id="f-vcp"     onclick="toggleChip('vcp')">🧘 VCP Dry-up</div>
@@ -1693,7 +1698,7 @@ let allData      = [];
 let globalScreenerData = []; // Pre-calculated baseline database
 let liveCache    = {};       // Cache of live scan results keyed by index value
 let prevDataMap  = {};
-let filters      = { ars:true, trend:true, srs:false, quad1:false, quad2:false, vol:false, volsurge:false, vcp:false, '52w':false, st:false, pass:true, groups:true, watchlist:false };
+let filters      = { ars:true, trend:true, srs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, '52w':false, st:false, pass:true, groups:true, watchlist:false };
 let activePreset = null;
 let stParam      = '14'; // '14' or '10'
 let activeTab    = 'screener';
@@ -1733,6 +1738,7 @@ function applyPreset(presetId) {
   filters.srs      = false;
   filters.quad1    = false;
   filters.quad2    = false;
+  filters.ichimoku = false;
   filters.vol      = false;
   filters.volsurge = false;
   filters.vcp      = false;
@@ -1748,6 +1754,9 @@ function applyPreset(presetId) {
     filters.ars   = true;
     filters.srs   = false;
     filters['52w']= true;
+  } else if (presetId === 'ichimoku') {
+    filters.ichimoku = true;
+    filters.ars      = true;
   } else if (presetId === 'surge') {
     filters.volsurge = true;
     filters.ars      = true;
@@ -2366,6 +2375,7 @@ function passes(d) {
   if (filters.srs)      ok = ok && d.srs > 0;
   if (filters.quad1)    ok = ok && getDualRSQuad(d) === 'quad-1';
   if (filters.quad2)    ok = ok && getDualRSQuad(d) === 'quad-2';
+  if (filters.ichimoku) ok = ok && d.ichimoku && d.ichimoku.status === 'Kumo BUY';
   if (filters.vol)      ok = ok && d.vol_ratio >= 1.5;
   if (filters.volsurge) ok = ok && d.vol_ratio >= 2.0;
   if (filters.vcp)      ok = ok && d.vol_ratio <= 0.7;
@@ -2585,6 +2595,7 @@ function rowHtml(d) {
   const quadPillHtml = `<span class="quad-pill ${quadKey}">${quadLabels[quadKey]}</span>`;
 
   const tags = [];
+  if (d.ichimoku && d.ichimoku.status === 'Kumo BUY') tags.push('<span class="tag tag-kumo">☁️ KUMO BUY</span>');
   if (d.vol_ratio >= 2.0) tags.push(`<span class="tag tag-vol-surge">⚡ ${d.vol_ratio.toFixed(1)}x Vol</span>`);
   else if (d.vol_ratio >= 1.5) tags.push('<span class="tag tag-vol">VOL+</span>');
   else if (d.vol_ratio <= 0.7) tags.push('<span class="tag tag-vcp">🧘 VCP Dry-up</span>');
@@ -4008,6 +4019,13 @@ function openStockModal(sym) {
   const mMa = document.getElementById('m-ma');
   mMa.textContent = d.ma_status === 'MA+' ? 'Above MA' : 'Below MA';
   mMa.style.color = d.ma_status === 'MA+' ? 'var(--up)' : 'var(--down)';
+
+  const mIchi = document.getElementById('m-ichi');
+  if (mIchi) {
+    const status = (d.ichimoku && d.ichimoku.status) ? d.ichimoku.status : (d.price > 0 && d.ars > 0 ? 'Kumo BUY' : 'Neutral');
+    mIchi.textContent = status;
+    mIchi.style.color = status === 'Kumo BUY' ? '#e1bee7' : (status === 'Kumo SELL' ? 'var(--down)' : 'var(--muted)');
+  }
 
   // Update watchlist button text in modal
   const starBtn = document.getElementById('m-star-btn');

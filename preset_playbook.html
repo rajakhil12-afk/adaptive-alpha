@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Alpha — Strategy Presets Playbook & Roadmap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00e676;
+      --secondary: #5e96ff;
+      --accent: #ffb74d;
+      --danger: #ef5350;
+      --dark: #0B0E14;
+      --panel: #131722;
+      --text: #1e2229;
+      --border: #cbd5e1;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Outfit', -apple-system, sans-serif;
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--text);
+      background: #f8fafc;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 30px auto;
+      background: #ffffff;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    /* Cover Styling */
+    .cover {
+      background: linear-gradient(135deg, #0B0E14 0%, #161b22 100%);
+      color: #ffffff;
+      padding: 60px 50px;
+      position: relative;
+    }
+    .cover-badge {
+      display: inline-block;
+      background: rgba(38, 166, 154, 0.2);
+      color: #00e676;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 230, 118, 0.4);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .cover h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+    .cover p {
+      font-size: 16px;
+      color: #94a3b8;
+      max-width: 650px;
+    }
+    .cover-meta {
+      display: flex;
+      gap: 30px;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    /* Content Area */
+    .content {
+      padding: 40px 50px;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-top: 35px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    p { margin-bottom: 14px; color: #334155; }
+    ul, ol { margin-bottom: 16px; padding-left: 22px; color: #334155; }
+    li { margin-bottom: 6px; }
+
+    /* Rules Boxes */
+    .box {
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 18px 0;
+      font-size: 14px;
+    }
+    .box-entry {
+      background: #f0fdf4;
+      border-left: 4px solid #16a34a;
+      color: #14532d;
+    }
+    .box-entry h4 { color: #15803d; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    
+    .box-exit {
+      background: #fef2f2;
+      border-left: 4px solid #dc2626;
+      color: #7f1d1d;
+    }
+    .box-exit h4 { color: #b91c1c; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+
+    .box-avoid {
+      background: #fffbeb;
+      border-left: 4px solid #d97706;
+      color: #78350f;
+    }
+    .box-avoid h4 { color: #b45309; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    .matrix-table th {
+      background: #0f172a;
+      color: #ffffff;
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 700;
+    }
+    .matrix-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+    }
+    .matrix-table tr:nth-child(even) { background: #f8fafc; }
+
+    .pill {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .pill-q1 { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .pill-q2 { background: #fef3c7; color: #b45309; border: 1px solid #fde047; }
+    .pill-q3 { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
+
+    @media print {
+      body { background: #ffffff; }
+      .container { border: none; box-shadow: none; margin: 0; max-width: 100%; }
+      .cover { background: #0b0e14 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .matrix-table th { background: #0f172a !important; color: #ffffff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page-break { page-break-before: always; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Cover Page -->
+  <div class="cover">
+    <span class="cover-badge">Adaptive Alpha Playbook v10.0</span>
+    <h1>STRATEGY PRESETS PLAYBOOK & ROADMAP</h1>
+    <p>Complete Operational Guide: Entry Triggers, Exit Rules, Risk Management & Red Flags for All 5 Screener Presets</p>
+    <div class="cover-meta">
+      <div><strong>TARGET UNIVERSE:</strong> NSE India (Nifty 500)</div>
+      <div><strong>RISK ENGINE:</strong> Supertrend ATR + Position Sizer</div>
+      <div><strong>DUAL RS MATRIX:</strong> ARS + SRS</div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <h2>📊 Executive Summary: The Dual RS Matrix</h2>
+    <p>Adaptive Alpha utilizes a <strong>Dual Relative Strength Engine</strong> combining long-term outperformance vs NIFTY 50 (<strong>ARS</strong>) and short-term quarterly acceleration (<strong>SRS</strong>):</p>
+
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Quadrant</th>
+          <th>Condition</th>
+          <th>Strategy Preset</th>
+          <th>Market Phase & Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill pill-q1">🌟 Quad 1</span></td>
+          <td>ARS &gt; 0% &amp; SRS &gt; 0%</td>
+          <td><strong>Dual Alpha Leaders</strong></td>
+          <td><strong>Power Leader:</strong> Highest win-rate momentum breakouts. Heavy institutional accumulation.</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-q2">🔄 Quad 2</span></td>
+          <td>ARS &le; 0% &amp; SRS &gt; 0%</td>
+          <td><strong>Early Turnarounds</strong></td>
+          <td><strong>Bottoming Crossover:</strong> Early trend turnarounds weeks before ARS turns positive.</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-q3">⏸️ Quad 3</span></td>
+          <td>ARS &gt; 0% &amp; SRS &le; 0%</td>
+          <td><strong>Leader Dip Buy</strong></td>
+          <td><strong>Cooling Leader:</strong> Buy-the-dip re-entry near 50MA / Supertrend support.</td>
+        </tr>
+        <tr>
+          <td><span class="pill" style="background:#f3e8ff;color:#7e22ce;border:1px solid #d8b4fe">☁️ KUMO</span></td>
+          <td>Price &gt; Kumo Top &amp; TK Cross</td>
+          <td><strong>Kumo Breakouts</strong></td>
+          <td><strong>Triple Confluence:</strong> Japanese Cloud breakout with TK Bullish Crossover &amp; green cloud.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+
+    <!-- PRESET 1 -->
+    <h2>1. 🌟 Preset: Dual Alpha Leaders (Quad 1)</h2>
+    <p><strong>Philosophy:</strong> Buy established, high-velocity market leaders that possess both long-term structural tailwinds and active short-term quarterly acceleration. This is the flagship momentum setup with the highest statistical win-rate.</p>
+
+    <div class="box box-entry">
+      <h4>✅ ENTRY RULES</h4>
+      <ul>
+        <li><strong>Preset Condition:</strong> Stock must be in <span class="pill pill-q1">Quad 1</span> (Both ARS &gt; 0% and SRS &gt; 0%).</li>
+        <li><strong>Trend Confirmation:</strong> Supertrend must be in <strong>BUY</strong> status and stock must be <strong>MA+</strong> (above 50MA &amp; 200MA).</li>
+        <li><strong>Trigger Event:</strong> Enter on a fresh <code>*NEW*</code> ARS crossover or when volume exceeds <code>1.3x</code> average volume.</li>
+      </ul>
+    </div>
+
+    <div class="box box-exit">
+      <h4>🛑 EXIT &amp; STOP-LOSS RULES</h4>
+      <ul>
+        <li><strong>Initial Stop-Loss:</strong> Set hard stop at the <strong>Supertrend (ST14) Price Level</strong> (auto-calculated in modal).</li>
+        <li><strong>Profit Target 1 (1:2 R:R):</strong> Sell 50% position when price reaches Target 1 (e.g. +8% to +12% gain). Move stop-loss to breakeven.</li>
+        <li><strong>Profit Target 2 (1:3 R:R):</strong> Trail the remaining 50% position along the Supertrend line until a <strong>SELL</strong> signal fires.</li>
+      </ul>
+    </div>
+
+    <div class="box box-avoid">
+      <h4>⚠️ WHAT TO AVOID / RED FLAGS</h4>
+      <ul>
+        <li><strong>Avoid Extended Entries:</strong> Do not buy if the stock is already &gt; 25% above its 50MA (overextended).</li>
+        <li><strong>Avoid Low Volume Breakouts:</strong> Skip breakouts accompanied by volume ratio &lt; 1.0x (lacks institutional backing).</li>
+      </ul>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- PRESET 2 -->
+    <h2>2. 🔄 Preset: Early Turnarounds (Quad 2)</h2>
+    <p><strong>Philosophy:</strong> Catch explosive bottoming breakouts <em>weeks before</em> the rest of the market notices them. Quad 2 stocks have underperformed historically (ARS &le; 0), but their short-term relative strength (SRS) has just turned positive on heavy institutional buying.</p>
+
+    <div class="box box-entry">
+      <h4>✅ ENTRY RULES</h4>
+      <ul>
+        <li><strong>Preset Condition:</strong> Stock must be in <span class="pill pill-q2">Quad 2</span> (ARS &le; 0% and SRS &gt; 0%).</li>
+        <li><strong>Volume Surge:</strong> Must have <strong><code>⚡ VOL Surge (2.0x+)</code></strong> indicating institutional accumulation.</li>
+        <li><strong>Trigger Event:</strong> Enter when stock prints a fresh <code>*NEW*</code> breakout or crosses above its 20-day high.</li>
+      </ul>
+    </div>
+
+    <div class="box box-exit">
+      <h4>🛑 EXIT &amp; STOP-LOSS RULES</h4>
+      <ul>
+        <li><strong>Initial Stop-Loss:</strong> Place stop-loss 2% below the swing low of the bottoming base (or ST10 fast Supertrend).</li>
+        <li><strong>Profit Target 1:</strong> Take 50% profit at +10% gain (near overhead resistance).</li>
+        <li><strong>Trailing Exit:</strong> Trail the remaining 50% using ST10 Supertrend line.</li>
+      </ul>
+    </div>
+
+    <div class="box box-avoid">
+      <h4>⚠️ WHAT TO AVOID / RED FLAGS</h4>
+      <ul>
+        <li><strong>Avoid Below 200MA:</strong> Skip stocks trading far below their 200-day moving average (heavy overhead supply).</li>
+        <li><strong>Avoid Weak SRS:</strong> Skip if SRS is barely positive (&lt; +1.0%). Look for strong SRS acceleration.</li>
+      </ul>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+
+    <!-- PRESET 3 -->
+    <h2>3. ⏸️ Preset: Leader Dip Buy (Quad 3)</h2>
+    <p><strong>Philosophy:</strong> Buy proven long-term structural leaders when they are on sale (pulling back near key moving average support), providing an extraordinary Risk-to-Reward ratio (1:3 or better).</p>
+
+    <div class="box box-entry">
+      <h4>✅ ENTRY RULES</h4>
+      <ul>
+        <li><strong>Preset Condition:</strong> Stock must be in <span class="pill pill-q3">Quad 3</span> (ARS &gt; 0% and SRS &le; 0%).</li>
+        <li><strong>Support Level:</strong> Price must be resting within 2% of its <strong>50MA</strong> or <strong>Supertrend ST14</strong> support line.</li>
+        <li><strong>Proximity:</strong> Must be within 8%–10% of its 52-week high (not a broken chart).</li>
+      </ul>
+    </div>
+
+    <div class="box box-exit">
+      <h4>🛑 EXIT &amp; STOP-LOSS RULES</h4>
+      <ul>
+        <li><strong>Initial Stop-Loss:</strong> Tight stop 1.5% below the 50MA or ST14 Supertrend line.</li>
+        <li><strong>Profit Target:</strong> Exit 50% at 52-week high retest. Trail remaining position to new highs.</li>
+      </ul>
+    </div>
+
+    <div class="box box-avoid">
+      <h4>⚠️ WHAT TO AVOID / RED FLAGS</h4>
+      <ul>
+        <li><strong>Avoid Heavy Volume Sell-Offs:</strong> Do not buy dips accompanied by huge red volume bars (&gt; 2.0x avg volume). Look for quiet, low-volume pullbacks.</li>
+      </ul>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- PRESET 4 -->
+    <h2>4. ⚡ Preset: Volume Surge (2.0x+)</h2>
+    <p><strong>Philosophy:</strong> Follow institutional footprint ("smart money"). Volume precedes price—when big funds buy millions of shares, volume surges 2x to 5x above average.</p>
+
+    <div class="box box-entry">
+      <h4>✅ ENTRY RULES</h4>
+      <ul>
+        <li><strong>Preset Condition:</strong> Volume Ratio &ge; <code>2.0x</code> average 20-day volume.</li>
+        <li><strong>Price Action:</strong> Stock must close positive (green candle) on the surge day.</li>
+        <li><strong>Trend:</strong> Must be in Quad 1 or Quad 2 with <strong>ARS Trending ↑</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="box box-exit">
+      <h4>🛑 EXIT &amp; STOP-LOSS RULES</h4>
+      <ul>
+        <li><strong>Initial Stop-Loss:</strong> Set stop at the low of the volume surge candle.</li>
+        <li><strong>Target:</strong> Target 1:2 R:R within 5 to 10 trading sessions.</li>
+      </ul>
+    </div>
+
+    <div class="box box-avoid">
+      <h4>⚠️ WHAT TO AVOID / RED FLAGS</h4>
+      <ul>
+        <li><strong>Avoid Upper Shadows:</strong> Avoid stocks with huge top wicks (indicates profit booking / selling tail).</li>
+      </ul>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+
+    <!-- PRESET 5 -->
+    <h2>5. 🧘 Preset: VCP Consolidations (Volatility Contraction)</h2>
+    <p><strong>Philosophy:</strong> Spot the "calm before the storm". Based on Mark Minervini's Volatility Contraction Pattern, we identify stocks near 52-week highs where selling volume has completely dried up.</p>
+
+    <div class="box box-entry">
+      <h4>✅ ENTRY RULES</h4>
+      <ul>
+        <li><strong>Preset Condition:</strong> Near 52W High (`hi52_prox &ge; -8%`) AND Volume Dry-up (`vol_ratio &le; 0.7x`).</li>
+        <li><strong>Relative Strength:</strong> ARS &gt; 0% (structural leader).</li>
+        <li><strong>Trigger:</strong> Put on watchlist; enter immediately when price breaks above the tight pivot on volume surge.</li>
+      </ul>
+    </div>
+
+    <div class="box box-exit">
+      <h4>🛑 EXIT &amp; STOP-LOSS RULES</h4>
+      <ul>
+        <li><strong>Initial Stop-Loss:</strong> Ultra-tight stop 2%–3% below the narrow VCP pivot low.</li>
+        <li><strong>Target:</strong> 1:3 R:R minimum (since risk is extremely small).</li>
+      </ul>
+    </div>
+
+    <div class="box box-avoid">
+      <h4>⚠️ WHAT TO AVOID / RED FLAGS</h4>
+      <ul>
+        <li><strong>Avoid Wide/Loose Charts:</strong> Avoid stocks swinging 15%+ up and down erratically. VCP requires tight, orderly price action.</li>
+      </ul>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+
+    <!-- PRESET 6 -->
+    <h2>6. ☁️ Preset: Ichimoku Kumo Cloud Breakouts</h2>
+    <p><strong>Philosophy:</strong> The ultimate Japanese multi-indicator trend system. Spots stocks closing above the daily Kumo Cloud with Tenkan/Kijun bullish alignment, signaling a complete structural shift from bearish/neutral to a clear bull trend.</p>
+
+    <div class="box box-entry">
+      <h4>✅ ENTRY RULES</h4>
+      <ul>
+        <li><strong>Preset Condition:</strong> Price closes <strong>above the top of the Kumo Cloud</strong> (`Price > Math.max(SpanA, SpanB)`).</li>
+        <li><strong>TK Crossover:</strong> Tenkan-sen (9-period) must be above Kijun-sen (26-period).</li>
+        <li><strong>Trigger Event:</strong> Enter on fresh Kumo crossover when daily close crosses above the Kumo Cloud top.</li>
+      </ul>
+    </div>
+
+    <div class="box box-exit">
+      <h4>🛑 EXIT &amp; STOP-LOSS RULES</h4>
+      <ul>
+        <li><strong>Initial Stop-Loss:</strong> Set stop at the <strong>Kijun-sen (Base Line)</strong> or Kumo Cloud Top.</li>
+        <li><strong>Target &amp; Trailing:</strong> Trail along Kijun-sen line as long as price remains above the Cloud. Exit if price closes back inside the Cloud.</li>
+      </ul>
+    </div>
+
+    <div class="box box-avoid">
+      <h4>⚠️ WHAT TO AVOID / RED FLAGS</h4>
+      <ul>
+        <li><strong>Avoid Thick Red Cloud Overhead:</strong> Avoid entering if the future Kumo cloud ahead is dark red and widening.</li>
+      </ul>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+
+    <h2>🧮 Universal Risk Management Rules</h2>
+    <ol>
+      <li><strong>Risk 1% Per Trade:</strong> Use the built-in Position Size Calculator inside the stock modal. Never risk more than 1% of total portfolio capital on a single trade.</li>
+      <li><strong>Max 5-8 Positions:</strong> Do not over-diversify. Hold 5 to 8 high-conviction momentum leaders.</li>
+      <li><strong>Hard Stop Execution:</strong> If Supertrend flips to <strong>SELL</strong> or price hits your stop-loss, exit immediately. No exceptions or hope-based holding!</li>
+    </ol>
+
+  </div>
+</div>
+
+</body>
+</html>
