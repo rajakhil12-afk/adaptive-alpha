@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "sym": "IEX",
+    "name": "Indian Energy Exch",
+    "ind": "Financial Services",
+    "triggerDate": "2026-08-04",
+    "triggerPrice": 129.2,
+    "maxPrice": 129.2,
+    "currentPrice": 129.2,
+    "volRatioAtTrigger": 0.62,
+    "rsRatingAtTrigger": 24,
+    "gainPct": 0,
+    "maxGainPct": 0
+  }
+]
