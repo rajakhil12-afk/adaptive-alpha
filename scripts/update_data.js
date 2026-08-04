@@ -928,10 +928,69 @@ async function run() {
       }
     }
 
+// Calculate Ichimoku Kinko Hyo (9, 26, 52) Daily Breakouts & Cloud status
+function calcIchimoku(candles) {
+  const len = candles ? candles.length : 0;
+  if (len < 52 + 5) {
+    return { status: "Neutral", breakout: false, tenkan: 0, kijun: 0, kumoTop: 0, kumoBottom: 0 };
+  }
+
+  const getHL2 = (slice) => {
+    let maxH = -Infinity;
+    let minL = Infinity;
+    for (let i = 0; i < slice.length; i++) {
+      if (slice[i].h > maxH) maxH = slice[i].h;
+      if (slice[i].l < minL) minL = slice[i].l;
+    }
+    return (maxH + minL) / 2;
+  };
+
+  const cToday = candles[len - 1];
+  const slice9 = candles.slice(len - 9);
+  const slice26 = candles.slice(len - 26);
+  const slice52 = candles.slice(len - 52);
+
+  const tenkan = getHL2(slice9);
+  const kijun = getHL2(slice26);
+  const spanB = getHL2(slice52);
+  const spanA = (tenkan + kijun) / 2;
+
+  const kumoTop = Math.max(spanA, spanB);
+  const kumoBottom = Math.min(spanA, spanB);
+
+  const cPrev = candles[len - 2];
+  const prevSlice9 = candles.slice(len - 10, len - 1);
+  const prevSlice26 = candles.slice(len - 27, len - 1);
+  const prevSlice52 = candles.slice(len - 53, len - 1);
+
+  const prevTenkan = getHL2(prevSlice9);
+  const prevKijun = getHL2(prevSlice26);
+  const prevSpanB = getHL2(prevSlice52);
+  const prevSpanA = (prevTenkan + prevKijun) / 2;
+  const prevKumoTop = Math.max(prevSpanA, prevSpanB);
+
+  const isKumoBuy = cToday.c > kumoTop && tenkan > kijun;
+  const isKumoBreakout = isKumoBuy && cPrev.c <= prevKumoTop;
+
+  let status = "Neutral";
+  if (isKumoBuy) status = "Kumo BUY";
+  else if (cToday.c < kumoBottom && tenkan < kijun) status = "Kumo SELL";
+
+  return {
+    status,
+    breakout: isKumoBreakout,
+    tenkan: parseFloat(tenkan.toFixed(2)),
+    kijun: parseFloat(kijun.toFixed(2)),
+    kumoTop: parseFloat(kumoTop.toFixed(2)),
+    kumoBottom: parseFloat(kumoBottom.toFixed(2))
+  };
+}
+
     const calc = calcARS(stockHist, benchData, cutoffTs);
     if (calc) {
       const st14 = calcSupertrend(stockHist, 14, 3);
       const st10 = calcSupertrend(stockHist, 10, 3);
+      const ichi = calcIchimoku(stockHist);
 
       results.push({
         sym: stock.sym,
@@ -950,6 +1009,7 @@ async function run() {
         signPrice: calc.signPrice ? parseFloat(calc.signPrice.toFixed(2)) : null,
         st14: { trend: st14.trend, signal: st14.signal, val: st14.val },
         st10: { trend: st10.trend, signal: st10.signal, val: st10.val },
+        ichimoku: ichi,
         ma_status: calc.ma_status,
         ars_slope: parseFloat(calc.ars_slope.toFixed(4))
       });
