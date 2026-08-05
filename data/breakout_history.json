@@ -5,10 +5,23 @@
     "ind": "Financial Services",
     "triggerDate": "2026-08-04",
     "triggerPrice": 129.2,
-    "maxPrice": 129.2,
-    "currentPrice": 129.2,
+    "maxPrice": 129.59,
+    "currentPrice": 129.59,
     "volRatioAtTrigger": 0.62,
     "rsRatingAtTrigger": 24,
+    "gainPct": 0.3,
+    "maxGainPct": 0.3
+  },
+  {
+    "sym": "IEX",
+    "name": "Indian Energy Exch",
+    "ind": "Financial Services",
+    "triggerDate": "2026-08-05",
+    "triggerPrice": 129.59,
+    "maxPrice": 129.59,
+    "currentPrice": 129.59,
+    "volRatioAtTrigger": 0.4,
+    "rsRatingAtTrigger": 21,
     "gainPct": 0,
     "maxGainPct": 0
   }
