@@ -6,10 +6,10 @@
     "triggerDate": "2026-08-04",
     "triggerPrice": 129.2,
     "maxPrice": 129.59,
-    "currentPrice": 125.95,
+    "currentPrice": 125.5,
     "volRatioAtTrigger": 0.62,
     "rsRatingAtTrigger": 24,
-    "gainPct": -2.52,
+    "gainPct": -2.86,
     "maxGainPct": 0.3
   },
   {
@@ -19,10 +19,23 @@
     "triggerDate": "2026-08-05",
     "triggerPrice": 129.59,
     "maxPrice": 129.59,
-    "currentPrice": 125.95,
+    "currentPrice": 125.5,
     "volRatioAtTrigger": 0.4,
     "rsRatingAtTrigger": 21,
-    "gainPct": -2.81,
+    "gainPct": -3.16,
+    "maxGainPct": 0
+  },
+  {
+    "sym": "SIGNATURE",
+    "name": "Signatureglobal (India)",
+    "ind": "Realty",
+    "triggerDate": "2026-08-13",
+    "triggerPrice": 801.05,
+    "maxPrice": 801.05,
+    "currentPrice": 801.05,
+    "volRatioAtTrigger": 0.58,
+    "rsRatingAtTrigger": 21,
+    "gainPct": 0,
     "maxGainPct": 0
   }
 ]
