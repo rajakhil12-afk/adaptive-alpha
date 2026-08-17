@@ -1,5 +1,5 @@
 {
-  "updated": "11:40 pm IST · 17 Aug",
+  "updated": "11:46 pm IST · 17 Aug",
   "bhavDate": "2026-08-17",
   "fii_dii": {
     "date": "17-Aug-2026",
@@ -190,7 +190,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0114,
-      "rs_rating": 44
+      "rs_rating": 45
     },
     {
       "sym": "BAJAJ-AUTO",
@@ -227,7 +227,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0144,
-      "rs_rating": 66
+      "rs_rating": 67
     },
     {
       "sym": "BAJFINANCE",
@@ -745,7 +745,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0036,
-      "rs_rating": 6
+      "rs_rating": 5
     },
     {
       "sym": "ICICIBANK",
@@ -1004,7 +1004,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0066,
-      "rs_rating": 15
+      "rs_rating": 14
     },
     {
       "sym": "LT",
@@ -1078,7 +1078,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0664,
-      "rs_rating": 81
+      "rs_rating": 80
     },
     {
       "sym": "MARUTI",
@@ -1152,7 +1152,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0963,
-      "rs_rating": 80
+      "rs_rating": 79
     },
     {
       "sym": "NTPC",
@@ -1411,7 +1411,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0154,
-      "rs_rating": 85
+      "rs_rating": 86
     },
     {
       "sym": "SBIN",
@@ -1485,7 +1485,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0354,
-      "rs_rating": 65
+      "rs_rating": 64
     },
     {
       "sym": "TCS",
@@ -1633,7 +1633,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0078,
-      "rs_rating": 45
+      "rs_rating": 46
     },
     {
       "sym": "TITAN",
@@ -1670,7 +1670,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0008,
-      "rs_rating": 84
+      "rs_rating": 85
     },
     {
       "sym": "TRENT",
@@ -1818,7 +1818,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0656,
-      "rs_rating": 87
+      "rs_rating": 88
     },
     {
       "sym": "ADANIENSOL",
@@ -1929,7 +1929,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.1682,
-      "rs_rating": 81
+      "rs_rating": 82
     },
     {
       "sym": "AMBUJACEM",
@@ -2188,7 +2188,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0015,
-      "rs_rating": 32
+      "rs_rating": 33
     },
     {
       "sym": "CGPOWER",
@@ -2299,7 +2299,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0093,
-      "rs_rating": 88
+      "rs_rating": 89
     },
     {
       "sym": "CUMMINSIND",
@@ -2521,7 +2521,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0147,
-      "rs_rating": 29
+      "rs_rating": 30
     },
     {
       "sym": "HAL",
@@ -2595,7 +2595,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0292,
-      "rs_rating": 42
+      "rs_rating": 43
     },
     {
       "sym": "HYUNDAI",
@@ -2632,7 +2632,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0052,
-      "rs_rating": 43
+      "rs_rating": 44
     },
     {
       "sym": "INDHOTEL",
@@ -2780,7 +2780,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0733,
-      "rs_rating": 66
+      "rs_rating": 65
     },
     {
       "sym": "LODHA",
@@ -2854,7 +2854,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.2356,
-      "rs_rating": 86
+      "rs_rating": 87
     },
     {
       "sym": "MUTHOOTFIN",
@@ -2891,7 +2891,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0037,
-      "rs_rating": 35
+      "rs_rating": 34
     },
     {
       "sym": "PIDILITIND",
@@ -2965,7 +2965,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0126,
-      "rs_rating": 56
+      "rs_rating": 57
     },
     {
       "sym": "PNB",
@@ -3116,6 +3116,43 @@
       "rs_rating": 19
     },
     {
+      "sym": "ENRIN",
+      "name": "Siemens Energy",
+      "ind": "Capital Goods",
+      "logoid": "siemens-energy",
+      "ars": 1.2137,
+      "srs": -0.0563,
+      "vol_ratio": 0.71,
+      "hi52_prox": -0.1028,
+      "price": 3605.7,
+      "breakout": false,
+      "trending": false,
+      "signDays": 1373,
+      "signSince": 1612151100,
+      "signPrice": 989.83,
+      "st14": {
+        "trend": "sell",
+        "signal": "sell_signal",
+        "val": 3969.19
+      },
+      "st10": {
+        "trend": "sell",
+        "signal": "sell_signal",
+        "val": 3989.43
+      },
+      "ichimoku": {
+        "status": "Neutral",
+        "breakout": false,
+        "tenkan": 3851.8,
+        "kijun": 3767.45,
+        "kumoTop": 3809.62,
+        "kumoBottom": 3748
+      },
+      "ma_status": "MA-",
+      "ars_slope": -0.2192,
+      "rs_rating": 68
+    },
+    {
       "sym": "SIEMENS",
       "name": "Siemens India",
       "ind": "Capital Goods",
@@ -3224,7 +3261,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0458,
-      "rs_rating": 93
+      "rs_rating": 94
     },
     {
       "sym": "TATACAP",
@@ -3446,7 +3483,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0151,
-      "rs_rating": 48
+      "rs_rating": 49
     },
     {
       "sym": "VEDL",
@@ -3483,7 +3520,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0072,
-      "rs_rating": 17
+      "rs_rating": 16
     },
     {
       "sym": "ZYDUSLIFE",
@@ -3668,7 +3705,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.037,
-      "rs_rating": 12
+      "rs_rating": 11
     },
     {
       "sym": "LGEINDIA",
@@ -3705,7 +3742,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.041,
-      "rs_rating": 40
+      "rs_rating": 41
     },
     {
       "sym": "LUPIN",
@@ -3742,7 +3779,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0044,
-      "rs_rating": 45
+      "rs_rating": 44
     },
     {
       "sym": "POLYCAB",
@@ -3964,7 +4001,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0716,
-      "rs_rating": 84
+      "rs_rating": 85
     },
     {
       "sym": "ASHOKLEY",
@@ -4519,7 +4556,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0094,
-      "rs_rating": 76
+      "rs_rating": 75
     },
     {
       "sym": "PERSISTENT",
@@ -4593,7 +4630,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0021,
-      "rs_rating": 36
+      "rs_rating": 37
     },
     {
       "sym": "POLICYBZR",
@@ -4741,7 +4778,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.017,
-      "rs_rating": 44
+      "rs_rating": 45
     },
     {
       "sym": "BIOCON",
@@ -4778,7 +4815,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.011,
-      "rs_rating": 11
+      "rs_rating": 10
     },
     {
       "sym": "LAURUSLABS",
@@ -4815,7 +4852,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0423,
-      "rs_rating": 91
+      "rs_rating": 92
     },
     {
       "sym": "GLAND",
@@ -4889,7 +4926,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0072,
-      "rs_rating": 9
+      "rs_rating": 8
     },
     {
       "sym": "PGHH",
@@ -5296,7 +5333,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0408,
-      "rs_rating": 57
+      "rs_rating": 56
     },
     {
       "sym": "M&MFIN",
@@ -5962,7 +5999,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0001,
-      "rs_rating": 26
+      "rs_rating": 27
     },
     {
       "sym": "OBEROIRLTY",
@@ -6036,7 +6073,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0164,
-      "rs_rating": 55
+      "rs_rating": 56
     },
     {
       "sym": "PHOENIXLTD",
@@ -6073,7 +6110,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0648,
-      "rs_rating": 86
+      "rs_rating": 87
     },
     {
       "sym": "PRESTIGE",
@@ -6221,7 +6258,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0005,
-      "rs_rating": 14
+      "rs_rating": 13
     },
     {
       "sym": "OIL",
@@ -6369,7 +6406,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0028,
-      "rs_rating": 53
+      "rs_rating": 54
     },
     {
       "sym": "NMDC",
@@ -6406,7 +6443,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0209,
-      "rs_rating": 63
+      "rs_rating": 62
     },
     {
       "sym": "NATIONALUM",
@@ -6443,7 +6480,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.055,
-      "rs_rating": 83
+      "rs_rating": 84
     },
     {
       "sym": "APLAPOLLO",
@@ -6813,7 +6850,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0204,
-      "rs_rating": 64
+      "rs_rating": 63
     },
     {
       "sym": "CONCOR",
@@ -6924,7 +6961,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.1205,
-      "rs_rating": 57
+      "rs_rating": 58
     },
     {
       "sym": "CDSL",
@@ -7072,7 +7109,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.004,
-      "rs_rating": 46
+      "rs_rating": 47
     },
     {
       "sym": "TATAELXSI",
@@ -7183,7 +7220,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0197,
-      "rs_rating": 30
+      "rs_rating": 31
     },
     {
       "sym": "DELHIVERY",
@@ -7257,7 +7294,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0248,
-      "rs_rating": 71
+      "rs_rating": 70
     },
     {
       "sym": "BLUESTARCO",
@@ -7442,7 +7479,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0118,
-      "rs_rating": 90
+      "rs_rating": 91
     },
     {
       "sym": "AFCONS",
@@ -7516,7 +7553,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0349,
-      "rs_rating": 56
+      "rs_rating": 55
     },
     {
       "sym": "ARE&M",
@@ -7590,7 +7627,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0643,
-      "rs_rating": 60
+      "rs_rating": 59
     },
     {
       "sym": "ANANDRATHI",
@@ -7997,7 +8034,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0127,
-      "rs_rating": 89
+      "rs_rating": 90
     },
     {
       "sym": "CESC",
@@ -8478,7 +8515,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0829,
-      "rs_rating": 85
+      "rs_rating": 86
     },
     {
       "sym": "DELHIVERY",
@@ -8515,7 +8552,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0126,
-      "rs_rating": 10
+      "rs_rating": 9
     },
     {
       "sym": "DEVYANI",
@@ -8848,7 +8885,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0045,
-      "rs_rating": 51
+      "rs_rating": 52
     },
     {
       "sym": "GMDCLTD",
@@ -8885,7 +8922,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.2285,
-      "rs_rating": 68
+      "rs_rating": 67
     },
     {
       "sym": "HBLENGINE",
@@ -9033,7 +9070,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0131,
-      "rs_rating": 67
+      "rs_rating": 66
     },
     {
       "sym": "IFCI",
@@ -9107,7 +9144,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0899,
-      "rs_rating": 93
+      "rs_rating": 94
     },
     {
       "sym": "IRCON",
@@ -9144,7 +9181,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0267,
-      "rs_rating": 41
+      "rs_rating": 42
     },
     {
       "sym": "ITI",
@@ -9181,7 +9218,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0218,
-      "rs_rating": 33
+      "rs_rating": 34
     },
     {
       "sym": "IGL",
@@ -9218,7 +9255,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0005,
-      "rs_rating": 14
+      "rs_rating": 13
     },
     {
       "sym": "INOXWIND",
@@ -9329,7 +9366,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.153,
-      "rs_rating": 83
+      "rs_rating": 84
     },
     {
       "sym": "JMFINANCIL",
@@ -9403,7 +9440,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0092,
-      "rs_rating": 22
+      "rs_rating": 21
     },
     {
       "sym": "JYOTICNC",
@@ -9514,7 +9551,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0183,
-      "rs_rating": 82
+      "rs_rating": 83
     },
     {
       "sym": "KEC",
@@ -9551,7 +9588,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0139,
-      "rs_rating": 16
+      "rs_rating": 15
     },
     {
       "sym": "KFINTECH",
@@ -9625,7 +9662,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0244,
-      "rs_rating": 45
+      "rs_rating": 44
     },
     {
       "sym": "MRPL",
@@ -10069,7 +10106,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0426,
-      "rs_rating": 65
+      "rs_rating": 64
     },
     {
       "sym": "PWL",
@@ -10217,7 +10254,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0214,
-      "rs_rating": 29
+      "rs_rating": 30
     },
     {
       "sym": "POONAWALLA",
@@ -10291,7 +10328,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0088,
-      "rs_rating": 37
+      "rs_rating": 38
     },
     {
       "sym": "REDINGTON",
@@ -10587,7 +10624,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0042,
-      "rs_rating": 27
+      "rs_rating": 28
     },
     {
       "sym": "SWANCORP",
@@ -10957,7 +10994,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0018,
-      "rs_rating": 2
+      "rs_rating": 1
     },
     {
       "sym": "WOCKPHARMA",
@@ -11808,7 +11845,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0188,
-      "rs_rating": 25
+      "rs_rating": 26
     },
     {
       "sym": "BIRLACORPN",
@@ -11956,7 +11993,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0437,
-      "rs_rating": 71
+      "rs_rating": 72
     },
     {
       "sym": "CIEINDIA",
@@ -12030,7 +12067,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0185,
-      "rs_rating": 58
+      "rs_rating": 57
     },
     {
       "sym": "CSBBANK",
@@ -12141,7 +12178,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0019,
-      "rs_rating": 28
+      "rs_rating": 29
     },
     {
       "sym": "CAPLIPOINT",
@@ -12215,7 +12252,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.053,
-      "rs_rating": 74
+      "rs_rating": 73
     },
     {
       "sym": "CEATLTD",
@@ -12511,7 +12548,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0268,
-      "rs_rating": 72
+      "rs_rating": 71
     },
     {
       "sym": "CRAFTSMAN",
@@ -12585,7 +12622,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.028,
-      "rs_rating": 23
+      "rs_rating": 22
     },
     {
       "sym": "DCMSHRIRAM",
@@ -12733,7 +12770,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0159,
-      "rs_rating": 46
+      "rs_rating": 45
     },
     {
       "sym": "ELECON",
@@ -12955,7 +12992,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0328,
-      "rs_rating": 13
+      "rs_rating": 12
     },
     {
       "sym": "FDC",
@@ -13140,7 +13177,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.2112,
-      "rs_rating": 94
+      "rs_rating": 93
     },
     {
       "sym": "FORTIS",
@@ -13178,6 +13215,43 @@
       "ma_status": "MA-",
       "ars_slope": -0.0562,
       "rs_rating": 74
+    },
+    {
+      "sym": "GMRINFRA",
+      "name": "GMR Infra",
+      "ind": "Services",
+      "logoid": null,
+      "ars": 1.44,
+      "srs": 0.0439,
+      "vol_ratio": 0.81,
+      "hi52_prox": -0.1189,
+      "price": 101.31,
+      "breakout": false,
+      "trending": true,
+      "signDays": 1217,
+      "signSince": 1632109500,
+      "signPrice": 30.68,
+      "st14": {
+        "trend": "sell",
+        "signal": null,
+        "val": 109.07
+      },
+      "st10": {
+        "trend": "sell",
+        "signal": null,
+        "val": 109.04
+      },
+      "ichimoku": {
+        "status": "Kumo SELL",
+        "breakout": false,
+        "tenkan": 104.36,
+        "kijun": 107.91,
+        "kumoTop": 107.37,
+        "kumoBottom": 106.14
+      },
+      "ma_status": "MA-",
+      "ars_slope": -0.0893,
+      "rs_rating": 81
     },
     {
       "sym": "GALAXYSURF",
@@ -13288,7 +13362,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0474,
-      "rs_rating": 59
+      "rs_rating": 60
     },
     {
       "sym": "GLENMARK",
@@ -13399,7 +13473,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.069,
-      "rs_rating": 79
+      "rs_rating": 78
     },
     {
       "sym": "GRANULES",
@@ -13473,7 +13547,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.014,
-      "rs_rating": 35
+      "rs_rating": 36
     },
     {
       "sym": "GRINDWELL",
@@ -13769,7 +13843,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0635,
-      "rs_rating": 52
+      "rs_rating": 53
     },
     {
       "sym": "HATHWAY",
@@ -14028,7 +14102,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0045,
-      "rs_rating": 34
+      "rs_rating": 35
     },
     {
       "sym": "IOB",
@@ -14065,7 +14139,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0074,
-      "rs_rating": 72
+      "rs_rating": 71
     },
     {
       "sym": "JBCHEPHARM",
@@ -14179,6 +14253,43 @@
       "rs_rating": 14
     },
     {
+      "sym": "JSWHOLD",
+      "name": "JSW Holdings",
+      "ind": "Financial Services",
+      "logoid": null,
+      "ars": 0.7719,
+      "srs": -0.0891,
+      "vol_ratio": 0.37,
+      "hi52_prox": -0.4677,
+      "price": 11798,
+      "breakout": false,
+      "trending": true,
+      "signDays": 499,
+      "signSince": 1724039100,
+      "signPrice": 6782.55,
+      "st14": {
+        "trend": "buy",
+        "signal": null,
+        "val": 11209.19
+      },
+      "st10": {
+        "trend": "buy",
+        "signal": null,
+        "val": 11184.35
+      },
+      "ichimoku": {
+        "status": "Neutral",
+        "breakout": false,
+        "tenkan": 11992,
+        "kijun": 11491.5,
+        "kumoTop": 11866.5,
+        "kumoBottom": 11741.75
+      },
+      "ma_status": "MA-",
+      "ars_slope": 0.0133,
+      "rs_rating": 40
+    },
+    {
       "sym": "JAMNAAUTO",
       "name": "Jamna Auto Ind",
       "ind": "Automobile",
@@ -14213,7 +14324,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0064,
-      "rs_rating": 47
+      "rs_rating": 46
     },
     {
       "sym": "JINDALSAW",
@@ -14472,7 +14583,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0308,
-      "rs_rating": 64
+      "rs_rating": 65
     },
     {
       "sym": "KALYANKJIL",
@@ -14583,7 +14694,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.3581,
-      "rs_rating": 92
+      "rs_rating": 93
     },
     {
       "sym": "KNRCON",
@@ -14660,6 +14771,43 @@
       "rs_rating": 77
     },
     {
+      "sym": "L&TFH",
+      "name": "L&T Finance Holdings",
+      "ind": "Financial Services",
+      "logoid": null,
+      "ars": 1.0152,
+      "srs": 0.1127,
+      "vol_ratio": 0.66,
+      "hi52_prox": -0.0614,
+      "price": 315,
+      "breakout": false,
+      "trending": false,
+      "signDays": 339,
+      "signSince": 1744083900,
+      "signPrice": 154.37,
+      "st14": {
+        "trend": "sell",
+        "signal": null,
+        "val": 328.64
+      },
+      "st10": {
+        "trend": "sell",
+        "signal": null,
+        "val": 328.22
+      },
+      "ichimoku": {
+        "status": "Neutral",
+        "breakout": false,
+        "tenkan": 315.63,
+        "kijun": 315.32,
+        "kumoTop": 315.47,
+        "kumoBottom": 297.35
+      },
+      "ma_status": "MA+",
+      "ars_slope": 0.0379,
+      "rs_rating": 76
+    },
+    {
       "sym": "LTTS",
       "name": "L&T Technology Serv",
       "ind": "IT",
@@ -14694,7 +14842,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0192,
-      "rs_rating": 32
+      "rs_rating": 33
     },
     {
       "sym": "LXCHEM",
@@ -14882,6 +15030,80 @@
       "rs_rating": 18
     },
     {
+      "sym": "MAHDISC",
+      "name": "Mahindra Logistics",
+      "ind": "Services",
+      "logoid": null,
+      "ars": -0.4438,
+      "srs": 0.1123,
+      "vol_ratio": 0.4,
+      "hi52_prox": -0.0853,
+      "price": 404.95,
+      "breakout": false,
+      "trending": false,
+      "signDays": 937,
+      "signSince": 1667533500,
+      "signPrice": 538,
+      "st14": {
+        "trend": "buy",
+        "signal": null,
+        "val": 371.54
+      },
+      "st10": {
+        "trend": "buy",
+        "signal": null,
+        "val": 371.36
+      },
+      "ichimoku": {
+        "status": "Neutral",
+        "breakout": false,
+        "tenkan": 409.68,
+        "kijun": 406.47,
+        "kumoTop": 408.07,
+        "kumoBottom": 381.22
+      },
+      "ma_status": "MA+",
+      "ars_slope": -0.002,
+      "rs_rating": 24
+    },
+    {
+      "sym": "MAHINDCIE",
+      "name": "Mahindra CIE Auto",
+      "ind": "Automobile",
+      "logoid": null,
+      "ars": 0.362,
+      "srs": -0.1348,
+      "vol_ratio": 0.21,
+      "hi52_prox": -0.1729,
+      "price": 411.3,
+      "breakout": false,
+      "trending": true,
+      "signDays": 1032,
+      "signSince": 1655264700,
+      "signPrice": 199.65,
+      "st14": {
+        "trend": "sell",
+        "signal": null,
+        "val": 442.28
+      },
+      "st10": {
+        "trend": "sell",
+        "signal": null,
+        "val": 440.01
+      },
+      "ichimoku": {
+        "status": "Kumo SELL",
+        "breakout": false,
+        "tenkan": 414.27,
+        "kijun": 441.45,
+        "kumoTop": 442.7,
+        "kumoBottom": 427.86
+      },
+      "ma_status": "MA-",
+      "ars_slope": 0.0223,
+      "rs_rating": 29
+    },
+    {
       "sym": "MAHLOG",
       "name": "Mahindra Logistics",
       "ind": "Services",
@@ -14916,7 +15138,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0007,
-      "rs_rating": 24
+      "rs_rating": 25
     },
     {
       "sym": "MASTEK",
@@ -14953,7 +15175,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.01,
-      "rs_rating": 31
+      "rs_rating": 32
     },
     {
       "sym": "MEDPLUS",
@@ -14990,7 +15212,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0074,
-      "rs_rating": 1
+      "rs_rating": 2
     },
     {
       "sym": "METROPOLIS",
@@ -15212,7 +15434,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0513,
-      "rs_rating": 50
+      "rs_rating": 51
     },
     {
       "sym": "NOCIL",
@@ -15326,6 +15548,43 @@
       "rs_rating": 76
     },
     {
+      "sym": "NIPPON",
+      "name": "Nippon Life India AMC",
+      "ind": "Financial Services",
+      "logoid": null,
+      "ars": 1.2922,
+      "srs": 0.0618,
+      "vol_ratio": 1.05,
+      "hi52_prox": -0.0127,
+      "price": 1202.7,
+      "breakout": false,
+      "trending": true,
+      "signDays": 592,
+      "signSince": 1711943100,
+      "signPrice": 486.6,
+      "st14": {
+        "trend": "buy",
+        "signal": null,
+        "val": 1100.43
+      },
+      "st10": {
+        "trend": "buy",
+        "signal": null,
+        "val": 1102.83
+      },
+      "ichimoku": {
+        "status": "Kumo BUY",
+        "breakout": true,
+        "tenkan": 1185.05,
+        "kijun": 1151.2,
+        "kumoTop": 1168.13,
+        "kumoBottom": 1135.7
+      },
+      "ma_status": "MA+",
+      "ars_slope": 0.0817,
+      "rs_rating": 81
+    },
+    {
       "sym": "OBCL",
       "name": "Orissa Minerals",
       "ind": "Metals & Mining",
@@ -15397,7 +15656,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": -0.0024,
-      "rs_rating": 7
+      "rs_rating": 6
     },
     {
       "sym": "PCBL",
@@ -15437,6 +15696,43 @@
       "rs_rating": 63
     },
     {
+      "sym": "PGI",
+      "name": "P&G Health",
+      "ind": "Healthcare",
+      "logoid": null,
+      "ars": -0.5174,
+      "srs": 0.0607,
+      "vol_ratio": 0.4,
+      "hi52_prox": -0.1564,
+      "price": 5836.5,
+      "breakout": false,
+      "trending": false,
+      "signDays": 1369,
+      "signSince": 1612323900,
+      "signPrice": 7083.45,
+      "st14": {
+        "trend": "sell",
+        "signal": null,
+        "val": 6414.8
+      },
+      "st10": {
+        "trend": "sell",
+        "signal": null,
+        "val": 6409.54
+      },
+      "ichimoku": {
+        "status": "Kumo SELL",
+        "breakout": false,
+        "tenkan": 6242.75,
+        "kijun": 6395.25,
+        "kumoTop": 6395.25,
+        "kumoBottom": 6319
+      },
+      "ma_status": "MA-",
+      "ars_slope": -0.0048,
+      "rs_rating": 14
+    },
+    {
       "sym": "PIIND",
       "name": "PI Industries",
       "ind": "Chemicals",
@@ -15471,7 +15767,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0574,
-      "rs_rating": 8
+      "rs_rating": 7
     },
     {
       "sym": "PNCINFRA",
@@ -15915,7 +16211,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0185,
-      "rs_rating": 33
+      "rs_rating": 32
     },
     {
       "sym": "RAIN",
@@ -15952,7 +16248,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0218,
-      "rs_rating": 44
+      "rs_rating": 46
     },
     {
       "sym": "RAJESHEXPO",
@@ -16100,7 +16396,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0523,
-      "rs_rating": 73
+      "rs_rating": 72
     },
     {
       "sym": "RELAXO",
@@ -16359,7 +16655,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.1817,
-      "rs_rating": 94
+      "rs_rating": 95
     },
     {
       "sym": "SKFINDIA",
@@ -16470,7 +16766,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0137,
-      "rs_rating": 34
+      "rs_rating": 35
     },
     {
       "sym": "SANOFI",
@@ -16544,7 +16840,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": -0.0454,
-      "rs_rating": 78
+      "rs_rating": 79
     },
     {
       "sym": "SCHNEIDER",
@@ -16692,7 +16988,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0214,
-      "rs_rating": 67
+      "rs_rating": 66
     },
     {
       "sym": "SOBHA",
@@ -16914,7 +17210,7 @@
       },
       "ma_status": "MA+",
       "ars_slope": 0.0213,
-      "rs_rating": 75
+      "rs_rating": 74
     },
     {
       "sym": "SUNTV",
@@ -17321,7 +17617,7 @@
       },
       "ma_status": "MA-",
       "ars_slope": 0.0133,
-      "rs_rating": 49
+      "rs_rating": 48
     },
     {
       "sym": "UGROCAP",
@@ -17581,6 +17877,43 @@
       "ma_status": "MA+",
       "ars_slope": 0.089,
       "rs_rating": 68
+    },
+    {
+      "sym": "VINATIPORG",
+      "name": "Vinati Organics",
+      "ind": "Chemicals",
+      "logoid": null,
+      "ars": -0.3628,
+      "srs": -0.0154,
+      "vol_ratio": 0.76,
+      "hi52_prox": -0.2478,
+      "price": 1344.2,
+      "breakout": false,
+      "trending": true,
+      "signDays": 502,
+      "signSince": 1723520700,
+      "signPrice": 1999.45,
+      "st14": {
+        "trend": "sell",
+        "signal": null,
+        "val": 1379.24
+      },
+      "st10": {
+        "trend": "sell",
+        "signal": null,
+        "val": 1375.44
+      },
+      "ichimoku": {
+        "status": "Kumo BUY",
+        "breakout": false,
+        "tenkan": 1342.6,
+        "kijun": 1327.75,
+        "kumoTop": 1335.17,
+        "kumoBottom": 1334.05
+      },
+      "ma_status": "MA-",
+      "ars_slope": 0.0183,
+      "rs_rating": 23
     },
     {
       "sym": "IDEA",
