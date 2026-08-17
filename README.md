@@ -1,6 +1,6 @@
 # Adaptive Alpha — Institutional Momentum & Rotation Screener (v10.0)
 
-**Adaptive Alpha** is a premium, client-ready technical momentum screener, dual relative-strength engine, and sector rotation dashboard for the **NSE India** stock universe (Nifty 50 + Nifty Midcap 100 + Nifty Smallcap 100 + curated extras, ~200+ stocks). Designed with a high-end TradingView-inspired dark slate aesthetic, the platform helps analysts and traders identify market leaders, explosive volume breakouts, and industry rotation trends in real time.
+**Adaptive Alpha** is a premium, client-ready technical momentum screener, dual relative-strength engine, and sector rotation dashboard for the **NSE India** stock universe (**Nifty 500**, Nifty 50, Nifty 100, Nifty Midcap 100, Nifty Smallcap 100, ~500 stocks). Designed with a high-end TradingView-inspired dark slate aesthetic, the platform helps analysts and traders identify market leaders, explosive volume breakouts, and industry rotation trends in real time.
 
 > **Live Site:** https://rajakhil12-afk.github.io/adaptive-alpha
 
