@@ -80,7 +80,50 @@ const SMALLCAP100 = [
   {sym:'URBANCO'}, {sym:'WELCORP'}, {sym:'WHIRLPOOL'}, {sym:'WOCKPHARMA'}, {sym:'ZENSARTECH'}
 ];
 
-const UNIVERSE = [...N50, ...EXTRA, ...MIDCAP100, ...SMALLCAP100];
+const N500_REST = [
+  {sym:'AAVAS'}, {sym:'ABBOTINDIA'}, {sym:'ACE'}, {sym:'ATGL'}, {sym:'ABFRL'},
+  {sym:'AJANTPHARM'}, {sym:'AKZOINDIA'}, {sym:'ALKYLAMINE'}, {sym:'ALLCARGO'}, {sym:'ALOKINDS'},
+  {sym:'ANURAS'}, {sym:'ASTRAZEN'}, {sym:'ASTRAL'}, {sym:'ATUL'}, {sym:'AVANTIFEED'},
+  {sym:'BALAMINES'}, {sym:'BALRAMCHIN'}, {sym:'BANKINDIA'}, {sym:'MAHABANK'}, {sym:'BATAINDIA'},
+  {sym:'BAYERCROP'}, {sym:'BERGEPAINT'}, {sym:'BIRLACORPN'}, {sym:'BSOFT'}, {sym:'MAPMYINDIA'},
+  {sym:'CCL'}, {sym:'CIEINDIA'}, {sym:'CRISIL'}, {sym:'CSBBANK'}, {sym:'CAMPUS'},
+  {sym:'CANFINHOME'}, {sym:'CAPLIPOINT'}, {sym:'CARBORUNIV'}, {sym:'CEATLTD'}, {sym:'CENTRALBK'},
+  {sym:'CENTURYPLY'}, {sym:'CENTURYTEX'}, {sym:'CERA'}, {sym:'CHENNPETRO'}, {sym:'CLEDUCATE'},
+  {sym:'COCHINSHIP'}, {sym:'COROMANDEL'}, {sym:'CRAFTSMAN'}, {sym:'CYIENT'}, {sym:'DCMSHRIRAM'},
+  {sym:'EIDPARRY'}, {sym:'EIHAOTEL'}, {sym:'EPL'}, {sym:'EQUITASBNK'}, {sym:'ELECON'},
+  {sym:'ELGIEQUIP'}, {sym:'ENDURANCE'}, {sym:'ENGINERSIN'}, {sym:'ERIS'}, {sym:'EASEMYTRIP'},
+  {sym:'FDC'}, {sym:'FACT'}, {sym:'FINEORG'}, {sym:'FINPIPE'}, {sym:'FINCABLES'},
+  {sym:'FORTIS'}, {sym:'GMRINFRA'}, {sym:'GALAXYSURF'}, {sym:'GILLETTE'}, {sym:'GLAXO'},
+  {sym:'GLENMARK'}, {sym:'GODFRYPHLP'}, {sym:'GODREJIND'}, {sym:'GRANULES'}, {sym:'GRAPHITE'},
+  {sym:'GRINDWELL'}, {sym:'GUJGASLTD'}, {sym:'GNFC'}, {sym:'GPPL'}, {sym:'GSFC'},
+  {sym:'GSPL'}, {sym:'HEG'}, {sym:'HFCL'}, {sym:'HLEGLAS'}, {sym:'HAPPSTMNDS'},
+  {sym:'HATHWAY'}, {sym:'HIMATSEIDE'}, {sym:'HINDPETRO'}, {sym:'HOMEFIRST'}, {sym:'HONAUT'},
+  {sym:'ICICIPRULI'}, {sym:'ISEC'}, {sym:'IIFLGLAM'}, {sym:'IGARASHI'}, {sym:'IOB'},
+  {sym:'JBCHEPHARM'}, {sym:'JKPAPER'}, {sym:'JKLAKSHMI'}, {sym:'JSWHOLD'}, {sym:'JAMNAAUTO'},
+  {sym:'JINDALSAW'}, {sym:'JSL'}, {sym:'JUBLINGREA'}, {sym:'JUBLPHARMA'}, {sym:'JUSTDIAL'},
+  {sym:'KRBL'}, {sym:'KSB'}, {sym:'KALYANKJIL'}, {sym:'KANSAINER'}, {sym:'KEI'},
+  {sym:'KNRCON'}, {sym:'KIMS'}, {sym:'L&TFH'}, {sym:'LTTS'}, {sym:'LXCHEM'},
+  {sym:'LEMONTREE'}, {sym:'LICI'}, {sym:'MMTC'}, {sym:'MOIL'}, {sym:'MAHDISC'},
+  {sym:'MAHINDCIE'}, {sym:'MAHLOG'}, {sym:'MASTEK'}, {sym:'MEDPLUS'}, {sym:'METROPOLIS'},
+  {sym:'MINDACORP'}, {sym:'MOTILALOFS'}, {sym:'NCC'}, {sym:'NESCO'}, {sym:'NLCINDIA'},
+  {sym:'NOCIL'}, {sym:'NAZARA'}, {sym:'NEWGEN'}, {sym:'NIPPON'}, {sym:'OBCL'},
+  {sym:'ORIENTELEC'}, {sym:'PCBL'}, {sym:'PGI'}, {sym:'PIIND'}, {sym:'PNCINFRA'},
+  {sym:'PAGEIND'}, {sym:'PFIZER'}, {sym:'POLYMED'}, {sym:'POLYPLEX'}, {sym:'PRAJIND'},
+  {sym:'PRINCEPIPE'}, {sym:'PRSMJOHNSN'}, {sym:'RITES'}, {sym:'RADICO'}, {sym:'RVNL'},
+  {sym:'RAILTEL'}, {sym:'RAIN'}, {sym:'RAJESHEXPO'}, {sym:'RALLIS'}, {sym:'RATNAMANI'},
+  {sym:'RAYMOND'}, {sym:'RELAXO'}, {sym:'RHIM'}, {sym:'ROSSARI'}, {sym:'ROUTE'},
+  {sym:'SBFC'}, {sym:'SBICARD'}, {sym:'SJS'}, {sym:'SKFINDIA'}, {sym:'SAFARI'},
+  {sym:'SAMHI'}, {sym:'SANOFI'}, {sym:'SCHAEFFLER'}, {sym:'SCHNEIDER'}, {sym:'SCI'},
+  {sym:'SHARDACROP'}, {sym:'SHYAMMETL'}, {sym:'SOBHA'}, {sym:'SONATSOFTW'}, {sym:'STAR'},
+  {sym:'STLTECH'}, {sym:'SUMICHEM'}, {sym:'SUNDRMFAST'}, {sym:'SUNTV'}, {sym:'SUNDARAM'},
+  {sym:'SWANENERGY'}, {sym:'TASTYBITE'}, {sym:'TEJASNET'}, {sym:'THERMAX'}, {sym:'THYROCARE'},
+  {sym:'TIMKEN'}, {sym:'TRIDENT'}, {sym:'TRIVENI'}, {sym:'TTKPRESTIG'}, {sym:'TV18BRDCST'},
+  {sym:'UCOBANK'}, {sym:'UGROCAP'}, {sym:'UTIAMC'}, {sym:'UBL'}, {sym:'VGUARD'},
+  {sym:'VIPIND'}, {sym:'VANYA'}, {sym:'VENKEYS'}, {sym:'VIJAYA'}, {sym:'VINATIPORG'},
+  {sym:'IDEA'}, {sym:'WELSPUNLIV'}, {sym:'ZEEL'}, {sym:'ZYDUSWELL'}
+];
+
+const UNIVERSE = [...N50, ...EXTRA, ...MIDCAP100, ...SMALLCAP100, ...N500_REST];
 
 // Map local symbols to their exact TradingView search ticker query name
 function getTvQuerySym(sym) {
