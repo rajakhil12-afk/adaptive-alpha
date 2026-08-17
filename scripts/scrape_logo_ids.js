@@ -98,7 +98,7 @@ const N500_REST = [
   {sym:'GRINDWELL'}, {sym:'GUJGASLTD'}, {sym:'GNFC'}, {sym:'GPPL'}, {sym:'GSFC'},
   {sym:'GSPL'}, {sym:'HEG'}, {sym:'HFCL'}, {sym:'HLEGLAS'}, {sym:'HAPPSTMNDS'},
   {sym:'HATHWAY'}, {sym:'HIMATSEIDE'}, {sym:'HINDPETRO'}, {sym:'HOMEFIRST'}, {sym:'HONAUT'},
-  {sym:'ICICIPRULI'}, {sym:'ISEC'}, {sym:'IIFLGLAM'}, {sym:'IGARASHI'}, {sym:'IOB'},
+  {sym:'ICICIPRULI'}, {sym:'INDIAMART'}, {sym:'IIFLGLAM'}, {sym:'IGARASHI'}, {sym:'IOB'},
   {sym:'JBCHEPHARM'}, {sym:'JKPAPER'}, {sym:'JKLAKSHMI'}, {sym:'JSWHOLD'}, {sym:'JAMNAAUTO'},
   {sym:'JINDALSAW'}, {sym:'JSL'}, {sym:'JUBLINGREA'}, {sym:'JUBLPHARMA'}, {sym:'JUSTDIAL'},
   {sym:'KRBL'}, {sym:'KSB'}, {sym:'KALYANKJIL'}, {sym:'KANSAINER'}, {sym:'KEI'},
@@ -117,9 +117,9 @@ const N500_REST = [
   {sym:'SHARDACROP'}, {sym:'SHYAMMETL'}, {sym:'SOBHA'}, {sym:'SONATSOFTW'}, {sym:'STAR'},
   {sym:'STLTECH'}, {sym:'SUMICHEM'}, {sym:'SUNDRMFAST'}, {sym:'SUNTV'}, {sym:'SUNDARAM'},
   {sym:'SWANENERGY'}, {sym:'TASTYBITE'}, {sym:'TEJASNET'}, {sym:'THERMAX'}, {sym:'THYROCARE'},
-  {sym:'TIMKEN'}, {sym:'TRIDENT'}, {sym:'TRIVENI'}, {sym:'TTKPRESTIG'}, {sym:'TV18BRDCST'},
+  {sym:'TIMKEN'}, {sym:'TRIDENT'}, {sym:'TRIVENI'}, {sym:'TTKPRESTIG'}, {sym:'NW18'},
   {sym:'UCOBANK'}, {sym:'UGROCAP'}, {sym:'UTIAMC'}, {sym:'UBL'}, {sym:'VGUARD'},
-  {sym:'VIPIND'}, {sym:'VANYA'}, {sym:'VENKEYS'}, {sym:'VIJAYA'}, {sym:'VINATIPORG'},
+  {sym:'VIPIND'}, {sym:'VTL'}, {sym:'VENKEYS'}, {sym:'VIJAYA'}, {sym:'VINATIPORG'},
   {sym:'IDEA'}, {sym:'WELSPUNLIV'}, {sym:'ZEEL'}, {sym:'ZYDUSWELL'}
 ];
 
