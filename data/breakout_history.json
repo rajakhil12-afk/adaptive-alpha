@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "sym": "KAJARIACER",
+    "name": "Kajaria Ceramics",
+    "ind": "Construction Materials",
+    "triggerDate": "2026-08-18",
+    "triggerPrice": 1225.8,
+    "maxPrice": 1225.8,
+    "currentPrice": 1225.8,
+    "volRatioAtTrigger": 0.44,
+    "rsRatingAtTrigger": 48,
+    "gainPct": 0,
+    "maxGainPct": 0
+  }
+]
