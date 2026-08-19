@@ -6,9 +6,22 @@
     "triggerDate": "2026-08-18",
     "triggerPrice": 1225.8,
     "maxPrice": 1225.8,
-    "currentPrice": 1225.8,
+    "currentPrice": 1208.9,
     "volRatioAtTrigger": 0.44,
     "rsRatingAtTrigger": 48,
+    "gainPct": -1.38,
+    "maxGainPct": 0
+  },
+  {
+    "sym": "GPPL",
+    "name": "Gujarat Pipavav Port",
+    "ind": "Services",
+    "triggerDate": "2026-08-19",
+    "triggerPrice": 165.13,
+    "maxPrice": 165.13,
+    "currentPrice": 165.13,
+    "volRatioAtTrigger": 1.69,
+    "rsRatingAtTrigger": 56,
     "gainPct": 0,
     "maxGainPct": 0
   }
