@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adaptive Alpha</title>
+<title>Adaptive Alpha v10.0 — Institutional Momentum &amp; Rotation Terminal</title>
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -42,7 +42,7 @@
   .ticker-strip::before, .ticker-strip::after { content: ''; position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2; }
   .ticker-strip::before { left: 0; background: linear-gradient(90deg, var(--bg-strip), transparent); }
   .ticker-strip::after  { right: 0; background: linear-gradient(270deg, var(--bg-strip), transparent); }
-  .ticker-track { display: flex; gap: 36px; white-space: nowrap; animation: ticker-scroll 38s linear infinite; padding-left: 100%; }
+  .ticker-track { display: flex; gap: 36px; white-space: nowrap; animation: ticker-scroll 95s linear infinite; padding-left: 100%; }
   .ticker-strip:hover .ticker-track { animation-play-state: paused; }
   @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-100%); } }
   .tk-item { display: flex; align-items: center; gap: 8px; font-family: var(--font-num); font-size: 12px; }
@@ -1189,9 +1189,9 @@
 </div>
 
 <div class="topbar">
-  <div class="logo" style="display: flex; align-items: center; gap: 9px;">
-    <img src="logo.png" alt="Adaptive Alpha" style="width: 28px; height: 28px; border-radius: 7px; border: 1px solid rgba(38,166,154,0.35); box-shadow: 0 0 12px rgba(38,166,154,0.35); object-fit: cover;">
-    Adaptive <span>Alpha</span>
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <img src="logo.png" alt="Adaptive Alpha Logo" style="width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid rgba(38,166,154,0.4); box-shadow: 0 0 12px rgba(38,166,154,0.3); object-fit: cover; flex-shrink: 0;">
+    <div class="logo">Adaptive <span>Alpha</span></div>
   </div>
   <span class="badge badge-blue" id="version-badge">v10.0</span>
   <span class="badge badge-green" id="index-badge">Nifty 50</span>
