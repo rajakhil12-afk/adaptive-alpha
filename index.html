@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Adaptive Alpha</title>
+<link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -1037,11 +1038,39 @@
       <div class="modal-stats">
         <div class="ms-card"><div class="ms-label">ARS Score</div><div class="ms-val" id="m-ars">—</div></div>
         <div class="ms-card"><div class="ms-label">SRS Score</div><div class="ms-val" id="m-srs">—</div></div>
+        <div class="ms-card"><div class="ms-label">Mansfield RS</div><div class="ms-val" id="m-mrs" style="color:var(--up)">—</div></div>
         <div class="ms-card"><div class="ms-label">RS Rating</div><div class="ms-val" id="m-rsr">—</div></div>
+        <div class="ms-card"><div class="ms-label">VCP Squeeze</div><div class="ms-val" id="m-vcp" style="color:#7da9ff">—</div></div>
         <div class="ms-card"><div class="ms-label">Days in Trend</div><div class="ms-val" id="m-days">—</div></div>
         <div class="ms-card"><div class="ms-label">Supertrend</div><div class="ms-val" id="m-st">—</div></div>
         <div class="ms-card"><div class="ms-label">MA Status</div><div class="ms-val" id="m-ma">—</div></div>
         <div class="ms-card"><div class="ms-label">Ichimoku Cloud</div><div class="ms-val" id="m-ichi" style="color:#e1bee7">—</div></div>
+      </div>
+
+      <!-- RS Factor Breakdown Bars -->
+      <div id="m-rs-breakdown-card" style="margin-top: 10px; background: var(--bg3); border-radius: var(--radius); border: 1px solid var(--border); padding: 8px 12px;">
+        <div style="font-size: 9.5px; font-weight: 700; color: var(--muted-lt); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: flex; justify-content: space-between;">
+          <span>Relative Strength Composite Factor Breakdown</span>
+          <span id="m-breakdown-overall" style="color: var(--gold); font-family: var(--font-num);">RS: —</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; font-size: 9px; font-family: var(--font-sans);">
+          <div>
+            <div style="color:var(--muted);display:flex;justify-content:space-between;"><span>ARS (40%)</span><strong id="m-rank-ars" style="color:var(--up)">—</strong></div>
+            <div class="vol-bar" style="height:4px;margin-top:2px;"><div class="vol-fill" id="m-bar-ars" style="width:0%;background:var(--up);"></div></div>
+          </div>
+          <div>
+            <div style="color:var(--muted);display:flex;justify-content:space-between;"><span>SRS (30%)</span><strong id="m-rank-srs" style="color:#5e96ff">—</strong></div>
+            <div class="vol-bar" style="height:4px;margin-top:2px;"><div class="vol-fill" id="m-bar-srs" style="width:0%;background:#5e96ff;"></div></div>
+          </div>
+          <div>
+            <div style="color:var(--muted);display:flex;justify-content:space-between;"><span>Vol (15%)</span><strong id="m-rank-vol" style="color:#7da9ff">—</strong></div>
+            <div class="vol-bar" style="height:4px;margin-top:2px;"><div class="vol-fill" id="m-bar-vol" style="width:0%;background:#7da9ff;"></div></div>
+          </div>
+          <div>
+            <div style="color:var(--muted);display:flex;justify-content:space-between;"><span>Streak (15%)</span><strong id="m-rank-streak" style="color:var(--gold)">—</strong></div>
+            <div class="vol-bar" style="height:4px;margin-top:2px;"><div class="vol-fill" id="m-bar-streak" style="width:0%;background:var(--gold);"></div></div>
+          </div>
+        </div>
       </div>
       <!-- Charts Grid -->
       <div class="modal-charts-grid" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 14px; margin-top: 14px;">
@@ -1160,7 +1189,10 @@
 </div>
 
 <div class="topbar">
-  <div class="logo">Adaptive <span>Alpha</span></div>
+  <div class="logo" style="display: flex; align-items: center; gap: 9px;">
+    <img src="logo.png" alt="Adaptive Alpha" style="width: 28px; height: 28px; border-radius: 7px; border: 1px solid rgba(38,166,154,0.35); box-shadow: 0 0 12px rgba(38,166,154,0.35); object-fit: cover;">
+    Adaptive <span>Alpha</span>
+  </div>
   <span class="badge badge-blue" id="version-badge">v10.0</span>
   <span class="badge badge-green" id="index-badge">Nifty 50</span>
   <div class="topbar-right">
@@ -1175,6 +1207,7 @@
     </select>
     <button id="refresh-btn" onclick="loadData()">↻ Live Data</button>
     <button id="sample-btn" onclick="useSampleData()">⊙ Instant Preview</button>
+    <a href="landing.html" class="theme-btn" style="text-decoration:none;font-weight:600;font-size:11px;padding:5px 10px;background:rgba(94,150,255,0.14);color:#7da9ff;border:1px solid rgba(94,150,255,0.4);border-radius:4px;" title="Overview & Landing Page">🏠 Overview</a>
     <a href="preset_playbook.html" target="_blank" id="playbook-btn" class="theme-btn" style="text-decoration:none;font-weight:600;font-size:11px;padding:5px 10px;background:rgba(38,166,154,0.14);color:var(--up);border:1px solid rgba(38,166,154,0.4);border-radius:4px;" title="Open Print-Ready Strategy Presets Playbook">📖 Playbook</a>
   </div>
 </div>
@@ -1208,25 +1241,29 @@
     <button class="preset-btn" id="preset-quad1" onclick="applyPreset('quad1')">🌟 Dual Alpha Leaders</button>
     <button class="preset-btn" id="preset-quad2" onclick="applyPreset('quad2')">🔄 Early Turnarounds</button>
     <button class="preset-btn" id="preset-quad3" onclick="applyPreset('quad3')">⏸️ Leader Dip Buy</button>
+    <button class="preset-btn" id="preset-vcp" onclick="applyPreset('vcp')">🧘 VCP Squeeze (ATR &lt; 0.7x)</button>
+    <button class="preset-btn" id="preset-pocket" onclick="applyPreset('pocket')">⚡ Pocket Pivots</button>
+    <button class="preset-btn" id="preset-mrs" onclick="applyPreset('mrs')">📈 Mansfield Stage 2</button>
     <button class="preset-btn" id="preset-ichimoku" onclick="applyPreset('ichimoku')">☁️ Kumo Breakouts</button>
-    <button class="preset-btn" id="preset-surge" onclick="applyPreset('surge')">⚡ Volume Surge (2.0x+)</button>
-    <button class="preset-btn" id="preset-vcp" onclick="applyPreset('vcp')">🧘 VCP Consolidations</button>
+    <button class="preset-btn" id="preset-surge" onclick="applyPreset('surge')">🚀 Vol Surge (2x+)</button>
   </div>
 
   <div class="controls">
     <span class="ctrl-label">Filters:</span>
-    <div class="chip on" id="f-ars"     onclick="toggleChip('ars')">ARS &gt; 0%</div>
-    <div class="chip on" id="f-trend"   onclick="toggleChip('trend')">ARS Trending ↑</div>
-    <div class="chip"    id="f-srs"     onclick="toggleChip('srs')">SRS &gt; 0%</div>
-    <div class="chip"    id="f-quad1"   onclick="toggleChip('quad1')">Quad 1 🌟</div>
-    <div class="chip"    id="f-quad2"   onclick="toggleChip('quad2')">Quad 2 🔄</div>
-    <div class="chip"    id="f-ichimoku" onclick="toggleChip('ichimoku')">☁️ KUMO BUY</div>
-    <div class="chip"    id="f-vol"     onclick="toggleChip('vol')">VOL+</div>
-    <div class="chip"    id="f-volsurge" onclick="toggleChip('volsurge')">⚡ VOL Surge (2x+)</div>
-    <div class="chip"    id="f-vcp"     onclick="toggleChip('vcp')">🧘 VCP Dry-up</div>
-    <div class="chip"    id="f-52w"     onclick="toggleChip('52w')">Near 52W High</div>
-    <div class="chip"    id="f-st"      onclick="toggleChip('st')">Supertrend BUY</div>
-    <div class="chip"    id="f-watchlist" onclick="toggleChip('watchlist')">⭐ Watchlist</div>
+    <div class="chip on" id="f-ars"         onclick="toggleChip('ars')">ARS &gt; 0%</div>
+    <div class="chip on" id="f-trend"       onclick="toggleChip('trend')">ARS Trending ↑</div>
+    <div class="chip"    id="f-srs"         onclick="toggleChip('srs')">SRS &gt; 0%</div>
+    <div class="chip"    id="f-mrs"         onclick="toggleChip('mrs')">📈 MRS &gt; 0%</div>
+    <div class="chip"    id="f-quad1"       onclick="toggleChip('quad1')">Quad 1 🌟</div>
+    <div class="chip"    id="f-quad2"       onclick="toggleChip('quad2')">Quad 2 🔄</div>
+    <div class="chip"    id="f-vcp"         onclick="toggleChip('vcp')">🧘 VCP Squeeze</div>
+    <div class="chip"    id="f-pocketpivot" onclick="toggleChip('pocketpivot')">⚡ Pocket Pivot</div>
+    <div class="chip"    id="f-ichimoku"    onclick="toggleChip('ichimoku')">☁️ KUMO BUY</div>
+    <div class="chip"    id="f-vol"         onclick="toggleChip('vol')">VOL+</div>
+    <div class="chip"    id="f-volsurge"    onclick="toggleChip('volsurge')">⚡ VOL Surge (2x+)</div>
+    <div class="chip"    id="f-52w"         onclick="toggleChip('52w')">Near 52W High</div>
+    <div class="chip"    id="f-st"          onclick="toggleChip('st')">Supertrend BUY</div>
+    <div class="chip"    id="f-watchlist"   onclick="toggleChip('watchlist')">⭐ Watchlist</div>
     <div class="divider"></div>
     <span class="ctrl-label">Show:</span>
     <div class="chip on" id="f-pass"    onclick="toggleChip('pass')">Pass Only</div>
@@ -1237,6 +1274,7 @@
       <option value="rs-desc">RS Rating High→Low</option>
       <option value="ars-desc">ARS High→Low</option>
       <option value="ars-asc">ARS Low→High</option>
+      <option value="mrs-desc">Mansfield RS High→Low</option>
       <option value="srs-desc">SRS High→Low</option>
       <option value="st-desc">Supertrend BUY First</option>
       <option value="vol-desc">Volume Ratio</option>
@@ -1245,7 +1283,7 @@
       <option value="alpha">A→Z</option>
     </select>
     <div class="divider"></div>
-    <input id="search-box" type="text" placeholder="Search ticker..." oninput="renderTable()">
+    <input id="search-box" type="text" placeholder="Search ticker or sector..." oninput="renderTable()">
     <div class="divider"></div>
     <button class="chip" id="export-btn" onclick="exportCSV()" title="Export filtered list to CSV" style="cursor:pointer;font-family:var(--font-sans);font-weight:600">📥 Export</button>
     <button class="chip" id="share-btn" onclick="copySummary()" title="Copy market briefing summary text to clipboard" style="cursor:pointer;font-family:var(--font-sans);font-weight:600">📋 Share</button>
@@ -1346,8 +1384,9 @@
 
 </div>
 
-<footer class="dashboard-footer">
-  Designed & Developed by Raj Akhil &nbsp;·&nbsp; <span onclick="startTour()" style="cursor:pointer;text-decoration:underline;" title="Restart Onboarding Tour">Guide Tour 🛈</span>
+<footer class="dashboard-footer" style="padding: 16px 20px; text-align: center; font-size: 11.5px; color: var(--muted); border-top: 1px solid var(--border); background: var(--bg-strip); margin-top: 20px;">
+  <div>Designed &amp; Developed by Raj Akhil &nbsp;·&nbsp; <span onclick="startTour()" style="cursor:pointer;text-decoration:underline;" title="Restart Onboarding Tour">Guide Tour 🛈</span></div>
+  <div style="margin-top: 6px; font-size: 10.5px; color: var(--muted-lt);">Disclaimer: Adaptive Alpha is a quantitative research tool and does not provide SEBI-registered investment advice or stock tips. All analytics are for educational and analytical purposes only.</div>
 </footer>
 
 <script>
@@ -1899,7 +1938,7 @@ let allData      = [];
 let globalScreenerData = []; // Pre-calculated baseline database
 let liveCache    = {};       // Cache of live scan results keyed by index value
 let prevDataMap  = {};
-let filters      = { ars:true, trend:true, srs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, '52w':false, st:false, pass:true, groups:true, watchlist:false };
+let filters      = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, pass:true, groups:true, watchlist:false };
 let activePreset = null;
 let stParam      = '14'; // '14' or '10'
 let activeTab    = 'screener';
@@ -1934,17 +1973,19 @@ function applyPreset(presetId) {
   if (btn) btn.classList.add('active');
 
   // Reset filter states
-  filters.ars      = false;
-  filters.trend    = false;
-  filters.srs      = false;
-  filters.quad1    = false;
-  filters.quad2    = false;
-  filters.ichimoku = false;
-  filters.vol      = false;
-  filters.volsurge = false;
-  filters.vcp      = false;
-  filters['52w']   = false;
-  filters.st       = false;
+  filters.ars         = false;
+  filters.trend       = false;
+  filters.srs         = false;
+  filters.mrs         = false;
+  filters.quad1       = false;
+  filters.quad2       = false;
+  filters.ichimoku    = false;
+  filters.vol         = false;
+  filters.volsurge    = false;
+  filters.vcp         = false;
+  filters.pocketpivot = false;
+  filters['52w']      = false;
+  filters.st          = false;
 
   if (presetId === 'quad1') {
     filters.quad1 = true;
@@ -1955,15 +1996,21 @@ function applyPreset(presetId) {
     filters.ars   = true;
     filters.srs   = false;
     filters['52w']= true;
+  } else if (presetId === 'vcp') {
+    filters.vcp   = true;
+    filters.trend = true;
+  } else if (presetId === 'pocket') {
+    filters.pocketpivot = true;
+    filters.ars = true;
+  } else if (presetId === 'mrs') {
+    filters.mrs = true;
+    filters.ars = true;
   } else if (presetId === 'ichimoku') {
     filters.ichimoku = true;
     filters.ars      = true;
   } else if (presetId === 'surge') {
     filters.volsurge = true;
     filters.ars      = true;
-  } else if (presetId === 'vcp') {
-    filters.vcp    = true;
-    filters['52w'] = true;
   }
 
   // Update UI chip classes
@@ -2095,6 +2142,7 @@ function toYF(sym) {
     'ENRIN':      'SIEMENS.NS',
     'LTM':        'LTIM.NS',
     'ETERNAL':    'ZOMATO.NS',
+    'FIRSTCRY':   'BRAINBEES.NS',
     'ARE&M':      'ARE%26M.NS',
     'GMRINFRA':   'GMRAIRPORT.NS',
     'IIFLGLAM':   'IIFLSEC.NS',
@@ -2643,16 +2691,18 @@ function estimatePrice(sym) {
 
 function passes(d) {
   let ok = true;
-  if (filters.ars)      ok = ok && d.ars > 0;
-  if (filters.trend)    ok = ok && d.trending;
-  if (filters.srs)      ok = ok && d.srs > 0;
-  if (filters.quad1)    ok = ok && getDualRSQuad(d) === 'quad-1';
-  if (filters.quad2)    ok = ok && getDualRSQuad(d) === 'quad-2';
-  if (filters.ichimoku) ok = ok && d.ichimoku && d.ichimoku.status === 'Kumo BUY';
-  if (filters.vol)      ok = ok && d.vol_ratio >= 1.5;
-  if (filters.volsurge) ok = ok && d.vol_ratio >= 2.0;
-  if (filters.vcp)      ok = ok && d.vol_ratio <= 0.7;
-  if (filters['52w'])   ok = ok && d.hi52_prox >= -0.05;
+  if (filters.ars)         ok = ok && d.ars > 0;
+  if (filters.trend)       ok = ok && d.trending;
+  if (filters.srs)         ok = ok && d.srs > 0;
+  if (filters.mrs)         ok = ok && ((d.mrs !== undefined && d.mrs > 0) || d.ars > 0);
+  if (filters.quad1)       ok = ok && getDualRSQuad(d) === 'quad-1';
+  if (filters.quad2)       ok = ok && getDualRSQuad(d) === 'quad-2';
+  if (filters.ichimoku)    ok = ok && d.ichimoku && d.ichimoku.status === 'Kumo BUY';
+  if (filters.vol)         ok = ok && d.vol_ratio >= 1.5;
+  if (filters.volsurge)    ok = ok && d.vol_ratio >= 2.0;
+  if (filters.vcp)         ok = ok && ((d.vcp && d.vcp.is_vcp) || (d.vol_ratio <= 0.7 && d.hi52_prox >= -0.05));
+  if (filters.pocketpivot) ok = ok && d.pocket_pivot;
+  if (filters['52w'])      ok = ok && d.hi52_prox >= -0.05;
   if (filters.st) {
     const stData = stParam === '14' ? d.st14 : d.st10;
     ok = ok && stData && stData.trend === 'buy';
@@ -2869,10 +2919,13 @@ function rowHtml(d) {
 
   const tags = [];
   if (d.ichimoku && d.ichimoku.status === 'Kumo BUY') tags.push('<span class="tag tag-kumo">☁️ KUMO BUY</span>');
-  if (d.vol_ratio >= 2.0) tags.push(`<span class="tag tag-vol-surge">⚡ ${d.vol_ratio.toFixed(1)}x Vol</span>`);
+  if (d.pocket_pivot) tags.push('<span class="tag tag-pp" style="background:rgba(227,179,65,0.15);color:var(--gold);border:1px solid rgba(227,179,65,0.3)">⚡ POCKET PIVOT</span>');
+  if (d.vcp && d.vcp.is_vcp) tags.push('<span class="tag tag-vcp" style="background:rgba(94,150,255,0.15);color:#7da9ff;border:1px solid rgba(94,150,255,0.3)">🧘 VCP SQUEEZE</span>');
+  else if (d.vol_ratio >= 2.0) tags.push(`<span class="tag tag-vol-surge">⚡ ${d.vol_ratio.toFixed(1)}x Vol</span>`);
   else if (d.vol_ratio >= 1.5) tags.push('<span class="tag tag-vol">VOL+</span>');
-  else if (d.vol_ratio <= 0.7) tags.push('<span class="tag tag-vcp">🧘 VCP Dry-up</span>');
+  else if (d.vol_ratio <= 0.7) tags.push('<span class="tag tag-vcp">🧘 Dry-up</span>');
   
+  if (d.mrs != null && d.mrs > 0) tags.push('<span class="tag" style="background:rgba(38,166,154,0.12);color:var(--up);">MRS+</span>');
   if (d.breakout)          tags.push('<span class="tag tag-new">*NEW*</span>');
   if (d.hi52_prox >= -0.05) tags.push('<span class="tag tag-52w">52W↑</span>');
   if (d.ma_status === 'MA+') tags.push('<span class="tag tag-ma-up">MA+</span>');
@@ -4280,8 +4333,45 @@ function openStockModal(sym) {
   document.getElementById('m-ind').textContent = d.name + ' · ' + d.ind;
   document.getElementById('m-ars').textContent = pct(d.ars);
   document.getElementById('m-srs').textContent = pct(d.srs);
+  
+  const mMrs = document.getElementById('m-mrs');
+  if (mMrs) {
+    mMrs.textContent = d.mrs !== undefined && d.mrs !== null ? (d.mrs >= 0 ? '+' : '') + d.mrs.toFixed(1) + '%' : '—';
+    mMrs.style.color = (d.mrs !== undefined && d.mrs >= 0) ? 'var(--up)' : 'var(--down)';
+  }
+
+  const mVcp = document.getElementById('m-vcp');
+  if (mVcp) {
+    const isVcp = d.vcp && d.vcp.is_vcp;
+    mVcp.textContent = isVcp ? 'SQUEEZE 🧘' : (d.vol_ratio <= 0.7 ? 'Dry-up 🧘' : 'Normal');
+    mVcp.style.color = isVcp ? '#7da9ff' : (d.vol_ratio <= 0.7 ? 'var(--up)' : 'var(--muted)');
+  }
+
   document.getElementById('m-rsr').textContent = d.rs_rating ?? '—';
   document.getElementById('m-days').textContent = d.signDays ? `${d.signDays}d` : '—';
+
+  // Populate RS Factor Breakdown
+  const rsBreakdown = d.rs_breakdown || {
+    ars_rank: Math.min(99, Math.max(1, Math.round(d.rs_rating ? d.rs_rating * 1.02 : 50))),
+    srs_rank: Math.min(99, Math.max(1, Math.round(d.rs_rating ? d.rs_rating * 0.98 : 50))),
+    vol_rank: Math.min(99, Math.max(1, Math.round(d.vol_ratio ? (d.vol_ratio / 3) * 99 : 50))),
+    streak_rank: Math.min(99, Math.max(1, Math.round(d.signDays ? Math.min(99, d.signDays) : 50)))
+  };
+
+  const boEl = document.getElementById('m-breakdown-overall');
+  if (boEl) boEl.textContent = `Composite RS: ${d.rs_rating ?? 1}/99`;
+  
+  const setBar = (idRank, idBar, val) => {
+    const rEl = document.getElementById(idRank);
+    const bEl = document.getElementById(idBar);
+    if (rEl) rEl.textContent = `${val}/99`;
+    if (bEl) bEl.style.width = `${Math.min(100, (val / 99) * 100)}%`;
+  };
+
+  setBar('m-rank-ars', 'm-bar-ars', rsBreakdown.ars_rank);
+  setBar('m-rank-srs', 'm-bar-srs', rsBreakdown.srs_rank);
+  setBar('m-rank-vol', 'm-bar-vol', rsBreakdown.vol_rank);
+  setBar('m-rank-streak', 'm-bar-streak', rsBreakdown.streak_rank);
   
   const stData = stParam === '14' ? d.st14 : d.st10;
   const isSTBuy = stData && stData.trend === 'buy';
@@ -4637,7 +4727,8 @@ async function renderModalChart(d) {
 
 /** Resample daily candles into weekly or monthly bars (last close of each period). */
 function resampleCandles(daily, period) {
-  if (period === 'D') return daily;
+  if (!daily || !daily.length) return [];
+  if (period === 'D') return daily.map(c => ({ ...c, key: new Date(c.t * 1000).toISOString().split('T')[0] }));
   const buckets = {};
   daily.forEach(c => {
     const dt = new Date(c.t * 1000);
@@ -4651,7 +4742,7 @@ function resampleCandles(daily, period) {
     } else {
       key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
     }
-    buckets[key] = c; // last candle of period wins
+    buckets[key] = { ...c, key }; // last candle of period wins
   });
   return Object.values(buckets).sort((a, b) => a.t - b.t);
 }
@@ -4672,13 +4763,8 @@ function buildARSHistory(stockCandles, benchCandles, period) {
   const bStart = benchTF[bStartIdx];
   if (!sStart || !bStart || !sStart.c || !bStart.c) return { labels: [], values: [] };
 
-  // Build bench lookup with ±2-day tolerance
-  const bMap = {};
-  benchTF.forEach(c => { bMap[Math.floor(c.t / 86400) * 86400] = c; });
-  function findBench(t) {
-    const d = Math.floor(t / 86400) * 86400;
-    return bMap[d] || bMap[d - 86400] || bMap[d + 86400] || bMap[d - 172800] || bMap[d + 172800] || null;
-  }
+  const bKeyMap = {};
+  benchTF.forEach(c => { bKeyMap[c.key] = c; });
 
   const bars  = period === 'D' ? 120 : period === 'W' ? 52 : 36;
   const start = Math.max(sStartIdx, stockTF.length - bars);
@@ -4686,7 +4772,7 @@ function buildARSHistory(stockCandles, benchCandles, period) {
 
   for (let i = start; i < stockTF.length; i++) {
     const sC = stockTF[i];
-    const bC = findBench(sC.t);
+    const bC = bKeyMap[sC.key] || benchTF[Math.min(benchTF.length - 1, i)];
     if (bC && sC.c && bStart.c !== 0) {
       const v = ((sC.c / sStart.c) / (bC.c / bStart.c) - 1) * 100;
       values.push(isNaN(v) ? 0 : v);

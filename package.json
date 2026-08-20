@@ -1,7 +1,7 @@
 {
   "name": "adaptive-alpha",
-  "version": "8.1.0",
-  "description": "Institutional momentum & sector rotation screener for NSE India (Nifty 50 + Midcap 100 + Smallcap 100). Features ARS, SRS, RS Rating, Dual Supertrend, FII/DII flows, and sector RRG quadrant analysis.",
+  "version": "10.0.0",
+  "description": "Institutional momentum & sector rotation screener for NSE India (Nifty 500). Features ARS, SRS, Mansfield RS, Quantitative VCP Squeeze, Pocket Pivot Accumulation, RS Rating 1-99, Dual Supertrend, FII/DII flows, and sector RRG quadrant analysis.",
   "main": "scripts/update_data.js",
   "scripts": {
     "start": "node scripts/update_data.js",

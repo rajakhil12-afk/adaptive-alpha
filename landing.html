@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Alpha — Institutional Momentum & Rotation Terminal (NSE India)</title>
+  <meta name="description" content="Next-Gen Institutional Relative Strength Engine for NSE India. Classify Nifty 500 stocks into actionable momentum regimes with Dual RS (ARS + SRS), volume accumulation radar, and smart risk sizing.">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #05070c;
+      --bg-card: rgba(13, 18, 28, 0.7);
+      --bg-card-hover: rgba(20, 28, 44, 0.85);
+      --bg-glass: rgba(255, 255, 255, 0.03);
+      --border-glass: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(0, 229, 153, 0.4);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      /* Neon Quant Palette */
+      --emerald: #00e599;
+      --emerald-glow: rgba(0, 229, 153, 0.35);
+      --emerald-dim: rgba(0, 229, 153, 0.1);
+      --cyan: #38bdf8;
+      --cyan-glow: rgba(56, 189, 248, 0.35);
+      --cyan-dim: rgba(56, 189, 248, 0.1);
+      --violet: #818cf8;
+      --violet-dim: rgba(129, 140, 248, 0.12);
+      --amber: #fbbf24;
+      --amber-dim: rgba(251, 191, 36, 0.12);
+      --crimson: #f43f5e;
+      --crimson-dim: rgba(244, 63, 94, 0.12);
+
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      font-size: 15px;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 229, 153, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 15% 70%, rgba(129, 140, 248, 0.07) 0%, transparent 50%),
+        radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px;
+    }
+
+    /* Ambient dynamic glow blobs */
+    .glow-mesh {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+    .gm-1 { top: -200px; left: 50%; transform: translateX(-50%); background: radial-gradient(circle, #00e599 0%, #38bdf8 50%, transparent 70%); }
+    .gm-2 { top: 1600px; right: -150px; background: radial-gradient(circle, #818cf8 0%, transparent 70%); }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Glass Header Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(5, 7, 12, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-glass);
+    }
+    .nav-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 74px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00e599 0%, #38bdf8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: #05070c;
+      box-shadow: 0 0 20px rgba(0, 229, 153, 0.4);
+    }
+    .brand-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      color: #ffffff;
+    }
+    .brand-title span {
+      background: linear-gradient(90deg, #00e599, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-tag {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--cyan);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    .nav-links a:hover { color: #ffffff; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+    
+    /* Luxury Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 11px 22px;
+      border-radius: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-glow {
+      background: linear-gradient(135deg, #00e599 0%, #059669 100%);
+      color: #05070c;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 25px rgba(0, 229, 153, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .btn-glow:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(0, 229, 153, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      background: linear-gradient(135deg, #10f0a5 0%, #06a775 100%);
+    }
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(10px);
+    }
+    .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+    .btn-lg {
+      padding: 15px 32px;
+      font-size: 16px;
+      border-radius: 12px;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 85px 0 60px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 18px;
+      background: rgba(0, 229, 153, 0.06);
+      border: 1px solid rgba(0, 229, 153, 0.25);
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--emerald);
+      margin-bottom: 28px;
+      box-shadow: 0 0 25px rgba(0, 229, 153, 0.15);
+      backdrop-filter: blur(10px);
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.5; }
+    }
+    .hero h1 {
+      font-size: 64px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      max-width: 1020px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, #ffffff 20%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
+    .hero h1 .accent-text {
+      background: linear-gradient(90deg, #00e599 0%, #38bdf8 50%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
+    .hero-desc {
+      font-size: 19px;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin: 0 auto 40px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+
+    /* Trust Stats Strip */
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      background: rgba(13, 18, 28, 0.6);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      padding: 24px 30px;
+      max-width: 1060px;
+      margin: 0 auto 80px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+    .metric-item {
+      text-align: center;
+      border-right: 1px solid var(--border-glass);
+      padding: 0 10px;
+    }
+    .metric-item:last-child { border-right: none; }
+    .metric-num {
+      font-family: var(--font-mono);
+      font-size: 30px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 2px;
+      letter-spacing: -0.5px;
+    }
+    .metric-num span { color: var(--emerald); }
+    .metric-lbl {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* Interactive Live Terminal Preview Box (Mac Window Frame) */
+    .terminal-frame {
+      background: rgba(10, 14, 22, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 
+        0 0 0 1px rgba(0, 229, 153, 0.15),
+        0 30px 80px rgba(0, 0, 0, 0.8),
+        0 0 60px rgba(0, 229, 153, 0.1);
+      margin-bottom: 120px;
+    }
+    .tf-header {
+      background: rgba(16, 22, 34, 0.95);
+      border-bottom: 1px solid var(--border-glass);
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .tf-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tf-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .tfd-red { background: #ff5f56; }
+    .tfd-yellow { background: #ffbd2e; }
+    .tfd-green { background: #27c93f; }
+
+    .tf-tabs {
+      display: flex;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--border-glass);
+    }
+    .tf-tab {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .tf-tab.active {
+      background: rgba(0, 229, 153, 0.12);
+      color: var(--emerald);
+      border-color: rgba(0, 229, 153, 0.3);
+    }
+    .tf-body {
+      padding: 0;
+      overflow-x: auto;
+    }
+    .tf-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13.5px;
+    }
+    .tf-table th {
+      background: rgba(13, 18, 28, 0.6);
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border-glass);
+    }
+    .tf-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-glass);
+      color: var(--text-main);
+    }
+    .tf-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .stock-tag {
+      font-weight: 800;
+      font-size: 15px;
+      color: #ffffff;
+    }
+    .stock-ind {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+    .mono-val {
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+    .badge-quad {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+    }
+    .bq-1 { background: var(--emerald-dim); color: var(--emerald); border: 1px solid rgba(0,229,153,0.3); }
+    .bq-2 { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(56,189,248,0.3); }
+    .bq-vol { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(251,191,36,0.3); }
+    .bq-st { background: rgba(0,229,153,0.15); color: var(--emerald); font-weight: 800; }
+
+    /* Interactive 2x2 Coordinate Matrix Section */
+    .section-head {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .section-pill {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+      padding: 4px 12px;
+      background: rgba(56, 189, 248, 0.08);
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+    .section-head h2 {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -1.2px;
+      color: #ffffff;
+      margin-bottom: 14px;
+    }
+    .section-head p {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Bento Grid for Quadrant Matrix */
+    .matrix-bento {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto 120px;
+    }
+    .bento-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bento-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: transparent;
+      transition: all 0.3s;
+    }
+    .bento-card:hover {
+      transform: translateY(-4px);
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+    .bc-1::before { background: var(--emerald); }
+    .bc-1:hover { box-shadow: 0 20px 50px rgba(0, 229, 153, 0.15); border-color: rgba(0, 229, 153, 0.4); }
+    .bc-2::before { background: var(--cyan); }
+    .bc-2:hover { box-shadow: 0 20px 50px rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); }
+    .bc-3::before { background: var(--amber); }
+    .bc-3:hover { box-shadow: 0 20px 50px rgba(251, 191, 36, 0.15); border-color: rgba(251, 191, 36, 0.4); }
+    .bc-4::before { background: var(--crimson); }
+    .bc-4:hover { box-shadow: 0 20px 50px rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.4); }
+
+    .bc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .bc-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 100px;
+      letter-spacing: 0.5px;
+    }
+    .bc-cond {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+    .bento-card h3 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+    .bento-card p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+    .bc-rule-box {
+      background: rgba(5, 7, 12, 0.6);
+      border: 1px solid var(--border-glass);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 13.5px;
+    }
+    .bc-rule-lbl {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    /* Asymmetric Features Bento Box Grid */
+    .feature-bento {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 120px;
+    }
+    .fb-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(20px);
+      border-radius: 18px;
+      padding: 30px;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .fb-card:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+      background: var(--bg-card-hover);
+      transform: translateY(-3px);
+    }
+    .fb-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .fb-card h3 {
+      font-size: 19px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+    .fb-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* 3-Step Execution Timeline */
+    .timeline-wrap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-bottom: 120px;
+      position: relative;
+    }
+    .tl-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: 18px;
+      padding: 34px;
+      position: relative;
+    }
+    .tl-step {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--emerald);
+      background: var(--emerald-dim);
+      border: 1px solid rgba(0, 229, 153, 0.3);
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    .tl-card h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+    .tl-card p {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* FAQ Section */
+    .faq-wrap {
+      max-width: 900px;
+      margin: 0 auto 120px;
+    }
+    .faq-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: 14px;
+      margin-bottom: 14px;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    .faq-q {
+      padding: 22px 28px;
+      font-size: 16.5px;
+      font-weight: 700;
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .faq-q:hover { background: rgba(255, 255, 255, 0.02); }
+    .faq-icon {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      color: var(--text-dim);
+      transition: transform 0.25s ease;
+    }
+    .faq-box.open .faq-icon { transform: rotate(45deg); color: var(--emerald); }
+    .faq-a {
+      padding: 0 28px 24px;
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+      display: none;
+    }
+    .faq-box.open .faq-a { display: block; }
+
+    /* Luxury Master CTA Banner */
+    .master-cta {
+      background: radial-gradient(circle at 50% 0%, rgba(0, 229, 153, 0.2) 0%, rgba(13, 18, 28, 0.8) 70%);
+      border: 1px solid rgba(0, 229, 153, 0.4);
+      border-radius: 24px;
+      padding: 70px 40px;
+      text-align: center;
+      margin-bottom: 100px;
+      box-shadow: 0 0 80px rgba(0, 229, 153, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .master-cta h2 {
+      font-size: 46px;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
+    .master-cta p {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 620px;
+      margin: 0 auto 36px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-glass);
+      background: #040508;
+      padding: 50px 0 35px;
+      font-size: 13.5px;
+      color: var(--text-dim);
+    }
+    .footer-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 26px;
+      list-style: none;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: #ffffff; }
+
+    /* Responsive adjustments */
+    @media (max-width: 960px) {
+      .hero h1 { font-size: 44px; }
+      .metrics-bar { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .matrix-bento { grid-template-columns: 1fr; }
+      .feature-bento { grid-template-columns: 1fr; }
+      .timeline-wrap { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Ambient Glows -->
+  <div class="glow-mesh gm-1"></div>
+  <div class="glow-mesh gm-2"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav-wrap">
+      <a href="landing.html" class="brand">
+        <img src="logo.png" alt="Adaptive Alpha" style="width: 38px; height: 38px; border-radius: 9px; border: 1px solid rgba(0, 229, 153, 0.35); box-shadow: 0 0 16px rgba(0, 229, 153, 0.3); object-fit: cover;">
+        <div class="brand-title">Adaptive <span>Alpha</span></div>
+        <span class="brand-tag">v10.0</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#matrix">Regime Matrix</a></li>
+        <li><a href="#terminal">Live Breakouts</a></li>
+        <li><a href="#features">Quant Toolkit</a></li>
+        <li><a href="#blueprint">Execution</a></li>
+        <li><a href="preset_playbook.html">Strategy Playbook</a></li>
+        <li><a href="user_guide.html">Docs</a></li>
+      </ul>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <a href="index.html" class="btn btn-glow">
+          <span>⚡ Open Screener Terminal</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="container">
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        <span>INSTITUTIONAL RELATIVE STRENGTH ENGINE • NSE INDIA</span>
+      </div>
+      
+      <h1>
+        <span class="gradient-text">Trade Market Leaders.</span>
+        <span class="accent-text">Before The Crowd.</span>
+      </h1>
+
+      <p class="hero-desc">
+        Eliminate market noise. Classify all 500+ Nifty 500 equities into 4 actionable institutional momentum regimes with Dual Relative Strength (ARS + SRS), catch 2x+ volume accumulation spikes, and execute with precision stop-loss sizing.
+      </p>
+
+      <div class="hero-actions">
+        <a href="index.html" class="btn btn-glow btn-lg">
+          <span>🚀 Launch Screener Terminal (Free)</span>
+        </a>
+        <a href="preset_playbook.html" class="btn btn-glass btn-lg">
+          <span>📖 Explore Strategy Playbook</span>
+        </a>
+      </div>
+
+      <!-- Trust Metrics Strip -->
+      <div class="metrics-bar">
+        <div class="metric-item">
+          <div class="metric-num">500<span>+</span></div>
+          <div class="metric-lbl">NSE Equities Scanned</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">4<span> Regimes</span></div>
+          <div class="metric-lbl">Dual RS Quadrants</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">100<span>%</span></div>
+          <div class="metric-lbl">Free &amp; Open Access</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">7:00<span> PM</span></div>
+          <div class="metric-lbl">Automated Daily EOD</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Terminal Frame (Live Leader Preview) -->
+    <section id="terminal" class="terminal-frame">
+      <div class="tf-header">
+        <div class="tf-controls">
+          <div class="tf-dot tfd-red"></div>
+          <div class="tf-dot tfd-yellow"></div>
+          <div class="tf-dot tfd-green"></div>
+          <span style="font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: #ffffff; margin-left: 8px;">
+            Adaptive Terminal — Top Institutional Breakouts
+          </span>
+        </div>
+
+        <div class="tf-tabs">
+          <div class="tf-tab active" onclick="filterLiveTab('all', this)">All Leaders</div>
+          <div class="tf-tab" onclick="filterLiveTab('surge', this)">Volume Surges 🔥</div>
+          <div class="tf-tab" onclick="filterLiveTab('turnaround', this)">Turnarounds 🔄</div>
+        </div>
+
+        <a href="index.html" class="btn btn-glass" style="padding: 6px 14px; font-size: 12px;">
+          Open Full 500+ Grid ➔
+        </a>
+      </div>
+
+      <div class="tf-body">
+        <table class="tf-table">
+          <thead>
+            <tr>
+              <th>Symbol &amp; Sector</th>
+              <th>Regime Quadrant</th>
+              <th>ARS (Cumulative)</th>
+              <th>SRS (Quarterly)</th>
+              <th>Supertrend</th>
+              <th>Volume Radar</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="terminal-tbody">
+            <!-- Dynamically populated from data/screener.json -->
+            <tr>
+              <td>
+                <div class="stock-tag">TRENT</div>
+                <div class="stock-ind">Consumer Services / Retail</div>
+              </td>
+              <td><span class="badge-quad bq-1">🌟 QUAD 1 (Leader)</span></td>
+              <td><span class="mono-val" style="color: var(--emerald);">+142.6%</span></td>
+              <td><span class="mono-val" style="color: var(--emerald);">+18.4%</span></td>
+              <td><span class="badge-quad bq-st">BUY ⚡</span></td>
+              <td><span class="badge-quad bq-vol">2.4x Surge 🔥</span></td>
+              <td><a href="index.html" class="btn btn-glass" style="padding: 4px 10px; font-size: 11px;">Inspect ➔</a></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="stock-tag">COCHINSHIP</div>
+                <div class="stock-ind">Capital Goods / Defence</div>
+              </td>
+              <td><span class="badge-quad bq-1">🌟 QUAD 1 (Leader)</span></td>
+              <td><span class="mono-val" style="color: var(--emerald);">+118.2%</span></td>
+              <td><span class="mono-val" style="color: var(--emerald);">+24.1%</span></td>
+              <td><span class="badge-quad bq-st">BUY ⚡</span></td>
+              <td><span class="badge-quad bq-vol">3.1x Surge 🔥</span></td>
+              <td><a href="index.html" class="btn btn-glass" style="padding: 4px 10px; font-size: 11px;">Inspect ➔</a></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="stock-tag">DIXON</div>
+                <div class="stock-ind">Consumer Electronics</div>
+              </td>
+              <td><span class="badge-quad bq-2">🔄 QUAD 2 (Turnaround)</span></td>
+              <td><span class="mono-val" style="color: var(--text-muted);">-4.2%</span></td>
+              <td><span class="mono-val" style="color: var(--cyan);">+14.8%</span></td>
+              <td><span class="badge-quad bq-st">BUY ⚡</span></td>
+              <td><span class="badge-quad bq-vol">1.9x Surge</span></td>
+              <td><a href="index.html" class="btn btn-glass" style="padding: 4px 10px; font-size: 11px;">Inspect ➔</a></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="stock-tag">BEL</div>
+                <div class="stock-ind">Aerospace &amp; Defence</div>
+              </td>
+              <td><span class="badge-quad bq-1">🌟 QUAD 1 (Leader)</span></td>
+              <td><span class="mono-val" style="color: var(--emerald);">+94.5%</span></td>
+              <td><span class="mono-val" style="color: var(--emerald);">+11.2%</span></td>
+              <td><span class="badge-quad bq-st">BUY ⚡</span></td>
+              <td><span class="badge-quad bq-vol">1.6x Surge</span></td>
+              <td><a href="index.html" class="btn btn-glass" style="padding: 4px 10px; font-size: 11px;">Inspect ➔</a></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="stock-tag">BHARTIARTL</div>
+                <div class="stock-ind">Telecommunications</div>
+              </td>
+              <td><span class="badge-quad bq-1">🌟 QUAD 1 (Leader)</span></td>
+              <td><span class="mono-val" style="color: var(--emerald);">+81.3%</span></td>
+              <td><span class="mono-val" style="color: var(--emerald);">+9.6%</span></td>
+              <td><span class="badge-quad bq-st">BUY ⚡</span></td>
+              <td><span class="badge-quad">0.9x Normal</span></td>
+              <td><a href="index.html" class="btn btn-glass" style="padding: 4px 10px; font-size: 11px;">Inspect ➔</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- The 4-Quadrant Visual Regime Matrix -->
+    <section id="matrix">
+      <div class="section-head">
+        <span class="section-pill">Quant Framework</span>
+        <h2>The Dual RS 4-Quadrant Matrix</h2>
+        <p>Combining anchored long-term trend (ARS) with short-term velocity (SRS) eliminates market noise and reveals true institutional capital rotation.</p>
+      </div>
+
+      <div class="matrix-bento">
+        <!-- Quad 1 -->
+        <div class="bento-card bc-1">
+          <div class="bc-header">
+            <span class="bc-badge" style="background: var(--emerald-dim); color: var(--emerald); border: 1px solid rgba(0,229,153,0.3);">🌟 QUAD 1</span>
+            <span class="bc-cond">ARS &gt; 0 &amp; SRS &gt; 0</span>
+          </div>
+          <h3>Power Leaders</h3>
+          <p>
+            Stocks with heavy multi-year outperformance AND accelerating quarterly velocity vs NIFTY 50. This is where institutional funds concentrate aggressive capital.
+          </p>
+          <div class="bc-rule-box">
+            <div class="bc-rule-lbl" style="color: var(--emerald);">Tactical Playbook</div>
+            <div style="color: #ffffff;">Trade fresh 52-week breakouts with &gt;2x volume surges. Trail stop along Supertrend.</div>
+          </div>
+        </div>
+
+        <!-- Quad 2 -->
+        <div class="bento-card bc-2">
+          <div class="bc-header">
+            <span class="bc-badge" style="background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(56,189,248,0.3);">🔄 QUAD 2</span>
+            <span class="bc-cond">ARS &le; 0 &amp; SRS &gt; 0</span>
+          </div>
+          <h3>Early Turnarounds</h3>
+          <p>
+            Stocks emerging from long-term consolidation with explosive short-term momentum. Catches bottom reversals weeks before moving average golden crosses trigger!
+          </p>
+          <div class="bc-rule-box">
+            <div class="bc-rule-lbl" style="color: var(--cyan);">Tactical Playbook</div>
+            <div style="color: #ffffff;">High-reward reversal entries as price crosses above 50-day EMA on fresh volume spikes.</div>
+          </div>
+        </div>
+
+        <!-- Quad 3 -->
+        <div class="bento-card bc-3">
+          <div class="bc-header">
+            <span class="bc-badge" style="background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(251,191,36,0.3);">⏸️ QUAD 3</span>
+            <span class="bc-cond">ARS &gt; 0 &amp; SRS &le; 0</span>
+          </div>
+          <h3>Leader Dip Buys</h3>
+          <p>
+            Structural market leaders undergoing healthy cooling pullbacks. Low-risk accumulation zones near rising 50-day EMAs rather than chasing over-extended breakouts.
+          </p>
+          <div class="bc-rule-box">
+            <div class="bc-rule-lbl" style="color: var(--amber);">Tactical Playbook</div>
+            <div style="color: #ffffff;">Accumulate on VCP dry-up volume (&lt;0.7x) near 50 EMA support with a tight stop-loss.</div>
+          </div>
+        </div>
+
+        <!-- Quad 4 -->
+        <div class="bento-card bc-4">
+          <div class="bc-header">
+            <span class="bc-badge" style="background: var(--crimson-dim); color: var(--crimson); border: 1px solid rgba(244,63,94,0.3);">💤 QUAD 4</span>
+            <span class="bc-cond">ARS &le; 0 &amp; SRS &le; 0</span>
+          </div>
+          <h3>Laggards &amp; Underperformers</h3>
+          <p>
+            Underperforming the NIFTY 50 on both long-term and quarterly horizons. Major capital dead zones where trader money gets trapped in prolonged drawdowns.
+          </p>
+          <div class="bc-rule-box">
+            <div class="bc-rule-lbl" style="color: var(--crimson);">Tactical Playbook</div>
+            <div style="color: #ffffff;">Avoid buying or exit holdings to redeploy capital into Quad 1 leaders and Quad 2 turnarounds.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Asymmetric Feature Bento Grid -->
+    <section id="features">
+      <div class="section-head">
+        <span class="section-pill">Advanced Capabilities</span>
+        <h2>The Full Quant Toolkit (v10.0)</h2>
+        <p>Engineered for professional momentum traders, portfolio managers, and quantitative swing traders.</p>
+      </div>
+
+      <div class="feature-bento">
+        <div class="fb-card">
+          <div>
+            <div class="fb-icon-wrap">⚡</div>
+            <h3>Dual Relative Strength (ARS + SRS)</h3>
+            <p>Anchored multi-year outperformance against NIFTY 50 coupled with rolling 63-day quarter momentum and composite RS rating (1–99) with 4-factor breakdown.</p>
+          </div>
+        </div>
+
+        <div class="fb-card">
+          <div>
+            <div class="fb-icon-wrap">🧘</div>
+            <h3>Quantitative VCP Squeeze Engine</h3>
+            <p>True 2-dimensional Volatility Contraction Pattern analysis based on Mark Minervini principles: checks 5-day/20-day ATR contraction ratio (&le;0.70x), volume dry-up (&le;0.75x), and price tightness (&le;4.5%).</p>
+          </div>
+        </div>
+
+        <div class="fb-card">
+          <div>
+            <div class="fb-icon-wrap">📈</div>
+            <h3>Mansfield Relative Strength (MRS)</h3>
+            <p>Stan Weinstein Stage-2 breakout verification: 50-period moving average of stock/benchmark ratio detecting when institutional bases enter structural markup phases.</p>
+          </div>
+        </div>
+
+        <div class="fb-card">
+          <div>
+            <div class="fb-icon-wrap">🚀</div>
+            <h3>Pocket Pivot Accumulation Radar</h3>
+            <p>Gil Morales &amp; Chris Kacher institutional volume footprint detector: identifies high-volume up-days that exceed the largest down-day volume of the past 10 sessions.</p>
+          </div>
+        </div>
+
+        <div class="fb-card">
+          <div>
+            <div class="fb-icon-wrap">🧮</div>
+            <h3>Smart Position Sizer &amp; Risk Calculator</h3>
+            <p>Integrated inside stock detail modals; calculates exact share quantity, total investment capital, and 1:2 / 1:3 R:R targets directly off Supertrend stops.</p>
+          </div>
+        </div>
+
+        <div class="fb-card">
+          <div>
+            <div class="fb-icon-wrap">🗺️</div>
+            <h3>Sector Rotation &amp; RRG Treemap</h3>
+            <p>Interactive visual heatmaps tracking capital flow between IT, Auto, Pharma, Banking, and Metals across Indian markets.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3-Step Execution Timeline -->
+    <section id="blueprint">
+      <div class="section-head">
+        <span class="section-pill">Workflow Blueprint</span>
+        <h2>How to Trade with Adaptive Alpha</h2>
+        <p>A simple, repeatable 3-step routine designed for swing traders and investors.</p>
+      </div>
+
+      <div class="timeline-wrap">
+        <div class="tl-card">
+          <span class="tl-step">STEP 01</span>
+          <h3>Filter by Quadrant</h3>
+          <p>Use 1-click strategy presets to focus strictly on <strong>Quad 1 (Power Leaders)</strong> or <strong>Quad 2 (Early Turnarounds)</strong>, instantly eliminating 80% of underperforming stocks.</p>
+        </div>
+
+        <div class="tl-card">
+          <span class="tl-step">STEP 02</span>
+          <h3>Confirm Volume &amp; Trend</h3>
+          <p>Verify that the stock has an active <strong>Dual Supertrend BUY badge</strong> and is backed by an institutional <strong>&gt;2.0x Volume Surge</strong> above the 50-day EMA.</p>
+        </div>
+
+        <div class="tl-card">
+          <span class="tl-step">STEP 03</span>
+          <h3>Size Position &amp; Execute</h3>
+          <p>Open the detail modal, enter your risk capital (e.g. 1% of portfolio), and get exact position size, entry, and profit targets before entering the trade.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQs -->
+    <section class="faq-wrap">
+      <div class="section-head">
+        <span class="section-pill">Clear Answers</span>
+        <h2>Frequently Asked Questions</h2>
+      </div>
+
+      <div class="faq-box open">
+        <div class="faq-q">
+          <span>What is Adaptive Relative Strength (ARS)?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          ARS measures a stock's cumulative outperformance relative to the NIFTY 50 index anchored since January 1, 2021. If a stock gained 200% while Nifty gained 50%, ARS reflects true alpha generated over benchmark performance.
+        </div>
+      </div>
+
+      <div class="faq-box">
+        <div class="faq-q">
+          <span>How often is the data refreshed?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          The screener runs an automated End-of-Day (EOD) data pipeline via GitHub Actions every trading day at <strong>7:00 PM IST</strong>, pulling official NSE Bhavcopy and Yahoo Finance series. You can also trigger on-demand live recalculations during market hours directly in the terminal.
+        </div>
+      </div>
+
+      <div class="faq-box">
+        <div class="faq-q">
+          <span>Is Adaptive Alpha completely free?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          Yes! Adaptive Alpha is 100% free and open-access. There are no paywalls, hidden fees, or mandatory sign-ups required to use the terminal.
+        </div>
+      </div>
+
+      <div class="faq-box">
+        <div class="faq-q">
+          <span>How does SRS differ from standard RSI?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          RSI (Relative Strength Index) only measures internal price momentum of a single stock on a 0-100 oscillator. <strong>SRS (Shorter-term Relative Strength)</strong> measures comparative outperformance against the NIFTY 50 benchmark over a 63-day (1 business quarter) rolling window, identifying true market leadership.
+        </div>
+      </div>
+    </section>
+
+    <!-- Master Bottom CTA -->
+    <section class="master-cta">
+      <h2>Stop Guessing. Start Trading Institutional Alpha.</h2>
+      <p>Filter through 500+ NSE stocks in seconds to find high-probability breakout leaders with mathematical precision.</p>
+      <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+        <a href="index.html" class="btn btn-glow btn-lg">
+          <span>⚡ Launch Screener Terminal (Instant Access)</span>
+        </a>
+        <a href="preset_playbook.html" class="btn btn-glass btn-lg">
+          <span>📖 Read Strategy Playbook</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-flex">
+      <div>
+        <div style="font-weight: 800; color: #ffffff; font-size: 15px; margin-bottom: 4px;">Adaptive Alpha v10.0</div>
+        <div>Next-Gen Institutional Momentum &amp; Sector Rotation Terminal for NSE India</div>
+      </div>
+      <ul class="footer-links">
+        <li><a href="index.html">Screener Terminal</a></li>
+        <li><a href="preset_playbook.html">Playbook</a></li>
+        <li><a href="user_guide.html">User Guide</a></li>
+        <li><a href="https://github.com/rajakhil12-afk/adaptive-alpha" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </div>
+    <div class="container" style="margin-top: 30px; padding: 14px 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); border-radius: 10px; font-size: 12px; text-align: center; color: var(--text-dim); line-height: 1.6;">
+      <strong style="color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">Regulatory &amp; Analytical Disclaimer</strong>
+      Adaptive Alpha is a quantitative research tool and does not provide SEBI-registered investment advice or stock tips. All calculations, matrices, and indicators are for educational, technical, and analytical purposes only. Always manage your risk responsibly.
+    </div>
+  </footer>
+
+  <script>
+    // FAQ Accordions
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => {
+        const box = q.parentElement;
+        box.classList.toggle('open');
+      });
+    });
+
+    let allScreenerRows = [];
+
+    // Filter live table by tab
+    function filterLiveTab(type, el) {
+      document.querySelectorAll('.tf-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+
+      if (!allScreenerRows.length) return;
+
+      let filtered = [];
+      if (type === 'surge') {
+        filtered = allScreenerRows.filter(r => r.vol_ratio && r.vol_ratio >= 1.8).slice(0, 5);
+      } else if (type === 'turnaround') {
+        filtered = allScreenerRows.filter(r => (r.ars <= 0 && r.srs > 0)).slice(0, 5);
+      } else {
+        filtered = allScreenerRows.filter(r => (r.ars > 0 && r.srs > 0)).slice(0, 5);
+      }
+
+      renderTable(filtered);
+    }
+
+    function renderTable(stocks) {
+      if (!stocks || !stocks.length) return;
+      const tbody = document.getElementById('terminal-tbody');
+      tbody.innerHTML = stocks.map(s => {
+        const arsFormatted = (s.ars >= 0 ? '+' : '') + (s.ars * (s.ars < 5 ? 100 : 1)).toFixed(1) + '%';
+        const srsFormatted = (s.srs >= 0 ? '+' : '') + (s.srs * (s.srs < 5 ? 100 : 1)).toFixed(1) + '%';
+        const isQuad1 = s.ars > 0 && s.srs > 0;
+        const isQuad2 = s.ars <= 0 && s.srs > 0;
+        const quadBadge = isQuad1 
+          ? '<span class="badge-quad bq-1">🌟 QUAD 1 (Leader)</span>' 
+          : (isQuad2 ? '<span class="badge-quad bq-2">🔄 QUAD 2 (Turnaround)</span>' : '<span class="badge-quad">QUAD REGIME</span>');
+        const volMultiplier = s.vol_ratio ? `${s.vol_ratio.toFixed(1)}x` : '1.2x';
+        const isSurge = s.vol_ratio && s.vol_ratio >= 1.8;
+
+        return `
+          <tr>
+            <td>
+              <div class="stock-tag">${s.ticker || s.symbol}</div>
+              <div class="stock-ind">${s.sector || 'NSE Equities'}</div>
+            </td>
+            <td>${quadBadge}</td>
+            <td><span class="mono-val" style="color: ${s.ars >= 0 ? 'var(--emerald)' : 'var(--text-muted)'};">${arsFormatted}</span></td>
+            <td><span class="mono-val" style="color: ${s.srs >= 0 ? 'var(--cyan)' : 'var(--crimson)'};">${srsFormatted}</span></td>
+            <td><span class="badge-quad bq-st">BUY ⚡</span></td>
+            <td><span class="badge-quad ${isSurge ? 'bq-vol' : ''}">${volMultiplier} ${isSurge ? '🔥' : ''}</span></td>
+            <td><a href="index.html" class="btn btn-glass" style="padding: 4px 10px; font-size: 11px;">Inspect ➔</a></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function loadLiveLeaders() {
+      try {
+        const res = await fetch('data/screener.json');
+        if (!res.ok) return;
+        const data = await res.json();
+        allScreenerRows = data.rows || data;
+        if (!Array.isArray(allScreenerRows)) return;
+
+        const quad1Stocks = allScreenerRows
+          .filter(r => (r.ars > 0 && r.srs > 0))
+          .sort((a, b) => (b.rs_rating || b.ars) - (a.rs_rating || a.ars))
+          .slice(0, 5);
+
+        renderTable(quad1Stocks);
+      } catch (err) {
+        console.log('Live leaders loaded with fallback data.');
+      }
+    }
+
+    loadLiveLeaders();
+  </script>
+</body>
+</html>
