@@ -92,18 +92,21 @@ function getMondayOfCurrentWeek() {
   return (monday.getTime() - istOffset) / 1000;
 }
 
-// Helper: Categorize a stock into Large/Mid/Small Cap
+// Constituent lists for accurate market-cap classification
+const N50_SYMS = ['ADANIENT','ADANIPORTS','APOLLOHOSP','ASIANPAINT','AXISBANK','BAJAJ-AUTO','BAJFINANCE','BAJAJFINSV','BEL','BHARTIARTL','CIPLA','COALINDIA','DRREDDY','EICHERMOT','ETERNAL','GRASIM','HCLTECH','HDFCBANK','HDFCLIFE','HINDALCO','HINDUNILVR','ICICIBANK','ITC','INFY','INDIGO','JSWSTEEL','JIOFIN','KOTAKBANK','LT','M_M','MARUTI','MAXHEALTH','NTPC','NESTLEIND','ONGC','POWERGRID','RELIANCE','SBILIFE','SHRIRAMFIN','SBIN','SUNPHARMA','TCS','TATACONSUM','TMPV','TATASTEEL','TECHM','TITAN','TRENT','ULTRACEMCO','WIPRO'];
+const EXTRA_SYMS = ['ABB','ADANIENSOL','ADANIGREEN','ADANIPOWER','AMBUJACEM','DMART','BAJAJHLDNG','BANKBARODA','BPCL','BOSCHLTD','BRITANNIA','CGPOWER','CANBK','CHOLAFIN','CUMMINSIND','DLF','DIVISLAB','GAIL','GODREJCP','HDFCAMC','HAL','HINDZINC','HYUNDAI','INDHOTEL','IOC','IRFC','JINDALSTEL','LTM','LODHA','MAZDOCK','MUTHOOTFIN','PIDILITIND','PFC','PNB','RECLTD','MOTHERSON','SHREECEM','ENRIN','SIEMENS','SOLARINDS','TVSMOTOR','TATACAP','TMCV','TATAPOWER','TORNTPHARM','UNIONBANK','UNITDSPR','VBL','VEDL','ZYDUSLIFE'];
+const MIDCAP_SYMS = ['INDIANB','BSE','POWERINDIA','INDUSTOWER','LGEINDIA','LUPIN','POLYCAB','GROWW','HEROMOTOCO','ABCAPITAL','ICICIGI','BHARATFORG','ASHOKLEY','OFSS','BHEL','IDFCFIRSTB','YESBANK','SUZLON','NBCC','IRCTC','SAIL','HUDCO','GMRAIRPORT','MARICO','JSWENERGY','MANKIND','COFORGE','PERSISTENT','PAYTM','POLICYBZR','NAUKRI','AUROPHARMA','ALKEM','BIOCON','LAURUSLABS','GLAND','COLPAL','PGHH','DABUR','EMAMILTD','PATANJALI','FEDERALBNK','IDBI','RBLBANK','AUBANK','BANDHANBNK','LICHSGFIN','SUNDARMFIN','M&MFIN','MFSL','GICRE','NIACL','STARHEALTH','SONACOMS','BALKRISIND','EXIDEIND','MRF','APOLLOTYRE','ESCORTS','VOLTAS','CROMPTON','HAVELLS','DIXON','KAJARIACER','JKCEMENT','RAMCOCEM','OBEROIRLTY','GODREJPROP','PHOENIXLTD','PRESTIGE','PETRONET','MGL','IGL','OIL','NHPC','SJVN','TORNTPOWER','NMDC','NATIONALUM','APLAPOLLO','LLOYDSME','UNOMINDA','SUPREMEIND','SRF','UPL','DEEPAKNTR','TATACHEM','AARTIIND','NAVINFLUOR','CONCOR','IEX','MCX','CDSL','ANGELONE','KPITTECH','MPHASIS','TATAELXSI','JUBLFOOD','PVRINOX','DELHIVERY','ZFCVINDIA','BLUESTARCO','WHIRLPOOL'];
+
+// Helper: Categorize a stock into Large/Mid/Small Cap accurately
 function categorizeStock(s) {
-  const N50_SYMS = ['ADANIENT','ADANIPORTS','APOLLOHOSP','ASIANPAINT','AXISBANK','BAJAJ-AUTO','BAJFINANCE','BAJAJFINSV','BEL','BHARTIARTL','CIPLA','COALINDIA','DRREDDY','EICHERMOT','ETERNAL','GRASIM','HCLTECH','HDFCBANK','HDFCLIFE','HINDALCO','HINDUNILVR','ICICIBANK','ITC','INFY','INDIGO','JSWSTEEL','JIOFIN','KOTAKBANK','LT','M_M','MARUTI','MAXHEALTH','NTPC','NESTLEIND','ONGC','POWERGRID','RELIANCE','SBILIFE','SHRIRAMFIN','SBIN','SUNPHARMA','TCS','TATACONSUM','TMPV','TATASTEEL','TECHM','TITAN','TRENT','ULTRACEMCO','WIPRO'];
-  const EXTRA_SYMS = ['ABB','ADANIENSOL','ADANIGREEN','ADANIPOWER','AMBUJACEM','DMART','BAJAJHLDNG','BANKBARODA','BPCL','BOSCHLTD','BRITANNIA','CGPOWER','CANBK','CHOLAFIN','CUMMINSIND','DLF','DIVISLAB','GAIL','GODREJCP','HDFCAMC','HAL','HINDZINC','HYUNDAI','INDHOTEL','IOC','IRFC','JINDALSTEL','LTM','LODHA','MAZDOCK','MUTHOOTFIN','PIDILITIND','PFC','PNB','RECLTD','MOTHERSON','SHREECEM','ENRIN','SIEMENS','SOLARINDS','TVSMOTOR','TATACAP','TMCV','TATAPOWER','TORNTPHARM','UNIONBANK','UNITDSPR','VBL','VEDL','ZYDUSLIFE'];
   if (N50_SYMS.includes(s.sym) || EXTRA_SYMS.includes(s.sym)) return '🚀 Large Cap';
-  if (s.rs_rating >= 60 || s.price > 1000) return '🔥 Mid Cap';
+  if (MIDCAP_SYMS.includes(s.sym)) return '🔥 Mid Cap';
   return '⚡ Small Cap';
 }
 
 async function run() {
   const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' });
-  let msg = `⚡ <b>DAILY BREAKOUT REPORT</b> | ${dateStr}\n`;
+  let msg = `⚡ <b>DAILY BREAKOUT & MOMENTUM REPORT</b> | ${dateStr}\n`;
   msg += `⏰ <i>Updated: ${escapeHtml(updatedTime)}</i>\n\n`;
 
   if (fiiDii) {
@@ -115,8 +118,8 @@ async function run() {
 
   // --- Section 1: Today's Fresh ARS Crossover Breakouts ---
   const freshBreakouts = stocks.filter(s => s.breakout);
-  // Also include high-momentum near-52W-high stocks as secondary breakouts
-  const nearHighBreakouts = stocks.filter(s => !s.breakout && s.rs_rating >= 85 && s.hi52_prox >= 0.95 && s.vol_ratio >= 1.3);
+  // Near-52W-high stocks as secondary breakouts (fixed hi52_prox >= -0.05)
+  const nearHighBreakouts = stocks.filter(s => !s.breakout && s.rs_rating >= 85 && s.hi52_prox >= -0.05 && s.vol_ratio >= 1.3);
   const allTodayBreakouts = [...freshBreakouts, ...nearHighBreakouts];
 
   if (allTodayBreakouts.length === 0) {
@@ -135,7 +138,7 @@ async function run() {
       if (list.length === 0) continue;
       msg += `<b>${catName} (${list.length})</b>\n`;
       list.forEach(s => {
-        const typeTag = s.breakout ? '🌟 ARS Crossover' : '🔥 52W High Prox';
+        const typeTag = s.breakout ? '🌟 ARS Breakout' : '🔥 52W High Prox';
         const volTag = `${s.vol_ratio}x Vol`;
         const rsTag = `RS: ${s.rs_rating}`;
         if (useDetailedView) {
@@ -149,7 +152,23 @@ async function run() {
     }
   }
 
-  // --- Section 2: This Week's Breakouts (ARS positive, flipped within current Mon-Fri week, not today's fresh) ---
+  // --- Section 2: VCP Squeeze & Pocket Pivots ---
+  const vcpStocks = stocks.filter(s => s.vcp && s.vcp.is_vcp && s.ars > 0);
+  const pocketPivots = stocks.filter(s => s.pocket_pivot && s.ars > 0);
+
+  if (vcpStocks.length > 0 || pocketPivots.length > 0) {
+    msg += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    msg += `🎯 <b>QUANTITATIVE SETUP RADAR</b>\n`;
+    if (vcpStocks.length > 0) {
+      msg += `🧘 <b>VCP Squeezes (${vcpStocks.length}):</b> ${vcpStocks.slice(0, 8).map(s => `<code>${escapeHtml(s.sym)}</code>`).join(', ')}\n`;
+    }
+    if (pocketPivots.length > 0) {
+      msg += `⚡ <b>Pocket Pivots (${pocketPivots.length}):</b> ${pocketPivots.slice(0, 8).map(s => `<code>${escapeHtml(s.sym)}</code>`).join(', ')}\n`;
+    }
+    msg += `\n`;
+  }
+
+  // --- Section 3: This Week's Breakouts ---
   const mondayTs = getMondayOfCurrentWeek();
   const weeklyBreakouts = stocks.filter(s =>
     !s.breakout && s.ars > 0 && s.signDays != null && s.signDays <= 5 &&
@@ -160,32 +179,12 @@ async function run() {
     msg += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
     msg += `🟢 <b>This Week's Breakouts (${weeklyBreakouts.length})</b>\n`;
     weeklyBreakouts.sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
-    weeklyBreakouts.forEach(s => {
+    weeklyBreakouts.slice(0, 15).forEach(s => {
       const boPrice = s.signPrice ?? s.price;
       const gain = boPrice > 0 ? ((s.price - boPrice) / boPrice * 100) : 0;
       const gainStr = gain >= 0 ? `+${gain.toFixed(1)}%` : `${gain.toFixed(1)}%`;
       const daysLabel = s.signDays === 1 ? '1d ago' : `${s.signDays}d ago`;
       msg += `• <b>${escapeHtml(s.sym)}</b> — ₹${s.price.toLocaleString('en-IN')} | <code>${gainStr}</code> | ${daysLabel}\n`;
-    });
-    msg += `\n`;
-  }
-
-  // --- Section 3: This Week's Breakdowns (ARS negative, flipped within current Mon-Fri week) ---
-  const weeklyBreakdowns = stocks.filter(s =>
-    s.ars < 0 && s.signDays != null && s.signDays <= 5 &&
-    s.signSince != null && s.signSince >= mondayTs
-  );
-
-  if (weeklyBreakdowns.length > 0) {
-    msg += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
-    msg += `🔴 <b>This Week's Breakdowns (${weeklyBreakdowns.length})</b>\n`;
-    weeklyBreakdowns.sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
-    weeklyBreakdowns.forEach(s => {
-      const bdPrice = s.signPrice ?? s.price;
-      const drop = bdPrice > 0 ? ((s.price - bdPrice) / bdPrice * 100) : 0;
-      const dropStr = drop >= 0 ? `+${drop.toFixed(1)}%` : `${drop.toFixed(1)}%`;
-      const daysLabel = s.signDays === 1 ? '1d ago' : `${s.signDays}d ago`;
-      msg += `• <b>${escapeHtml(s.sym)}</b> — ₹${s.price.toLocaleString('en-IN')} | <code>${dropStr}</code> | ${daysLabel}\n`;
     });
     msg += `\n`;
   }
@@ -216,7 +215,15 @@ async function run() {
   msg += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
   msg += `📈 <i>Check screener dashboard for interactive charts!</i>`;
 
-  await sendTelegramMessage(msg);
+  // Safely split if message exceeds Telegram 4000 char threshold
+  if (msg.length > 3900) {
+    const half = Math.floor(msg.length / 2);
+    const splitIdx = msg.lastIndexOf('\n\n', half) || half;
+    await sendTelegramMessage(msg.substring(0, splitIdx));
+    await sendTelegramMessage(msg.substring(splitIdx));
+  } else {
+    await sendTelegramMessage(msg);
+  }
 }
 
 run().catch(err => {

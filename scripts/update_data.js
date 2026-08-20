@@ -569,11 +569,12 @@ function toYF(sym) {
   const map = {
     'BAJAJ-AUTO': 'BAJAJ-AUTO.NS',
     'M_M':        'M%26M.NS',
-    'TMPV':       'TATAMTRDVR.NS',
+    'TMPV':       'TATAMOTORS.NS',
     'TMCV':       'TATAMOTORS.NS',
     'ENRIN':      'SIEMENS.NS',
     'LTM':        'LTIM.NS',
-    'ETERNAL':    'ETERNAL.NS',
+    'ETERNAL':    'ZOMATO.NS',
+    'FIRSTCRY':   'BRAINBEES.NS',
     'ARE&M':      'ARE%26M.NS',
     'GMRINFRA':   'GMRAIRPORT.NS',
     'IIFLGLAM':   'IIFLSEC.NS',
@@ -737,7 +738,7 @@ async function fetchYahoo(ticker, range = '6y', maxRetries = 3) {
 
 // Calculate Supertrend (period, multiplier) matching TradingView exactly
 function calcSupertrend(candles, period = 10, multiplier = 3) {
-  const len = candles.length;
+  const len = candles ? candles.length : 0;
   if (len < period + 5) return { trend: "sell", signal: null, val: 0 };
   
   const tr = [];
@@ -759,10 +760,11 @@ function calcSupertrend(candles, period = 10, multiplier = 3) {
   }
   
   // Calculate ATR using Wilder's Smoothed Moving Average (RMA)
-  const atr = [];
+  const atr = new Array(len);
   let sum = 0;
   for (let i = 0; i < period; i++) {
     sum += tr[i];
+    atr[i] = sum / (i + 1); // safe initial values
   }
   let currentAtr = sum / period;
   atr[period - 1] = currentAtr;
@@ -779,23 +781,23 @@ function calcSupertrend(candles, period = 10, multiplier = 3) {
   const trend = []; // 1 for BUY, -1 for SELL
   
   for (let i = 0; i < len; i++) {
-    if (i < period - 1) {
-      up.push(hl2[i] - multiplier * (tr[i] || 0));
-      dn.push(hl2[i] + multiplier * (tr[i] || 0));
-      supertrend.push(0);
-      trend.push(-1);
+    const c = candles[i];
+    const prevC = candles[i - 1] || c;
+    const curAtr = atr[i] || tr[i] || 1;
+    
+    const basicUp = hl2[i] - multiplier * curAtr;
+    const basicDn = hl2[i] + multiplier * curAtr;
+    
+    if (i === 0) {
+      up.push(basicUp);
+      dn.push(basicDn);
+      supertrend.push(c.c >= hl2[i] ? basicUp : basicDn);
+      trend.push(c.c >= hl2[i] ? 1 : -1);
       continue;
     }
     
-    const c = candles[i];
-    const prevC = candles[i - 1] || c;
-    const currentAtr = atr[i];
-    
-    const basicUp = hl2[i] - multiplier * currentAtr;
-    const basicDn = hl2[i] + multiplier * currentAtr;
-    
-    const prevUp = up[i - 1] || basicUp;
-    const prevDn = dn[i - 1] || basicDn;
+    const prevUp = up[i - 1];
+    const prevDn = dn[i - 1];
     
     const finalUp = (basicUp > prevUp || prevC.c < prevUp) ? basicUp : prevUp;
     const finalDn = (basicDn < prevDn || prevC.c > prevDn) ? basicDn : prevDn;
@@ -803,8 +805,8 @@ function calcSupertrend(candles, period = 10, multiplier = 3) {
     up.push(finalUp);
     dn.push(finalDn);
     
-    const prevST = supertrend[i - 1] || 0;
-    const prevTrend = trend[i - 1] || -1;
+    const prevST = supertrend[i - 1];
+    const prevTrend = trend[i - 1];
     
     let currentST = 0;
     let currentTrend = -1;
@@ -842,8 +844,119 @@ function calcSupertrend(candles, period = 10, multiplier = 3) {
   return {
     trend: currentTrend === 1 ? "buy" : "sell",
     signal: signal,
-    val: parseFloat(supertrend[lastIdx].toFixed(2))
+    val: parseFloat((supertrend[lastIdx] || 0).toFixed(2))
   };
+}
+
+// Calculate Mansfield Relative Strength (50-period SMA of stock/bench ratio)
+function calcMansfieldRS(stockCandles, benchCandles, period = 50) {
+  if (!stockCandles || !benchCandles || stockCandles.length < period + 5 || benchCandles.length < period + 5) {
+    return { mrs: 0, mrs_trend: false };
+  }
+  const sLen = stockCandles.length;
+  const bLen = benchCandles.length;
+  
+  const bMap = {};
+  benchCandles.forEach(c => {
+    bMap[Math.floor(c.t / 86400) * 86400] = c.c;
+  });
+
+  const ratios = [];
+  for (let i = Math.max(0, sLen - (period + 20)); i < sLen; i++) {
+    const sC = stockCandles[i];
+    const dKey = Math.floor(sC.t / 86400) * 86400;
+    const bClose = bMap[dKey] || bMap[dKey - 86400] || bMap[dKey + 86400] || bMap[dKey - 172800] || null;
+    if (bClose && bClose > 0 && sC.c > 0) {
+      ratios.push(sC.c / bClose);
+    }
+  }
+
+  if (ratios.length < period) return { mrs: 0, mrs_trend: false };
+
+  const rLen = ratios.length;
+  const currentRatio = ratios[rLen - 1];
+  const slice50 = ratios.slice(rLen - period);
+  const sma50 = slice50.reduce((sum, v) => sum + v, 0) / period;
+  
+  const mrs = sma50 > 0 ? ((currentRatio / sma50) - 1) * 100 : 0;
+  
+  // Check if MRS is expanding/trending upward vs 5 days ago
+  let mrsPrev5 = 0;
+  if (rLen >= period + 5) {
+    const prev5Ratio = ratios[rLen - 6];
+    const prev5Slice = ratios.slice(rLen - period - 5, rLen - 5);
+    const prev5Sma = prev5Slice.reduce((sum, v) => sum + v, 0) / period;
+    mrsPrev5 = prev5Sma > 0 ? ((prev5Ratio / prev5Sma) - 1) * 100 : 0;
+  }
+
+  return {
+    mrs: parseFloat(mrs.toFixed(2)),
+    mrs_trend: mrs > mrsPrev5
+  };
+}
+
+// Quantitative Volatility Contraction Pattern (VCP) Squeeze & Tightness
+function calcVCP(candles) {
+  const len = candles ? candles.length : 0;
+  if (len < 55) {
+    return { is_vcp: false, atr_ratio: 1.0, vol_dryup: 1.0, tightness_pct: 5.0 };
+  }
+
+  const tr = [];
+  for (let i = 1; i < len; i++) {
+    const c = candles[i];
+    const p = candles[i - 1];
+    tr.push(Math.max(c.h - c.l, Math.abs(c.h - p.c), Math.abs(c.l - p.c)));
+  }
+
+  const trLen = tr.length;
+  const atr5 = tr.slice(trLen - 5).reduce((s, v) => s + v, 0) / 5;
+  const atr20 = tr.slice(trLen - 20).reduce((s, v) => s + v, 0) / 20;
+  const atr_ratio = atr20 > 0 ? atr5 / atr20 : 1.0;
+
+  // Volume Dry-up: 5-day Avg Vol / 50-day Avg Vol
+  const v5 = candles.slice(len - 5).reduce((s, c) => s + c.v, 0) / 5;
+  const v50 = candles.slice(len - 50).reduce((s, c) => s + c.v, 0) / 50;
+  const vol_dryup = v50 > 0 ? v5 / v50 : 1.0;
+
+  // Tightness: 5-day high-low price range as % of price
+  const last5 = candles.slice(len - 5);
+  const maxH5 = Math.max(...last5.map(c => c.h));
+  const minL5 = Math.min(...last5.map(c => c.l));
+  const tightness_pct = candles[len - 1].c > 0 ? ((maxH5 - minL5) / candles[len - 1].c) * 100 : 10;
+
+  // True VCP Squeeze condition: Volatility compression + Volume dryup + range tightness <= 4%
+  const is_vcp = atr_ratio <= 0.70 && vol_dryup <= 0.75 && tightness_pct <= 4.5;
+
+  return {
+    is_vcp,
+    atr_ratio: parseFloat(atr_ratio.toFixed(2)),
+    vol_dryup: parseFloat(vol_dryup.toFixed(2)),
+    tightness_pct: parseFloat(tightness_pct.toFixed(2))
+  };
+}
+
+// Institutional Pocket Pivot Accumulation Detector (Gil Morales / Chris Kacher)
+function calcPocketPivot(candles) {
+  const len = candles ? candles.length : 0;
+  if (len < 20) return false;
+
+  const today = candles[len - 1];
+  const yest = candles[len - 2];
+  const isUpDay = today.c > yest.c;
+  if (!isUpDay || today.v <= 0) return false;
+
+  // Find maximum down-day volume in the last 10 sessions (prior to today)
+  let maxDownVol = 0;
+  for (let i = len - 11; i < len - 1; i++) {
+    if (i > 0 && candles[i].c < candles[i - 1].c) {
+      if (candles[i].v > maxDownVol) maxDownVol = candles[i].v;
+    }
+  }
+
+  // Pocket pivot occurs when up-volume exceeds largest down-day volume over past 10 days
+  const isPocketPivot = maxDownVol > 0 && today.v > maxDownVol;
+  return isPocketPivot;
 }
 
 // Calculate Ichimoku Kinko Hyo (9, 26, 52) Daily Breakouts & Cloud status
@@ -981,8 +1094,9 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
   const avgVol = vSlice.reduce((s, c) => s + c.v, 0) / vSlice.length;
   const vol_ratio = avgVol > 0 ? sToday.v / avgVol : 1;
   
+  // 52-Week High uses session Highs (c.h)
   const hiSlice = stockCandles.slice(Math.max(0, sLen - 252));
-  const hi52Max = Math.max(...hiSlice.map(c => c.c));
+  const hi52Max = Math.max(...hiSlice.map(c => c.h !== undefined && c.h !== null ? c.h : c.c));
   const hi52_prox = hi52Max > 0 ? (sToday.c - hi52Max) / hi52Max : -0.1;
 
   let signSince = null, signDays = null, signPrice = null;
@@ -1172,45 +1286,54 @@ async function run() {
     }
   }
 
-  console.log(`Processing ${UNIVERSE.length} stocks…`);
+  console.log(`Processing ${UNIVERSE.length} stocks with concurrent async batching…`);
   const results = [];
+  const BATCH_SIZE = 8;
   
-  for (let i = 0; i < UNIVERSE.length; i++) {
-    const stock = UNIVERSE[i];
-    const yf = toYF(stock.sym);
-    const stockHist = await fetchYahoo(yf, '6y');
-    if (!stockHist || stockHist.length < 100) {
-      console.warn(`[${i+1}/${UNIVERSE.length}] Skipped ${stock.sym} (No history)`);
-      continue;
-    }
-
-    // Merge latest Bhavcopy closing price and volume
-    const latestBhav = bhav.data[stock.sym];
-    if (latestBhav) {
-      const last = stockHist[stockHist.length - 1];
-      if (last.t < bhav.timestamp) {
-        stockHist.push({ t: bhav.timestamp, c: latestBhav.close, h: latestBhav.close, l: latestBhav.close, v: latestBhav.volume });
-      } else {
-        last.c = latestBhav.close;
-        last.h = latestBhav.close;
-        last.l = latestBhav.close;
-        last.v = latestBhav.volume;
+  for (let i = 0; i < UNIVERSE.length; i += BATCH_SIZE) {
+    const batch = UNIVERSE.slice(i, i + BATCH_SIZE);
+    const batchPromises = batch.map(async (stock, bIdx) => {
+      const globalIdx = i + bIdx + 1;
+      const yf = toYF(stock.sym);
+      const stockHist = await fetchYahoo(yf, '6y');
+      if (!stockHist || stockHist.length < 100) {
+        console.warn(`[${globalIdx}/${UNIVERSE.length}] Skipped ${stock.sym} (No history)`);
+        return null;
       }
-    }
 
-    const calc = calcARS(stockHist, benchData, cutoffTs);
-    if (calc) {
+      // Merge latest Bhavcopy closing price and volume if available
+      const latestBhav = bhav.data[stock.sym];
+      if (latestBhav) {
+        const last = stockHist[stockHist.length - 1];
+        if (last.t < bhav.timestamp) {
+          stockHist.push({ t: bhav.timestamp, c: latestBhav.close, h: latestBhav.close, l: latestBhav.close, v: latestBhav.volume });
+        } else {
+          last.c = latestBhav.close;
+          last.h = latestBhav.close;
+          last.l = latestBhav.close;
+          last.v = latestBhav.volume;
+        }
+      }
+
+      const calc = calcARS(stockHist, benchData, cutoffTs);
+      if (!calc) return null;
+
       const st14 = calcSupertrend(stockHist, 14, 3);
       const st10 = calcSupertrend(stockHist, 10, 3);
       const ichi = calcIchimoku(stockHist);
+      const mrsData = calcMansfieldRS(stockHist, benchData, 50);
+      const vcpData = calcVCP(stockHist);
+      const pocketPivot = calcPocketPivot(stockHist);
 
-      results.push({
+      return {
         sym: stock.sym,
         name: stock.name,
         ind: stock.ind,
         logoid: logoIds[stock.sym] || null,
         ars: parseFloat(calc.ars.toFixed(4)),
         srs: parseFloat(calc.srs.toFixed(4)),
+        mrs: mrsData.mrs,
+        mrs_trend: mrsData.mrs_trend,
         vol_ratio: parseFloat(calc.vol_ratio.toFixed(2)),
         hi52_prox: parseFloat(calc.hi52_prox.toFixed(4)),
         price: parseFloat(calc.price.toFixed(2)),
@@ -1222,16 +1345,28 @@ async function run() {
         st14: { trend: st14.trend, signal: st14.signal, val: st14.val },
         st10: { trend: st10.trend, signal: st10.signal, val: st10.val },
         ichimoku: ichi,
+        vcp: {
+          is_vcp: vcpData.is_vcp,
+          atr_ratio: vcpData.atr_ratio,
+          vol_dryup: vcpData.vol_dryup,
+          tightness: vcpData.tightness_pct
+        },
+        pocket_pivot: pocketPivot,
         ma_status: calc.ma_status,
         ars_slope: parseFloat(calc.ars_slope.toFixed(4))
-      });
-    }
-    
-    // Throttle queries to avoid rate limits
+      };
+    });
+
+    const batchResults = await Promise.all(batchPromises);
+    batchResults.forEach(res => {
+      if (res) results.push(res);
+    });
+
+    // Small throttle between batches to be polite to Yahoo Finance API
     await new Promise(resolve => setTimeout(resolve, 80));
   }
 
-  // Calculate RS Rating (1-99) for each stock based on composite rank
+  // Calculate RS Rating (1-99) & Factor Breakdown for each stock based on composite rank
   const N = results.length;
   if (N > 0) {
     const getRanks = (key, customValFn) => {
@@ -1260,6 +1395,12 @@ async function run() {
     composites.forEach((item, r) => {
       const rating = Math.round(1 + (r / (N - 1 || 1)) * 98);
       results[item.idx].rs_rating = rating;
+      results[item.idx].rs_breakdown = {
+        ars_rank: Math.round(1 + ranksArs[item.idx] * 98),
+        srs_rank: Math.round(1 + ranksSrs[item.idx] * 98),
+        vol_rank: Math.round(1 + ranksVol[item.idx] * 98),
+        streak_rank: Math.round(1 + ranksDays[item.idx] * 98)
+      };
     });
   }
 
@@ -1298,10 +1439,12 @@ async function run() {
 
   // Update current prices & max run-ups for all logged historical breakouts
   const stockPriceMap = new Map(results.map(s => [s.sym, s.price]));
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 45); // Keep up to 45 days of active records
+  const cutoffTime = Date.now() - (45 * 24 * 60 * 60 * 1000); // 45 days in ms
 
-  breakoutHistory = breakoutHistory.filter(h => new Date(h.triggerDate) >= thirtyDaysAgo);
+  breakoutHistory = breakoutHistory.filter(h => {
+    const t = Date.parse(h.triggerDate);
+    return !isNaN(t) && t >= cutoffTime;
+  });
 
   breakoutHistory.forEach(h => {
     if (stockPriceMap.has(h.sym)) {

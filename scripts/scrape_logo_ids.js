@@ -157,7 +157,10 @@ function searchLogo(sym) {
       res.on('end', () => {
         try {
           const json = JSON.parse(body);
-          const match = json.find(r => r.symbol === tvSym && r.exchange === 'NSE') || json[0];
+          if (!Array.isArray(json) || json.length === 0) return resolve(null);
+          const match = json.find(r => (r.symbol === tvSym || r.symbol === sym) && (r.exchange === 'NSE' || r.exchange === 'BSE')) 
+                     || json.find(r => r.exchange === 'NSE') 
+                     || json[0];
           resolve(match ? match.logoid : null);
         } catch(e) {
           resolve(null);
