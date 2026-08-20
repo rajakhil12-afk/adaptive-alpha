@@ -1437,6 +1437,34 @@ async function run() {
     }
   });
 
+  // Also seed recent positive momentum breakouts from the last 30 days
+  const recentLeaders = results.filter(s =>
+    s.ars > 0 && s.signDays != null && s.signDays <= 30 && s.signPrice > 0
+  );
+
+  recentLeaders.forEach(stock => {
+    const triggerD = stock.signSince ? new Date(stock.signSince * 1000).toISOString().split('T')[0] : todayStr;
+    const exists = breakoutHistory.some(h => h.sym === stock.sym);
+    if (!exists) {
+      const p = stock.price;
+      const trigP = stock.signPrice || p;
+      const gain = ((p - trigP) / trigP) * 100;
+      breakoutHistory.push({
+        sym: stock.sym,
+        name: stock.name,
+        ind: stock.ind,
+        triggerDate: triggerD,
+        triggerPrice: trigP,
+        maxPrice: Math.max(p, trigP),
+        currentPrice: p,
+        gainPct: parseFloat(gain.toFixed(2)),
+        maxGainPct: parseFloat(Math.max(gain, 0).toFixed(2)),
+        volRatioAtTrigger: stock.vol_ratio,
+        rsRatingAtTrigger: stock.rs_rating
+      });
+    }
+  });
+
   // Update current prices & max run-ups for all logged historical breakouts
   const stockPriceMap = new Map(results.map(s => [s.sym, s.price]));
   const cutoffTime = Date.now() - (45 * 24 * 60 * 60 * 1000); // 45 days in ms

@@ -195,18 +195,21 @@ async function run() {
     const winners = history.filter(h => (h.gainPct || 0) > 0);
     const winRate = ((winners.length / history.length) * 100).toFixed(0);
     const avgGain = (history.reduce((acc, h) => acc + (h.gainPct || 0), 0) / history.length).toFixed(1);
+    const avgMaxGain = (history.reduce((acc, h) => acc + (h.maxGainPct || h.gainPct || 0), 0) / history.length).toFixed(1);
 
     msg += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
-    msg += `📊 <b>30-DAY PERFORMANCE TRACKER</b>\n`;
-    msg += `• Tracked Picks: <code>${history.length}</code> | Win Rate: <code>${winRate}%</code>\n`;
-    msg += `• Avg Return: <code>${avgGain >= 0 ? '+' : ''}${avgGain}%</code>\n\n`;
+    msg += `📊 <b>30-DAY BREAKOUT PERFORMANCE TRACKER</b>\n`;
+    msg += `• Tracked Breakouts: <code>${history.length} picks</code>\n`;
+    msg += `• Win Rate: <code>${winRate}%</code> 🎯 | Avg Gain: <code>${avgGain >= 0 ? '+' : ''}${avgGain}%</code>\n`;
+    msg += `• Peak Run-up Avg: <code>+${avgMaxGain}%</code>\n\n`;
 
     // Highlight top outperformers from past breakouts
-    const sortedPerformers = [...history].sort((a, b) => (b.gainPct || 0) - (a.gainPct || 0)).slice(0, 3);
+    const sortedPerformers = [...history].sort((a, b) => (b.gainPct || 0) - (a.gainPct || 0)).slice(0, 4);
     if (sortedPerformers.length > 0 && sortedPerformers[0].gainPct > 0) {
-      msg += `🏆 <b>Top Active Runners:</b>\n`;
+      msg += `🏆 <b>Top Active Breakout Runners:</b>\n`;
       sortedPerformers.forEach(p => {
-        msg += `• <b>${escapeHtml(p.sym)}</b>: <b>+${p.gainPct}%</b> (Peak: +${p.maxGainPct}%)\n`;
+        const peakStr = (p.maxGainPct && p.maxGainPct > p.gainPct) ? ` (Peak: +${p.maxGainPct}%)` : '';
+        msg += `• <b>${escapeHtml(p.sym)}</b>: <b>+${p.gainPct}%</b>${peakStr}\n`;
       });
       msg += `\n`;
     }
