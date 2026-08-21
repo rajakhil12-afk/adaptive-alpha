@@ -986,6 +986,28 @@
       font-family: var(--font-num);
     }
 
+    /* ── LEADER DIP BUY / RETEST STYLES ── */
+    .bo-dipbuy-row:hover {
+      background: rgba(56, 189, 248, 0.06) !important;
+    }
+    .bo-dipbuy-divider {
+      height: 1px; margin: 6px 14px 2px;
+      background: linear-gradient(90deg, #38bdf8 0%, transparent 100%);
+      opacity: 0.25;
+    }
+    .bo-section-title-dip {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 700; color: var(--fg);
+      padding: 12px 14px 8px; letter-spacing: 0.3px;
+    }
+    .bo-section-title-dip .bo-icon { font-size: 16px; }
+    .bo-section-title-dip .bo-count-pill-dip {
+      font-size: 10px; font-weight: 600;
+      background: rgba(56, 189, 248, 0.14); color: #38bdf8;
+      padding: 1px 7px; border-radius: 8px;
+      font-family: var(--font-num);
+    }
+
     /* ── STOCK DETAILS POPUP MODAL ── */
     .modal-overlay {
       position: fixed;
@@ -4211,8 +4233,9 @@ function updateBadgeCounts() {
   if (boCountEl) {
     const todayBo = allData.filter(d => d.breakout);
     const weekBo = allData.filter(d => d.ars > 0 && isThisWeek(d) && !d.breakout);
-    const weekBd = allData.filter(d => d.ars < 0 && isThisWeek(d));
-    boCountEl.textContent = todayBo.length + weekBo.length + weekBd.length;
+    const dipBuy = allData.filter(d => !d.breakout && isThisWeek(d) && (d.st10?.trend === 'buy' || d.ma_status === 'MA+') && (d.srs <= 0 || (d.ars >= -0.015 && d.ars <= 0.05)));
+    const weekBd = allData.filter(d => d.ars < -0.01 && d.srs <= 0 && (d.st10?.trend === 'sell' || d.ma_status === 'MA-') && isThisWeek(d));
+    boCountEl.textContent = todayBo.length + weekBo.length + dipBuy.length + weekBd.length;
   }
 }
 
@@ -4261,13 +4284,14 @@ function renderBreakoutsTab() {
 
   const todayData = allData.filter(d => d.breakout);
   const weeklyData = allData.filter(d => d.ars > 0 && isThisWeek(d) && !d.breakout);
-  const breakdownData = allData.filter(d => d.ars < 0 && isThisWeek(d));
+  const dipBuyData = allData.filter(d => !d.breakout && isThisWeek(d) && (d.st10?.trend === 'buy' || d.ma_status === 'MA+') && (d.srs <= 0 || (d.ars >= -0.015 && d.ars <= 0.05)));
+  const breakdownData = allData.filter(d => d.ars < -0.01 && d.srs <= 0 && (d.st10?.trend === 'sell' || d.ma_status === 'MA-') && isThisWeek(d));
 
-  if (todayData.length === 0 && weeklyData.length === 0 && breakdownData.length === 0) {
+  if (todayData.length === 0 && weeklyData.length === 0 && dipBuyData.length === 0 && breakdownData.length === 0) {
     container.innerHTML = `
       <div class="empty-watch">
         <div class="big">🔥</div>
-        <div>No fresh breakout or breakdown stocks detected in today's EOD data scan.</div>
+        <div>No fresh breakout, dip buy, or breakdown stocks detected in today's scan.</div>
       </div>
     `;
     return;
@@ -4349,9 +4373,52 @@ function renderBreakoutsTab() {
     html += `<div style="padding:8px 14px;font-size:11px;color:var(--muted)">No additional breakouts this week.</div>`;
   }
 
-  // ── Section 3: This Week's Breakdowns (negative) ──
+  // ── Section 3: Leader Retest / Dip Buys (Holding Trend Support) ──
+  html += `<div class="bo-dipbuy-divider"></div>`;
+  html += `<div class="bo-section-title-dip"><span class="bo-icon">🎯</span> Leader Retest / Dip Buys <span class="bo-count-pill-dip">${dipBuyData.length}</span></div>`;
+  if (dipBuyData.length > 0) {
+    const dipSorted = [...dipBuyData].sort((a, b) => (b.rs_rating ?? 0) - (a.rs_rating ?? 0));
+    html += `
+      <div class="bo-weekly-grid bo-weekly-header">
+        <div>★</div>
+        <div>Ticker</div>
+        <div>ARS</div>
+        <div class="bo-col-bo-price">Support</div>
+        <div>Current ₹</div>
+        <div>Zone</div>
+        <div>Since</div>
+        <div class="bo-col-rs">RS</div>
+      </div>
+      ${dipSorted.map(d => {
+        const boPrice = d.signPrice ?? d.price;
+        const diff = boPrice > 0 ? ((d.price - boPrice) / boPrice * 100) : 0;
+        const diffStr = diff >= 0 ? `+${diff.toFixed(1)}%` : `${diff.toFixed(1)}%`;
+        const dateStr = d.signSince ? new Date(d.signSince * 1000).toLocaleDateString('en-IN', {day:'2-digit', month:'short'}) : '—';
+        const isPinned = pinnedStocks.includes(d.sym);
+        const daysAgo = d.signDays ?? 0;
+        const daysLabel = daysAgo === 1 ? '1d ago' : `${daysAgo}d ago`;
+        const supportType = (d.st10 && d.st10.val) ? `ST ₹${d.st10.val}` : (d.ma_status === 'MA+' ? 'Above 50MA' : 'Dip Zone');
+        return `
+          <div class="bo-weekly-grid bo-weekly-row bo-dipbuy-row" onclick="openStockModal('${d.sym}')">
+            <div><span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${d.sym}')">${isPinned ? '★' : '☆'}</span></div>
+            <div><span class="bo-sym">${d.sym}</span><br><span class="bo-name">${d.name}</span></div>
+            <div style="color:var(--gold);font-weight:600">${(d.ars * 100).toFixed(1)}%</div>
+            <div class="bo-col-bo-price" style="color:#38bdf8;font-size:9.5px">${supportType}</div>
+            <div style="font-weight:600">₹${d.price.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
+            <div style="color:var(--fg);font-size:10px">${diffStr}</div>
+            <div class="bo-date">${dateStr} <span style="opacity:0.6;font-size:9px">(${daysLabel})</span></div>
+            <div class="bo-col-rs" style="color:#38bdf8;font-weight:600">${d.rs_rating ?? '—'}</div>
+          </div>
+        `;
+      }).join('')}
+    `;
+  } else {
+    html += `<div style="padding:8px 14px;font-size:11px;color:var(--muted)">No leader dip setups this week.</div>`;
+  }
+
+  // ── Section 4: Structural Breakdowns (negative) ──
   html += `<div class="bo-breakdown-divider"></div>`;
-  html += `<div class="bo-section-title-down"><span class="bo-icon">📉</span> This Week's Breakdowns <span class="bo-count-pill-down">${breakdownData.length}</span></div>`;
+  html += `<div class="bo-section-title-down"><span class="bo-icon">📉</span> Structural Breakdowns <span class="bo-count-pill-down">${breakdownData.length}</span></div>`;
   if (breakdownData.length > 0) {
     const bdSorted = [...breakdownData].sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
     html += `
@@ -4389,7 +4456,7 @@ function renderBreakoutsTab() {
       }).join('')}
     `;
   } else {
-    html += `<div style="padding:8px 14px;font-size:11px;color:var(--muted)">No breakdowns this week.</div>`;
+    html += `<div style="padding:8px 14px;font-size:11px;color:var(--muted)">No confirmed breakdowns this week.</div>`;
   }
 
   container.innerHTML = html;
