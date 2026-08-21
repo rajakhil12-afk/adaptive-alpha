@@ -189,6 +189,24 @@ async function run() {
     msg += `\n`;
   }
 
+  // --- Section 3b: Leader Retest / Dip Buys (Near Support) ---
+  const dipBuyStocks = stocks.filter(s =>
+    !s.breakout && (s.st10?.trend === 'buy' || s.ma_status === 'MA+') &&
+    (s.srs <= 0 || (s.ars >= -0.015 && s.ars <= 0.05)) &&
+    s.signDays != null && s.signDays <= 5 && s.signSince != null && s.signSince >= mondayTs
+  );
+
+  if (dipBuyStocks.length > 0) {
+    msg += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    msg += `🎯 <b>Leader Retest / Dip Buys (${dipBuyStocks.length})</b>\n`;
+    dipBuyStocks.sort((a, b) => (b.rs_rating ?? 0) - (a.rs_rating ?? 0));
+    dipBuyStocks.slice(0, 8).forEach(s => {
+      const rsTag = `RS: ${s.rs_rating}`;
+      msg += `• <b>${escapeHtml(s.sym)}</b> — ₹${s.price.toLocaleString('en-IN')} | <code>${rsTag}</code> | Near Support\n`;
+    });
+    msg += `\n`;
+  }
+
   // --- Section 4: 30-Day Historical Performance Summary ---
   const history = rawData.breakout_history || [];
   if (history.length > 0) {

@@ -1353,7 +1353,9 @@ async function run() {
         },
         pocket_pivot: pocketPivot,
         ma_status: calc.ma_status,
-        ars_slope: parseFloat(calc.ars_slope.toFixed(4))
+        ars_slope: parseFloat(calc.ars_slope.toFixed(4)),
+        is_breakdown: calc.ars < -0.01 && calc.srs <= 0 && (st10.trend === 'sell' || calc.ma_status === 'MA-'),
+        is_dip_buy: (calc.ars >= -0.015 || (calc.signDays != null && calc.signDays <= 15 && calc.signPrice > 0)) && (st10.trend === 'buy' || calc.ma_status === 'MA+') && calc.srs <= 0
       };
     });
 
