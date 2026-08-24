@@ -1065,10 +1065,8 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
   const effectiveCutoff = Math.max(cutoffTs, sStart.t);
   let bStartIdx = 0;
   for (let i = 0; i < bLen; i++) { if (benchCandles[i].t >= effectiveCutoff) { bStartIdx = i; break; } }
-  
-  const sStart = stockCandles[sStartIdx];
   const bStart = benchCandles[bStartIdx];
-  if (!sStart || !bStart) return null;
+  if (!bStart) return null;
 
   const ars = sStart.c && bStart.c && bStart.c !== 0 ? ((sToday.c / sStart.c) / (bToday.c / bStart.c)) - 1 : 0;
   const sStartP = stockCandles[Math.max(0, sStartIdx - 1)];
