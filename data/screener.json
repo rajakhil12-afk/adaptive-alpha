@@ -1,11 +1,7 @@
 {
-  "updated": "11:20 pm IST · 24 Aug",
+  "updated": "11:34 pm IST · 24 Aug",
   "bhavDate": "2026-08-24",
-  "fii_dii": {
-    "date": "24-Aug-2026",
-    "fii": 1181.66,
-    "dii": 2493.41
-  },
+  "fii_dii": null,
   "stocks": [
     {
       "sym": "ADANIENT",
