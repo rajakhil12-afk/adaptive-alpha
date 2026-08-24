@@ -239,9 +239,10 @@ async function run() {
   // Safely split if message exceeds Telegram 4000 char threshold
   if (msg.length > 3900) {
     const half = Math.floor(msg.length / 2);
-    const splitIdx = msg.lastIndexOf('\n\n', half) || half;
-    await sendTelegramMessage(msg.substring(0, splitIdx));
-    await sendTelegramMessage(msg.substring(splitIdx));
+    let splitIdx = msg.lastIndexOf('\n\n', half);
+    if (splitIdx <= 0) splitIdx = half;
+    await sendTelegramMessage(msg.substring(0, splitIdx).trim());
+    await sendTelegramMessage(msg.substring(splitIdx).trim());
   } else {
     await sendTelegramMessage(msg);
   }

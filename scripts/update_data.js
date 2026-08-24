@@ -819,15 +819,15 @@ function calcSupertrend(candles, period = 10, multiplier = 3) {
   }
   
   const lastIdx = len - 1;
-  const currentTrend = trend[lastIdx];
-  const prevTrend = trend[lastIdx - 1];
+  const finalTrend = trend[lastIdx];
+  const prevFinalTrend = trend[lastIdx - 1];
   
   let signal = null;
-  if (prevTrend === -1 && currentTrend === 1) signal = "buy_signal";
-  else if (prevTrend === 1 && currentTrend === -1) signal = "sell_signal";
+  if (prevFinalTrend === -1 && finalTrend === 1) signal = "buy_signal";
+  else if (prevFinalTrend === 1 && finalTrend === -1) signal = "sell_signal";
   
   return {
-    trend: currentTrend === 1 ? "buy" : "sell",
+    trend: finalTrend === 1 ? "buy" : "sell",
     signal: signal,
     val: parseFloat((supertrend[lastIdx] || 0).toFixed(2))
   };
