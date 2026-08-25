@@ -4668,10 +4668,11 @@ async function initScreener() {
 
   showProgress('Loading screener database…', 10);
   try {
-    let res = await fetch('data/screener.json');
+    const cacheBuster = '?v=' + Date.now();
+    let res = await fetch('data/screener.json' + cacheBuster);
     if (!res.ok) {
       // Try parent folder if inside a subdirectory
-      res = await fetch('../data/screener.json');
+      res = await fetch('../data/screener.json' + cacheBuster);
     }
     if (!res.ok) throw new Error('Data file not found');
     const payload = await res.json();

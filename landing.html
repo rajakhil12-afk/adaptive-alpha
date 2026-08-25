@@ -732,96 +732,217 @@
 </footer>
 
 <script>
-  // Signature hero visual: animated ARS/SRS quadrant scatter
+  // Dynamic Live Regime Map & Live Breakout Leaderboard Engine
   (function(){
     var ns = "http://www.w3.org/2000/svg";
     var layer = document.getElementById("dotLayer");
-    var tickers = [
-      {sym:"TRENT", x:0.86, y:0.78, q:"#E8A23A"},
-      {sym:"COCHINSHIP", x:0.74, y:0.9, q:"#E8A23A"},
-      {sym:"BEL", x:0.66, y:0.62, q:"#E8A23A"},
-      {sym:"BHARTIARTL", x:0.58, y:0.5, q:"#E8A23A"},
-      {sym:"DIXON", x:0.34, y:0.7, q:"#14B8A6"},
-      {sym:"KAYNES", x:0.22, y:0.82, q:"#14B8A6"},
-      {sym:"IREDA", x:0.4, y:0.6, q:"#14B8A6"},
-      {sym:"INFY", x:0.68, y:0.28, q:"#2A46E8"},
-      {sym:"HDFCBANK", x:0.58, y:0.18, q:"#2A46E8"},
-      {sym:"ITC", x:0.28, y:0.22, q:"#98A2B8"},
-      {sym:"ZOMATO", x:0.14, y:0.34, q:"#98A2B8"},
-      {sym:"PAYTM", x:0.2, y:0.14, q:"#98A2B8"}
-    ];
-    tickers.forEach(function(t, i){
-      var cx = t.x * 400;
-      var cy = (1 - t.y) * 328;
-      var g = document.createElementNS(ns, "g");
-      g.setAttribute("class", "ticker-dot");
-
-      var glow = document.createElementNS(ns, "circle");
-      glow.setAttribute("cx", cx); glow.setAttribute("cy", cy); glow.setAttribute("r", 10);
-      glow.setAttribute("fill", t.q); glow.setAttribute("opacity", "0.18");
-
-      var dot = document.createElementNS(ns, "circle");
-      dot.setAttribute("cx", cx); dot.setAttribute("cy", cy); dot.setAttribute("r", 4.5);
-      dot.setAttribute("fill", t.q); dot.setAttribute("stroke", "#fff"); dot.setAttribute("stroke-width", "1.2");
-
-      var anim = document.createElementNS(ns, "animate");
-      anim.setAttribute("attributeName", "r");
-      anim.setAttribute("values", "9;13;9");
-      anim.setAttribute("dur", (2.6 + (i % 4) * 0.4) + "s");
-      anim.setAttribute("repeatCount", "indefinite");
-      glow.appendChild(anim);
-
-      var label = document.createElementNS(ns, "text");
-      label.setAttribute("class", "ticker-tag");
-      label.setAttribute("x", cx + 8);
-      label.setAttribute("y", cy - 8);
-      label.textContent = t.sym;
-
-      g.appendChild(glow); g.appendChild(dot); g.appendChild(label);
-      g.addEventListener("mouseenter", function(){ label.style.opacity = 1; });
-      g.addEventListener("mouseleave", function(){ label.style.opacity = 0; });
-      layer.appendChild(g);
-    });
-  })();
-
-  // Leaderboard: real per-tab data + filtering (sample data — wire to live feed)
-  (function(){
-    var rows = [
-      {sym:"TRENT", sec:"Consumer Services / Retail", q:1, ars:"+142.6%", srs:"+18.4%", buy:true, vol:"2.4x", hot:true},
-      {sym:"COCHINSHIP", sec:"Capital Goods / Defence", q:1, ars:"+118.2%", srs:"+24.1%", buy:true, vol:"3.1x", hot:true},
-      {sym:"DIXON", sec:"Consumer Electronics", q:2, ars:"−4.2%", srs:"+14.8%", buy:true, vol:"1.9x", hot:false},
-      {sym:"BEL", sec:"Aerospace & Defence", q:1, ars:"+94.5%", srs:"+11.2%", buy:true, vol:"1.6x", hot:false},
-      {sym:"BHARTIARTL", sec:"Telecommunications", q:1, ars:"+81.3%", srs:"+9.6%", buy:true, vol:"0.9x", hot:false},
-      {sym:"KAYNES", sec:"Electronics Manufacturing", q:2, ars:"−2.1%", srs:"+21.7%", buy:true, vol:"2.7x", hot:true},
-      {sym:"IREDA", sec:"Financial Services / NBFC", q:2, ars:"−6.8%", srs:"+16.3%", buy:true, vol:"2.2x", hot:true}
-    ];
-    var sets = {
-      all: rows.slice(0,5),
-      volume: rows.filter(function(r){ return r.hot; }),
-      turnarounds: rows.filter(function(r){ return r.q === 2; })
-    };
     var body = document.getElementById("boardBody");
-    function render(key){
-      var data = sets[key] || sets.all;
-      body.innerHTML = data.map(function(r){
-        return '<tr>'
-          + '<td><span class="sym">'+r.sym+'</span><span class="sec-tag">'+r.sec+'</span></td>'
-          + '<td><span class="quad-chip q'+r.q+'">'+(r.q===1 ? '🌟 QUAD 1' : '🔄 QUAD 2')+'</span></td>'
-          + '<td class="'+(r.ars.indexOf('−')===0?'neg':'pos')+'">'+r.ars+'</td>'
-          + '<td class="'+(r.srs.indexOf('−')===0?'neg':'pos')+'">'+r.srs+'</td>'
+
+    var fallbackTickers = [
+      {sym:"TRENT", ars:1.426, srs:0.184, q:"#E8A23A"},
+      {sym:"COCHINSHIP", ars:1.182, srs:0.241, q:"#E8A23A"},
+      {sym:"BEL", ars:0.945, srs:0.112, q:"#E8A23A"},
+      {sym:"BHARTIARTL", ars:0.813, srs:0.096, q:"#E8A23A"},
+      {sym:"DIXON", ars:-0.042, srs:0.148, q:"#14B8A6"},
+      {sym:"KAYNES", ars:-0.021, srs:0.217, q:"#14B8A6"},
+      {sym:"IREDA", ars:-0.068, srs:0.163, q:"#14B8A6"},
+      {sym:"INFY", ars:0.38, srs:-0.052, q:"#2A46E8"},
+      {sym:"HDFCBANK", ars:0.18, srs:-0.041, q:"#2A46E8"},
+      {sym:"ITC", ars:-0.12, srs:-0.082, q:"#98A2B8"},
+      {sym:"ZOMATO", ars:-0.18, srs:-0.045, q:"#98A2B8"},
+      {sym:"PAYTM", ars:-0.24, srs:-0.115, q:"#98A2B8"}
+    ];
+
+    function plotDots(tickers) {
+      layer.innerHTML = "";
+      var posArsList = tickers.filter(t => t.ars > 0).map(t => t.ars);
+      var negArsList = tickers.filter(t => t.ars <= 0).map(t => Math.abs(t.ars));
+      var posSrsList = tickers.filter(t => t.srs > 0).map(t => t.srs);
+      var negSrsList = tickers.filter(t => t.srs <= 0).map(t => Math.abs(t.srs));
+
+      var maxPosARS = Math.max(0.2, ...(posArsList.length ? posArsList : [0.5]));
+      var maxNegARS = Math.max(0.1, ...(negArsList.length ? negArsList : [0.3]));
+      var maxPosSRS = Math.max(0.1, ...(posSrsList.length ? posSrsList : [0.3]));
+      var maxNegSRS = Math.max(0.1, ...(negSrsList.length ? negSrsList : [0.2]));
+
+      tickers.forEach(function(t, i){
+        var cx, cy;
+        if (t.ars > 0) {
+          cx = 200 + Math.min(175, Math.max(25, (t.ars / maxPosARS) * 165));
+        } else {
+          cx = 200 - Math.min(175, Math.max(25, (Math.abs(t.ars) / maxNegARS) * 165));
+        }
+
+        if (t.srs > 0) {
+          cy = 164 - Math.min(140, Math.max(20, (t.srs / maxPosSRS) * 135));
+        } else {
+          cy = 164 + Math.min(140, Math.max(20, (Math.abs(t.srs) / maxNegSRS) * 135));
+        }
+
+        var color = t.q || (t.ars > 0 && t.srs > 0 ? "#E8A23A" : (t.ars <= 0 && t.srs > 0 ? "#14B8A6" : (t.ars > 0 && t.srs <= 0 ? "#2A46E8" : "#98A2B8")));
+
+        var g = document.createElementNS(ns, "g");
+        g.setAttribute("class", "ticker-dot");
+        g.style.cursor = "pointer";
+
+        var glow = document.createElementNS(ns, "circle");
+        glow.setAttribute("cx", cx); glow.setAttribute("cy", cy); glow.setAttribute("r", 10);
+        glow.setAttribute("fill", color); glow.setAttribute("opacity", "0.22");
+
+        var dot = document.createElementNS(ns, "circle");
+        dot.setAttribute("cx", cx); dot.setAttribute("cy", cy); dot.setAttribute("r", 4.5);
+        dot.setAttribute("fill", color); dot.setAttribute("stroke", "#fff"); dot.setAttribute("stroke-width", "1.2");
+
+        var anim = document.createElementNS(ns, "animate");
+        anim.setAttribute("attributeName", "r");
+        anim.setAttribute("values", "9;13;9");
+        anim.setAttribute("dur", (2.6 + (i % 4) * 0.4) + "s");
+        anim.setAttribute("repeatCount", "indefinite");
+        glow.appendChild(anim);
+
+        var label = document.createElementNS(ns, "text");
+        label.setAttribute("class", "ticker-tag");
+        label.setAttribute("x", cx + 8);
+        label.setAttribute("y", cy - 8);
+        label.textContent = t.sym + ' (' + (t.ars >= 0 ? '+' : '') + (t.ars * 100).toFixed(0) + '%)';
+
+        g.appendChild(glow); g.appendChild(dot); g.appendChild(label);
+        g.addEventListener("mouseenter", function(){ label.style.opacity = 1; });
+        g.addEventListener("mouseleave", function(){ label.style.opacity = 0; });
+        g.addEventListener("click", function(){ window.location.href = "index.html?search=" + encodeURIComponent(t.sym); });
+        layer.appendChild(g);
+      });
+    }
+
+    // Default static plot first
+    plotDots(fallbackTickers);
+
+    var liveRows = [];
+    function renderBoard(key){
+      var data = [];
+      if (key === 'volume') {
+        data = liveRows.filter(r => r.hot);
+      } else if (key === 'turnarounds') {
+        data = liveRows.filter(r => r.q === 2);
+      } else {
+        data = liveRows;
+      }
+      if (data.length === 0) data = liveRows;
+      var show = data.slice(0, 8);
+      body.innerHTML = show.map(function(r){
+        var arsStr = (r.ars >= 0 ? '+' : '−') + Math.abs(r.ars * 100).toFixed(1) + '%';
+        var srsStr = (r.srs >= 0 ? '+' : '−') + Math.abs(r.srs * 100).toFixed(1) + '%';
+        var quadLabel = r.q === 1 ? '🌟 QUAD 1' : (r.q === 2 ? '🔄 QUAD 2' : (r.q === 3 ? '⏸️ QUAD 3' : '💤 QUAD 4'));
+        return '<tr onclick="window.location.href=\'index.html?search='+encodeURIComponent(r.sym)+'\'" style="cursor:pointer">'
+          + '<td><span class="sym">'+r.sym+'</span><span class="sec-tag">'+(r.sec || r.ind || 'Equities')+'</span></td>'
+          + '<td><span class="quad-chip q'+r.q+'">'+quadLabel+'</span></td>'
+          + '<td class="'+(r.ars >= 0 ? 'pos' : 'neg')+'">'+arsStr+'</td>'
+          + '<td class="'+(r.srs >= 0 ? 'pos' : 'neg')+'">'+srsStr+'</td>'
           + '<td>'+(r.buy ? '<span class="buy-badge">BUY ⚡</span>' : '—')+'</td>'
-          + '<td class="'+(r.hot?'vol-hot':'mono')+'">'+r.vol+(r.hot?' 🔥':'')+'</td>'
+          + '<td class="'+(r.hot ? 'vol-hot' : 'mono')+'">'+r.vol+(r.hot ? ' 🔥' : '')+'</td>'
           + '</tr>';
       }).join('');
     }
-    render('all');
+
+    // Default fallback rows
+    liveRows = [
+      {sym:"TRENT", sec:"Consumer Services / Retail", q:1, ars:1.426, srs:0.184, buy:true, vol:"2.4x", hot:true},
+      {sym:"COCHINSHIP", sec:"Capital Goods / Defence", q:1, ars:1.182, srs:0.241, buy:true, vol:"3.1x", hot:true},
+      {sym:"DIXON", sec:"Consumer Electronics", q:2, ars:-0.042, srs:0.148, buy:true, vol:"1.9x", hot:false},
+      {sym:"BEL", sec:"Aerospace & Defence", q:1, ars:0.945, srs:0.112, buy:true, vol:"1.6x", hot:false},
+      {sym:"BHARTIARTL", sec:"Telecommunications", q:1, ars:0.813, srs:0.096, buy:true, vol:"0.9x", hot:false},
+      {sym:"KAYNES", sec:"Electronics Manufacturing", q:2, ars:-0.021, srs:0.217, buy:true, vol:"2.7x", hot:true},
+      {sym:"IREDA", sec:"Financial Services / NBFC", q:2, ars:-0.068, srs:0.163, buy:true, vol:"2.2x", hot:true}
+    ];
+    renderBoard('all');
+
     document.querySelectorAll(".board-tabs button").forEach(function(btn){
       btn.addEventListener("click", function(){
         document.querySelectorAll(".board-tabs button").forEach(function(b){ b.classList.remove("active"); });
         btn.classList.add("active");
-        render(btn.getAttribute("data-tab"));
+        renderBoard(btn.getAttribute("data-tab"));
       });
     });
+
+    // Fetch Live Daily Screener Database
+    async function loadLiveFeed() {
+      try {
+        var cb = '?v=' + Date.now();
+        var res = await fetch('data/screener.json' + cb);
+        if (!res.ok) res = await fetch('../data/screener.json' + cb);
+        if (!res.ok) return;
+        var data = await res.json();
+        if (!data || !Array.isArray(data.stocks) || data.stocks.length === 0) return;
+
+        var allStocks = data.stocks;
+
+        // 1. Extract dynamic quadrant leaders for the scatter plot
+        var q1 = allStocks.filter(s => s.ars > 0 && s.srs > 0).sort((a,b) => (b.rs_rating || 0) - (a.rs_rating || 0)).slice(0, 4);
+        var q2 = allStocks.filter(s => s.ars <= 0 && s.srs > 0).sort((a,b) => (b.vol_ratio || 0) - (a.vol_ratio || 0)).slice(0, 4);
+        var q3 = allStocks.filter(s => s.ars > 0 && s.srs <= 0).sort((a,b) => (b.ars || 0) - (a.ars || 0)).slice(0, 3);
+        var q4 = allStocks.filter(s => s.ars <= 0 && s.srs <= 0).sort((a,b) => (a.rs_rating || 0) - (b.rs_rating || 0)).slice(0, 3);
+
+        var dynamicTickers = [
+          ...q1.map(s => ({ sym: s.sym, ars: s.ars, srs: s.srs, q: "#E8A23A" })),
+          ...q2.map(s => ({ sym: s.sym, ars: s.ars, srs: s.srs, q: "#14B8A6" })),
+          ...q3.map(s => ({ sym: s.sym, ars: s.ars, srs: s.srs, q: "#2A46E8" })),
+          ...q4.map(s => ({ sym: s.sym, ars: s.ars, srs: s.srs, q: "#98A2B8" }))
+        ];
+
+        if (dynamicTickers.length >= 8) {
+          plotDots(dynamicTickers);
+        }
+
+        // 2. Build live leaderboard rows
+        var breakouts = allStocks.filter(s => s.breakout || s.rs_rating >= 85 || s.vol_ratio >= 1.5);
+        breakouts.sort((a, b) => {
+          if (a.breakout && !b.breakout) return -1;
+          if (!a.breakout && b.breakout) return 1;
+          return (b.rs_rating || 0) - (a.rs_rating || 0);
+        });
+
+        liveRows = breakouts.map(s => {
+          var q = s.ars > 0 && s.srs > 0 ? 1 : (s.ars <= 0 && s.srs > 0 ? 2 : (s.ars > 0 && s.srs <= 0 ? 3 : 4));
+          return {
+            sym: s.sym,
+            sec: s.ind || 'Equities',
+            q: q,
+            ars: s.ars || 0,
+            srs: s.srs || 0,
+            buy: s.st10?.trend === 'buy' || s.breakout,
+            vol: (s.vol_ratio ? s.vol_ratio.toFixed(1) : '1.0') + 'x',
+            hot: (s.vol_ratio || 0) >= 1.8 || s.breakout
+          };
+        });
+
+        var activeTab = document.querySelector('.board-tabs button.active');
+        renderBoard(activeTab ? activeTab.getAttribute('data-tab') : 'all');
+
+        // 3. Update preview cards with top 6 live RS leaders
+        var previewCards = document.querySelectorAll('.pv-grid .pv-card');
+        var topLeaders = allStocks.filter(s => s.ars > 0).sort((a,b) => (b.rs_rating || 0) - (a.rs_rating || 0)).slice(0, 6);
+        topLeaders.forEach((s, idx) => {
+          if (previewCards[idx]) {
+            var symEl = previewCards[idx].querySelector('.pv-sym');
+            var valEl = previewCards[idx].querySelector('.pv-val');
+            var barEl = previewCards[idx].querySelector('.pv-bar i');
+            if (symEl) symEl.textContent = s.sym;
+            if (valEl) valEl.textContent = (s.ars >= 0 ? '+' : '') + (s.ars * 100).toFixed(1) + '%';
+            if (barEl) barEl.style.width = Math.min(100, Math.max(15, (s.rs_rating || 50))) + '%';
+          }
+        });
+
+        // 4. Update date badge if available
+        if (data.updated) {
+          var quadBadge = document.querySelector('.quad-head .badge');
+          if (quadBadge) quadBadge.textContent = 'UPDATED ' + data.updated;
+        }
+      } catch (err) {
+        console.log('Error loading dynamic landing feed:', err);
+      }
+    }
+
+    loadLiveFeed();
   })();
 
   // Cursor spotlight in hero
