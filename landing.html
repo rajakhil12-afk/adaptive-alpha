@@ -365,13 +365,17 @@
   [data-reveal]{opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease;}
   [data-reveal].in{opacity:1; transform:translateY(0);}
 
-  /* ---------- CURSOR SPOTLIGHT (hero only) ---------- */
-  .hero{position:relative; overflow:hidden;}
-  .spotlight{
-    position:absolute; width:520px; height:520px; border-radius:50%; pointer-events:none;
-    background:radial-gradient(circle, rgba(42,70,232,0.14), transparent 70%);
-    transform:translate(-50%,-50%); left:50%; top:30%; z-index:0; transition:opacity .3s;
-    filter:blur(4px);
+  /* ---------- FULL-PAGE INTERACTIVE BLUE WAVE CANVAS & AURA ---------- */
+  #waveCanvas{
+    position:fixed; top:0; left:0; width:100vw; height:100vh;
+    pointer-events:none; z-index:-1; opacity:0.92;
+  }
+  .global-cursor-glow{
+    position:fixed; width:650px; height:650px; border-radius:50%; pointer-events:none;
+    background:radial-gradient(circle, rgba(42,70,232,0.22) 0%, rgba(59,130,246,0.14) 35%, rgba(20,184,166,0.06) 60%, transparent 75%);
+    transform:translate(-50%,-50%); top:30%; left:50%; z-index:-1;
+    filter:blur(6px); transition:opacity .4s ease, transform .08s ease-out;
+    will-change:transform, left, top;
   }
 
   /* ---------- PRODUCT PREVIEW MOCKUP ---------- */
@@ -405,6 +409,8 @@
 </style>
 </head>
 <body>
+<canvas id="waveCanvas"></canvas>
+<div class="global-cursor-glow" id="globalGlow"></div>
 
 <header>
   <nav class="nav">
@@ -425,7 +431,7 @@
 <main>
   <!-- HERO -->
   <section class="hero">
-    <div class="spotlight" id="spotlight"></div>
+    
     <div class="wrap hero-grid">
       <div>
         <span class="eyebrow"><span class="dot"></span> Live EOD data · Nifty 500 · 100% free</span>
@@ -945,16 +951,120 @@
     loadLiveFeed();
   })();
 
-  // Cursor spotlight in hero
+  // Full-Page Interactive Blue Wave & Fluid Cursor Canvas Engine
   (function(){
-    var hero = document.querySelector(".hero");
-    var spot = document.getElementById("spotlight");
-    if(!hero || !spot || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    hero.addEventListener("mousemove", function(e){
-      var r = hero.getBoundingClientRect();
-      spot.style.left = (e.clientX - r.left) + "px";
-      spot.style.top = (e.clientY - r.top) + "px";
+    var canvas = document.getElementById("waveCanvas");
+    var glow = document.getElementById("globalGlow");
+    if (!canvas) return;
+    var ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    var width = 0, height = 0;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    function resize(){
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    var mouse = { x: width * 0.5, y: height * 0.3, targetX: width * 0.5, targetY: height * 0.3, speed: 0, active: false };
+    var lastMouseTime = 0;
+
+    window.addEventListener("mousemove", function(e){
+      var dx = e.clientX - mouse.targetX;
+      var dy = e.clientY - mouse.targetY;
+      mouse.speed = Math.min(Math.sqrt(dx * dx + dy * dy), 40);
+      mouse.targetX = e.clientX;
+      mouse.targetY = e.clientY;
+      mouse.active = true;
+      lastMouseTime = performance.now();
+
+      if (glow) {
+        glow.style.left = e.clientX + "px";
+        glow.style.top = e.clientY + "px";
+        glow.style.opacity = "1";
+      }
     });
+
+    window.addEventListener("mouseleave", function(){
+      mouse.active = false;
+      if (glow) glow.style.opacity = "0.4";
+    });
+
+    // Multi-layer animated sine waves with cursor interaction
+    var waves = [
+      { amp: 45, freq: 0.0018, speed: 0.016, color: "rgba(42, 70, 232, 0.12)", yOffset: 0.22 },
+      { amp: 60, freq: 0.0012, speed: -0.012, color: "rgba(59, 130, 246, 0.15)", yOffset: 0.48 },
+      { amp: 50, freq: 0.0022, speed: 0.019, color: "rgba(20, 184, 166, 0.10)", yOffset: 0.72 },
+      { amp: 70, freq: 0.0009, speed: -0.015, color: "rgba(42, 70, 232, 0.14)", yOffset: 0.88 }
+    ];
+
+    var time = 0;
+    function animate(){
+      time += 1;
+      // Smooth mouse interpolation
+      mouse.x += (mouse.targetX - mouse.x) * 0.08;
+      mouse.y += (mouse.targetY - mouse.y) * 0.08;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw cursor interactive blue ripples if active
+      if (mouse.active || performance.now() - lastMouseTime < 2500) {
+        var grad = ctx.createRadialGradient(mouse.x, mouse.y, 10, mouse.x, mouse.y, 380);
+        grad.addColorStop(0, "rgba(42, 70, 232, 0.16)");
+        grad.addColorStop(0.4, "rgba(59, 130, 246, 0.09)");
+        grad.addColorStop(0.7, "rgba(20, 184, 166, 0.04)");
+        grad.addColorStop(1, "transparent");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      // Draw fluid undulating waves across entire page
+      for (var w = 0; w < waves.length; w++) {
+        var wave = waves[w];
+        ctx.beginPath();
+        ctx.fillStyle = wave.color;
+
+        var baseY = height * wave.yOffset;
+        ctx.moveTo(0, height);
+
+        for (var x = 0; x <= width; x += 12) {
+          // Standard fluid oscillation
+          var waveY = Math.sin(x * wave.freq + time * wave.speed + w) * wave.amp
+                    + Math.cos(x * wave.freq * 0.5 + time * wave.speed * 0.7) * (wave.amp * 0.5);
+
+          // Magnetic mouse wave perturbation
+          var distToMouse = Math.abs(x - mouse.x);
+          if (distToMouse < 320) {
+            var influence = Math.cos((distToMouse / 320) * Math.PI * 0.5);
+            var mouseOffset = (mouse.y - baseY) * 0.28 * influence;
+            waveY += mouseOffset;
+          }
+
+          var y = baseY + waveY;
+          if (x === 0) {
+            ctx.lineTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+
+        ctx.lineTo(width, height);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      animate();
+    }
   })();
 
   // Scroll reveal
