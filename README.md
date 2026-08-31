@@ -88,6 +88,47 @@ The screener pipeline includes built-in resilience:
 
 ---
 
+## 🚀 Installation & Local Setup
+
+The pipeline is built with **zero external runtime dependencies** (using native Node.js standard libraries: `https`, `fs`, `path`, and `child_process`).
+
+### Prerequisites
+- **Node.js**: `v20.0.0` or later (`>=24.0.0` recommended)
+- **Git**
+
+### Running Locally
+```bash
+# Clone the repository
+git clone https://github.com/rajakhil12-afk/adaptive-alpha.git
+cd adaptive-alpha
+
+# Run the screener data generation pipeline
+node scripts/update_data.js
+
+# (Optional) Scrape missing TradingView logo identifiers
+node scripts/scrape_logo_ids.js
+
+# (Optional) Test Telegram notification script locally
+node scripts/send_telegram_notification.js
+```
+
+---
+
+## 🔐 Environment Variables & GitHub Secrets
+
+For automated daily Telegram breakout notifications, configure the following secrets in your GitHub repository (**Settings > Secrets and variables > Actions**):
+
+| Secret / Variable | Required | Description | Example |
+| :--- | :--- | :--- | :--- |
+| `TELEGRAM_BOT_TOKEN` | Optional (CI alerts) | Telegram Bot API token obtained from [@BotFather](https://t.me/BotFather) | `123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ` |
+| `TELEGRAM_CHAT_ID` | Optional (CI alerts) | Telegram channel ID, group ID, or user ID (use [@userinfobot](https://t.me/userinfobot)) | `-1001234567890` or `987654321` |
+| `TELEGRAM_REQUIRED` | Optional | Set to `true` if you want the pipeline to fail when credentials are missing | `false` |
+
+A sample template is provided in [`.env.example`](.env.example).
+
+---
+
 ## 🤝 Acknowledgements
 
 Special thanks to the Pine Script developer community on TradingView, particularly **Bhat Trader**, whose conceptual scripting and custom indicators for measuring relative strength against benchmark indexes laid the mathematical foundation for this application's momentum matrix logic.
+

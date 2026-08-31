@@ -1,4 +1,12 @@
+# Dependencies
 node_modules/
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Temporary / build files
 git-temp/
 mingit.zip
 *.log
