@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Re-enable any disabled scheduled workflows
         # GitHub auto-disables scheduled workflows after 60 days of repo inactivity.
