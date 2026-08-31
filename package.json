@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node scripts/update_data.js",
     "update": "node scripts/update_data.js",
-    "scrape-logos": "node scripts/scrape_logo_ids.js"
+    "scrape-logos": "node scripts/scrape_logo_ids.js",
+    "notify": "node scripts/send_telegram_notification.js"
   },
   "engines": {
     "node": ">=24.0.0"
