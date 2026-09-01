@@ -2,9 +2,10 @@ name: Daily Screener Update
 
 on:
   schedule:
-    # Run every Monday to Friday at 1:30 PM UTC (7:00 PM IST)
-    - cron: '30 13 * * 1-5'
-  workflow_dispatch: # Enable manual triggers from GitHub UI
+    # Run every Monday to Friday at 2:10 PM UTC (7:40 PM IST)
+    # Using an off-peak minute (:10) bypasses GitHub Actions queue congestion
+    - cron: '10 14 * * 1-5'
+  workflow_dispatch: # Enable manual triggers anytime from GitHub Actions UI
 
 jobs:
   update-screener:
@@ -25,9 +26,6 @@ jobs:
       - name: Install system dependencies
         run: sudo apt-get install -y unzip
 
-      - name: Scrape Missing Logo IDs
-        run: node scripts/scrape_logo_ids.js || echo "Logo scraping failed, continuing."
-
       - name: Run Screener Generator (with retry)
         run: |
           for attempt in 1 2 3; do
@@ -37,8 +35,8 @@ jobs:
               echo "All 3 attempts failed. Exiting."
               exit 1
             fi
-            echo "Attempt $attempt failed. Retrying in 60 seconds..."
-            sleep 60
+            echo "Attempt $attempt failed. Retrying in 30 seconds..."
+            sleep 30
           done
 
       - name: Send Telegram Notification
@@ -53,13 +51,12 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Always write a heartbeat timestamp — this ensures a commit always happens,
-          # which keeps the repo "active" so GitHub never auto-pauses this schedule.
+          # Write a heartbeat timestamp to keep repo active
           echo "Last successful run: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > .github/last_updated.txt
 
-          git add data/screener.json data/breakout_history.json data/logo_ids.json .github/last_updated.txt
+          git add data/screener.json data/breakout_history.json .github/last_updated.txt
 
-          # If screener.json changed, use a descriptive message; otherwise just heartbeat
+          # If screener.json changed, use a descriptive message; otherwise heartbeat
           if git diff --cached --quiet -- data/screener.json; then
             git commit -m "ci: heartbeat keep-alive [skip ci]"
           else
