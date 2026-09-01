@@ -56,7 +56,7 @@ combining ARS & SRS yields 4 distinct market regimes:
 ## ⚙️ Hybrid Data Architecture
 
 ### Layer 1 — Static EOD Pipeline (GitHub Actions)
-Runs automatically every weekday at **7:00 PM IST** (13:30 UTC):
+Runs automatically every weekday at **7:40 PM IST** (14:10 UTC):
 
 1. Downloads official **NSE UDiFF Bhavcopy** (with fallback to legacy archive URL).
 2. Fetches 6-year historical series from **Yahoo Finance** with retry logic.
@@ -74,7 +74,7 @@ Clicking **"↻ Live Data"** in the dashboard pulls real-time price series from 
 
 | Workflow | Schedule | Purpose |
 |---|---|---|
-| `screener_update.yml` | Mon–Fri at 7:00 PM IST (13:30 UTC) | Downloads NSE data, calculates indicators, sends Telegram report, updates `screener.json` |
+| `screener_update.yml` | Mon–Fri at 7:40 PM IST (14:10 UTC) | Downloads NSE data, calculates indicators, sends Telegram report, updates `screener.json` |
 | `keepalive.yml` | 1st of every month | Re-enables any paused workflows; commits heartbeat file |
 
 Both workflows use **Node.js 24** on `ubuntu-latest` with **GitHub Actions v5** (`actions/checkout@v5`, `actions/setup-node@v5`).
