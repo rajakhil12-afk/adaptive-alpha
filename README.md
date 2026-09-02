@@ -25,7 +25,7 @@
 * **Shorter-term Relative Strength (SRS):** Rolling 63-day (1 quarter) momentum.
 * **RS Rating (1–99):** Composite percentile rank across ARS (40%), SRS (30%), Volume Ratio (15%), and ARS-positive duration (15%).
 * **Dual Supertrend (14/3 & 10/3):** Two-stage trend confirmation with fresh signal glow badges (⚡).
-* **FII/DII Flow Ticker & Telegram Alerts:** Daily net buying/selling by foreign & domestic institutional investors + automated 7:00 PM IST Telegram breakout reports.
+* **FII/DII Flow Ticker & Telegram Alerts:** Daily net buying/selling by foreign & domestic institutional investors + automated 8:00 PM IST (7:40 PM UTC) Telegram breakout reports.
 
 ---
 
