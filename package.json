@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node scripts/update_data.js",
     "update": "node scripts/update_data.js",
+    "test": "node --test",
     "scrape-logos": "node scripts/scrape_logo_ids.js",
     "notify": "node scripts/send_telegram_notification.js"
   },
