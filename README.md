@@ -1,134 +1,137 @@
-# Adaptive Alpha — Institutional Momentum & Rotation Screener (v10.0)
+# ⚡ Adaptive Alpha — Institutional Momentum & Sector Rotation Terminal
 
-**Adaptive Alpha** is a premium, client-ready technical momentum screener, dual relative-strength engine, and sector rotation dashboard for the **NSE India** stock universe (**Nifty 500**, Nifty 50, Nifty 100, Nifty Midcap 100, Nifty Smallcap 100, ~500 stocks). Designed with a high-end TradingView-inspired dark slate aesthetic, the platform helps analysts and traders identify market leaders, explosive volume breakouts, and industry rotation trends in real time.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/Node.js-%3E%3D22.0.0-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Tests](https://img.shields.io/badge/Unit%20Tests-100%25%20Passing-brightgreen.svg)](test/indicators.test.js)
+[![Daily Refresh](https://img.shields.io/badge/Daily%20Refresh-7%3A40%20PM%20IST-orange.svg)](.github/workflows/screener_update.yml)
+[![GitHub stars](https://img.shields.io/github/stars/rajakhil12-afk/adaptive-alpha?style=social)](https://github.com/rajakhil12-afk/adaptive-alpha)
 
-> **Live Site:** https://rajakhil12-afk.github.io/adaptive-alpha
+**Adaptive Alpha** is an open-source, zero-build quantitative momentum screener, dual relative-strength engine, and sector rotation dashboard for the **NSE India** stock universe (**Nifty 500**, Nifty 50, Nifty Next 50, Nifty Midcap 100, Nifty Smallcap 100, ~500 equities). 
+
+Designed with a high-end dark slate institutional aesthetic, the platform equips traders, quants, and analysts to identify leading momentum stocks, volume accumulation footprints, and industry rotation trends for **$0**.
 
 ---
 
-## 🚀 Key Features (v10.0)
+### 🌐 Live Platform Links
+* ⚡ **[Live Screener Terminal](https://rajakhil12-afk.github.io/adaptive-alpha/)** — Real-time interactive quantitative scanner & heatmaps.
+* 🏠 **[Landing Page & Market Regime Map](https://rajakhil12-afk.github.io/adaptive-alpha/landing.html)** — Macro market breadth & regime overview.
+* 📖 **[Strategy Presets Playbook](https://rajakhil12-afk.github.io/adaptive-alpha/preset_playbook.html)** — Risk-reward trade setups & execution rules.
+* 📚 **[User Guide & Methodology](https://rajakhil12-afk.github.io/adaptive-alpha/user_guide.html)** — Complete mathematical indicator formulas.
 
-* **Dual RS 4-Quadrant Engine (ARS + SRS):** Classifies stocks into 4 actionable quadrants:
+---
+
+## 🚀 Key Features
+
+* **Dual RS 4-Quadrant Engine (ARS + SRS):** Classifies stocks into 4 actionable regimes:
   * 🌟 **QUAD 1 (Power Leader):** `ARS > 0` & `SRS > 0` (Heavy institutional momentum)
   * 🔄 **QUAD 2 (Early Turnaround):** `ARS <= 0` & `SRS > 0` (Catches bottoming crossovers weeks before ARS turns positive!)
   * ⏸️ **QUAD 3 (Leader Dip Buy):** `ARS > 0` & `SRS <= 0` (Cooling leader / low-risk re-entry zone near 50MA)
   * 💤 **QUAD 4 (Laggard):** `ARS <= 0` & `SRS <= 0` (Underperforming stocks)
-* **🎯 1-Click Strategy Presets:** Instant filter bar buttons for *Dual Alpha Leaders, Early Turnarounds, Leader Dip Buy, Volume Surge,* and *VCP Consolidations*.
-* **🧮 Smart Position Size & Risk Calculator:** Integrated inside stock detail modals; automatically calculates exact share quantities, total investment, % of portfolio capital, and 1:2 / 1:3 R:R targets based on Supertrend stop-loss (with `localStorage` memory).
-* **🗺️ Interactive Sector Rotation Treemap View:** Responsive CSS grid displaying Sector ARS (long-term trend), Sector SRS (short-term acceleration), stock counts, and leading stock per industry.
-* **🖼️ 1-Click Social Share Card Generator:** Renders a high-resolution PNG image card of today's breakouts and market summary via HTML Canvas, complete with 1-click *Download PNG* and *Copy Image to Clipboard* for Twitter, WhatsApp, or Telegram.
-* **📡 Volume Radar (Surge 2x+ & VCP Dry-up < 0.7x):** Detects institutional accumulation surges (>2.0x avg vol) and volume contraction setups (<0.7x avg vol).
-* **📈 Inline ARS Sparklines & Breathing Pulse Glow:** Mini trendlines inside table rows and ambient gold/emerald breathing pulse animation on fresh breakouts.
-* **📱 Mobile App Experience:** Touch-optimized bottom navigation bar on smartphone screens (< 768px).
-* **TradingView Aesthetics:** Premium Slate Dark Theme (`#0B0E14` / `#131722`) with desaturated pastel indicators.
-* **Adaptive Relative Strength (ARS):** Long-term outperformance vs NIFTY 50 anchored from January 2021.
-* **Shorter-term Relative Strength (SRS):** Rolling 63-day (1 quarter) momentum.
-* **RS Rating (1–99):** Composite percentile rank across ARS (40%), SRS (30%), Volume Ratio (15%), and ARS-positive duration (15%).
-* **Dual Supertrend (14/3 & 10/3):** Two-stage trend confirmation with fresh signal glow badges (⚡).
-* **FII/DII Flow Ticker & Telegram Alerts:** Daily net buying/selling by foreign & domestic institutional investors + automated 8:00 PM IST (7:40 PM UTC) Telegram breakout reports.
+* **🎯 1-Click Strategy Presets:** Instant filter buttons for *Power Leaders (Q1 + ST), Early Pocket Pivots, VCP Squeeze, Institutional Volume Surges (2×), Stage-2 Near 52W High,* and *Q2 Turnarounds*.
+* **🏛️ Relative Rotation Graph (RRG) Radar Clock:** Clockwise sector rotation visualizer tracking leading, improving, weakening, and lagging industries against the Nifty benchmark.
+* **🧘 Quantitative VCP Squeeze & Pocket Pivot Detectors:** Algorithmic detection of ATR volatility contraction ($\text{ATR}_5/\text{ATR}_{20} \le 0.70$) and institutional volume accumulation footprints.
+* **🗺️ Multi-Metric Heatmap View:** Matrix colored dynamically by 52-Week High Proximity, ARS Alpha %, or Volume Spurts.
+* **🧮 Smart Position Size & Risk Calculator:** Integrated inside stock detail modals; automatically computes exact share quantities, total investment, % of portfolio capital, and 1:2 / 1:3 R:R targets based on Supertrend trailing stop-loss (with `localStorage` persistence).
+* **🎨 1-Click Social Share Card Generator:** Renders high-res PNG image cards of daily breakout leaders via HTML5 Canvas with instant *Download PNG* and *Copy Image* shortcuts for Twitter/X, WhatsApp, and Telegram.
+* **🎯 30-Day Breakout Track Record Ribbon:** Live topbar banner tracking rolling win rate %, average peak run-up %, and top performers.
+* **📱 Mobile App Experience:** Touch-optimized bottom navigation bar on smartphone screens.
 
 ---
 
-## 📊 Technical Indicators & Math
+## 📊 Quantitative Math & Indicators
 
 ### 1. Adaptive Relative Strength (ARS)
-Measures cumulative outperformance vs NIFTY 50 since January 1, 2021.
+Measures cumulative outperformance vs. NIFTY 50 since January 1, 2021:
 
 $$ARS = \frac{\text{Stock Price}_{\text{Today}} / \text{Stock Price}_{2021\text{-}01\text{-}01}}{\text{NIFTY}_{\text{Today}} / \text{NIFTY}_{2021\text{-}01\text{-}01}} - 1$$
 
 ### 2. Shorter-term Relative Strength (SRS)
-Rolling 63-trading-day (1 business quarter) relative performance.
+Rolling 63-trading-day (1 business quarter) relative performance:
 
 $$SRS = \frac{\text{Stock Price}_{\text{Today}} / \text{Stock Price}_{63\text{ days ago}}}{\text{NIFTY}_{\text{Today}} / \text{NIFTY}_{63\text{ days ago}}} - 1$$
 
-### 3. Dual RS 4-Quadrant Classification
-combining ARS & SRS yields 4 distinct market regimes:
+### 3. Dual RS 4-Quadrant Matrix
 
 | Quadrant | Condition | Signal & Action |
 | :--- | :--- | :--- |
-| 🌟 **Quad 1** | `ARS > 0` & `SRS > 0` | **Power Leader** (High conviction breakouts) |
-| 🔄 **Quad 2** | `ARS <= 0` & `SRS > 0` | **Early Turnaround** (Catches bottoming stocks early) |
-| ⏸️ **Quad 3** | `ARS > 0` & `SRS <= 0` | **Leader Dip** (Low risk re-entry near 50MA) |
-| 💤 **Quad 4** | `ARS <= 0` & `SRS <= 0` | **Laggard** (Avoid / underperforming) |
+| 🌟 **Quad 1** | `ARS > 0` & `SRS > 0` | **Power Leader** (High conviction trend breakouts) |
+| 🔄 **Quad 2** | `ARS <= 0` & `SRS > 0` | **Early Turnaround** (Catches bottoming reversals early) |
+| ⏸️ **Quad 3** | `ARS > 0` & `SRS <= 0` | **Leader Dip** (Low-risk re-entry near moving average support) |
+| 💤 **Quad 4** | `ARS <= 0` & `SRS <= 0` | **Laggard** (Avoid / capital preservation zone) |
 
 ---
 
-## ⚙️ Hybrid Data Architecture
+## ⚙️ Architecture: Zero-Build & Automated CI/CD
 
-### Layer 1 — Static EOD Pipeline (GitHub Actions)
-Runs automatically every weekday at **7:40 PM IST** (14:10 UTC):
-
-1. Downloads official **NSE UDiFF Bhavcopy** (with fallback to legacy archive URL).
-2. Fetches 6-year historical series from **Yahoo Finance** with retry logic.
-3. Calculates ARS, SRS, RS Rating, Supertrend, MA Status, ARS Slope for all ~200+ stocks.
-4. Formats timestamps explicitly in **IST (`Asia/Kolkata`)** timezone.
-5. Sends automated **Telegram Breakout & Sector Reports** (including fresh crossovers and calendar week breakouts).
-6. Writes `data/screener.json` and commits it — triggering an instant GitHub Pages redeploy.
-
-### Layer 2 — On-Demand Live Scan
-Clicking **"↻ Live Data"** in the dashboard pulls real-time price series from Yahoo Finance and recalculates all indicators client-side in the browser.
-
----
-
-## 🛠️ Automation Details
-
-| Workflow | Schedule | Purpose |
-|---|---|---|
-| `screener_update.yml` | Mon–Fri at 7:40 PM IST (14:10 UTC) | Downloads NSE data, calculates indicators, sends Telegram report, updates `screener.json` |
-| `keepalive.yml` | 1st of every month | Re-enables any paused workflows; commits heartbeat file |
-
-Both workflows use **Node.js 24** on `ubuntu-latest` with **GitHub Actions v5** (`actions/checkout@v5`, `actions/setup-node@v5`).
-
-The screener pipeline includes built-in resilience:
-* **3 retry attempts** per Yahoo Finance fetch with exponential backoff
-* **5 retry attempts** for the NIFTY 50 benchmark fetch
-* **Graceful Bhavcopy fallback** — continues with Yahoo-only data if NSE is unavailable
-* **Workflow-level retry** — the entire script is retried up to 3 times with 60-second intervals
-* **Global error handlers** — `unhandledRejection` and `uncaughtException` prevent silent crashes
-
----
-
-## 🚀 Installation & Local Setup
-
-The pipeline is built with **zero external runtime dependencies** (using native Node.js standard libraries: `https`, `fs`, `path`, and `child_process`).
-
-### Prerequisites
-- **Node.js**: `v20.0.0` or later (`>=24.0.0` recommended)
-- **Git**
-
-### Running Locally
-```bash
-# Clone the repository
-git clone https://github.com/rajakhil12-afk/adaptive-alpha.git
-cd adaptive-alpha
-
-# Run the screener data generation pipeline
-node scripts/update_data.js
-
-# (Optional) Scrape missing TradingView logo identifiers
-node scripts/scrape_logo_ids.js
-
-# (Optional) Test Telegram notification script locally
-node scripts/send_telegram_notification.js
+```text
+adaptive-alpha/
+├── .github/workflows/
+│   └── screener_update.yml   # Automated 7:40 PM IST (14:10 UTC) cron pipeline
+├── config/universe.js        # ~500 NSE constituent dataset
+├── css/styles.css            # Dark/light theme tokens, tooltips, performance ribbon
+├── data/screener.json        # EOD calculated database & market pulse
+├── js/                       # Zero-build modular ES scripts
+│   ├── app.js                # State orchestrator & preset filter engine
+│   ├── indicators.js         # Pure mathematical indicator module
+│   ├── modal.js              # Scorecard & position size calculator
+│   ├── shareCard.js          # Canvas PNG social card generator
+│   ├── table.js              # Table rendering, sorting, dynamic sparklines
+│   ├── tooltips.js           # Instant floating micro-tooltips engine
+│   ├── treemap.js            # Sector rotation RRG clock & heatmaps
+│   └── universe.js           # Universal stock constituent lists
+├── scripts/update_data.js    # Node.js backend calculation engine
+├── test/indicators.test.js   # Automated unit tests (node --test)
+├── index.html                # Main Screener Terminal (~370 lines)
+├── landing.html              # Marketing & Regime Map Landing Page
+└── package.json              # Scripts: start, test, update, notify
 ```
 
 ---
 
-## 🔐 Environment Variables & GitHub Secrets
+## 🧪 Automated Unit Testing
 
-For automated daily Telegram breakout notifications, configure the following secrets in your GitHub repository (**Settings > Secrets and variables > Actions**):
+Run the native Node.js test suite anytime with zero npm dependencies:
 
-| Secret / Variable | Required | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `TELEGRAM_BOT_TOKEN` | Optional (CI alerts) | Telegram Bot API token obtained from [@BotFather](https://t.me/BotFather) | `123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ` |
-| `TELEGRAM_CHAT_ID` | Optional (CI alerts) | Telegram channel ID, group ID, or user ID (use [@userinfobot](https://t.me/userinfobot)) | `-1001234567890` or `987654321` |
-| `TELEGRAM_REQUIRED` | Optional | Set to `true` if you want the pipeline to fail when credentials are missing | `false` |
+```bash
+npm test
+# or: node --test test/indicators.test.js
+```
 
-A sample template is provided in [`.env.example`](.env.example).
+```text
+✔ Supertrend calculation — uptrend detection and buy signal
+✔ Supertrend calculation — insufficient candles fallback
+✔ Pocket Pivot Detector — identifies institutional volume accumulation
+✔ VCP Squeeze Detector — validates volatility and volume compression
+✔ Mansfield Relative Strength — computes benchmark outperformance
+✔ RS Rating Multi-Factor Ranker — ranks composite stocks between 1 and 99
+ℹ tests 6 | pass 6 | fail 0 | duration_ms 667ms
+```
 
 ---
 
-## 🤝 Acknowledgements
+## 🛠️ Local Development & Setup
 
-Special thanks to the Pine Script developer community on TradingView, particularly **Bhat Trader**, whose conceptual scripting and custom indicators for measuring relative strength against benchmark indexes laid the mathematical foundation for this application's momentum matrix logic.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/rajakhil12-afk/adaptive-alpha.git
+   cd adaptive-alpha
+   ```
 
+2. **Open directly in browser:**
+   Open `index.html` or `landing.html` in any web browser — no build or bundling required!
+
+3. **Run daily update locally:**
+   ```bash
+   npm start
+   # or: node scripts/update_data.js
+   ```
+
+---
+
+## 🌟 Support & Community
+
+If you find **Adaptive Alpha** useful for your trading, quantitative research, or open-source projects, please consider giving it a **⭐ Star on GitHub**!
+
+* Created with ❤️ by the **Adaptive Alpha Team**
+* Contributions, issue reports, and pull requests are welcome.
+* Released under the [MIT License](LICENSE).
