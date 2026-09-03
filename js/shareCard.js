@@ -1,7 +1,91 @@
 /**
  * Adaptive Alpha — Social Share Card & Data Export Engine
- * Generates high-res PNG visual cards, CSV exports, and Telegram/WhatsApp text summaries.
+ * Generates high-res PNG visual cards with official logo, theme palettes,
+ * CSV exports, and Telegram/WhatsApp text summaries.
  */
+
+let currentCardTheme = 'gold'; // 'gold', 'emerald', 'sapphire', 'amethyst'
+
+const CARD_THEMES = {
+  gold: {
+    name: 'Obsidian Gold',
+    bgStart: '#090c12',
+    bgEnd: '#161b24',
+    accent: '#e3b341',
+    border: 'rgba(227, 179, 65, 0.45)',
+    titleColor: '#e3b341',
+    subtitleColor: '#8b949e',
+    listTitleColor: '#e3b341',
+    rowBg: 'rgba(22, 28, 42, 0.95)',
+    rowBorder: 'rgba(227, 179, 65, 0.25)',
+    arsPos: '#00e676',
+    arsNeg: '#ef5350',
+    volColor: '#82b1ff',
+    rsColor: '#e3b341',
+    pillBg: 'rgba(227, 179, 65, 0.14)'
+  },
+  emerald: {
+    name: 'Emerald Alpha',
+    bgStart: '#03140c',
+    bgEnd: '#0a291b',
+    accent: '#0fe586',
+    border: 'rgba(15, 229, 134, 0.45)',
+    titleColor: '#0fe586',
+    subtitleColor: '#7ba892',
+    listTitleColor: '#0fe586',
+    rowBg: 'rgba(8, 38, 25, 0.95)',
+    rowBorder: 'rgba(15, 229, 134, 0.25)',
+    arsPos: '#0fe586',
+    arsNeg: '#ef5350',
+    volColor: '#5eead4',
+    rsColor: '#0fe586',
+    pillBg: 'rgba(15, 229, 134, 0.14)'
+  },
+  sapphire: {
+    name: 'Sapphire Pro',
+    bgStart: '#051020',
+    bgEnd: '#0d2242',
+    accent: '#58a6ff',
+    border: 'rgba(88, 166, 255, 0.45)',
+    titleColor: '#58a6ff',
+    subtitleColor: '#8da6c4',
+    listTitleColor: '#58a6ff',
+    rowBg: 'rgba(14, 32, 60, 0.95)',
+    rowBorder: 'rgba(88, 166, 255, 0.25)',
+    arsPos: '#26d07c',
+    arsNeg: '#ff6b6b',
+    volColor: '#a5d6ff',
+    rsColor: '#79c0ff',
+    pillBg: 'rgba(88, 166, 255, 0.14)'
+  },
+  amethyst: {
+    name: 'Amethyst Matrix',
+    bgStart: '#10071c',
+    bgEnd: '#240f3b',
+    accent: '#c084fc',
+    border: 'rgba(192, 132, 252, 0.45)',
+    titleColor: '#c084fc',
+    subtitleColor: '#a496b8',
+    listTitleColor: '#e879f9',
+    rowBg: 'rgba(32, 16, 52, 0.95)',
+    rowBorder: 'rgba(192, 132, 252, 0.25)',
+    arsPos: '#34d399',
+    arsNeg: '#f87171',
+    volColor: '#e879f9',
+    rsColor: '#c084fc',
+    pillBg: 'rgba(192, 132, 252, 0.14)'
+  }
+};
+
+function setCardTheme(themeKey) {
+  if (CARD_THEMES[themeKey]) {
+    currentCardTheme = themeKey;
+    document.querySelectorAll('.card-theme-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-theme') === themeKey);
+    });
+    generateShareImageCard();
+  }
+}
 
 function openShareCardModal() {
   const modal = document.getElementById('share-card-modal');
@@ -14,91 +98,242 @@ function closeShareCardModal() {
   if (modal) modal.classList.remove('open');
 }
 
+function drawCanvasRoundRect(ctx, x, y, width, height, radius, fill, stroke) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+  if (fill) ctx.fill();
+  if (stroke) ctx.stroke();
+}
+
 function generateShareImageCard() {
   const canvas = document.getElementById('share-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
   canvas.width = 1200;
-  canvas.height = 750;
+  canvas.height = 760;
 
-  const grad = ctx.createLinearGradient(0, 0, 1200, 750);
-  grad.addColorStop(0, '#0d1117');
-  grad.addColorStop(1, '#161b22');
+  const theme = CARD_THEMES[currentCardTheme] || CARD_THEMES.gold;
+
+  // Background Gradient
+  const grad = ctx.createLinearGradient(0, 0, 1200, 760);
+  grad.addColorStop(0, theme.bgStart);
+  grad.addColorStop(1, theme.bgEnd);
   ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 1200, 750);
+  ctx.fillRect(0, 0, 1200, 760);
 
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-  ctx.lineWidth = 4;
-  ctx.strokeRect(20, 20, 1160, 710);
+  // Decorative Subtle Grid Glow
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.025)';
+  ctx.lineWidth = 1;
+  for (let x = 40; x < 1200; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, 760);
+    ctx.stroke();
+  }
+  for (let y = 40; y < 760; y += 40) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(1200, y);
+    ctx.stroke();
+  }
 
-  ctx.fillStyle = '#e3b341';
-  ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-  ctx.fillText('⚡ ADAPTIVE ALPHA | DAILY MOMENTUM CARD', 50, 75);
+  // Outer Glowing Border
+  ctx.strokeStyle = theme.border;
+  ctx.lineWidth = 3.5;
+  drawCanvasRoundRect(ctx, 20, 20, 1160, 720, 16, false, true);
+
+  // Inner Accent Line
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+  ctx.lineWidth = 1;
+  drawCanvasRoundRect(ctx, 27, 27, 1146, 706, 12, false, true);
+
+  // Top Left Header: Logo & Title
+  const logoElem = document.getElementById('app-brand-logo');
+  const hasValidLogo = logoElem && logoElem.complete && logoElem.naturalWidth > 0;
+
+  if (hasValidLogo) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(84, 80, 28, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.fill();
+    ctx.strokeStyle = theme.accent;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+    ctx.clip();
+    ctx.drawImage(logoElem, 56, 52, 56, 56);
+    ctx.restore();
+
+    ctx.fillStyle = theme.titleColor;
+    ctx.font = '900 32px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText('ADAPTIVE ALPHA', 128, 76);
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 24px -apple-system, sans-serif';
+    ctx.fillText('| DAILY MOMENTUM CARD', 418, 76);
+  } else {
+    // Elegant Vector Logo Mark Fallback
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(84, 80, 28, 0, Math.PI * 2);
+    ctx.fillStyle = theme.pillBg;
+    ctx.fill();
+    ctx.strokeStyle = theme.accent;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.fillStyle = theme.accent;
+    ctx.font = '900 28px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('⚡', 84, 89);
+    ctx.textAlign = 'left';
+
+    ctx.fillStyle = theme.titleColor;
+    ctx.font = '900 32px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText('ADAPTIVE ALPHA', 128, 76);
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 24px -apple-system, sans-serif';
+    ctx.fillText('| DAILY MOMENTUM CARD', 418, 76);
+  }
 
   const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' });
-  ctx.fillStyle = '#8b949e';
-  ctx.font = '500 22px -apple-system, sans-serif';
-  ctx.fillText(`NSE Market Closing Summary · ${dateStr}`, 50, 115);
+  ctx.fillStyle = theme.subtitleColor;
+  ctx.font = '500 20px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillText(`NSE Market Closing Summary · ${dateStr}`, 128, 110);
 
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-  ctx.lineWidth = 2;
+  // Top Right Pill (NSE Nifty 500)
+  ctx.fillStyle = theme.pillBg;
+  ctx.strokeStyle = theme.border;
+  ctx.lineWidth = 1;
+  drawCanvasRoundRect(ctx, 940, 50, 200, 42, 21, true, true);
+  ctx.fillStyle = theme.accent;
+  ctx.font = 'bold 16px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('⚡ NSE NIFTY 500', 1040, 77);
+  ctx.textAlign = 'left';
+
+  // Header Divider
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.moveTo(50, 135);
-  ctx.lineTo(1150, 135);
+  ctx.moveTo(50, 138);
+  ctx.lineTo(1150, 138);
   ctx.stroke();
 
   const freshBo = allData.filter(d => d.breakout);
   const topRunners = [...allData].sort((a,b) => b.ars - a.ars).slice(0, 5);
   const displayList = freshBo.length > 0 ? freshBo.slice(0, 5) : topRunners;
-  const listTitle = freshBo.length > 0 ? `🔥 FRESH ARS BREAKOUTS (${freshBo.length})` : `🌟 TOP RELATIVE STRENGTH LEADERS`;
+  const listTitle = freshBo.length > 0 ? `🔥 FRESH ARS BREAKOUT LEADERS (${freshBo.length})` : `🌟 TOP RELATIVE STRENGTH LEADERS`;
 
-  ctx.fillStyle = '#58a6ff';
-  ctx.font = 'bold 24px -apple-system, sans-serif';
-  ctx.fillText(listTitle, 50, 180);
+  // Section Title
+  ctx.fillStyle = theme.listTitleColor;
+  ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillText(listTitle, 50, 178);
 
-  let y = 230;
+  let y = 232;
   displayList.forEach((s, idx) => {
-    ctx.fillStyle = 'rgba(22, 27, 34, 0.8)';
-    ctx.fillRect(50, y - 30, 1100, 60);
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-    ctx.strokeRect(50, y - 30, 1100, 60);
+    // Row Background Card
+    ctx.fillStyle = theme.rowBg;
+    ctx.strokeStyle = theme.rowBorder;
+    ctx.lineWidth = 1.2;
+    drawCanvasRoundRect(ctx, 50, y - 34, 1100, 68, 10, true, true);
+
+    // Rank & Ticker Badge
+    ctx.fillStyle = theme.accent;
+    ctx.font = 'bold 22px -apple-system, monospace';
+    ctx.fillText(`${idx + 1}.`, 70, y + 8);
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 24px monospace';
-    ctx.fillText(`${idx + 1}. ${s.sym}`, 70, y + 8);
+    ctx.font = '800 24px -apple-system, monospace';
+    ctx.fillText(`${s.sym}`, 108, y + 8);
 
-    ctx.fillStyle = '#8b949e';
-    ctx.font = '500 18px sans-serif';
-    ctx.fillText(`₹${(s.price || 0).toLocaleString('en-IN')}`, 320, y + 8);
+    // Sector Subtext
+    ctx.fillStyle = theme.subtitleColor;
+    ctx.font = '500 14px -apple-system, sans-serif';
+    const cleanInd = (s.ind || 'NSE Equity').replace('Financial Services', 'Financials');
+    ctx.fillText(`${cleanInd}`, 108, y + 26);
 
+    // Current Price
+    ctx.fillStyle = '#e6edf3';
+    ctx.font = '600 20px -apple-system, sans-serif';
+    ctx.fillText(`₹${(s.price || 0).toLocaleString('en-IN', {maximumFractionDigits: 1})}`, 360, y + 8);
+
+    // ARS Alpha Badge Pill
     const arsPct = (s.ars * 100).toFixed(1);
-    ctx.fillStyle = s.ars >= 0 ? '#00e676' : '#ef5350';
-    ctx.font = 'bold 20px monospace';
-    ctx.fillText(`ARS: ${arsPct > 0 ? '+' : ''}${arsPct}%`, 520, y + 8);
-
-    ctx.fillStyle = (s.vol_ratio || 1) >= 1.5 ? '#82b1ff' : '#c9d1d9';
+    const isPos = s.ars >= 0;
+    ctx.fillStyle = isPos ? 'rgba(0, 230, 118, 0.12)' : 'rgba(239, 83, 80, 0.12)';
+    ctx.strokeStyle = isPos ? 'rgba(0, 230, 118, 0.3)' : 'rgba(239, 83, 80, 0.3)';
+    drawCanvasRoundRect(ctx, 520, y - 18, 160, 36, 18, true, true);
+    ctx.fillStyle = isPos ? theme.arsPos : theme.arsNeg;
     ctx.font = 'bold 18px monospace';
-    ctx.fillText(`Vol: ${(s.vol_ratio || 1).toFixed(1)}x`, 760, y + 8);
+    ctx.fillText(`ARS: ${isPos ? '+' : ''}${arsPct}%`, 540, y + 6);
 
-    ctx.fillStyle = '#e3b341';
-    ctx.font = 'bold 20px monospace';
-    ctx.fillText(`RS: ${s.rs_rating ?? 1}`, 980, y + 8);
+    // Volume Surge Badge Pill
+    const vol = (s.vol_ratio || 1).toFixed(1);
+    const isVolHigh = (s.vol_ratio || 1) >= 1.5;
+    ctx.fillStyle = isVolHigh ? 'rgba(130, 177, 255, 0.12)' : 'rgba(255, 255, 255, 0.04)';
+    ctx.strokeStyle = isVolHigh ? 'rgba(130, 177, 255, 0.3)' : 'rgba(255, 255, 255, 0.08)';
+    drawCanvasRoundRect(ctx, 720, y - 18, 140, 36, 18, true, true);
+    ctx.fillStyle = isVolHigh ? theme.volColor : '#8b949e';
+    ctx.font = 'bold 18px monospace';
+    ctx.fillText(`Vol: ${vol}×`, 745, y + 6);
 
-    y += 75;
+    // RS Rating Badge Pill
+    const rsVal = s.rs_rating ?? 1;
+    ctx.fillStyle = theme.pillBg;
+    ctx.strokeStyle = theme.border;
+    drawCanvasRoundRect(ctx, 900, y - 18, 130, 36, 18, true, true);
+    ctx.fillStyle = theme.rsColor;
+    ctx.font = 'bold 18px monospace';
+    ctx.fillText(`RS: ${rsVal}`, 930, y + 6);
+
+    // Supertrend / Trend status
+    const stData = s.st14 || s.st10;
+    const isBuy = stData ? stData.trend === 'buy' : true;
+    ctx.fillStyle = isBuy ? 'rgba(0, 230, 118, 0.15)' : 'rgba(239, 83, 80, 0.15)';
+    ctx.strokeStyle = isBuy ? '#00e676' : '#ef5350';
+    drawCanvasRoundRect(ctx, 1050, y - 18, 80, 36, 6, true, true);
+    ctx.fillStyle = isBuy ? '#00e676' : '#ef5350';
+    ctx.font = '800 14px monospace';
+    ctx.fillText(isBuy ? 'BUY' : 'SELL', 1072, y + 5);
+
+    y += 82;
   });
 
+  // Footer Signature
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(50, 680);
+  ctx.lineTo(1150, 680);
+  ctx.stroke();
+
   ctx.fillStyle = '#8b949e';
-  ctx.font = 'italic 18px sans-serif';
-  ctx.fillText('📈 Generated via Adaptive Alpha Quantitative Screener', 50, 700);
-  ctx.fillText('rajakhil12-afk.github.io/adaptive-alpha/', 780, 700);
+  ctx.font = 'italic 16px -apple-system, sans-serif';
+  ctx.fillText('⚡ Generated via Adaptive Alpha Quantitative Momentum Screener', 50, 712);
+
+  ctx.fillStyle = theme.accent;
+  ctx.font = '600 16px monospace';
+  ctx.fillText('rajakhil12-afk.github.io/adaptive-alpha/', 780, 712);
 }
 
 function downloadShareCardImage() {
   const canvas = document.getElementById('share-canvas');
   if (!canvas) return;
   const link = document.createElement('a');
-  link.download = `adaptive_alpha_market_card_${new Date().toISOString().split('T')[0]}.png`;
+  link.download = `adaptive_alpha_${currentCardTheme}_${new Date().toISOString().split('T')[0]}.png`;
   link.href = canvas.toDataURL('image/png');
   link.click();
 }

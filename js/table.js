@@ -110,6 +110,7 @@ function rowHtml(d) {
   else if (d.vol_ratio <= 0.7) tags.push('<span class="tag tag-vcp">🧘 Dry-up</span>');
   
   if (d.mrs != null && d.mrs > 0) tags.push('<span class="tag" style="background:rgba(38,166,154,0.12);color:var(--up);">MRS+</span>');
+  if (d.is_fno || (typeof window !== 'undefined' && window.FNO_SET && window.FNO_SET.has(d.sym))) tags.push('<span class="tag tag-fno" style="background:rgba(227,179,65,0.12);color:var(--gold);border:1px solid rgba(227,179,65,0.25)">F&O</span>');
   if (d.breakout)          tags.push('<span class="tag tag-new">*NEW*</span>');
   if (d.hi52_prox >= -0.05) tags.push('<span class="tag tag-52w">52W↑</span>');
   if (d.ma_status === 'MA+') tags.push('<span class="tag tag-ma-up">MA+</span>');

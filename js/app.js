@@ -15,7 +15,7 @@ let allData      = [];
 let globalScreenerData = [];
 let liveCache    = {};
 let prevDataMap  = {};
-let filters      = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, pass:true, groups:true, watchlist:false };
+let filters      = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
 let activePreset = null;
 let stParam      = '14';
 let activeTab    = 'screener';
@@ -51,6 +51,7 @@ function getDualRSQuad(d) {
 
 function passes(d) {
   let ok = true;
+  if (filters.fno)         ok = ok && (d.is_fno || (window.FNO_SET && window.FNO_SET.has(d.sym)));
   if (filters.ars)         ok = ok && d.ars > 0;
   if (filters.trend)       ok = ok && d.trending;
   if (filters.srs)         ok = ok && d.srs > 0;
@@ -74,7 +75,7 @@ function applyPreset(presetName) {
   if (activePreset === presetName) {
     activePreset = null;
     document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
-    filters = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, pass:true, groups:true, watchlist:false };
+    filters = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
     syncChipUI();
     renderAll();
     return;
@@ -85,7 +86,8 @@ function applyPreset(presetName) {
     btn.classList.toggle('active', btn.getAttribute('data-preset') === presetName);
   });
 
-  filters = { ars:false, trend:false, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, pass:true, groups:true, watchlist:false };
+  const keepFno = filters.fno;
+  filters = { ars:false, trend:false, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:keepFno, pass:true, groups:true, watchlist:false };
 
   if (presetName === 'power-leaders') {
     filters.quad1 = true;
@@ -120,7 +122,7 @@ function applyPreset(presetName) {
 }
 
 function syncChipUI() {
-  const keys = ['ars','trend','srs','mrs','vol','volsurge','vcp','pocketpivot','52w','st','pass','groups','watchlist'];
+  const keys = ['ars','trend','srs','mrs','vol','volsurge','vcp','pocketpivot','52w','st','fno','pass','groups','watchlist'];
   keys.forEach(k => {
     const el = document.getElementById('f-' + k);
     if (el) el.classList.toggle('on', !!filters[k]);
@@ -138,7 +140,8 @@ function toggleChip(key) {
 
 function toggleSector(ind) {
   activeSector = activeSector === ind ? null : ind;
-  setTab('screener', document.querySelectorAll('.tab')[0]);
+  const scrTab = document.querySelector('.tab[onclick*="screener"]') || document.querySelectorAll('.tab')[1];
+  setTab('screener', scrTab);
   renderAll();
 }
 
@@ -177,13 +180,17 @@ function setTab(name, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   if (el) el.classList.add('active');
   
+  const tabOv = document.getElementById('tab-overview');
+  if (tabOv) tabOv.style.display = name==='overview' ? '' : 'none';
   document.getElementById('tab-screener').style.display = name==='screener' ? '' : 'none';
   document.getElementById('tab-watchlist').style.display = name==='watchlist' ? '' : 'none';
   document.getElementById('tab-breakouts').style.display = name==='breakouts' ? '' : 'none';
   document.getElementById('tab-heatmap').style.display = name==='heatmap' ? '' : 'none';
   document.getElementById('tab-sectors').style.display = name==='sectors' ? '' : 'none';
 
-  if (name === 'watchlist') {
+  if (name === 'overview') {
+    renderOverviewTab();
+  } else if (name === 'watchlist') {
     renderWatchlistTab();
   } else if (name === 'breakouts') {
     renderBreakoutsTab();
@@ -558,8 +565,10 @@ function renderBreakoutsTab() {
 }
 
 function switchIndex() {
-  currentIndex = parseInt(document.getElementById('index-sel').value);
+  const rawVal = document.getElementById('index-sel').value;
+  currentIndex = isNaN(parseInt(rawVal)) ? rawVal : parseInt(rawVal);
   let label = `Nifty ${currentIndex}`;
+  if (currentIndex === 'fno' || currentIndex === 'FNO') label = 'Nifty F&O';
   if (currentIndex === 200) label = 'Nifty Midcap 100';
   if (currentIndex === 400) label = 'Nifty Smallcap 100';
   if (currentIndex === 500) label = 'Nifty 500';
@@ -584,7 +593,7 @@ function switchIndex() {
     renderAll();
   } else {
     allData = [];
-    if (currentIndex >= 200) {
+    if (currentIndex === 'fno' || currentIndex >= 200) {
       useSampleData();
     } else {
       loadData();
@@ -603,7 +612,9 @@ function renderAll() {
   renderTickerStrip();
   renderBreakoutPerformanceRibbon();
   
-  if (activeTab === 'screener') {
+  if (activeTab === 'overview') {
+    renderOverviewTab();
+  } else if (activeTab === 'screener') {
     renderTable();
   } else if (activeTab === 'watchlist') {
     renderWatchlistTab();
@@ -615,6 +626,160 @@ function renderAll() {
     renderSectors();
   }
   if (!toastShown) setTimeout(showVolumeSpurtToast, 1800);
+}
+
+function renderOverviewTab() {
+  const container = document.getElementById('overview-content');
+  if (!container) return;
+
+  if (!allData.length) {
+    container.innerHTML = '<div style="color:var(--muted);padding:40px;text-align:center">Loading market overview data…</div>';
+    return;
+  }
+
+  const totalCount = allData.length;
+  const passCount = allData.filter(passes).length;
+  const passRate = totalCount > 0 ? (passCount / totalCount * 100).toFixed(0) : 0;
+  const breadthCount = allData.filter(d => d.ma_status === 'MA+').length;
+  const breadthPct = totalCount > 0 ? (breadthCount / totalCount * 100).toFixed(0) : 0;
+
+  // 4 Quadrants
+  const q1List = allData.filter(d => getDualRSQuad(d) === 'quad-1');
+  const q2List = allData.filter(d => getDualRSQuad(d) === 'quad-2');
+  const q3List = allData.filter(d => getDualRSQuad(d) === 'quad-3');
+  const q4List = allData.filter(d => getDualRSQuad(d) === 'quad-4');
+
+  const topQ1 = [...q1List].sort((a,b) => (b.rs_rating||0) - (a.rs_rating||0)).slice(0, 5);
+  const topQ2 = [...q2List].sort((a,b) => (b.srs||0) - (a.srs||0)).slice(0, 5);
+  const topQ3 = [...q3List].sort((a,b) => (b.ars||0) - (a.ars||0)).slice(0, 5);
+  const topQ4 = [...q4List].sort((a,b) => (a.ars||0) - (b.ars||0)).slice(0, 5);
+
+  // Sectors
+  const byInd = {};
+  allData.forEach(d => { (byInd[d.ind] = byInd[d.ind]||[]).push(d); });
+  const sectorStats = Object.keys(byInd).map(ind => {
+    const list = byInd[ind];
+    const avgArs = list.reduce((s,d)=>s+(d.ars||0),0)/list.length;
+    const avgSrs = list.reduce((s,d)=>s+(d.srs||0),0)/list.length;
+    const top = [...list].sort((a,b)=>(b.ars||0)-(a.ars||0))[0];
+    return { ind, avgArs, avgSrs, count: list.length, topSym: top?.sym || '—' };
+  });
+  sectorStats.sort((a,b) => b.avgArs - a.avgArs);
+  const topSectors = sectorStats.slice(0, 3);
+
+  // Fresh Breakouts
+  const breakouts = allData.filter(d => d.breakout);
+  const volSurges = allData.filter(d => (d.vol_ratio||1) >= 2.0);
+
+  // FII / DII
+  let fiiText = '—', diiText = '—', netText = '—';
+  if (latestFiiDiiData) {
+    const fmt = v => `${v>=0?'+':''}₹${v.toLocaleString('en-IN',{maximumFractionDigits:1})} Cr`;
+    fiiText = fmt(latestFiiDiiData.fii || 0);
+    diiText = fmt(latestFiiDiiData.dii || 0);
+    netText = fmt((latestFiiDiiData.fii || 0) + (latestFiiDiiData.dii || 0));
+  }
+
+  let verdict = 'NEUTRAL', verdictColor = 'var(--amber)';
+  if (passRate >= 50) { verdict = 'BULLISH'; verdictColor = 'var(--up)'; }
+  else if (passRate <= 25) { verdict = 'BEARISH'; verdictColor = 'var(--down)'; }
+
+  container.innerHTML = `
+    <!-- Top Overview Hero -->
+    <div class="ov-hero">
+      <div class="ov-card" style="border-left: 4px solid ${verdictColor};">
+        <div class="ov-title"><span>Market Regime & Breadth</span><span style="color:${verdictColor};font-family:var(--font-num);">${passRate}% Pass Rate</span></div>
+        <div class="ov-stat-big" style="color:${verdictColor}">${verdict}</div>
+        <div class="ov-subtext"><strong>${passCount}</strong> of ${totalCount} stocks meet institutional RS momentum criteria · <strong>${breadthPct}%</strong> in Stage-2 uptrend (MA+)</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-title"><span>🏛️ Institutional Flows</span><span style="font-size:9.5px;color:var(--muted)">Provisional</span></div>
+        <div class="ov-row"><span style="color:var(--muted)">FII Net Flow</span><strong style="font-family:var(--font-num);">${fiiText}</strong></div>
+        <div class="ov-row"><span style="color:var(--muted)">DII Net Flow</span><strong style="font-family:var(--font-num);">${diiText}</strong></div>
+        <div class="ov-row" style="border-top:1px solid var(--border);margin-top:2px;padding-top:4px;"><span style="font-weight:600">Net Combined</span><strong style="font-family:var(--font-num);color:var(--up);">${netText}</strong></div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-title"><span>⚡ Today's Signals</span><span style="color:var(--gold)">Live</span></div>
+        <div class="ov-row"><span style="color:var(--muted)">Fresh Breakouts</span><strong style="color:var(--gold);font-family:var(--font-num);">${breakouts.length} stock${breakouts.length!==1?'s':''}</strong></div>
+        <div class="ov-row"><span style="color:var(--muted)">Vol Surge (&ge;2×)</span><strong style="color:#5e96ff;font-family:var(--font-num);">${volSurges.length} stocks</strong></div>
+        <div class="ov-row"><span style="color:var(--muted)">Near 52W High</span><strong style="color:var(--up);font-family:var(--font-num);">${allData.filter(d=>(d.hi52_prox||-1)>=-0.05).length} stocks</strong></div>
+      </div>
+    </div>
+
+    <!-- 4-Regime Quadrants Grid -->
+    <div style="font-size:12px;font-weight:700;color:var(--text);margin-top:4px;">📊 4-Momentum Regime Distribution</div>
+    <div class="ov-quads-grid">
+      <div class="ov-quad-card q1" onclick="applyPreset('power-leaders')">
+        <div class="ov-quad-head">
+          <span class="ov-quad-name" style="color:#0fe586">🌟 QUAD 1: LEADERS</span>
+          <span class="ov-quad-count" style="color:#0fe586">${q1List.length}</span>
+        </div>
+        <div class="ov-quad-desc">Strong long-term alpha (ARS+) and rising short-term momentum (SRS+).</div>
+        <div class="ov-quad-tickers">
+          ${topQ1.map(s => `<span class="ov-ticker-pill" onclick="event.stopPropagation();selectStock('${s.sym}')">${s.sym}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="ov-quad-card q2" onclick="applyPreset('bottom-reversal')">
+        <div class="ov-quad-head">
+          <span class="ov-quad-name" style="color:#5fc4ba">🔄 QUAD 2: TURNAROUNDS</span>
+          <span class="ov-quad-count" style="color:#5fc4ba">${q2List.length}</span>
+        </div>
+        <div class="ov-quad-desc">Base-building turnaround stocks improving with fresh quarterly momentum.</div>
+        <div class="ov-quad-tickers">
+          ${topQ2.map(s => `<span class="ov-ticker-pill" onclick="event.stopPropagation();selectStock('${s.sym}')">${s.sym}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="ov-quad-card q3" onclick="toggleChip('quad1')">
+        <div class="ov-quad-head">
+          <span class="ov-quad-name" style="color:#e3b341">⚠️ QUAD 3: PULLBACKS</span>
+          <span class="ov-quad-count" style="color:#e3b341">${q3List.length}</span>
+        </div>
+        <div class="ov-quad-desc">Leading trend undergoing healthy consolidation or dip-buy setup.</div>
+        <div class="ov-quad-tickers">
+          ${topQ3.map(s => `<span class="ov-ticker-pill" onclick="event.stopPropagation();selectStock('${s.sym}')">${s.sym}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="ov-quad-card q4">
+        <div class="ov-quad-head">
+          <span class="ov-quad-name" style="color:#ef5350">❄️ QUAD 4: LAGGARDS</span>
+          <span class="ov-quad-count" style="color:#ef5350">${q4List.length}</span>
+        </div>
+        <div class="ov-quad-desc">Underperforming benchmark on all timeframes. Capital preservation zone.</div>
+        <div class="ov-quad-tickers">
+          ${topQ4.map(s => `<span class="ov-ticker-pill" onclick="event.stopPropagation();selectStock('${s.sym}')">${s.sym}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- Sector Rotation & Shortcuts -->
+    <div class="ov-split-grid">
+      <div class="ov-card">
+        <div class="ov-title"><span>🏛️ Sector Rotation Leaders</span><button class="ov-btn" onclick="setTab('sectors', document.querySelectorAll('.tab')[5])">View RRG Clock →</button></div>
+        ${topSectors.map((s, idx) => `
+          <div class="ov-row" onclick="toggleSector('${s.ind.replace(/'/g,"\\'")}')" style="cursor:pointer;">
+            <span><strong>${idx+1}. ${s.ind}</strong> (${s.count} stocks)</span>
+            <div><span style="color:var(--up);font-weight:700;font-family:var(--font-num);">+${(s.avgArs*100).toFixed(1)}% ARS</span> · <span style="font-size:10px;color:var(--muted)">Top: <strong>${s.topSym}</strong></span></div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="ov-card">
+        <div class="ov-title"><span>⚡ Quick Action Hub</span><span>Explore</span></div>
+        <div class="ov-shortcut-row">
+          <button class="ov-btn" onclick="setTab('screener', document.querySelectorAll('.tab')[1])">📊 Full Screener</button>
+          <button class="ov-btn" onclick="applyPreset('power-leaders')">🌟 Power Leaders</button>
+          <button class="ov-btn" onclick="applyPreset('vcp-tight')">🧘 VCP Squeeze</button>
+          <button class="ov-btn" onclick="applyPreset('early-breakout')">🔥 Pocket Pivots</button>
+          <button class="ov-btn" onclick="setTab('heatmap', document.querySelectorAll('.tab')[4])">🗺️ Pro Heatmap</button>
+          <button class="ov-btn" onclick="openShareCardModal()">🎨 Social Card</button>
+          <button class="ov-btn" onclick="exportCSV()">📥 Download CSV</button>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function showProgress(msg, pct) {
@@ -697,6 +862,191 @@ function hideStaleToast() {
     toast.style.display = 'none';
     toast.classList.remove('toast-hiding');
   }, 400);
+}
+
+// ═══════ REAL-TIME LIVE YAHOO FINANCE SCANNING ENGINE ═══════
+const PROXIES = [
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  url => url
+];
+
+async function fetchYahoo(ticker, range = '5y') {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=${range}&interval=1d`;
+  for (const proxy of PROXIES) {
+    try {
+      const res = await fetch(proxy(url), { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) continue;
+      const json = await res.json();
+      const result = json?.chart?.result?.[0];
+      if (!result) continue;
+      const ts    = result.timestamp || [];
+      const q     = result.indicators?.quote?.[0] || {};
+      const close = q.close  || [];
+      const high  = q.high   || [];
+      const low   = q.low    || [];
+      const vol   = q.volume || [];
+      const candles = [];
+      for (let i = 0; i < ts.length; i++) {
+        if (close[i] != null) {
+          candles.push({ 
+            t: ts[i], 
+            c: close[i], 
+            h: high[i] !== undefined && high[i] !== null ? high[i] : close[i], 
+            l: low[i] !== undefined && low[i] !== null ? low[i] : close[i], 
+            v: vol[i] || 0 
+          });
+        }
+      }
+      if (candles.length > 20) return candles;
+    } catch(_) { continue; }
+  }
+  return null;
+}
+
+async function loadData() {
+  const universe = getUniverse();
+  allData = [];
+  hideStaleToast();
+  
+  const scanBtn = document.getElementById('live-scan-btn');
+  if (scanBtn) {
+    scanBtn.disabled = true;
+    scanBtn.textContent = '⏳ Scanning…';
+    scanBtn.style.opacity = '0.7';
+  }
+
+  showProgress(`Connecting to live market stream…`, 0);
+  const errBanner = document.getElementById('err-banner');
+  if (errBanner) errBanner.style.display = 'none';
+
+  const cutoffTs = new Date('2021-01-01').getTime() / 1000;
+  let benchData = null;
+  try { benchData = await fetchYahoo('^NSEI', '6y'); } catch(_) {}
+
+  if (benchData && benchData.length >= 100) {
+    globalBenchData = benchData;
+  } else {
+    try { benchData = await fetchYahoo('NIFTYBEES.NS', '6y'); } catch(_) {}
+  }
+
+  if (!benchData || benchData.length < 50) {
+    showError('Real-time benchmark feed unreachable via public proxies. Restoring local database.');
+    if (scanBtn) {
+      scanBtn.disabled = false;
+      scanBtn.textContent = '↻ Live Data';
+      scanBtn.style.opacity = '1';
+    }
+    initScreener();
+    return;
+  }
+
+  showProgress(`Benchmark loaded (${benchData.length} sessions). Scanning ${universe.length} stocks…`, 5);
+  const results = [];
+  const DELAY_MS = 60;
+
+  for (let i = 0; i < universe.length; i++) {
+    const stock = universe[i];
+    const pct = Math.round(5 + (i / universe.length) * 90);
+    showProgress(`[${i+1}/${universe.length}] Real-time scan: ${stock.sym} (${stock.name})…`, pct);
+    
+    const yf = toYF(stock.sym);
+    const candles = await fetchYahoo(yf, '5y');
+    const calc = calcARS(candles, benchData, cutoffTs);
+    
+    if (calc && calc.price) {
+      const breakout = calc.ars != null && calc.prev != null && calc.ars > 0 && calc.prev <= 0;
+      const trending = calc.ars != null && calc.prev != null && calc.ars > calc.prev;
+
+      let st14 = { trend: "sell", signal: null, val: 0 };
+      let st10 = { trend: "sell", signal: null, val: 0 };
+      if (candles && candles.length > 20) {
+        st14 = calcSupertrend(candles, 14, 3);
+        st10 = calcSupertrend(candles, 10, 3);
+      }
+
+      const vcpData = candles ? calcVCP(candles) : { is_vcp: false, atr_ratio: 1.0, vol_dryup: 1.0, tightness_pct: 5.0 };
+      const ppData = candles ? calcPocketPivot(candles) : false;
+      const mrsData = candles ? calcMansfieldRS(candles, benchData, 50) : { mrs: 0, mrs_trend: false };
+
+      results.push({
+        sym: stock.sym,
+        name: stock.name,
+        ind: stock.ind,
+        logoid: stock.logoid || stock.sym.toLowerCase(),
+        ars: calc.ars,
+        srs: calc.srs,
+        vol_ratio: calc.vol,
+        hi52_prox: calc.hi52,
+        price: calc.price,
+        breakout,
+        trending,
+        signSince: calc.signSince,
+        signDays: calc.signDays,
+        signPrice: calc.signPrice ?? null,
+        st14,
+        st10,
+        ichimoku: candles ? calcIchimoku(candles) : { status: "Neutral", breakout: false, tenkan: 0, kijun: 0, kumoTop: 0, kumoBottom: 0 },
+        ma_status: calc.ma_status ?? 'MA-',
+        ars_slope: calc.ars_slope ?? 0,
+        is_vcp: vcpData.is_vcp,
+        vcp_atr_ratio: vcpData.atr_ratio,
+        vcp_tightness_pct: vcpData.tightness_pct,
+        is_pocket_pivot: ppData,
+        mrs: mrsData.mrs,
+        mrs_trend: mrsData.mrs_trend
+      });
+    }
+
+    if (i % 4 === 0) {
+      await new Promise(r => setTimeout(r, DELAY_MS));
+    }
+  }
+
+  // Calculate RS Rating (1-99) dynamically on client-side
+  const N = results.length;
+  if (N > 0) {
+    const getRanks = (key, customValFn) => {
+      const sorted = [...results]
+        .map((s, idx) => ({ idx, val: customValFn ? customValFn(s) : s[key] }))
+        .sort((a, b) => (a.val || 0) - (b.val || 0));
+      const ranks = new Array(N);
+      sorted.forEach((item, r) => {
+        ranks[item.idx] = r / (N - 1 || 1);
+      });
+      return ranks;
+    };
+
+    const ranksArs = getRanks('ars');
+    const ranksSrs = getRanks('srs');
+    const ranksVol = getRanks('vol_ratio');
+    const ranksDays = getRanks(null, s => (s.signDays ?? 0) * (s.ars >= 0 ? 1 : -1));
+
+    results.forEach((s, idx) => {
+      const composite = (0.40 * ranksArs[idx]) + (0.30 * ranksSrs[idx]) + (0.15 * ranksVol[idx]) + (0.15 * ranksDays[idx]);
+      s.rs_rating = Math.max(1, Math.min(99, Math.round(composite * 98 + 1)));
+    });
+  }
+
+  if (results.length > 0) {
+    allData = results;
+    liveCache[currentIndex] = { data: [...results], ts: new Date() };
+    const nowTime = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+    const tsEl = document.getElementById('ts');
+    if (tsEl) tsEl.textContent = nowTime + ' IST · Live Scan';
+  } else {
+    showError('Live scan returned 0 results due to public proxy limits. Displaying stored database.');
+    filterActiveUniverse();
+  }
+
+  if (scanBtn) {
+    scanBtn.disabled = false;
+    scanBtn.textContent = '↻ Live Data';
+    scanBtn.style.opacity = '1';
+  }
+
+  renderAll();
 }
 
 const tourSteps = [
@@ -810,6 +1160,20 @@ async function initScreener() {
   } catch(e) { pinnedStocks = []; }
 
   showProgress('Loading screener database…', 10);
+  
+  if (window.STATIC_SCREENER_DATA && Array.isArray(window.STATIC_SCREENER_DATA.stocks)) {
+    const payload = window.STATIC_SCREENER_DATA;
+    globalScreenerData = payload.stocks;
+    if (payload.fii_dii) latestFiiDiiData = payload.fii_dii;
+    if (payload.breakout_history) globalBreakoutHistory = payload.breakout_history;
+    
+    filterActiveUniverse();
+    const tsEl = document.getElementById('ts');
+    if (tsEl) tsEl.textContent = payload.updated;
+    renderAll();
+    return;
+  }
+
   try {
     const cacheBuster = '?v=' + Date.now();
     let res = await fetch('data/screener.json' + cacheBuster);

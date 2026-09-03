@@ -535,6 +535,41 @@ const EXTRA_SET = new Set(EXTRA_SYMS);
 const MIDCAP_SET = new Set(MIDCAP_SYMS);
 const SMALLCAP_SET = new Set(SMALLCAP_SYMS);
 
+const FNO_SYMS = [
+  'AARTIIND', 'ABB', 'ABBOTINDIA', 'ABCAPITAL', 'ABFRL', 'ACC', 'ADANIENT',
+  'ADANIPORTS', 'ALKEM', 'AMBER', 'AMBUJACEM', 'ANGELONE', 'APOLLOHOSP', 'APOLLOTYRE',
+  'ASHOKLEY', 'ASIANPAINT', 'ASTRAL', 'ATUL', 'AUBANK', 'AUROPHARMA', 'AXISBANK',
+  'BAJAJ-AUTO', 'BAJAJFINSV', 'BAJFINANCE', 'BALKRISIND', 'BALRAMCHIN', 'BANDHANBNK',
+  'BANKBARODA', 'BATAINDIA', 'BEL', 'BDL', 'BHEL', 'BIOCON', 'BOSCHLTD', 'BPCL',
+  'BRITANNIA', 'BSOFT', 'CANBK', 'CANFINHOME', 'CDSL', 'CESC', 'CGPOWER', 'CHAMBLFERT',
+  'CHOLAFIN', 'CIPLA', 'COALINDIA', 'COFORGE', 'COLPAL', 'CONCOR', 'COROMANDEL',
+  'CROMPTON', 'CUB', 'CUMMINSIND', 'CYIENT', 'DABUR', 'DALBHARAT', 'DEEPAKNTR',
+  'DELHIVERY', 'DIVISLAB', 'DIXON', 'DLF', 'DRREDDY', 'EICHERMOT', 'ESCORTS',
+  'EXIDEIND', 'FEDERALBNK', 'GAIL', 'GLENMARK', 'GMRAIRPORT', 'GNFC', 'GODREJCP',
+  'GODREJPROP', 'GRANULES', 'GRASIM', 'GUJGASLTD', 'HAL', 'HAVELLS', 'HCLTECH',
+  'HDFCAMC', 'HDFCBANK', 'HDFCLIFE', 'HEROMOTOCO', 'HFCL', 'HINDALCO', 'HINDCOPPER',
+  'HINDPETRO', 'HINDUNILVR', 'HUDCO', 'ICICIBANK', 'ICICIGI', 'ICICIPRULI', 'IDEA',
+  'IDFCFIRSTB', 'IEX', 'IGL', 'INDHOTEL', 'INDIANB', 'INDIGO', 'INDUSINDBK',
+  'INDUSTOWER', 'INFY', 'IOC', 'IPCALAB', 'IRCTC', 'IREDA', 'IRFC', 'ITC',
+  'JINDALSTEL', 'JIOFIN', 'JKCEMENT', 'JSL', 'JSWENERGY', 'JSWSTEEL', 'JUBLFOOD',
+  'KALYANKJIL', 'KEI', 'KPITTECH', 'KOTAKBANK', 'LALPATHLAB', 'LAURUSLABS', 'LICHSGFIN',
+  'LICI', 'LODHA', 'LT', 'LTF', 'LTIM', 'LTTS', 'LUPIN', 'M_M', 'M&MFIN',
+  'MANAPPURAM', 'MARICO', 'MARUTI', 'MAXHEALTH', 'METROPOLIS', 'MFSL', 'MGL',
+  'MOTHERSON', 'MPHASIS', 'MRF', 'MUTHOOTFIN', 'NATIONALUM', 'NAUKRI', 'NAVINFLUOR',
+  'NBCC', 'NCC', 'NESTLEIND', 'NMDC', 'NTPC', 'NYKAA', 'OBEROIRLTY', 'OFSS',
+  'OIL', 'ONGC', 'PAGEIND', 'PATANJALI', 'PEL', 'PERSISTENT', 'PETRONET', 'PFC',
+  'PHOENIXLTD', 'PIDILITIND', 'PIIND', 'PNB', 'POLICYBZR', 'POLYCAB', 'POONAWALLA',
+  'POWERGRID', 'PRESTIGE', 'PVRINOX', 'RAMCOCEM', 'RBLBANK', 'RECLTD', 'RELIANCE',
+  'SAIL', 'SBICARD', 'SBILIFE', 'SBIN', 'SHREECEM', 'SHRIRAMFIN', 'SIEMENS',
+  'SJVN', 'SONACOMS', 'SRF', 'SUNPHARMA', 'SUNTV', 'SUPREMEIND', 'SYNGENE',
+  'TATACHEM', 'TATACOMM', 'TATACONSUM', 'TATAELXSI', 'TATAMOTORS', 'TATAPOWER',
+  'TATASTEEL', 'TATATECH', 'TCS', 'TECHM', 'TIINDIA', 'TITAN', 'TORNTPHARM',
+  'TORNTPOWER', 'TRENT', 'TVSMOTOR', 'UBL', 'ULTRACEMCO', 'UNIONBANK', 'UNITDSPR',
+  'UPL', 'VBL', 'VEDL', 'VOLTAS', 'WIPRO', 'YESBANK', 'ZEEL', 'ZYDUSLIFE'
+];
+
+const FNO_SET = new Set(FNO_SYMS);
+
 /**
  * Maps NSE symbols to Yahoo Finance ticker format
  */
@@ -561,6 +596,7 @@ function categorizeStock(s) {
 }
 
 function getUniverseByIndex(currentIndex) {
+  if (currentIndex === 'fno' || currentIndex === 'FNO') return UNIVERSE.filter(s => FNO_SET.has(s.sym));
   if (currentIndex === 50)  return N50;
   if (currentIndex === 100) return [...N50, ...EXTRA];
   if (currentIndex === 200) return MIDCAP100;
@@ -581,6 +617,8 @@ if (typeof module !== 'undefined' && module.exports) {
     EXTRA_SYMS,
     MIDCAP_SYMS,
     SMALLCAP_SYMS,
+    FNO_SYMS,
+    FNO_SET,
     toYF,
     categorizeStock,
     getUniverseByIndex
@@ -594,8 +632,11 @@ if (typeof window !== 'undefined') {
   window.SMALLCAP100 = SMALLCAP100;
   window.N500_REST = N500_REST;
   window.UNIVERSE = UNIVERSE;
+  window.FNO_SYMS = FNO_SYMS;
+  window.FNO_SET = FNO_SET;
   window.toYF = toYF;
   window.categorizeStock = categorizeStock;
   window.getUniverse = getUniverseByIndex;
+  window.getUniverseByIndex = getUniverseByIndex;
 }
 
