@@ -8,6 +8,7 @@ const PROXIES = [
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  url => url
 ];
 
 let currentIndex = 50;
@@ -865,12 +866,6 @@ function hideStaleToast() {
 }
 
 // ═══════ REAL-TIME LIVE YAHOO FINANCE SCANNING ENGINE ═══════
-const PROXIES = [
-  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-  url => url
-];
 
 async function fetchYahoo(ticker, range = '5y') {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=${range}&interval=1d`;
