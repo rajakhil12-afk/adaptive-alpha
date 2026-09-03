@@ -366,37 +366,83 @@
     <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
 
     <!-- PRESET 5 -->
-    <h2>5. 🧘 Preset: VCP Consolidations (Volatility Contraction)</h2>
-    <p><strong>Philosophy:</strong> Spot the "calm before the storm". Based on Mark Minervini's Volatility Contraction Pattern, we identify stocks near 52-week highs where selling volume has completely dried up.</p>
+    <h2>5. 🧘 Preset: Quantitative VCP Squeeze (ATR &lt; 0.7x &amp; Volume Dry-up)</h2>
+    <p><strong>Philosophy:</strong> Spot the "calm before the explosion". Based on Mark Minervini's Volatility Contraction Pattern, the screener mathematically requires <strong>True 2D Compression</strong>: 5-day ATR contracted to &le; 70% of 20-day ATR, 5-day volume dried up to &le; 75% of 50-day average, and 5-day price range tightness &le; 4.5%.</p>
 
     <div class="box box-entry">
       <h4>✅ ENTRY RULES</h4>
       <ul>
-        <li><strong>Preset Condition:</strong> Near 52W High (`hi52_prox &ge; -8%`) AND Volume Dry-up (`vol_ratio &le; 0.7x`).</li>
-        <li><strong>Relative Strength:</strong> ARS &gt; 0% (structural leader).</li>
-        <li><strong>Trigger:</strong> Put on watchlist; enter immediately when price breaks above the tight pivot on volume surge.</li>
+        <li><strong>Preset Condition:</strong> <code>is_vcp == true</code> (ATR ratio &le; 0.70x, Volume Dry-up &le; 0.75x, Tightness &le; 4.5%).</li>
+        <li><strong>Relative Strength:</strong> ARS &gt; 0% (structural market outperformer).</li>
+        <li><strong>Trigger:</strong> Put on active radar; buy the moment price breaks above the tight consolidation pivot on expanding volume.</li>
       </ul>
     </div>
 
     <div class="box box-exit">
       <h4>🛑 EXIT &amp; STOP-LOSS RULES</h4>
       <ul>
-        <li><strong>Initial Stop-Loss:</strong> Ultra-tight stop 2%–3% below the narrow VCP pivot low.</li>
-        <li><strong>Target:</strong> 1:3 R:R minimum (since risk is extremely small).</li>
+        <li><strong>Initial Stop-Loss:</strong> Ultra-tight stop 1.5%–2.5% below the narrow VCP pivot low.</li>
+        <li><strong>Target:</strong> 1:3 to 1:4 R:R (since structural squeeze risk is exceptionally small).</li>
       </ul>
     </div>
 
     <div class="box box-avoid">
       <h4>⚠️ WHAT TO AVOID / RED FLAGS</h4>
       <ul>
-        <li><strong>Avoid Wide/Loose Charts:</strong> Avoid stocks swinging 15%+ up and down erratically. VCP requires tight, orderly price action.</li>
+        <li><strong>Avoid Loose Bases:</strong> Skip stocks with erratic wide swings. A true VCP requires progressive symmetrical contraction.</li>
       </ul>
     </div>
 
     <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
 
     <!-- PRESET 6 -->
-    <h2>6. ☁️ Preset: Ichimoku Kumo Cloud Breakouts</h2>
+    <h2>6. ⚡ Preset: Pocket Pivot Accumulation (Gil Morales / Chris Kacher)</h2>
+    <p><strong>Philosophy:</strong> Detect institutional foot-prints <em>inside</em> consolidations before conventional breakouts occur. A Pocket Pivot happens when an up-day volume exceeds the largest down-day volume of the prior 10 trading sessions.</p>
+
+    <div class="box box-entry">
+      <h4>✅ ENTRY RULES</h4>
+      <ul>
+        <li><strong>Preset Condition:</strong> <code>pocket_pivot == true</code> with positive daily candle close.</li>
+        <li><strong>Base Location:</strong> Stock must be near its 10-day EMA or 50-day SMA inside a constructive base.</li>
+        <li><strong>Trigger:</strong> Buy on the pocket pivot bar near moving average support.</li>
+      </ul>
+    </div>
+
+    <div class="box box-exit">
+      <h4>🛑 EXIT &amp; STOP-LOSS RULES</h4>
+      <ul>
+        <li><strong>Initial Stop-Loss:</strong> 1% below the 10-day EMA or low of the pocket pivot bar.</li>
+        <li><strong>Target:</strong> Hold into new 52-week high breakout and trail along ST14 Supertrend.</li>
+      </ul>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+
+    <!-- PRESET 7 -->
+    <h2>7. 📈 Preset: Mansfield Relative Strength (Weinstein Stage 2)</h2>
+    <p><strong>Philosophy:</strong> Stan Weinstein's classic institutional methodology. Measures the 50-period SMA of the stock/benchmark ratio. When Mansfield RS turns positive (&gt; 0) and is sloping upward, the stock has officially transitioned from a Stage 1 base to a Stage 2 sustained markup phase.</p>
+
+    <div class="box box-entry">
+      <h4>✅ ENTRY RULES</h4>
+      <ul>
+        <li><strong>Preset Condition:</strong> Mansfield RS &gt; 0% with <code>mrs_trend == true</code>.</li>
+        <li><strong>Trend:</strong> Stock price &gt; 50-day SMA &gt; 200-day SMA (Stage 2 alignment).</li>
+        <li><strong>Trigger:</strong> Enter on breakout above multi-month base with rising MRS.</li>
+      </ul>
+    </div>
+
+    <div class="box box-exit">
+      <h4>🛑 EXIT &amp; STOP-LOSS RULES</h4>
+      <ul>
+        <li><strong>Initial Stop-Loss:</strong> Place stop below the rising 50-day SMA or Supertrend ST14.</li>
+        <li><strong>Trailing:</strong> Trail along the 50-day SMA for multi-month swing compound runs.</li>
+      </ul>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+
+    <!-- PRESET 8 -->
+    <h2>8. ☁️ Preset: Ichimoku Kumo Cloud Breakouts</h2>
     <p><strong>Philosophy:</strong> The ultimate Japanese multi-indicator trend system. Spots stocks closing above the daily Kumo Cloud with Tenkan/Kijun bullish alignment, signaling a complete structural shift from bearish/neutral to a clear bull trend.</p>
 
     <div class="box box-entry">

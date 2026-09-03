@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jishu — Institutional Momentum Paper Desk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #0B0E14;
+      --bg-card: #131722;
+      --bg-card-hover: #1E222D;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(255, 255, 255, 0.18);
+      --text-main: #F1F5F9;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --accent-green: #10B981;
+      --accent-green-glow: rgba(16, 185, 129, 0.2);
+      --accent-red: #EF4444;
+      --accent-red-glow: rgba(239, 68, 68, 0.2);
+      --accent-cyan: #06B6D4;
+      --accent-amber: #F59E0B;
+      --accent-purple: #8B5CF6;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    header {
+      background: rgba(19, 23, 34, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bot-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #FFF 30%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-tag {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      background: rgba(6, 182, 212, 0.12);
+      color: var(--accent-cyan);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(6, 182, 212, 0.25);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .sync-btn {
+      background: var(--bg-card-hover);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .sync-btn:hover {
+      background: #2A2E39;
+      border-color: var(--border-focus);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 28px 24px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .kpi-card:hover {
+      border-color: var(--border-focus);
+      transform: translateY(-2px);
+    }
+
+    .kpi-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .kpi-val {
+      font-size: 26px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+    }
+
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .val-positive { color: var(--accent-green); }
+    .val-negative { color: var(--accent-red); }
+
+    /* Strategy Info Bar */
+    .strategy-banner {
+      background: linear-gradient(90deg, rgba(6, 182, 212, 0.08), rgba(139, 92, 246, 0.08));
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .rules-list {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+
+    .rule-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-main);
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-header h2 {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-count {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+    }
+
+    /* Table Styles */
+    .table-container {
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background: #0E121A;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      white-space: nowrap;
+    }
+
+    tbody tr:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .stock-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stock-sym {
+      font-weight: 700;
+      color: #FFF;
+      font-size: 14px;
+    }
+
+    .stock-ind {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .mono-cell {
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .progress-track {
+      width: 120px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
+      border-radius: 3px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    .badge-breakeven {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-initial {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-exit-target {
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .badge-exit-stop {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .empty-state {
+      padding: 40px;
+      text-align: center;
+      color: var(--text-dim);
+    }
+
+    /* Event Feed */
+    .event-feed {
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .event-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .event-time {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="bot-avatar">🤖</div>
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h1>Jishu Desk</h1>
+          <span class="brand-tag">Paper Trading v1.0</span>
+        </div>
+        <p style="font-size: 12px; color: var(--text-dim);">Institutional Relative Strength Execution Engine</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span id="lastUpdatedText" style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);">Updated: Loading...</span>
+      <button class="sync-btn" onclick="loadPortfolioData()">↻ Refresh State</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Strategy Rule Banner -->
+    <div class="strategy-banner">
+      <div>
+        <strong style="color: #FFF; font-size: 14px;">Strategy Parameters &amp; Execution Rules:</strong>
+      </div>
+      <div class="rules-list">
+        <span class="rule-pill">Regime: Quad 1 (ARS &gt; 0, SRS &gt; 0)</span>
+        <span class="rule-pill">Stop Loss: -3.618% / Supertrend</span>
+        <span class="rule-pill">Target 1 (1:2): Move SL to Cost (Risk-Free)</span>
+        <span class="rule-pill">Target 2 (1:3): Profit Booking Exit</span>
+        <span class="rule-pill">Max Slots: 10 Positions</span>
+      </div>
+    </div>
+
+    <!-- Key Performance Indicator Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-title">Total Equity Value</span>
+        <span class="kpi-val" id="totalEquity">₹10,00,000</span>
+        <span class="kpi-sub" id="totalReturnPct">Initial: ₹10,00,000 (0.00%)</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-title">Realized P&amp;L</span>
+        <span class="kpi-val" id="realizedPnl">₹0</span>
+        <span class="kpi-sub" id="winRateSub">Win Rate: 0.0% (0W / 0L)</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-title">Unrealized P&amp;L</span>
+        <span class="kpi-val" id="unrealizedPnl">₹0</span>
+        <span class="kpi-sub" id="openPositionsSub">0 Active Positions</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-title">Cash vs Invested</span>
+        <span class="kpi-val" id="cashBalance" style="font-size: 20px;">₹10,00,000</span>
+        <span class="kpi-sub" id="investedBalance">Invested: ₹0</span>
+      </div>
+    </div>
+
+    <!-- Active Open Positions -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>💼 Active Open Positions <span class="badge-count" id="openCountBadge">0 / 10</span></h2>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Stock</th>
+              <th>Entry Date</th>
+              <th>Entry Price</th>
+              <th>Current Price</th>
+              <th>Invested</th>
+              <th>Unrealized P&amp;L</th>
+              <th>Stop Loss</th>
+              <th>1:2 Target (Trail)</th>
+              <th>1:3 Target (Exit)</th>
+              <th>Risk Status</th>
+            </tr>
+          </thead>
+          <tbody id="openPositionsTable">
+            <tr><td colspan="10" class="empty-state">No active positions. The engine will deploy capital on the next Quad 1 momentum setup.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recent Actions & Activity Feed -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>⚡ Recent Engine Activity &amp; Triggers</h2>
+      </div>
+      <div class="event-feed" id="eventFeed">
+        <div class="event-item">
+          <span>Jishu Paper Desk loaded. Ready for daily market execution.</span>
+          <span class="event-time">Today</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Closed Trades History Ledger -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>📜 Closed Trades Ledger <span class="badge-count" id="closedCountBadge">0 Trades</span></h2>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Stock</th>
+              <th>Entry Date</th>
+              <th>Exit Date</th>
+              <th>Entry Price</th>
+              <th>Exit Price</th>
+              <th>Qty</th>
+              <th>Realized P&amp;L</th>
+              <th>Return %</th>
+              <th>Exit Reason</th>
+            </tr>
+          </thead>
+          <tbody id="closedTradesTable">
+            <tr><td colspan="9" class="empty-state">No completed trades yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    async function loadPortfolioData() {
+      try {
+        const res = await fetch('data/jishu_portfolio.json?nocache=' + Date.now());
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        renderDashboard(data);
+      } catch (err) {
+        console.warn('Could not fetch portfolio JSON via HTTP:', err.message);
+        document.getElementById('lastUpdatedText').innerText = 'Data file not loaded via HTTP. Run local server or check data/jishu_portfolio.json';
+      }
+    }
+
+    function renderDashboard(data) {
+      const acc = data.account || {};
+      const initial = acc.initial_capital || 1000000;
+      const equity = acc.total_equity || initial;
+      const realized = acc.realized_pnl || 0;
+      const unrealized = acc.unrealized_pnl || 0;
+      const returnPct = ((equity - initial) / initial) * 100;
+
+      // KPIs
+      document.getElementById('totalEquity').innerText = '₹' + equity.toLocaleString('en-IN');
+      const retEl = document.getElementById('totalReturnPct');
+      retEl.innerText = `Initial: ₹${initial.toLocaleString('en-IN')} (${returnPct >= 0 ? '+' : ''}${returnPct.toFixed(2)}%)`;
+      retEl.className = 'kpi-sub ' + (returnPct >= 0 ? 'val-positive' : 'val-negative');
+
+      const realEl = document.getElementById('realizedPnl');
+      realEl.innerText = (realized >= 0 ? '+' : '') + '₹' + realized.toLocaleString('en-IN');
+      realEl.className = 'kpi-val ' + (realized >= 0 ? 'val-positive' : 'val-negative');
+      document.getElementById('winRateSub').innerText = `Win Rate: ${acc.win_rate || 0}% (${acc.winning_trades || 0}W / ${acc.losing_trades || 0}L)`;
+
+      const unrelEl = document.getElementById('unrealizedPnl');
+      unrelEl.innerText = (unrealized >= 0 ? '+' : '') + '₹' + unrealized.toLocaleString('en-IN');
+      unrelEl.className = 'kpi-val ' + (unrealized >= 0 ? 'val-positive' : 'val-negative');
+
+      const openPos = data.open_positions || [];
+      document.getElementById('openPositionsSub').innerText = `${openPos.length} Active Positions`;
+      document.getElementById('openCountBadge').innerText = `${openPos.length} / ${data.settings?.max_positions || 10}`;
+
+      document.getElementById('cashBalance').innerText = '₹' + (acc.cash || 0).toLocaleString('en-IN');
+      document.getElementById('investedBalance').innerText = 'Invested: ₹' + (acc.invested_capital || 0).toLocaleString('en-IN');
+
+      if (data.last_updated) {
+        document.getElementById('lastUpdatedText').innerText = 'Last Updated: ' + new Date(data.last_updated).toLocaleString('en-IN');
+      }
+
+      // Open Positions Table
+      const openTbody = document.getElementById('openPositionsTable');
+      if (openPos.length === 0) {
+        openTbody.innerHTML = '<tr><td colspan="10" class="empty-state">No active positions. Capital ready for next Quad 1 setup.</td></tr>';
+      } else {
+        openTbody.innerHTML = openPos.map(p => {
+          const curP = p.current_price || p.entry_price;
+          const pnl = (curP - p.entry_price) * p.qty;
+          const pnlPct = ((curP - p.entry_price) / p.entry_price) * 100;
+          const pnlClass = pnl >= 0 ? 'val-positive' : 'val-negative';
+          const pnlPrefix = pnl >= 0 ? '+' : '';
+          
+          const riskStatus = p.sl_moved_to_cost 
+            ? '<span class="status-badge badge-breakeven">🛡️ Risk-Free (Cost SL)</span>'
+            : '<span class="status-badge badge-initial">⚠️ Active SL (-3.618%)</span>';
+
+          const progressToT2 = Math.min(100, Math.max(0, ((curP - p.entry_price) / (p.target_2_price - p.entry_price)) * 100));
+
+          return `
+            <tr>
+              <td>
+                <div class="stock-info">
+                  <span class="stock-sym">${p.sym}</span>
+                  <span class="stock-ind">${p.ind || 'Equities'} · Qty: ${p.qty}</span>
+                </div>
+              </td>
+              <td>${p.entry_date || '-'}</td>
+              <td class="mono-cell">₹${p.entry_price?.toFixed(2)}</td>
+              <td class="mono-cell">₹${curP?.toFixed(2)}</td>
+              <td class="mono-cell">₹${(p.invested_value || (p.qty * p.entry_price)).toLocaleString('en-IN')}</td>
+              <td class="mono-cell ${pnlClass}">
+                ${pnlPrefix}₹${pnl.toFixed(2)} (${pnlPrefix}${pnlPct.toFixed(2)}%)
+                <div class="progress-track"><div class="progress-fill" style="width: ${progressToT2}%"></div></div>
+              </td>
+              <td class="mono-cell" style="color: var(--accent-red);">₹${p.current_sl?.toFixed(2)}</td>
+              <td class="mono-cell" style="color: var(--accent-amber);">₹${p.target_1_price?.toFixed(2)}</td>
+              <td class="mono-cell" style="color: var(--accent-green);">₹${p.target_2_price?.toFixed(2)}</td>
+              <td>${riskStatus}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Closed Trades
+      const closed = data.closed_trades || [];
+      document.getElementById('closedCountBadge').innerText = `${closed.length} Trades`;
+      const closedTbody = document.getElementById('closedTradesTable');
+      if (closed.length === 0) {
+        closedTbody.innerHTML = '<tr><td colspan="9" class="empty-state">No completed trades yet.</td></tr>';
+      } else {
+        closedTbody.innerHTML = closed.map(c => {
+          const pnlClass = c.realized_pnl >= 0 ? 'val-positive' : 'val-negative';
+          const pnlPrefix = c.realized_pnl >= 0 ? '+' : '';
+          let badgeClass = 'badge-exit-target';
+          if (c.exit_reason === 'TARGET_1_3_HIT') badgeClass = 'badge-exit-target';
+          else if (c.exit_reason === 'COST_SL_HIT') badgeClass = 'badge-breakeven';
+          else badgeClass = 'badge-exit-stop';
+
+          return `
+            <tr>
+              <td><span class="stock-sym">${c.sym}</span></td>
+              <td>${c.entry_date || '-'}</td>
+              <td>${c.exit_date || '-'}</td>
+              <td class="mono-cell">₹${c.entry_price?.toFixed(2)}</td>
+              <td class="mono-cell">₹${c.exit_price?.toFixed(2)}</td>
+              <td class="mono-cell">${c.qty}</td>
+              <td class="mono-cell ${pnlClass}">${pnlPrefix}₹${c.realized_pnl?.toFixed(2)}</td>
+              <td class="mono-cell ${pnlClass}">${pnlPrefix}${c.return_pct?.toFixed(2)}%</td>
+              <td><span class="status-badge ${badgeClass}">${c.exit_reason}</span></td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Recent events
+      const events = data.recent_events || [];
+      const eventContainer = document.getElementById('eventFeed');
+      if (events.length > 0) {
+        eventContainer.innerHTML = events.slice(0, 15).map(e => `
+          <div class="event-item">
+            <span>${e.message || e.type}</span>
+            <span class="event-time">${new Date(e.timestamp).toLocaleDateString('en-IN', {day:'2-digit',month:'short'})}</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Initialize
+    loadPortfolioData();
+  </script>
+</body>
+</html>
