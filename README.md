@@ -12,11 +12,11 @@ Designed with a high-end dark slate institutional aesthetic, the platform equips
 
 ---
 
-### 🌐 Live Platform Links
-* ⚡ **[Live Screener Terminal](https://rajakhil12-afk.github.io/adaptive-alpha/)** — Real-time interactive quantitative scanner & heatmaps.
-* 🏠 **[Landing Page & Market Regime Map](https://rajakhil12-afk.github.io/adaptive-alpha/landing.html)** — Macro market breadth & regime overview.
-* 📖 **[Strategy Presets Playbook](https://rajakhil12-afk.github.io/adaptive-alpha/preset_playbook.html)** — Risk-reward trade setups & execution rules.
-* 📚 **[User Guide & Methodology](https://rajakhil12-afk.github.io/adaptive-alpha/user_guide.html)** — Complete mathematical indicator formulas.
+### 🌐 Live Platform
+* 🚀 **[Adaptive Alpha Platform (Home)](https://rajakhil12-afk.github.io/adaptive-alpha/landing.html)** — Official homepage, regime matrix & feature overview.
+* 📊 **[Live Screener Terminal](https://rajakhil12-afk.github.io/adaptive-alpha/)** — Interactive quantitative scanner, heatmap & RRG clock.
+* 📖 **[Strategy Presets Playbook](https://rajakhil12-afk.github.io/adaptive-alpha/preset_playbook.html)** — Trade setup rules & risk-reward guidelines.
+* 📚 **[User Guide & Methodology](https://rajakhil12-afk.github.io/adaptive-alpha/user_guide.html)** — Mathematical indicator formulas & documentation.
 
 ---
 
