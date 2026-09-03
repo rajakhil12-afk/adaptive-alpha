@@ -1,0 +1,47 @@
+{
+  "bot_name": "Jishu",
+  "version": "1.0.0",
+  "created_at": "2026-09-02T20:25:00+05:30",
+  "last_updated": "2026-09-02T20:25:00+05:30",
+  "account": {
+    "initial_capital": 1000000,
+    "cash": 1000000,
+    "invested_capital": 0,
+    "total_equity": 1000000,
+    "realized_pnl": 0,
+    "unrealized_pnl": 0,
+    "win_rate": 0,
+    "total_trades": 0,
+    "winning_trades": 0,
+    "losing_trades": 0
+  },
+  "settings": {
+    "max_positions": 10,
+    "max_capital_per_trade_pct": 10,
+    "fixed_sl_pct": 3.618,
+    "target_1_rr": 2,
+    "target_2_rr": 3,
+    "min_volume_ratio": 1.2,
+    "min_rs_rating": 70
+  },
+  "open_positions": [],
+  "closed_trades": [],
+  "daily_equity": [
+    {
+      "date": "2026-09-02",
+      "cash": 1000000,
+      "invested": 0,
+      "total_equity": 1000000,
+      "realized_pnl": 0,
+      "unrealized_pnl": 0,
+      "open_positions_count": 0
+    }
+  ],
+  "recent_events": [
+    {
+      "timestamp": "2026-09-02T20:25:00+05:30",
+      "type": "INITIALIZE",
+      "message": "Jishu Paper Desk initialized with \u20b910,00,000 virtual capital."
+    }
+  ]
+}
