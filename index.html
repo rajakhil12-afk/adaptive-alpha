@@ -24,7 +24,10 @@
 
 <!-- ═══════ TOPBAR NAVIGATION ═══════ -->
 <div class="topbar">
-  <div class="logo">⚡ ADAPTIVE <span>ALPHA</span></div>
+  <a href="landing.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;" title="Adaptive Alpha Home / Overview">
+    <img src="logo.png" alt="Adaptive Alpha Logo" style="width:28px;height:28px;border-radius:6px;object-fit:cover;flex-shrink:0;">
+    <div class="logo">ADAPTIVE <span>ALPHA</span></div>
+  </a>
   <span class="badge badge-blue" id="index-badge">Nifty 50</span>
   <span class="badge badge-green">Quantitative Engine</span>
 
@@ -65,6 +68,7 @@
 
   <!-- Primary Tab Switcher -->
   <div class="tabs">
+    <div class="tab" onclick="setTab('overview', this)">🏠 Overview</div>
     <div class="tab active" onclick="setTab('screener', this)">📊 Screener</div>
     <div class="tab" onclick="setTab('watchlist', this)">★ Watchlist (<span id="wl-count">0</span>)</div>
     <div class="tab" onclick="setTab('breakouts', this)">🔥 Breakout Radar (<span id="bo-count">0</span>)</div>
@@ -80,6 +84,11 @@
     <div class="compare-chips" id="compare-chips"></div>
     <button onclick="openCompare()" style="background:var(--up);color:#0d1017;padding:3px 10px;font-size:11px;">Compare Now →</button>
     <button onclick="compareStocks=[];updateCompareBar();renderTable();" style="background:transparent;border:none;color:var(--muted);font-size:11px;cursor:pointer;">Clear All</button>
+  </div>
+
+  <!-- ═══════ TAB 0: INLINE OVERVIEW DASHBOARD ═══════ -->
+  <div id="tab-overview" style="display:none;">
+    <div class="overview-container" id="overview-content"></div>
   </div>
 
   <!-- ═══════ TAB 1: SCREENER TERMINAL ═══════ -->
@@ -385,23 +394,27 @@
 
 <!-- Mobile Bottom Navigation -->
 <div class="mobile-bottom-nav">
-  <div class="mobile-nav-item active" onclick="setTab('screener', document.querySelectorAll('.tab')[0])">
+  <div class="mobile-nav-item" onclick="setTab('overview', document.querySelectorAll('.tab')[0])">
+    <span class="mobile-nav-icon">🏠</span>
+    <span>Overview</span>
+  </div>
+  <div class="mobile-nav-item active" onclick="setTab('screener', document.querySelectorAll('.tab')[1])">
     <span class="mobile-nav-icon">📊</span>
     <span>Screener</span>
   </div>
-  <div class="mobile-nav-item" onclick="setTab('watchlist', document.querySelectorAll('.tab')[1])">
+  <div class="mobile-nav-item" onclick="setTab('watchlist', document.querySelectorAll('.tab')[2])">
     <span class="mobile-nav-icon">★</span>
     <span>Watchlist</span>
   </div>
-  <div class="mobile-nav-item" onclick="setTab('breakouts', document.querySelectorAll('.tab')[2])">
+  <div class="mobile-nav-item" onclick="setTab('breakouts', document.querySelectorAll('.tab')[3])">
     <span class="mobile-nav-icon">🔥</span>
     <span>Breakouts</span>
   </div>
-  <div class="mobile-nav-item" onclick="setTab('heatmap', document.querySelectorAll('.tab')[3])">
+  <div class="mobile-nav-item" onclick="setTab('heatmap', document.querySelectorAll('.tab')[4])">
     <span class="mobile-nav-icon">🗺️</span>
     <span>Heatmap</span>
   </div>
-  <div class="mobile-nav-item" onclick="setTab('sectors', document.querySelectorAll('.tab')[4])">
+  <div class="mobile-nav-item" onclick="setTab('sectors', document.querySelectorAll('.tab')[5])">
     <span class="mobile-nav-icon">🏛️</span>
     <span>Sectors</span>
   </div>
