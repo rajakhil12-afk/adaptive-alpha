@@ -1,4 +1,4 @@
-{
+window.STATIC_SCREENER_DATA = {
   "updated": "05:30 pm IST \u00b7 03 Sept",
   "bhavDate": "2026-09-03",
   "fii_dii": {
@@ -18850,4 +18850,4 @@
       "rsRatingAtTrigger": 55
     }
   ]
-}
+};
