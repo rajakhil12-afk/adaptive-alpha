@@ -307,9 +307,59 @@ async function run() {
     sections.push(perfSec);
   }
 
+  // Section 5: 🤖 JISHU PAPER TRADING DESK
+  const jishuFile = path.join(__dirname, '..', 'data', 'jishu_portfolio.json');
+  if (fs.existsSync(jishuFile)) {
+    try {
+      const jishu = JSON.parse(fs.readFileSync(jishuFile, 'utf8'));
+      const acc = jishu.account || {};
+      const positions = Array.isArray(jishu.open_positions) ? jishu.open_positions : [];
+      const events = Array.isArray(jishu.recent_events) ? jishu.recent_events : [];
+      
+      let jishuSec = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      jishuSec += `🤖 <b>JISHU PAPER TRADING DESK (₹10L Portfolio)</b>\n`;
+      jishuSec += `• <b>Total Equity:</b> ₹${(acc.total_equity || 1000000).toLocaleString('en-IN')}\n`;
+      jishuSec += `• <b>Cash Available:</b> ₹${(acc.cash || 0).toLocaleString('en-IN')} | <b>Invested:</b> ₹${(acc.invested_capital || 0).toLocaleString('en-IN')}\n`;
+      jishuSec += `• <b>Realized P&L:</b> ${acc.realized_pnl >= 0 ? '+' : ''}₹${(acc.realized_pnl || 0).toLocaleString('en-IN')} | <b>Win Rate:</b> <code>${acc.win_rate || 0}%</code> (${acc.winning_trades || 0}W / ${acc.losing_trades || 0}L)\n\n`;
+
+      // Recent Actions / Executions today
+      const todayEvents = events.filter(e => {
+        if (!e.timestamp) return false;
+        const eDate = e.timestamp.split('T')[0];
+        const tDate = new Date().toISOString().split('T')[0];
+        return eDate === tDate;
+      }).slice(0, 5);
+
+      if (todayEvents.length > 0) {
+        jishuSec += `⚡ <b>Today's Engine Actions:</b>\n`;
+        todayEvents.forEach(ev => {
+          jishuSec += `• ${escapeHtml(ev.message || ev.type)}\n`;
+        });
+        jishuSec += `\n`;
+      }
+
+      // Active Holdings
+      if (positions.length > 0) {
+        jishuSec += `💼 <b>Active Open Positions (${positions.length}/10):</b>\n`;
+        positions.forEach(p => {
+          const curP = p.current_price || p.entry_price;
+          const pnlPct = ((curP - p.entry_price) / p.entry_price) * 100;
+          const pnlStr = pnlPct >= 0 ? `+${pnlPct.toFixed(1)}%` : `${pnlPct.toFixed(1)}%`;
+          const trailBadge = p.sl_moved_to_cost ? '🛡️ Risk-Free' : `SL: ₹${p.current_sl}`;
+          jishuSec += `• <b>${escapeHtml(p.sym)}</b>: ₹${curP} (<code>${pnlStr}</code>) | ${trailBadge} | T2: ₹${p.target_2_price}\n`;
+        });
+        jishuSec += `\n`;
+      }
+
+      sections.push(jishuSec);
+    } catch (jErr) {
+      console.warn('Could not parse Jishu portfolio for Telegram:', jErr.message);
+    }
+  }
+
   // Footer section
   let footerSec = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  footerSec += `📈 <i>Check screener dashboard for interactive charts!</i>`;
+  footerSec += `📈 <i>Check screener dashboard & jishu_desk.html for full analytics!</i>`;
   sections.push(footerSec);
 
   // Safely dispatch all sections

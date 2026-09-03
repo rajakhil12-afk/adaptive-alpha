@@ -966,6 +966,16 @@ async function run() {
 
   fs.writeFileSync(outputJson, JSON.stringify(payload, null, 2));
   console.log(`Successfully generated data file. Saved to: ${outputJson}`);
+
+  // Execute Jishu Institutional Paper Trading Engine
+  try {
+    const { runJishuEngine } = require('./jishu_engine');
+    console.log('\n--- EXECUTING JISHU PAPER TRADING DESK ---');
+    runJishuEngine(payload);
+  } catch (jishuErr) {
+    console.error('Warning: Failed running Jishu Engine:', jishuErr.message);
+  }
+
   console.log('--- PIPELINE COMPLETED ---');
 }
 
