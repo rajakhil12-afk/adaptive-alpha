@@ -26,6 +26,9 @@ jobs:
       - name: Install system dependencies
         run: sudo apt-get install -y unzip
 
+      - name: Run Indicator Unit Tests
+        run: node --test test/indicators.test.js
+
       - name: Run Screener Generator (with retry)
         run: |
           for attempt in 1 2 3; do
