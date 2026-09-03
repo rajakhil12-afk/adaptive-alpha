@@ -40,6 +40,7 @@
       <option value="200">Nifty Midcap 100</option>
       <option value="400">Nifty Smallcap 100</option>
       <option value="500">Nifty 500</option>
+      <option value="fno">⚡ Nifty F&O (~185)</option>
     </select>
     <button onclick="loadData()" id="live-scan-btn" title="Run manual live Yahoo Finance scan" style="background:var(--up-dim);color:var(--up);border-color:rgba(38,166,154,0.4);">↻ Live Data</button>
     <button onclick="openShareCardModal()" id="share-card-btn" title="Create Visual Social Card" style="background:rgba(227,179,65,0.15);color:var(--gold);border-color:rgba(227,179,65,0.3)">🎨 Card</button>
@@ -110,6 +111,7 @@
 
       <div class="divider"></div>
 
+      <span class="chip" id="f-fno" onclick="toggleChip('fno')">⚡ F&O Only</span>
       <span class="chip on" id="f-pass" onclick="toggleChip('pass')">Pass Only</span>
       <span class="chip on" id="f-groups" onclick="toggleChip('groups')">Group Sectors</span>
       <span class="chip" id="f-watchlist" onclick="toggleChip('watchlist')">★ Watchlist Only</span>
@@ -372,12 +374,20 @@
 
 <!-- ═══════ SOCIAL SHARE CARD MODAL ═══════ -->
 <div class="modal-overlay" id="share-card-modal">
-  <div class="modal-box" style="width: min(96vw, 720px);">
+  <div class="modal-box" style="width: min(96vw, 760px);">
     <div class="modal-header">
       <div style="font-size: 14px; font-weight: 700; color: var(--text);">🎨 Daily Market Momentum Card</div>
       <button class="modal-close" onclick="closeShareCardModal()">✕</button>
     </div>
     <div class="modal-body" style="text-align: center;">
+      <!-- Premium Theme Palette Switcher -->
+      <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+        <span style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Theme Palette:</span>
+        <button class="card-theme-btn active" data-theme="gold" onclick="setCardTheme('gold')">🌟 Obsidian Gold</button>
+        <button class="card-theme-btn" data-theme="emerald" onclick="setCardTheme('emerald')">⚡ Emerald Alpha</button>
+        <button class="card-theme-btn" data-theme="sapphire" onclick="setCardTheme('sapphire')">🔷 Sapphire Pro</button>
+        <button class="card-theme-btn" data-theme="amethyst" onclick="setCardTheme('amethyst')">🟣 Amethyst Matrix</button>
+      </div>
       <canvas id="share-canvas" style="width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow);"></canvas>
       <div style="margin-top: 14px; display: flex; justify-content: center; gap: 10px;">
         <button onclick="downloadShareCardImage()" style="background: var(--up); color: #0d1017; font-weight: 700; padding: 8px 16px;">💾 Download PNG</button>
