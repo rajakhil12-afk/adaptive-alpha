@@ -46,7 +46,7 @@ try {
 }
 
 // Load centralized universe and mappings
-const { N50, EXTRA, MIDCAP100, SMALLCAP100, N500_REST, UNIVERSE, toYF } = require('../config/universe');
+const { N50, EXTRA, MIDCAP100, SMALLCAP100, N500_REST, UNIVERSE, FNO_SYMS, FNO_SET, toYF } = require('../config/universe');
 
 // Download helper — used for non-NSE URLs (Yahoo Finance etc)
 function downloadFile(url, dest) {
@@ -713,9 +713,50 @@ async function downloadLatestBhavcopy() {
   throw new Error('Could not download any recent Bhavcopy files from NSE after 10 days of lookback.');
 }
 
+async function fetchDynamicFnoSymbols() {
+  console.log('Fetching official dynamic NSE F&O list from NSE archives...');
+  const foCsvUrl = 'https://nsearchives.nseindia.com/content/fo/fo_mktlots.csv';
+  const tempCsv = path.join(dataDir, 'temp_fo_mktlots.csv');
+  const cookieFile = path.join(dataDir, 'nse_cookies.txt');
+  const indexExclusions = new Set(['NIFTY', 'BANKNIFTY', 'FINNIFTY', 'MIDCPNIFTY', 'NIFTYNXT50', 'SYMBOL', 'UNDERLYING']);
+
+  try {
+    downloadNSEWithCurl(foCsvUrl, tempCsv, cookieFile);
+    if (fs.existsSync(tempCsv)) {
+      const content = fs.readFileSync(tempCsv, 'utf8');
+      try { fs.unlinkSync(tempCsv); } catch(e) {}
+      const lines = content.split('\n').map(l => l.trim()).filter(Boolean);
+      const dynamicSyms = new Set();
+      
+      for (const line of lines) {
+        const parts = line.split(',').map(p => p.trim());
+        if (parts.length >= 2) {
+          let sym = parts[1] || parts[0];
+          sym = sym.replace(/[^A-Za-z0-9_&-]/g, '').toUpperCase();
+          if (sym === 'M&M') sym = 'M_M';
+          if (sym && !indexExclusions.has(sym) && isNaN(Number(sym))) {
+            dynamicSyms.add(sym);
+          }
+        }
+      }
+      
+      if (dynamicSyms.size >= 100) {
+        console.log(`Successfully fetched ${dynamicSyms.size} dynamic F&O stocks from NSE.`);
+        return dynamicSyms;
+      }
+    }
+  } catch (err) {
+    console.warn(`Dynamic F&O fetch note: ${err.message.slice(0, 100)}. Using built-in F&O universe fallback.`);
+  }
+  console.log(`Using built-in F&O universe (${FNO_SET.size} stocks).`);
+  return FNO_SET;
+}
+
 async function run() {
   console.log('--- STARTING ADAPTIVE ALPHA PIPELINE ---');
   console.log(`Platform: ${process.platform}, Node: ${process.version}, Time: ${new Date().toISOString()}`);
+
+  const activeFnoSet = await fetchDynamicFnoSymbols();
   let bhav;
   try {
     bhav = await downloadLatestBhavcopy();
@@ -817,6 +858,7 @@ async function run() {
         pocket_pivot: pocketPivot,
         ma_status: calc.ma_status,
         ars_slope: parseFloat(calc.ars_slope.toFixed(4)),
+        is_fno: activeFnoSet.has(stock.sym),
         is_breakdown: calc.ars < -0.01 && calc.srs <= 0 && (st10.trend === 'sell' || calc.ma_status === 'MA-'),
         is_dip_buy: (calc.ars >= -0.015 || (calc.signDays != null && calc.signDays <= 15 && calc.signPrice > 0)) && (st10.trend === 'buy' || calc.ma_status === 'MA+') && calc.srs <= 0
       };
@@ -965,7 +1007,9 @@ async function run() {
   };
 
   fs.writeFileSync(outputJson, JSON.stringify(payload, null, 2));
-  console.log(`Successfully generated data file. Saved to: ${outputJson}`);
+  const outputJs = path.join(dataDir, 'screener.js');
+  fs.writeFileSync(outputJs, 'window.STATIC_SCREENER_DATA = ' + JSON.stringify(payload) + ';');
+  console.log(`Successfully generated data files. Saved to: ${outputJson} and ${outputJs}`);
 
   // Execute Jishu Institutional Paper Trading Engine
   try {
