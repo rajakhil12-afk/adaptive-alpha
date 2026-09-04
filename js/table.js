@@ -102,9 +102,9 @@ function rowHtml(d) {
   const quadPillHtml = `<span class="quad-pill ${quadKey}">${quadLabels[quadKey]}</span>`;
 
   const tags = [];
-  if (d.ichimoku && d.ichimoku.status === 'Kumo BUY') tags.push('<span class="tag tag-kumo">☁️ KUMO BUY</span>');
-  if (d.pocket_pivot) tags.push('<span class="tag tag-pp" style="background:rgba(227,179,65,0.15);color:var(--gold);border:1px solid rgba(227,179,65,0.3)">⚡ POCKET PIVOT</span>');
-  if (d.vcp && d.vcp.is_vcp) tags.push('<span class="tag tag-vcp" style="background:rgba(94,150,255,0.15);color:#7da9ff;border:1px solid rgba(94,150,255,0.3)">🧘 VCP SQUEEZE</span>');
+  if (d.ichimoku && (d.ichimoku.status === 'Kumo BUY' || d.ichimoku.kumo_buy || /Bull/i.test(d.ichimoku.status))) tags.push('<span class="tag tag-kumo">☁️ KUMO BUY</span>');
+  if (d.pocket_pivot || d.is_pocket_pivot) tags.push('<span class="tag tag-pp" style="background:rgba(227,179,65,0.15);color:var(--gold);border:1px solid rgba(227,179,65,0.3)">⚡ POCKET PIVOT</span>');
+  if ((d.vcp && d.vcp.is_vcp) || d.is_vcp) tags.push('<span class="tag tag-vcp" style="background:rgba(94,150,255,0.15);color:#7da9ff;border:1px solid rgba(94,150,255,0.3)">🧘 VCP SQUEEZE</span>');
   else if (d.vol_ratio >= 2.0) tags.push(`<span class="tag tag-vol-surge">⚡ ${d.vol_ratio.toFixed(1)}x Vol</span>`);
   else if (d.vol_ratio >= 1.5) tags.push('<span class="tag tag-vol">VOL+</span>');
   else if (d.vol_ratio <= 0.7) tags.push('<span class="tag tag-vcp">🧘 Dry-up</span>');
@@ -210,8 +210,9 @@ function rowHtml(d) {
 
 function renderTable() {
   if (!allData.length) return;
-  const search = document.getElementById('search-box').value.toLowerCase();
-  const sort   = document.getElementById('sort-sel').value;
+  const searchEl = document.getElementById('search-box');
+  const search   = searchEl ? searchEl.value.toLowerCase() : '';
+  const sort     = document.getElementById('sort-sel') ? document.getElementById('sort-sel').value : 'rs-desc';
   let data = allData.map(d => ({...d, pass: passes(d)}));
   if (search) data = data.filter(d => d.sym.toLowerCase().includes(search) || d.name.toLowerCase().includes(search) || d.ind.toLowerCase().includes(search));
   if (activeSector) data = data.filter(d => d.ind === activeSector);

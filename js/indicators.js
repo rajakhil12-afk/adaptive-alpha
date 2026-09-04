@@ -231,7 +231,7 @@ function calcPocketPivot(candles) {
 function calcIchimoku(candles) {
   const len = candles ? candles.length : 0;
   if (len < 52 + 5) {
-    return { status: "Neutral", breakout: false, tenkan: 0, kijun: 0, kumoTop: 0, kumoBottom: 0 };
+    return { status: "Neutral", breakout: false, tenkan: 0, kijun: 0, kumoTop: 0, kumoBottom: 0, kumo_buy: false };
   }
 
   const getHL2 = (slice) => {
@@ -260,10 +260,12 @@ function calcIchimoku(candles) {
   const isBullishCloud = cToday.c > kumoTop;
   const isBearishCloud = cToday.c < kumoBottom;
   const tkCross = tenkan >= kijun;
+  const isKumoBuy = isBullishCloud && tkCross;
 
   let status = "Neutral";
-  if (isBullishCloud && tkCross) status = "Strong Bullish";
+  if (isKumoBuy) status = "Kumo BUY";
   else if (isBullishCloud) status = "Bullish";
+  else if (isBearishCloud && tenkan < kijun) status = "Kumo SELL";
   else if (isBearishCloud) status = "Bearish";
 
   const prevC = candles[len - 2];
@@ -271,6 +273,7 @@ function calcIchimoku(candles) {
 
   return {
     status,
+    kumo_buy: isKumoBuy,
     breakout,
     tenkan: parseFloat(tenkan.toFixed(2)),
     kijun: parseFloat(kijun.toFixed(2)),

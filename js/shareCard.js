@@ -356,8 +356,9 @@ function copyShareCardImage() {
 }
 
 function exportCSV() {
-  const search = document.getElementById('search-box').value.toLowerCase();
-  const sort = document.getElementById('sort-sel').value;
+  const searchEl = document.getElementById('search-box');
+  const search = searchEl ? searchEl.value.toLowerCase() : '';
+  const sort = document.getElementById('sort-sel') ? document.getElementById('sort-sel').value : 'rs-desc';
   let data = allData.map(d => ({...d, pass: passes(d)}));
   if (search) data = data.filter(d => d.sym.toLowerCase().includes(search) || d.name.toLowerCase().includes(search) || d.ind.toLowerCase().includes(search));
   if (activeSector) data = data.filter(d => d.ind === activeSector);
@@ -407,7 +408,8 @@ function exportCSV() {
 }
 
 function copySummary() {
-  const search = document.getElementById('search-box').value.toLowerCase();
+  const searchEl = document.getElementById('search-box');
+  const search = searchEl ? searchEl.value.toLowerCase() : '';
   let data = allData.map(d => ({...d, pass: passes(d)}));
   if (search) data = data.filter(d => d.sym.toLowerCase().includes(search) || d.name.toLowerCase().includes(search) || d.ind.toLowerCase().includes(search));
   if (activeSector) data = data.filter(d => d.ind === activeSector);

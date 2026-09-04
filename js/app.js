@@ -59,11 +59,11 @@ function passes(d) {
   if (filters.mrs)         ok = ok && ((d.mrs !== undefined && d.mrs > 0) || d.ars > 0);
   if (filters.quad1)       ok = ok && getDualRSQuad(d) === 'quad-1';
   if (filters.quad2)       ok = ok && getDualRSQuad(d) === 'quad-2';
-  if (filters.ichimoku)    ok = ok && d.ichimoku && d.ichimoku.status === 'Kumo BUY';
+  if (filters.ichimoku)    ok = ok && d.ichimoku && (d.ichimoku.status === 'Kumo BUY' || d.ichimoku.kumo_buy || /Bull/i.test(d.ichimoku.status));
   if (filters.vol)         ok = ok && (d.vol_ratio || 1) >= 1.5;
   if (filters.volsurge)    ok = ok && (d.vol_ratio || 1) >= 2.0;
-  if (filters.vcp)         ok = ok && ((d.vcp && d.vcp.is_vcp) || ((d.vol_ratio || 1) <= 0.7 && d.hi52_prox >= -0.05));
-  if (filters.pocketpivot) ok = ok && d.pocket_pivot;
+  if (filters.vcp)         ok = ok && ((d.vcp && d.vcp.is_vcp) || d.is_vcp || ((d.vol_ratio || 1) <= 0.7 && d.hi52_prox >= -0.05));
+  if (filters.pocketpivot) ok = ok && (d.pocket_pivot || d.is_pocket_pivot);
   if (filters['52w'])      ok = ok && d.hi52_prox >= -0.05;
   if (filters.st) {
     const stData = stParam === '14' ? d.st14 : d.st10;
@@ -1010,12 +1010,14 @@ async function loadData() {
         signPrice: calc.signPrice ?? null,
         st14,
         st10,
-        ichimoku: candles ? calcIchimoku(candles) : { status: "Neutral", breakout: false, tenkan: 0, kijun: 0, kumoTop: 0, kumoBottom: 0 },
+        ichimoku: candles ? calcIchimoku(candles) : { status: "Neutral", breakout: false, tenkan: 0, kijun: 0, kumoTop: 0, kumoBottom: 0, kumo_buy: false },
         ma_status: calc.ma_status ?? 'MA-',
         ars_slope: calc.ars_slope ?? 0,
+        vcp: vcpData,
         is_vcp: vcpData.is_vcp,
         vcp_atr_ratio: vcpData.atr_ratio,
         vcp_tightness_pct: vcpData.tightness_pct,
+        pocket_pivot: ppData,
         is_pocket_pivot: ppData,
         mrs: mrsData.mrs,
         mrs_trend: mrsData.mrs_trend
@@ -1181,9 +1183,11 @@ async function analyzeExternalStock(symInput) {
       ichimoku: calcIchimoku(candles),
       ma_status: calc.ma_status ?? 'MA+',
       ars_slope: calc.ars_slope ?? 0.01,
+      vcp: vcp,
       is_vcp: vcp.is_vcp,
       vcp_atr_ratio: vcp.atr_ratio,
       vcp_tightness_pct: vcp.tightness_pct,
+      pocket_pivot: pp,
       is_pocket_pivot: pp,
       mrs: mrs.mrs,
       mrs_trend: mrs.mrs_trend,
