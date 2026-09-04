@@ -5,56 +5,256 @@
 
 // Nifty 50 constituents
 const N50 = [
-  {sym:'ADANIENT', name:'Adani Enterprises', ind:'Metals & Mining'},
-  {sym:'ADANIPORTS', name:'Adani Ports', ind:'Services'},
-  {sym:'APOLLOHOSP', name:'Apollo Hospitals', ind:'Healthcare'},
-  {sym:'ASIANPAINT', name:'Asian Paints', ind:'Consumer Durables'},
-  {sym:'AXISBANK', name:'Axis Bank', ind:'Financial Services'},
-  {sym:'BAJAJ-AUTO', name:'Bajaj Auto', ind:'Automobile'},
-  {sym:'BAJFINANCE', name:'Bajaj Finance', ind:'Financial Services'},
-  {sym:'BAJAJFINSV', name:'Bajaj Finserv', ind:'Financial Services'},
-  {sym:'BEL', name:'Bharat Electronics', ind:'Capital Goods'},
-  {sym:'BHARTIARTL', name:'Bharti Airtel', ind:'Telecom'},
-  {sym:'BPCL', name:'BPCL', ind:'Oil Gas'},
-  {sym:'CIPLA', name:'Cipla', ind:'Healthcare'},
-  {sym:'COALINDIA', name:'Coal India', ind:'Oil Gas'},
-  {sym:'DRREDDY', name:'Dr Reddy\'s', ind:'Healthcare'},
-  {sym:'EICHERMOT', name:'Eicher Motors', ind:'Automobile'},
-  {sym:'GRASIM', name:'Grasim Industries', ind:'Construction Materials'},
-  {sym:'HCLTECH', name:'HCL Tech', ind:'IT'},
-  {sym:'HDFCBANK', name:'HDFC Bank', ind:'Financial Services'},
-  {sym:'HDFCLIFE', name:'HDFC Life', ind:'Financial Services'},
-  {sym:'HINDALCO', name:'Hindalco', ind:'Metals & Mining'},
-  {sym:'HINDUNILVR', name:'HUL', ind:'FMCG'},
-  {sym:'ICICIBANK', name:'ICICI Bank', ind:'Financial Services'},
-  {sym:'INDIGO', name:'IndiGo', ind:'Services'},
-  {sym:'INDUSINDBK', name:'IndusInd Bank', ind:'Financial Services'},
-  {sym:'INFY', name:'Infosys', ind:'IT'},
-  {sym:'ITC', name:'ITC', ind:'FMCG'},
-  {sym:'JIOFIN', name:'Jio Financial', ind:'Financial Services'},
-  {sym:'JSWSTEEL', name:'JSW Steel', ind:'Metals & Mining'},
-  {sym:'KOTAKBANK', name:'Kotak Bank', ind:'Financial Services'},
-  {sym:'LT', name:'L&T', ind:'Construction'},
-  {sym:'M_M', name:'Mahindra & Mahindra', ind:'Automobile'},
-  {sym:'MARUTI', name:'Maruti Suzuki', ind:'Automobile'},
-  {sym:'MAXHEALTH', name:'Max Healthcare', ind:'Healthcare'},
-  {sym:'NESTLEIND', name:'Nestle India', ind:'FMCG'},
-  {sym:'NTPC', name:'NTPC', ind:'Power'},
-  {sym:'ONGC', name:'ONGC', ind:'Oil Gas'},
-  {sym:'POWERGRID', name:'Power Grid', ind:'Power'},
-  {sym:'RELIANCE', name:'Reliance', ind:'Oil Gas'},
-  {sym:'SBILIFE', name:'SBI Life', ind:'Financial Services'},
-  {sym:'SBIN', name:'State Bank of India', ind:'Financial Services'},
-  {sym:'SHRIRAMFIN', name:'Shriram Finance', ind:'Financial Services'},
-  {sym:'SUNPHARMA', name:'Sun Pharma', ind:'Healthcare'},
-  {sym:'TATACONSUM', name:'Tata Consumer', ind:'FMCG'},
-  {sym:'TATAMOTORS', name:'Tata Motors', ind:'Automobile'},
-  {sym:'TATASTEEL', name:'Tata Steel', ind:'Metals & Mining'},
-  {sym:'TCS', name:'TCS', ind:'IT'},
-  {sym:'TECHM', name:'Tech Mahindra', ind:'IT'},
-  {sym:'TITAN', name:'Titan', ind:'Consumer Durables'},
-  {sym:'TRENT', name:'Trent', ind:'Consumer Services'},
-  {sym:'ULTRACEMCO', name:'UltraTech Cement', ind:'Construction Materials'}
+  {
+    "sym": "ADANIENT",
+    "name": "Adani Enterprises",
+    "ind": "Metals & Mining"
+  },
+  {
+    "sym": "ADANIPORTS",
+    "name": "Adani Ports",
+    "ind": "Services"
+  },
+  {
+    "sym": "APOLLOHOSP",
+    "name": "Apollo Hospitals",
+    "ind": "Healthcare"
+  },
+  {
+    "sym": "ASIANPAINT",
+    "name": "Asian Paints",
+    "ind": "Consumer Durables"
+  },
+  {
+    "sym": "AXISBANK",
+    "name": "Axis Bank",
+    "ind": "Financial Services"
+  },
+  {
+    "sym": "BAJAJ-AUTO",
+    "name": "Bajaj Auto",
+    "ind": "Automobile"
+  },
+  {
+    "sym": "BAJFINANCE",
+    "name": "Bajaj Finance",
+    "ind": "Financial Services"
+  },
+  {
+    "sym": "BAJAJFINSV",
+    "name": "Bajaj Finserv",
+    "ind": "Financial Services"
+  },
+  {
+    "sym": "BEL",
+    "name": "Bharat Electronics",
+    "ind": "Capital Goods"
+  },
+  {
+    "sym": "BHARTIARTL",
+    "name": "Bharti Airtel",
+    "ind": "Telecom"
+  },
+  {
+    "sym": "CIPLA",
+    "name": "Cipla",
+    "ind": "Healthcare"
+  },
+  {
+    "sym": "COALINDIA",
+    "name": "Coal India",
+    "ind": "Oil Gas"
+  },
+  {
+    "sym": "DRREDDY",
+    "name": "Dr Reddy's",
+    "ind": "Healthcare"
+  },
+  {
+    "sym": "EICHERMOT",
+    "name": "Eicher Motors",
+    "ind": "Automobile"
+  },
+  {
+    "sym": "ZOMATO",
+    "name": "Eternal (Zomato)",
+    "ind": "Services"
+  },
+  {
+    "sym": "GRASIM",
+    "name": "Grasim Industries",
+    "ind": "Construction Materials"
+  },
+  {
+    "sym": "HCLTECH",
+    "name": "HCL Tech",
+    "ind": "IT"
+  },
+  {
+    "sym": "HDFCBANK",
+    "name": "HDFC Bank",
+    "ind": "Financial Services"
+  },
+  {
+    "sym": "HDFCLIFE",
+    "name": "HDFC Life",
+    "ind": "Financial Services"
+  },
+  {
+    "sym": "HINDALCO",
+    "name": "Hindalco",
+    "ind": "Metals & Mining"
+  },
+  {
+    "sym": "HINDUNILVR",
+    "name": "HUL",
+    "ind": "FMCG"
+  },
+  {
+    "sym": "ICICIBANK",
+    "name": "ICICI Bank",
+    "ind": "Financial Services"
+  },
+  {
+    "sym": "INDIGO",
+    "name": "IndiGo",
+    "ind": "Services"
+  },
+  {
+    "sym": "INFY",
+    "name": "Infosys",
+    "ind": "IT"
+  },
+  {
+    "sym": "ITC",
+    "name": "ITC",
+    "ind": "FMCG"
+  },
+  {
+    "sym": "JIOFIN",
+    "name": "Jio Financial",
+    "ind": "Financial Services"
+  },
+  {
+    "sym": "JSWSTEEL",
+    "name": "JSW Steel",
+    "ind": "Metals & Mining"
+  },
+  {
+    "sym": "KOTAKBANK",
+    "name": "Kotak Bank",
+    "ind": "Financial Services"
+  },
+  {
+    "sym": "LT",
+    "name": "L&T",
+    "ind": "Construction"
+  },
+  {
+    "sym": "M_M",
+    "name": "Mahindra & Mahindra",
+    "ind": "Automobile"
+  },
+  {
+    "sym": "MARUTI",
+    "name": "Maruti Suzuki",
+    "ind": "Automobile"
+  },
+  {
+    "sym": "MAXHEALTH",
+    "name": "Max Healthcare",
+    "ind": "Healthcare"
+  },
+  {
+    "sym": "NESTLEIND",
+    "name": "Nestle India",
+    "ind": "FMCG"
+  },
+  {
+    "sym": "NTPC",
+    "name": "NTPC",
+    "ind": "Power"
+  },
+  {
+    "sym": "ONGC",
+    "name": "ONGC",
+    "ind": "Oil Gas"
+  },
+  {
+    "sym": "POWERGRID",
+    "name": "Power Grid",
+    "ind": "Power"
+  },
+  {
+    "sym": "RELIANCE",
+    "name": "Reliance",
+    "ind": "Oil Gas"
+  },
+  {
+    "sym": "SBILIFE",
+    "name": "SBI Life",
+    "ind": "Financial Services"
+  },
+  {
+    "sym": "SBIN",
+    "name": "State Bank of India",
+    "ind": "Financial Services"
+  },
+  {
+    "sym": "SHRIRAMFIN",
+    "name": "Shriram Finance",
+    "ind": "Financial Services"
+  },
+  {
+    "sym": "SUNPHARMA",
+    "name": "Sun Pharma",
+    "ind": "Healthcare"
+  },
+  {
+    "sym": "TATACONSUM",
+    "name": "Tata Consumer",
+    "ind": "FMCG"
+  },
+  {
+    "sym": "TATAMOTORS",
+    "name": "Tata Motors",
+    "ind": "Automobile"
+  },
+  {
+    "sym": "TATASTEEL",
+    "name": "Tata Steel",
+    "ind": "Metals & Mining"
+  },
+  {
+    "sym": "TCS",
+    "name": "TCS",
+    "ind": "IT"
+  },
+  {
+    "sym": "TECHM",
+    "name": "Tech Mahindra",
+    "ind": "IT"
+  },
+  {
+    "sym": "TITAN",
+    "name": "Titan",
+    "ind": "Consumer Durables"
+  },
+  {
+    "sym": "TRENT",
+    "name": "Trent",
+    "ind": "Consumer Services"
+  },
+  {
+    "sym": "ULTRACEMCO",
+    "name": "UltraTech Cement",
+    "ind": "Construction Materials"
+  },
+  {
+    "sym": "WIPRO",
+    "name": "Wipro",
+    "ind": "IT"
+  }
 ];
 
 // Nifty Next 50 (Large Cap extension)
@@ -595,12 +795,15 @@ function categorizeStock(s) {
 }
 
 function getUniverseByIndex(currentIndex) {
-  if (currentIndex === 'fno' || currentIndex === 'FNO') return UNIVERSE.filter(s => FNO_SET.has(s.sym));
-  if (currentIndex === 50)  return N50;
-  if (currentIndex === 100) return [...N50, ...EXTRA];
-  if (currentIndex === 200) return MIDCAP100;
-  if (currentIndex === 400) return SMALLCAP100;
-  if (currentIndex === 500) return [...N50, ...EXTRA, ...MIDCAP100, ...SMALLCAP100, ...N500_REST];
+  const str = String(currentIndex).toLowerCase();
+  if (str === 'fno') return UNIVERSE.filter(s => FNO_SET.has(s.sym));
+  if (str === '50')  return N50;
+  if (str === '100') return [...N50, ...EXTRA];
+  if (str === '200') return [...N50, ...EXTRA, ...MIDCAP100];
+  if (str === 'midcap150' || str === '150') return [...MIDCAP100, ...N500_REST.slice(0, 50)];
+  if (str === 'smallcap250' || str === '250') return [...SMALLCAP100, ...N500_REST.slice(50, 200)];
+  if (str === '400' || str === 'smallcap100') return SMALLCAP100;
+  if (str === '500') return UNIVERSE;
   return N50;
 }
 
