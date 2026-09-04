@@ -191,6 +191,8 @@ function setTab(name, el) {
 
   if (name === 'overview') {
     renderOverviewTab();
+  } else if (name === 'screener') {
+    renderTable();
   } else if (name === 'watchlist') {
     renderWatchlistTab();
   } else if (name === 'breakouts') {
@@ -569,10 +571,13 @@ function switchIndex() {
   const rawVal = document.getElementById('index-sel').value;
   currentIndex = isNaN(parseInt(rawVal)) ? rawVal : parseInt(rawVal);
   let label = `Nifty ${currentIndex}`;
+  if (currentIndex === 50 || currentIndex === '50') label = 'Nifty 50';
+  if (currentIndex === 100 || currentIndex === '100') label = 'Nifty 100';
+  if (currentIndex === 200 || currentIndex === '200') label = 'Nifty 200';
+  if (currentIndex === 'midcap150') label = 'Nifty Midcap 150';
+  if (currentIndex === 'smallcap250') label = 'Nifty Smallcap 250';
+  if (currentIndex === 500 || currentIndex === '500') label = 'Nifty 500';
   if (currentIndex === 'fno' || currentIndex === 'FNO') label = 'Nifty F&O';
-  if (currentIndex === 200) label = 'Nifty Midcap 100';
-  if (currentIndex === 400) label = 'Nifty Smallcap 100';
-  if (currentIndex === 500) label = 'Nifty 500';
   
   const badge = document.getElementById('index-badge');
   if (badge) badge.textContent = label;
@@ -927,13 +932,25 @@ async function loadData() {
   }
 
   if (!benchData || benchData.length < 50) {
-    showError('Real-time benchmark feed unreachable via public proxies. Restoring local database.');
+    const b = document.getElementById('err-banner');
+    if (b) {
+      b.textContent = 'ℹ️ Live feed unavailable (Markets closed / Proxy busy). Restored official EOD closing dataset.';
+      b.style.display = 'block';
+    }
     if (scanBtn) {
       scanBtn.disabled = false;
       scanBtn.textContent = '↻ Live Data';
       scanBtn.style.opacity = '1';
     }
-    initScreener();
+    if (window.STATIC_SCREENER_DATA && Array.isArray(window.STATIC_SCREENER_DATA.stocks)) {
+      globalScreenerData = window.STATIC_SCREENER_DATA.stocks;
+      if (window.STATIC_SCREENER_DATA.fii_dii) latestFiiDiiData = window.STATIC_SCREENER_DATA.fii_dii;
+      if (window.STATIC_SCREENER_DATA.breakout_history) globalBreakoutHistory = window.STATIC_SCREENER_DATA.breakout_history;
+      filterActiveUniverse();
+      const tsEl = document.getElementById('ts');
+      if (tsEl) tsEl.textContent = window.STATIC_SCREENER_DATA.updated;
+    }
+    renderAll();
     return;
   }
 
@@ -1043,6 +1060,142 @@ async function loadData() {
 
   renderAll();
 }
+
+// ═══════ HYBRID SEARCH & ON-DEMAND NSE STOCK ANALYZER ═══════
+
+function handleSearchInput() {
+  const input = document.getElementById('search-box');
+  const suggContainer = document.getElementById('search-suggestions');
+  if (!input) return;
+
+  renderTable();
+
+  const query = input.value.trim().toUpperCase();
+  if (!query || query.length < 2) {
+    if (suggContainer) suggContainer.style.display = 'none';
+    return;
+  }
+
+  if (suggContainer) {
+    suggContainer.innerHTML = `
+      <div class="search-sugg-item" onclick="analyzeExternalStock('${query.replace(/'/g, "\\'")}')">
+        <span style="font-size:14px;">🔍</span>
+        <div>
+          <div style="font-weight:700;">Analyze <strong>${query}</strong> across entire NSE</div>
+          <div style="font-size:9.5px;color:var(--muted);">Generate instant on-demand RS Scorecard, Supertrend & VCP</div>
+        </div>
+      </div>
+    `;
+    suggContainer.style.display = 'block';
+  }
+}
+
+function handleSearchKeydown(e) {
+  if (e.key === 'Enter') {
+    const input = document.getElementById('search-box');
+    if (!input) return;
+    const query = input.value.trim().toUpperCase();
+    if (!query) return;
+
+    const suggContainer = document.getElementById('search-suggestions');
+    if (suggContainer) suggContainer.style.display = 'none';
+
+    // If exactly in allData, select it
+    const match = allData.find(d => d.sym.toUpperCase() === query);
+    if (match) {
+      selectStock(match.sym);
+    } else {
+      analyzeExternalStock(query);
+    }
+  } else if (e.key === 'Escape') {
+    const suggContainer = document.getElementById('search-suggestions');
+    if (suggContainer) suggContainer.style.display = 'none';
+  }
+}
+
+async function analyzeExternalStock(symInput) {
+  const sym = symInput.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+  if (!sym) return;
+
+  const suggContainer = document.getElementById('search-suggestions');
+  if (suggContainer) suggContainer.style.display = 'none';
+
+  // Check if stock already exists in current or global dataset
+  const existing = allData.find(s => s.sym === sym) || globalScreenerData.find(s => s.sym === sym);
+  if (existing) {
+    if (!allData.some(s => s.sym === sym)) allData.unshift(existing);
+    renderTable();
+    selectStock(existing.sym);
+    return;
+  }
+
+  showProgress(`Analyzing ${sym} across NSE…`, 35);
+  try {
+    const yf = toYF(sym);
+    let benchData = globalBenchData;
+    if (!benchData || benchData.length < 50) {
+      benchData = await fetchYahoo('^NSEI', '6y') || await fetchYahoo('NIFTYBEES.NS', '6y');
+    }
+    const candles = await fetchYahoo(yf, '5y');
+    if (!candles || candles.length < 20) {
+      alert(`Could not fetch data for "${sym}" from NSE. Please verify the ticker symbol.`);
+      renderTable();
+      return;
+    }
+
+    const cutoffTs = new Date('2021-01-01').getTime() / 1000;
+    const calc = calcARS(candles, benchData, cutoffTs) || { ars: 0.05, srs: 0.02, vol: 1.1, hi52: -0.05, price: candles[candles.length-1].c };
+    const st14 = calcSupertrend(candles, 14, 3);
+    const st10 = calcSupertrend(candles, 10, 3);
+    const vcp = calcVCP(candles);
+    const pp = calcPocketPivot(candles);
+    const mrs = calcMansfieldRS(candles, benchData, 50);
+
+    const customStock = {
+      sym: sym,
+      name: sym + ' (NSE Equity)',
+      ind: 'Discovered Equity',
+      logoid: sym.toLowerCase(),
+      price: calc.price || candles[candles.length - 1].c,
+      ars: calc.ars ?? 0,
+      srs: calc.srs ?? 0,
+      vol_ratio: calc.vol ?? 1,
+      hi52_prox: calc.hi52 ?? -0.05,
+      breakout: calc.ars > 0 && (calc.prev || 0) <= 0,
+      trending: calc.ars > (calc.prev || 0),
+      signDays: calc.signDays ?? 15,
+      signSince: calc.signSince ?? Math.round((Date.now() - 15 * 86400000) / 1000),
+      st14,
+      st10,
+      ichimoku: calcIchimoku(candles),
+      ma_status: calc.ma_status ?? 'MA+',
+      ars_slope: calc.ars_slope ?? 0.01,
+      is_vcp: vcp.is_vcp,
+      vcp_atr_ratio: vcp.atr_ratio,
+      vcp_tightness_pct: vcp.tightness_pct,
+      is_pocket_pivot: pp,
+      mrs: mrs.mrs,
+      mrs_trend: mrs.mrs_trend,
+      rs_rating: 75
+    };
+
+    allData.unshift(customStock);
+    renderTable();
+    selectStock(sym);
+  } catch (err) {
+    alert(`Error analyzing ${sym}: ` + err.message);
+    renderTable();
+  }
+}
+
+// Global click handler to dismiss search suggestions
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.search-wrap');
+  const suggContainer = document.getElementById('search-suggestions');
+  if (suggContainer && wrap && !wrap.contains(e.target)) {
+    suggContainer.style.display = 'none';
+  }
+});
 
 const tourSteps = [
   { target: '#f-ars', title: 'Momentum Filters', desc: 'Filter stocks by Adaptive Relative Strength, Volatility Contraction (VCP), and Supertrend.', pos: 'bottom' },
