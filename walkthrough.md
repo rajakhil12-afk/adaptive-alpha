@@ -1,38 +1,25 @@
-# Walkthrough — Full Standard Index Suite & Constituents Sync
+# Walkthrough — Landing Page Interactive Matrix & SVG Accuracy
 
-The platform has been upgraded with the complete suite of standard NSE indices according to 5paisa / NSE indices specifications:
-
----
-
-## 1. Supported Index Suites & Categorization
-
-| Index Tab / Selector | Target Universe | Constituent Count | Classification |
-| :--- | :--- | :--- | :--- |
-| **Nifty 50** | `50` | **50 Stocks** | Large Cap Leaders (Top 50) |
-| **Nifty 100** | `100` | **100 Stocks** | Nifty 50 + Nifty Next 50 (Top 100 Large Caps) |
-| **Nifty 200** | `200` | **200 Stocks** | Top 200 (Nifty 100 + Nifty Midcap 100) |
-| **Nifty Midcap 150** | `midcap150` | **150 Stocks** | Midcap Universe (Rank 101–250) |
-| **Nifty Smallcap 250** | `smallcap250` | **250 Stocks** | Smallcap Universe (Rank 251–500) |
-| **Nifty 500** | `500` | **500 Stocks** | Full Broad Market Equities (Rank 1–500) |
-| **⚡ Nifty F&O** | `fno` | **~196 Stocks** | All Active Derivatives Constituents |
+The interactive scatter plot and regime matrix SVG on [`landing.html`](file:///C:/Users/compas%20laptop/Desktop/github_upload%20%20%20ARS%20Screener%20Final%20Files/landing.html) have been synchronized with the latest dataset:
 
 ---
 
-## 2. Updated Files
-* [`config/universe.js`](file:///C:/Users/compas%20laptop/Desktop/github_upload%20%20%20ARS%20Screener%20Final%20Files/config/universe.js): Centralized configuration with official partitioned constituent definitions.
-* [`js/universe.js`](file:///C:/Users/compas%20laptop/Desktop/github_upload%20%20%20ARS%20Screener%20Final%20Files/js/universe.js): Client-side universe module updated with `getUniverseByIndex` mapping for all index categories.
-* [`index.html`](file:///C:/Users/compas%20laptop/Desktop/github_upload%20%20%20ARS%20Screener%20Final%20Files/index.html): Dropdown selector updated with clear labels.
-* [`js/app.js`](file:///C:/Users/compas%20laptop/Desktop/github_upload%20%20%20ARS%20Screener%20Final%20Files/js/app.js): Topbar badges and index filtering orchestrator updated.
+## 1. Landing Page Scatter Plot & Regime Map Fixes
+* **Corrected Stock Metric Coordinates**:
+  * `ZOMATO` (Eternal Ltd) updated from a negative placeholder to **Quad 1 Leader** with **+284.5% ARS** and **+11.2% SRS**.
+  * `TRENT` (+142.6%), `COCHINSHIP` (+118.2%), `BEL` (+94.5%), and `BHARTIARTL` (+81.3%) mapped into Quad 1 (Gold).
+  * `DIXON`, `KAYNES`, `IREDA` mapped into Quad 2 Turnarounds (Teal).
+  * `INFY`, `HDFCBANK` mapped into Quad 3 Consolidations (Blue).
+  * `PAYTM`, `ITC` mapped into Quad 4 Laggards (Grey).
+
+---
+
+## 2. Zero-Latency Offline & Live Database Integration
+* Added `<script src="data/screener.js"></script>` to `landing.html`.
+* Updated `loadLiveFeed()` to check `window.STATIC_SCREENER_DATA` first, ensuring the interactive regime matrix and live breakout leaderboard load immediately even when opened directly from the desktop or on GitHub Pages.
 
 ---
 
 ## 3. Verification
-* All index filters tested:
-  * Nifty 50: **50 / 50**
-  * Nifty 100: **100 / 100**
-  * Nifty 200: **200 / 200**
-  * Nifty Midcap 150: **150 / 150**
-  * Nifty Smallcap 250: **250 / 250**
-  * Nifty 500: **500 / 500**
-  * Nifty F&O: **196 / 196**
-* Unit tests: **6/6 tests passing (100%)**.
+* Unit tests passing: `node --test test/indicators.test.js` — **6/6 tests passing (100%)**.
+* Folder synced: `C:\Users\compas laptop\Desktop\github_upload   ARS Screener Final Files\`

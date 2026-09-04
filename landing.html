@@ -738,6 +738,7 @@
   </div>
 </footer>
 
+<script src="data/screener.js"></script>
 <script>
   // Dynamic Live Regime Map & Live Breakout Leaderboard Engine
   (function(){
@@ -746,6 +747,7 @@
     var body = document.getElementById("boardBody");
 
     var fallbackTickers = [
+      {sym:"ZOMATO", ars:2.845, srs:0.112, q:"#E8A23A"},
       {sym:"TRENT", ars:1.426, srs:0.184, q:"#E8A23A"},
       {sym:"COCHINSHIP", ars:1.182, srs:0.241, q:"#E8A23A"},
       {sym:"BEL", ars:0.945, srs:0.112, q:"#E8A23A"},
@@ -756,7 +758,6 @@
       {sym:"INFY", ars:0.38, srs:-0.052, q:"#2A46E8"},
       {sym:"HDFCBANK", ars:0.18, srs:-0.041, q:"#2A46E8"},
       {sym:"ITC", ars:-0.12, srs:-0.082, q:"#98A2B8"},
-      {sym:"ZOMATO", ars:-0.18, srs:-0.045, q:"#98A2B8"},
       {sym:"PAYTM", ars:-0.24, srs:-0.115, q:"#98A2B8"}
     ];
 
@@ -874,11 +875,15 @@
     // Fetch Live Daily Screener Database
     async function loadLiveFeed() {
       try {
-        var cb = '?v=' + Date.now();
-        var res = await fetch('data/screener.json' + cb);
-        if (!res.ok) res = await fetch('../data/screener.json' + cb);
-        if (!res.ok) return;
-        var data = await res.json();
+        var data = null;
+        if (window.STATIC_SCREENER_DATA && Array.isArray(window.STATIC_SCREENER_DATA.stocks)) {
+          data = window.STATIC_SCREENER_DATA;
+        } else {
+          var cb = '?v=' + Date.now();
+          var res = await fetch('data/screener.json' + cb);
+          if (!res.ok) res = await fetch('../data/screener.json' + cb);
+          if (res.ok) data = await res.json();
+        }
         if (!data || !Array.isArray(data.stocks) || data.stocks.length === 0) return;
 
         var allStocks = data.stocks;
