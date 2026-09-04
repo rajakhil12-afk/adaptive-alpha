@@ -35,12 +35,13 @@
     <span class="ts" id="ts">Loading…</span>
     <button class="theme-btn" id="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
     <select id="index-sel" onchange="switchIndex()">
-      <option value="50">Nifty 50</option>
-      <option value="100">Nifty Next 50 (100)</option>
-      <option value="200">Nifty Midcap 100</option>
-      <option value="400">Nifty Smallcap 100</option>
-      <option value="500">Nifty 500</option>
-      <option value="fno">⚡ Nifty F&O (~185)</option>
+      <option value="50">Nifty 50 (Large Cap)</option>
+      <option value="100">Nifty 100 (Top 100)</option>
+      <option value="200">Nifty 200 (Top 200)</option>
+      <option value="midcap150">Nifty Midcap 150</option>
+      <option value="smallcap250">Nifty Smallcap 250</option>
+      <option value="500">Nifty 500 (All Equities)</option>
+      <option value="fno">⚡ Nifty F&O (~196)</option>
     </select>
     <button onclick="loadData()" id="live-scan-btn" title="Run manual live Yahoo Finance scan" style="background:var(--up-dim);color:var(--up);border-color:rgba(38,166,154,0.4);">↻ Live Data</button>
     <button onclick="openShareCardModal()" id="share-card-btn" title="Create Visual Social Card" style="background:rgba(227,179,65,0.15);color:var(--gold);border-color:rgba(227,179,65,0.3)">🎨 Card</button>
@@ -118,7 +119,10 @@
 
       <div class="divider"></div>
 
-      <input type="text" id="search-box" placeholder="🔍 Search stock / sector…" oninput="renderTable()" autocomplete="off">
+      <div class="search-wrap">
+        <input type="text" id="search-box" placeholder="🔍 Search stock / sector / ticker…" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)" autocomplete="off">
+        <div id="search-suggestions" class="search-suggestions" style="display:none;"></div>
+      </div>
 
       <select id="sort-sel" onchange="renderTable()" style="margin-left:auto">
         <option value="rs-desc">Sort: RS Rating (High → Low)</option>
