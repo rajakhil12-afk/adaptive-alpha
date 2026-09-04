@@ -129,3 +129,20 @@ test('RS Rating Multi-Factor Ranker — ranks composite stocks between 1 and 99'
   assert.ok(lagger.rs_rating <= 15, 'Lagger should receive low RS Rating (<= 15)');
   assert.ok(leader.rs_breakdown.ars_rank >= lagger.rs_breakdown.ars_rank);
 });
+
+test('Ichimoku Cloud status — validates Kumo BUY and kumo_buy flags', () => {
+  const candles = generateCandles(65, 100, 1.5);
+  const result = calcIchimoku(candles);
+
+  assert.ok(result, 'Ichimoku should return an object');
+  assert.strictEqual(typeof result.kumo_buy, 'boolean');
+  assert.strictEqual(typeof result.status, 'string');
+  assert.strictEqual(result.status, 'Kumo BUY', 'Steadily climbing stock above cloud with TK cross should have Kumo BUY status');
+  assert.strictEqual(result.kumo_buy, true, 'kumo_buy boolean flag should be true');
+
+  const shortCandles = generateCandles(10);
+  const shortResult = calcIchimoku(shortCandles);
+  assert.strictEqual(shortResult.status, 'Neutral');
+  assert.strictEqual(shortResult.kumo_buy, false);
+});
+
