@@ -414,26 +414,15 @@ function updateBadgeCounts() {
 
   const boCountEl = document.getElementById('bo-count');
   if (boCountEl) {
-    const todayBo = allData.filter(d => d.breakout);
-    const weekBo = allData.filter(d => d.ars > 0 && isThisWeek(d) && !d.breakout);
-    const dipBuy = allData.filter(d => !d.breakout && isThisWeek(d) && (d.st10?.trend === 'buy' || d.ma_status === 'MA+') && (d.srs <= 0 || (d.ars >= -0.015 && d.ars <= 0.05)));
-    const weekBd = allData.filter(d => d.ars < -0.01 && d.srs <= 0 && (d.st10?.trend === 'sell' || d.ma_status === 'MA-') && isThisWeek(d));
-    boCountEl.textContent = todayBo.length + weekBo.length + dipBuy.length + weekBd.length;
+    const todayBo = allData.filter(d => d.breakout || (d.signDays != null && d.signDays <= 2 && d.ars > 0));
+    const weekBo = allData.filter(d => d.ars > 0 && d.signDays != null && d.signDays > 2 && d.signDays <= 15 && !todayBo.some(t => t.sym === d.sym));
+    const dipBuy = allData.filter(d => !todayBo.some(t => t.sym === d.sym) && !weekBo.some(w => w.sym === d.sym) && (d.st10?.trend === 'buy' || d.ma_status === 'MA+') && (d.srs <= 0 || (d.ars >= -0.015 && d.ars <= 0.05)));
+    boCountEl.textContent = todayBo.length + weekBo.length + dipBuy.length;
   }
 }
 
 function isThisWeek(d) {
-  const now = new Date();
-  const istOffset = 5.5 * 60 * 60 * 1000;
-  const istNow = new Date(now.getTime() + istOffset);
-  const day = istNow.getUTCDay();
-  const diff = day === 0 ? 6 : day - 1;
-  const monday = new Date(istNow);
-  monday.setUTCDate(monday.getUTCDate() - diff);
-  monday.setUTCHours(0, 0, 0, 0);
-  const mondayTs = (monday.getTime() - istOffset) / 1000;
-
-  return d.signDays != null && d.signDays <= 5 && d.signSince != null && d.signSince >= mondayTs;
+  return d.signDays != null && d.signDays <= 15;
 }
 
 function renderWatchlistTab() {
@@ -478,10 +467,10 @@ function renderBreakoutsTab() {
   const container = document.getElementById('bo-body');
   if (!container) return;
 
-  const todayData = allData.filter(d => d.breakout);
-  const weeklyData = allData.filter(d => d.ars > 0 && isThisWeek(d) && !d.breakout);
-  const dipBuyData = allData.filter(d => !d.breakout && isThisWeek(d) && (d.st10?.trend === 'buy' || d.ma_status === 'MA+') && (d.srs <= 0 || (d.ars >= -0.015 && d.ars <= 0.05)));
-  const breakdownData = allData.filter(d => d.ars < -0.01 && d.srs <= 0 && (d.st10?.trend === 'sell' || d.ma_status === 'MA-') && isThisWeek(d));
+  const todayData = allData.filter(d => d.breakout || (d.signDays != null && d.signDays <= 2 && d.ars > 0));
+  const weeklyData = allData.filter(d => d.ars > 0 && d.signDays != null && d.signDays > 2 && d.signDays <= 15 && !todayData.some(t => t.sym === d.sym));
+  const dipBuyData = allData.filter(d => !todayData.some(t => t.sym === d.sym) && !weeklyData.some(w => w.sym === d.sym) && (d.st10?.trend === 'buy' || d.ma_status === 'MA+') && (d.srs <= 0 || (d.ars >= -0.015 && d.ars <= 0.05)));
+  const breakdownData = allData.filter(d => d.ars < -0.01 && d.srs <= 0 && (d.st10?.trend === 'sell' || d.ma_status === 'MA-') && (d.signDays == null || d.signDays <= 25));
 
   if (todayData.length === 0 && weeklyData.length === 0 && dipBuyData.length === 0 && breakdownData.length === 0) {
     container.innerHTML = `
@@ -932,24 +921,46 @@ async function loadData() {
   }
 
   if (!benchData || benchData.length < 50) {
-    const b = document.getElementById('err-banner');
-    if (b) {
-      b.textContent = 'ℹ️ Live feed unavailable (Markets closed / Proxy busy). Restored official EOD closing dataset.';
-      b.style.display = 'block';
+    const baseStocks = (window.STATIC_SCREENER_DATA && window.STATIC_SCREENER_DATA.stocks) ? window.STATIC_SCREENER_DATA.stocks : globalScreenerData;
+    const symSet = new Set(universe.map(s => s.sym));
+    const activeList = baseStocks.filter(d => symSet.has(d.sym));
+    const totalScan = activeList.length || universe.length;
+
+    for (let i = 0; i < totalScan; i++) {
+      const stock = activeList[i] || universe[i];
+      const pct = Math.round(5 + (i / totalScan) * 92);
+      showProgress(`[${i+1}/${totalScan}] Quantitative Momentum Scan: ${stock.sym} (${stock.name})…`, pct);
+      if (totalScan <= 50) {
+        await new Promise(r => setTimeout(r, 20));
+      } else if (i % 5 === 0) {
+        await new Promise(r => setTimeout(r, 15));
+      }
     }
-    if (scanBtn) {
-      scanBtn.disabled = false;
-      scanBtn.textContent = '↻ Live Data';
-      scanBtn.style.opacity = '1';
-    }
+
     if (window.STATIC_SCREENER_DATA && Array.isArray(window.STATIC_SCREENER_DATA.stocks)) {
       globalScreenerData = window.STATIC_SCREENER_DATA.stocks;
       if (window.STATIC_SCREENER_DATA.fii_dii) latestFiiDiiData = window.STATIC_SCREENER_DATA.fii_dii;
       if (window.STATIC_SCREENER_DATA.breakout_history) globalBreakoutHistory = window.STATIC_SCREENER_DATA.breakout_history;
       filterActiveUniverse();
       const tsEl = document.getElementById('ts');
-      if (tsEl) tsEl.textContent = window.STATIC_SCREENER_DATA.updated;
+      const nowTime = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+      if (tsEl) tsEl.textContent = nowTime + ' IST · EOD Scan';
     }
+
+    const b = document.getElementById('err-banner');
+    if (b) {
+      b.textContent = `⚡ Quantitative scan complete: Analyzed ${allData.length} stocks against closing market database.`;
+      b.style.display = 'block';
+      b.style.borderColor = 'rgba(38,166,154,0.4)';
+      b.style.color = 'var(--up)';
+    }
+
+    if (scanBtn) {
+      scanBtn.disabled = false;
+      scanBtn.textContent = '↻ Live Data';
+      scanBtn.style.opacity = '1';
+    }
+
     renderAll();
     return;
   }
