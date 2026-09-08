@@ -172,17 +172,20 @@ async function run() {
   if (fiiDii) {
     const fiiVal = Number(fiiDii.fii || 0);
     const diiVal = Number(fiiDii.dii || 0);
-    const fiiFormatted = (fiiVal >= 0 ? '+' : '') + fiiVal.toLocaleString('en-IN');
-    const diiFormatted = (diiVal >= 0 ? '+' : '') + diiVal.toLocaleString('en-IN');
+    const fiiFormatted = (fiiVal >= 0 ? '+₹' : '-₹') + Math.abs(fiiVal).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const diiFormatted = (diiVal >= 0 ? '+₹' : '-₹') + Math.abs(diiVal).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     headerSec += `📊 <b>Institutional Flows:</b>\n`;
-    headerSec += `• FII Net: <code>₹${fiiFormatted} Cr</code> | DII Net: <code>₹${diiFormatted} Cr</code>\n\n`;
+    headerSec += `• FII Net: <code>${fiiFormatted} Cr</code> | DII Net: <code>${diiFormatted} Cr</code>\n\n`;
   }
   sections.push(headerSec);
+
+  const fmtPrice = (p) => Number(p || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   // Section 1: Today's Fresh ARS Crossover Breakouts
   const freshBreakouts = stocks.filter(s => s.breakout);
   const nearHighBreakouts = stocks.filter(s => !s.breakout && (s.rs_rating ?? 0) >= 85 && (s.hi52_prox ?? -1) >= -0.05 && (s.vol_ratio ?? 0) >= 1.3);
   const allTodayBreakouts = [...freshBreakouts, ...nearHighBreakouts];
+  const todaySymSet = new Set(allTodayBreakouts.map(s => s.sym));
 
   let breakoutSec = '';
   if (allTodayBreakouts.length === 0) {
@@ -208,7 +211,7 @@ async function run() {
         const volRatio = Number(s.vol_ratio || 0).toFixed(1);
         const volTag = `${volRatio}x Vol`;
         const rsTag = `RS: ${s.rs_rating ?? 'N/A'}`;
-        const priceStr = Number(s.price || 0).toLocaleString('en-IN');
+        const priceStr = fmtPrice(s.price);
         if (useDetailedView) {
           breakoutSec += `• <b>${escapeHtml(s.sym)}</b> — ₹${priceStr}\n`;
           breakoutSec += `  └ <code>${rsTag}</code> | <code>${volTag}</code> | ${typeTag}\n`;
@@ -238,12 +241,14 @@ async function run() {
     sections.push(radarSec);
   }
 
-  // Section 3: This Week's Breakouts
+  // Section 3: This Week's Breakouts (excluding today's fresh breakouts)
   const mondayTs = getMondayOfCurrentWeek();
   const weeklyBreakouts = stocks.filter(s =>
+    !todaySymSet.has(s.sym) &&
     !s.breakout && (s.ars ?? 0) > 0 && s.signDays != null && s.signDays <= 5 &&
     s.signSince != null && s.signSince >= mondayTs
   );
+  const weeklySymSet = new Set(weeklyBreakouts.map(s => s.sym));
 
   if (weeklyBreakouts.length > 0) {
     let weeklySec = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
@@ -255,14 +260,15 @@ async function run() {
       const gain = boPrice > 0 ? ((currPrice - boPrice) / boPrice * 100) : 0;
       const gainStr = gain >= 0 ? `+${gain.toFixed(1)}%` : `${gain.toFixed(1)}%`;
       const daysLabel = s.signDays === 1 ? '1d ago' : `${s.signDays}d ago`;
-      weeklySec += `• <b>${escapeHtml(s.sym)}</b> — ₹${currPrice.toLocaleString('en-IN')} | <code>${gainStr}</code> | ${daysLabel}\n`;
+      weeklySec += `• <b>${escapeHtml(s.sym)}</b> — ₹${fmtPrice(currPrice)} | <code>${gainStr}</code> | ${daysLabel}\n`;
     });
     weeklySec += `\n`;
     sections.push(weeklySec);
   }
 
-  // Section 3b: Leader Retest / Dip Buys (Near Support)
+  // Section 3b: Leader Retest / Dip Buys (Near Support) (excluding today & weekly breakouts)
   const dipBuyStocks = stocks.filter(s =>
+    !todaySymSet.has(s.sym) && !weeklySymSet.has(s.sym) &&
     !s.breakout && (s.st10?.trend === 'buy' || s.ma_status === 'MA+') &&
     ((s.srs ?? 0) <= 0 || ((s.ars ?? 0) >= -0.015 && (s.ars ?? 0) <= 0.05)) &&
     s.signDays != null && s.signDays <= 5 && s.signSince != null && s.signSince >= mondayTs
@@ -274,7 +280,7 @@ async function run() {
     dipBuyStocks.sort((a, b) => (b.rs_rating ?? 0) - (a.rs_rating ?? 0));
     dipBuyStocks.slice(0, 8).forEach(s => {
       const rsTag = `RS: ${s.rs_rating ?? 'N/A'}`;
-      const priceStr = Number(s.price || 0).toLocaleString('en-IN');
+      const priceStr = fmtPrice(s.price);
       dipSec += `• <b>${escapeHtml(s.sym)}</b> — ₹${priceStr} | <code>${rsTag}</code> | Near Support\n`;
     });
     dipSec += `\n`;

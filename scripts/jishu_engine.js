@@ -10,7 +10,7 @@ function loadJSON(filePath, defaultValue) {
       return JSON.parse(fs.readFileSync(filePath, 'utf8'));
     }
   } catch (err) {
-    console.error([Jishu] Error reading :, err.message);
+    console.error(`[Jishu] Error reading ${filePath}:`, err.message);
   }
   return defaultValue;
 }
@@ -117,7 +117,7 @@ function runJishuEngine(customScreenerData = null) {
     else if (curPrice >= pos.target_1_price && !pos.sl_moved_to_cost) {
       pos.sl_moved_to_cost = true;
       pos.current_sl = pos.entry_price; // Risk free trade now!
-      const trailMsg = 🛡️ [JISHU TRAIL]  reached 1:2 Target (₹). Stop Loss adjusted to COST PRICE (₹). Trade is now RISK-FREE!;
+      const trailMsg = `🛡️ [JISHU TRAIL] ${pos.sym} reached 1:2 Target (₹${pos.target_1_price ? pos.target_1_price.toFixed(2) : pos.entry_price.toFixed(2)}). Stop Loss adjusted to COST PRICE (₹${pos.entry_price.toFixed(2)}). Trade is now RISK-FREE!`;
       console.log(trailMsg);
       events.push({
         timestamp: new Date().toISOString(),
@@ -160,7 +160,7 @@ function runJishuEngine(customScreenerData = null) {
 
       const isProfit = realizedTradePnl >= 0;
       const exitBadge = isProfit ? '🎯 [JISHU TARGET HIT]' : '🛑 [JISHU STOP LOSS]';
-      const exitMsg = ${exitBadge} Closed  at ₹ | Reason:  | PnL: ₹ (%);
+      const exitMsg = `${exitBadge} Closed ${pos.sym} at ₹${exitPrice.toFixed(2)} | Reason: ${exitReason} | PnL: ₹${realizedTradePnl.toFixed(2)} (${returnPct.toFixed(2)}%)`;
       console.log(exitMsg);
       events.push({
         timestamp: new Date().toISOString(),
@@ -254,7 +254,7 @@ function runJishuEngine(customScreenerData = null) {
 
       portfolio.open_positions.push(newPosition);
 
-      const buyMsg = 🟢 [JISHU BUY ORDER]  () @ ₹ | Qty:  | Total: ₹ | SL: ₹ (-%) | Target 1 (1:2): ₹ | Target 2 (1:3): ₹;
+      const buyMsg = `🟢 [JISHU BUY ORDER] ${stock.sym} (${stock.name || stock.sym}) @ ₹${entryPrice.toFixed(2)} | Qty: ${qty} | Total: ₹${investedValue.toFixed(2)} | SL: ₹${initialSl.toFixed(2)} (-${portfolio.settings.fixed_sl_pct}%) | Target 1 (1:2): ₹${target1Price.toFixed(2)} | Target 2 (1:3): ₹${target2Price.toFixed(2)}`;
       console.log(buyMsg);
       events.push({
         timestamp: new Date().toISOString(),
@@ -317,7 +317,7 @@ function runJishuEngine(customScreenerData = null) {
   }
 
   saveJSON(PORTFOLIO_PATH, portfolio);
-  console.log([Jishu] Execution finished. Total Equity: ₹ | Open Positions:  | Realized PnL: ₹);
+  console.log(`[Jishu] Execution finished. Total Equity: ₹${portfolio.account.total_equity} | Open Positions: ${portfolio.open_positions.length} | Realized PnL: ₹${portfolio.account.realized_pnl}`);
 
   return {
     portfolio,
