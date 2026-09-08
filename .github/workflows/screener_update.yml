@@ -57,11 +57,11 @@ jobs:
           # Write a heartbeat timestamp to keep repo active
           echo "Last successful run: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > .github/last_updated.txt
 
-          git add data/screener.json data/breakout_history.json .github/last_updated.txt
+          git add data/screener.json data/screener.js data/breakout_history.json data/jishu_portfolio.json .github/last_updated.txt
 
-          # If screener.json changed, use a descriptive message; otherwise heartbeat
-          if git diff --cached --quiet -- data/screener.json; then
-            git commit -m "ci: heartbeat keep-alive [skip ci]"
+          # If data files changed, use a descriptive message; otherwise heartbeat
+          if git diff --cached --quiet -- data/screener.json data/screener.js data/jishu_portfolio.json data/breakout_history.json; then
+            git commit -m "ci: heartbeat keep-alive [skip ci]" || echo "No changes to commit"
           else
             git commit -m "Auto-update market data $(date -u '+%Y-%m-%d') [skip ci]"
           fi

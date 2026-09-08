@@ -1,0 +1,36 @@
+name: Daily Code Health & Bug Watchdog
+
+on:
+  schedule:
+    # Runs daily at 6:00 AM UTC (11:30 AM IST)
+    - cron: '0 6 * * *'
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  code-health-audit:
+    name: Codebase Health & Bug Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Full Code Health & Bug Audit Bot
+        run: node scripts/code_health_audit.js
+
+      - name: Run Python Jishu Engine Validation
+        run: python test/jishu_test.py
