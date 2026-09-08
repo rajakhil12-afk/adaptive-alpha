@@ -777,9 +777,19 @@ function toYF(sym) {
   const map = {
     'BAJAJ-AUTO': 'BAJAJ-AUTO.NS',
     'M_M':        'M%26M.NS',
+    'M&M':        'M%26M.NS',
     'M&MFIN':     'M%26MFIN.NS',
     'ARE&M':      'ARE%26M.NS',
     'NAM-INDIA':  'NAM-INDIA.NS',
+    'LTIM':       'LTIM.NS',
+    'LTF':        'LTF.NS',
+    'ZOMATO':     'ZOMATO.NS',
+    'CEINFO':     'CEINFO.NS',
+    'PGHL':       'PGHL.NS',
+    'JSWHL':      'JSWHL.NS',
+    'VINATIORGA': 'VINATIORGA.NS',
+    'GMRAIRPORT': 'GMRAIRPORT.NS',
+    'CIEINDIA':   'CIEINDIA.NS',
   };
   return map[sym] || (sym + '.NS');
 }
