@@ -48,7 +48,7 @@ function runJishuEngine(customScreenerData = null) {
       settings: {
         max_positions: 10,
         max_capital_per_trade_pct: 10,
-        fixed_sl_pct: 3.618,
+        fixed_sl_pct: 10,
         target_1_rr: 2,
         target_2_rr: 3,
         min_volume_ratio: 1.2,
@@ -59,6 +59,26 @@ function runJishuEngine(customScreenerData = null) {
       daily_equity: [],
       recent_events: []
     };
+  } else {
+    // Ensure settings are synced with latest rules (10% SL)
+    if (!portfolio.settings) portfolio.settings = {};
+    portfolio.settings.fixed_sl_pct = 10;
+    portfolio.settings.target_1_rr = 2;
+    portfolio.settings.target_2_rr = 3;
+    
+    // Update existing open positions to 10% risk if they haven't trailed to cost
+    if (Array.isArray(portfolio.open_positions)) {
+      portfolio.open_positions.forEach(pos => {
+        const riskPerShare = pos.entry_price * 0.10;
+        pos.risk_per_share = Number(riskPerShare.toFixed(2));
+        pos.initial_sl = Number((pos.entry_price - riskPerShare).toFixed(2));
+        if (!pos.sl_moved_to_cost) {
+          pos.current_sl = pos.initial_sl;
+        }
+        pos.target_1_price = Number((pos.entry_price + (2 * riskPerShare)).toFixed(2));
+        pos.target_2_price = Number((pos.entry_price + (3 * riskPerShare)).toFixed(2));
+      });
+    }
   }
 
   const currentDateStr = screener.bhavDate || new Date().toISOString().split('T')[0];
@@ -98,9 +118,9 @@ function runJishuEngine(customScreenerData = null) {
       exitReason = pos.sl_moved_to_cost ? 'COST_SL_HIT' : 'STOP_LOSS_HIT';
       exitPrice = curPrice;
     }
-    // 3. Check Fixed -3.618% Drop
+    // 3. Check Fixed -10% Drop
     else if (((curPrice - pos.entry_price) / pos.entry_price) <= -(portfolio.settings.fixed_sl_pct / 100)) {
-      exitReason = 'FIXED_3.618_SL';
+      exitReason = 'FIXED_10_SL';
       exitPrice = curPrice;
     }
     // 4. Check Supertrend Breakdown (if ST10 turns Sell and price is below ST10)
@@ -222,8 +242,8 @@ function runJishuEngine(customScreenerData = null) {
       const entryPrice = stock.price;
       const investedValue = qty * entryPrice;
 
-      // Risk calculation: fixed 3.618% risk or distance to Supertrend
-      const fixedRiskPct = portfolio.settings.fixed_sl_pct / 100; // 0.03618
+      // Risk calculation: fixed 10% risk or distance to Supertrend
+      const fixedRiskPct = portfolio.settings.fixed_sl_pct / 100; // 0.10
       const riskPerShare = entryPrice * fixedRiskPct;
       const initialSl = entryPrice - riskPerShare;
       const target1Price = entryPrice + (portfolio.settings.target_1_rr * riskPerShare); // 1:2 RR
