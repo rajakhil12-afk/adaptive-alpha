@@ -2,18 +2,18 @@
   "bot_name": "Jishu",
   "version": "1.0.0",
   "created_at": "2026-09-02T20:25:00+05:30",
-  "last_updated": "2026-09-09T17:47:50.543Z",
+  "last_updated": "2026-09-10T17:41:08.951Z",
   "account": {
     "initial_capital": 1000000,
-    "cash": 28783.33,
-    "invested_capital": 962034.9,
-    "total_equity": 990818.23,
-    "realized_pnl": 12697.979999999983,
-    "unrealized_pnl": -21879.75,
-    "win_rate": 100,
-    "total_trades": 1,
+    "cash": 23243.110000000015,
+    "invested_capital": 961425.3,
+    "total_equity": 984668.41,
+    "realized_pnl": 6505.259999999989,
+    "unrealized_pnl": -21836.85,
+    "win_rate": 50,
+    "total_trades": 2,
     "winning_trades": 1,
-    "losing_trades": 0
+    "losing_trades": 1
   },
   "settings": {
     "max_positions": 10,
@@ -41,9 +41,9 @@
       "target_2_price": 2510.3,
       "sl_moved_to_cost": false,
       "highest_price": 1931,
-      "current_price": 1800,
-      "unrealized_pnl": -6681,
-      "unrealized_pnl_pct": -6.784049715173484
+      "current_price": 1792,
+      "unrealized_pnl": -7089,
+      "unrealized_pnl_pct": -7.198342827550492
     },
     {
       "sym": "GNFC",
@@ -61,9 +61,9 @@
       "target_2_price": 780.85,
       "sl_moved_to_cost": false,
       "highest_price": 600.65,
-      "current_price": 574.6,
-      "unrealized_pnl": -4324.299999999992,
-      "unrealized_pnl_pct": -4.336968284358604
+      "current_price": 570.75,
+      "unrealized_pnl": -4963.399999999996,
+      "unrealized_pnl_pct": -4.977940564388575
     },
     {
       "sym": "HINDCOPPER",
@@ -81,9 +81,9 @@
       "target_2_price": 744.44,
       "sl_moved_to_cost": false,
       "highest_price": 572.65,
-      "current_price": 532.3,
-      "unrealized_pnl": -7020.900000000004,
-      "unrealized_pnl_pct": -7.046188771500921
+      "current_price": 527.3,
+      "unrealized_pnl": -7890.900000000004,
+      "unrealized_pnl_pct": -7.9193224482668345
     },
     {
       "sym": "BAJAJHLDNG",
@@ -101,9 +101,9 @@
       "target_2_price": 14792.7,
       "sl_moved_to_cost": false,
       "highest_price": 11379,
-      "current_price": 11078,
-      "unrealized_pnl": -2408,
-      "unrealized_pnl_pct": -2.6452236576149044
+      "current_price": 10992,
+      "unrealized_pnl": -3096,
+      "unrealized_pnl_pct": -3.401001845504877
     },
     {
       "sym": "ELGIEQUIP",
@@ -121,9 +121,9 @@
       "target_2_price": 811.46,
       "sl_moved_to_cost": false,
       "highest_price": 624.2,
-      "current_price": 618.85,
-      "unrealized_pnl": -856.0000000000036,
-      "unrealized_pnl_pct": -0.8570970842678663
+      "current_price": 621.6,
+      "unrealized_pnl": -416.00000000000364,
+      "unrealized_pnl_pct": -0.416533162447937
     },
     {
       "sym": "BHEL",
@@ -141,9 +141,9 @@
       "target_2_price": 566.74,
       "sl_moved_to_cost": false,
       "highest_price": 435.95,
-      "current_price": 433.7,
-      "unrealized_pnl": -515.25,
-      "unrealized_pnl_pct": -0.5161142332836335
+      "current_price": 429.5,
+      "unrealized_pnl": -1477.0499999999975,
+      "unrealized_pnl_pct": -1.4795274687464133
     },
     {
       "sym": "BALRAMCHIN",
@@ -160,10 +160,10 @@
       "target_1_price": 786.9,
       "target_2_price": 852.48,
       "sl_moved_to_cost": false,
-      "highest_price": 700.05,
-      "current_price": 700.05,
-      "unrealized_pnl": 6733.599999999993,
-      "unrealized_pnl_pct": 6.755623332062517
+      "highest_price": 705.15,
+      "current_price": 705.15,
+      "unrealized_pnl": 7508.7999999999965,
+      "unrealized_pnl_pct": 7.533358749523443
     },
     {
       "sym": "HAL",
@@ -181,29 +181,9 @@
       "target_2_price": 6576.7,
       "sl_moved_to_cost": false,
       "highest_price": 5059,
-      "current_price": 5000.5,
-      "unrealized_pnl": -1111.5,
-      "unrealized_pnl_pct": -1.1563550108717138
-    },
-    {
-      "sym": "ASHOKLEY",
-      "name": "Ashok Leyland",
-      "ind": "Automobile",
-      "logoid": "ashok-leyland",
-      "entry_date": "2026-09-03",
-      "entry_price": 177.1,
-      "qty": 564,
-      "invested_value": 99884.4,
-      "initial_sl": 159.39,
-      "current_sl": 159.39,
-      "risk_per_share": 17.71,
-      "target_1_price": 212.52,
-      "target_2_price": 230.23,
-      "sl_moved_to_cost": false,
-      "highest_price": 177.1,
-      "current_price": 167,
-      "unrealized_pnl": -5696.399999999997,
-      "unrealized_pnl_pct": -5.702992659514396
+      "current_price": 4950,
+      "unrealized_pnl": -2071,
+      "unrealized_pnl_pct": -2.1545760031626804
     },
     {
       "sym": "GRAPHITE",
@@ -221,12 +201,47 @@
       "target_2_price": 1098.05,
       "sl_moved_to_cost": false,
       "highest_price": 844.65,
-      "current_price": 844.65,
+      "current_price": 824.8,
+      "unrealized_pnl": -2342.300000000003,
+      "unrealized_pnl_pct": -2.3500858343692683
+    },
+    {
+      "sym": "SUNDRMFAST",
+      "name": "Sundram Fasteners",
+      "ind": "Automobile",
+      "logoid": "sundram-fasteners",
+      "entry_date": "2026-09-10",
+      "entry_price": 1256.1,
+      "qty": 79,
+      "invested_value": 99231.9,
+      "initial_sl": 1130.49,
+      "current_sl": 1130.49,
+      "risk_per_share": 125.61,
+      "target_1_price": 1507.32,
+      "target_2_price": 1632.93,
+      "sl_moved_to_cost": false,
+      "highest_price": 1256.1,
+      "current_price": 1256.1,
       "unrealized_pnl": 0,
       "unrealized_pnl_pct": 0
     }
   ],
   "closed_trades": [
+    {
+      "sym": "ASHOKLEY",
+      "name": "Ashok Leyland",
+      "ind": "Automobile",
+      "entry_date": "2026-09-03",
+      "exit_date": "2026-09-10",
+      "entry_price": 177.1,
+      "exit_price": 166.12,
+      "qty": 564,
+      "invested_value": 99884.4,
+      "realized_pnl": -6192.719999999994,
+      "return_pct": -6.199887069452281,
+      "exit_reason": "SUPERTREND_BREAKDOWN",
+      "highest_price": 177.1
+    },
     {
       "sym": "IFCI",
       "name": "IFCI",
@@ -270,9 +285,38 @@
       "realized_pnl": 12697.98,
       "unrealized_pnl": -21879.75,
       "open_positions_count": 10
+    },
+    {
+      "date": "2026-09-10",
+      "cash": 23243.11,
+      "invested": 961425.3,
+      "total_equity": 984668.41,
+      "realized_pnl": 6505.26,
+      "unrealized_pnl": -21836.85,
+      "open_positions_count": 10
     }
   ],
   "recent_events": [
+    {
+      "timestamp": "2026-09-10T17:41:08.951Z",
+      "type": "TRADE_EXIT",
+      "symbol": "ASHOKLEY",
+      "reason": "SUPERTREND_BREAKDOWN",
+      "pnl": -6192.719999999994,
+      "return_pct": -6.199887069452281,
+      "message": "🛑 [JISHU STOP LOSS] Closed ASHOKLEY at ₹166.12 | Reason: SUPERTREND_BREAKDOWN | PnL: ₹-6192.72 (-6.20%)"
+    },
+    {
+      "timestamp": "2026-09-10T17:41:08.951Z",
+      "type": "BUY_ORDER",
+      "symbol": "SUNDRMFAST",
+      "entry_price": 1256.1,
+      "qty": 79,
+      "target_1": 1507.32,
+      "target_2": 1632.9299999999998,
+      "sl": 1130.49,
+      "message": "🟢 [JISHU BUY ORDER] SUNDRMFAST (Sundram Fasteners) @ ₹1256.10 | Qty: 79 | Total: ₹99231.90 | SL: ₹1130.49 (-10%) | Target 1 (1:2): ₹1507.32 | Target 2 (1:3): ₹1632.93"
+    },
     {
       "timestamp": "2026-09-09T17:47:50.543Z",
       "type": "TRADE_EXIT",
