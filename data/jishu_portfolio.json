@@ -2,18 +2,18 @@
   "bot_name": "Jishu",
   "version": "1.0.0",
   "created_at": "2026-09-02T20:25:00+05:30",
-  "last_updated": "2026-09-10T17:41:08.951Z",
+  "last_updated": "2026-09-11T17:44:42.135Z",
   "account": {
     "initial_capital": 1000000,
-    "cash": 23243.110000000015,
-    "invested_capital": 961425.3,
-    "total_equity": 984668.41,
-    "realized_pnl": 6505.259999999989,
-    "unrealized_pnl": -21836.85,
-    "win_rate": 50,
-    "total_trades": 2,
+    "cash": 3171.310000000027,
+    "invested_capital": 974414.5,
+    "total_equity": 977585.81,
+    "realized_pnl": -13297.740000000013,
+    "unrealized_pnl": -9116.45,
+    "win_rate": 25,
+    "total_trades": 4,
     "winning_trades": 1,
-    "losing_trades": 1
+    "losing_trades": 3
   },
   "settings": {
     "max_positions": 10,
@@ -25,26 +25,6 @@
     "min_rs_rating": 70
   },
   "open_positions": [
-    {
-      "sym": "OBEROIRLTY",
-      "name": "Oberoi Realty",
-      "ind": "Realty",
-      "logoid": "oberoi-realty",
-      "entry_date": "2026-09-03",
-      "entry_price": 1931,
-      "qty": 51,
-      "invested_value": 98481,
-      "initial_sl": 1737.9,
-      "current_sl": 1737.9,
-      "risk_per_share": 193.1,
-      "target_1_price": 2317.2,
-      "target_2_price": 2510.3,
-      "sl_moved_to_cost": false,
-      "highest_price": 1931,
-      "current_price": 1792,
-      "unrealized_pnl": -7089,
-      "unrealized_pnl_pct": -7.198342827550492
-    },
     {
       "sym": "GNFC",
       "name": "GNFC",
@@ -61,29 +41,9 @@
       "target_2_price": 780.85,
       "sl_moved_to_cost": false,
       "highest_price": 600.65,
-      "current_price": 570.75,
-      "unrealized_pnl": -4963.399999999996,
-      "unrealized_pnl_pct": -4.977940564388575
-    },
-    {
-      "sym": "HINDCOPPER",
-      "name": "Hindustan Copper",
-      "ind": "Metals & Mining",
-      "logoid": "hindustan-copper",
-      "entry_date": "2026-09-03",
-      "entry_price": 572.65,
-      "qty": 174,
-      "invested_value": 99641.09999999999,
-      "initial_sl": 515.38,
-      "current_sl": 515.38,
-      "risk_per_share": 57.27,
-      "target_1_price": 687.18,
-      "target_2_price": 744.44,
-      "sl_moved_to_cost": false,
-      "highest_price": 572.65,
-      "current_price": 527.3,
-      "unrealized_pnl": -7890.900000000004,
-      "unrealized_pnl_pct": -7.9193224482668345
+      "current_price": 562.4,
+      "unrealized_pnl": -6349.5,
+      "unrealized_pnl_pct": -6.368101223674354
     },
     {
       "sym": "BAJAJHLDNG",
@@ -101,9 +61,9 @@
       "target_2_price": 14792.7,
       "sl_moved_to_cost": false,
       "highest_price": 11379,
-      "current_price": 10992,
-      "unrealized_pnl": -3096,
-      "unrealized_pnl_pct": -3.401001845504877
+      "current_price": 11134,
+      "unrealized_pnl": -1960,
+      "unrealized_pnl_pct": -2.1530890236400384
     },
     {
       "sym": "ELGIEQUIP",
@@ -121,9 +81,9 @@
       "target_2_price": 811.46,
       "sl_moved_to_cost": false,
       "highest_price": 624.2,
-      "current_price": 621.6,
-      "unrealized_pnl": -416.00000000000364,
-      "unrealized_pnl_pct": -0.416533162447937
+      "current_price": 617.7,
+      "unrealized_pnl": -1040,
+      "unrealized_pnl_pct": -1.0413329061198333
     },
     {
       "sym": "BHEL",
@@ -141,9 +101,9 @@
       "target_2_price": 566.74,
       "sl_moved_to_cost": false,
       "highest_price": 435.95,
-      "current_price": 429.5,
-      "unrealized_pnl": -1477.0499999999975,
-      "unrealized_pnl_pct": -1.4795274687464133
+      "current_price": 431,
+      "unrealized_pnl": -1133.5499999999975,
+      "unrealized_pnl_pct": -1.135451313223991
     },
     {
       "sym": "BALRAMCHIN",
@@ -161,9 +121,9 @@
       "target_2_price": 852.48,
       "sl_moved_to_cost": false,
       "highest_price": 705.15,
-      "current_price": 705.15,
-      "unrealized_pnl": 7508.7999999999965,
-      "unrealized_pnl_pct": 7.533358749523443
+      "current_price": 691.4,
+      "unrealized_pnl": 5418.7999999999965,
+      "unrealized_pnl_pct": 5.4365230651925245
     },
     {
       "sym": "HAL",
@@ -181,9 +141,9 @@
       "target_2_price": 6576.7,
       "sl_moved_to_cost": false,
       "highest_price": 5059,
-      "current_price": 4950,
-      "unrealized_pnl": -2071,
-      "unrealized_pnl_pct": -2.1545760031626804
+      "current_price": 4905,
+      "unrealized_pnl": -2926,
+      "unrealized_pnl_pct": -3.0440798576793835
     },
     {
       "sym": "GRAPHITE",
@@ -201,9 +161,9 @@
       "target_2_price": 1098.05,
       "sl_moved_to_cost": false,
       "highest_price": 844.65,
-      "current_price": 824.8,
-      "unrealized_pnl": -2342.300000000003,
-      "unrealized_pnl_pct": -2.3500858343692683
+      "current_price": 825.8,
+      "unrealized_pnl": -2224.300000000003,
+      "unrealized_pnl_pct": -2.2316936008997836
     },
     {
       "sym": "SUNDRMFAST",
@@ -220,13 +180,83 @@
       "target_1_price": 1507.32,
       "target_2_price": 1632.93,
       "sl_moved_to_cost": false,
-      "highest_price": 1256.1,
-      "current_price": 1256.1,
+      "highest_price": 1270,
+      "current_price": 1270,
+      "unrealized_pnl": 1098.1000000000072,
+      "unrealized_pnl_pct": 1.106599793010118
+    },
+    {
+      "sym": "GRANULES",
+      "name": "Granules India",
+      "ind": "Healthcare",
+      "logoid": "granules",
+      "entry_date": "2026-09-11",
+      "entry_price": 909.3,
+      "qty": 109,
+      "invested_value": 99113.7,
+      "initial_sl": 818.37,
+      "current_sl": 818.37,
+      "risk_per_share": 90.93,
+      "target_1_price": 1091.16,
+      "target_2_price": 1182.09,
+      "sl_moved_to_cost": false,
+      "highest_price": 909.3,
+      "current_price": 909.3,
+      "unrealized_pnl": 0,
+      "unrealized_pnl_pct": 0
+    },
+    {
+      "sym": "RAYMOND",
+      "name": "Raymond Ltd",
+      "ind": "Textiles",
+      "logoid": "raymond",
+      "entry_date": "2026-09-11",
+      "entry_price": 1002.8,
+      "qty": 99,
+      "invested_value": 99277.2,
+      "initial_sl": 902.52,
+      "current_sl": 902.52,
+      "risk_per_share": 100.28,
+      "target_1_price": 1203.36,
+      "target_2_price": 1303.64,
+      "sl_moved_to_cost": false,
+      "highest_price": 1002.8,
+      "current_price": 1002.8,
       "unrealized_pnl": 0,
       "unrealized_pnl_pct": 0
     }
   ],
   "closed_trades": [
+    {
+      "sym": "HINDCOPPER",
+      "name": "Hindustan Copper",
+      "ind": "Metals & Mining",
+      "entry_date": "2026-09-03",
+      "exit_date": "2026-09-11",
+      "entry_price": 572.65,
+      "exit_price": 514.5,
+      "qty": 174,
+      "invested_value": 99641.09999999999,
+      "realized_pnl": -10118.099999999997,
+      "return_pct": -10.154544660787563,
+      "exit_reason": "STOP_LOSS_HIT",
+      "highest_price": 572.65
+    },
+    {
+      "sym": "OBEROIRLTY",
+      "name": "Oberoi Realty",
+      "ind": "Realty",
+      "entry_date": "2026-09-03",
+      "exit_date": "2026-09-11",
+      "entry_price": 1931,
+      "exit_price": 1741.1,
+      "qty": 51,
+      "invested_value": 98481,
+      "realized_pnl": -9684.900000000005,
+      "return_pct": -9.834282755049202,
+      "exit_reason": "SUPERTREND_BREAKDOWN",
+      "highest_price": 1931
+    },
     {
       "sym": "ASHOKLEY",
       "name": "Ashok Leyland",
@@ -294,9 +324,58 @@
       "realized_pnl": 6505.26,
       "unrealized_pnl": -21836.85,
       "open_positions_count": 10
+    },
+    {
+      "date": "2026-09-11",
+      "cash": 3171.31,
+      "invested": 974414.5,
+      "total_equity": 977585.81,
+      "realized_pnl": -13297.74,
+      "unrealized_pnl": -9116.45,
+      "open_positions_count": 10
     }
   ],
   "recent_events": [
+    {
+      "timestamp": "2026-09-11T17:44:42.134Z",
+      "type": "TRADE_EXIT",
+      "symbol": "OBEROIRLTY",
+      "reason": "SUPERTREND_BREAKDOWN",
+      "pnl": -9684.900000000005,
+      "return_pct": -9.834282755049202,
+      "message": "🛑 [JISHU STOP LOSS] Closed OBEROIRLTY at ₹1741.10 | Reason: SUPERTREND_BREAKDOWN | PnL: ₹-9684.90 (-9.83%)"
+    },
+    {
+      "timestamp": "2026-09-11T17:44:42.135Z",
+      "type": "TRADE_EXIT",
+      "symbol": "HINDCOPPER",
+      "reason": "STOP_LOSS_HIT",
+      "pnl": -10118.099999999997,
+      "return_pct": -10.154544660787563,
+      "message": "🛑 [JISHU STOP LOSS] Closed HINDCOPPER at ₹514.50 | Reason: STOP_LOSS_HIT | PnL: ₹-10118.10 (-10.15%)"
+    },
+    {
+      "timestamp": "2026-09-11T17:44:42.135Z",
+      "type": "BUY_ORDER",
+      "symbol": "GRANULES",
+      "entry_price": 909.3,
+      "qty": 109,
+      "target_1": 1091.1599999999999,
+      "target_2": 1182.09,
+      "sl": 818.3699999999999,
+      "message": "🟢 [JISHU BUY ORDER] GRANULES (Granules India) @ ₹909.30 | Qty: 109 | Total: ₹99113.70 | SL: ₹818.37 (-10%) | Target 1 (1:2): ₹1091.16 | Target 2 (1:3): ₹1182.09"
+    },
+    {
+      "timestamp": "2026-09-11T17:44:42.135Z",
+      "type": "BUY_ORDER",
+      "symbol": "RAYMOND",
+      "entry_price": 1002.8,
+      "qty": 99,
+      "target_1": 1203.36,
+      "target_2": 1303.6399999999999,
+      "sl": 902.52,
+      "message": "🟢 [JISHU BUY ORDER] RAYMOND (Raymond Ltd) @ ₹1002.80 | Qty: 99 | Total: ₹99277.20 | SL: ₹902.52 (-10%) | Target 1 (1:2): ₹1203.36 | Target 2 (1:3): ₹1303.64"
+    },
     {
       "timestamp": "2026-09-10T17:41:08.951Z",
       "type": "TRADE_EXIT",
