@@ -278,6 +278,12 @@ function switchTLTab(tab) {
   }
 }
 
+function reloadTrendlyneWidget() {
+  if (selectedSym) {
+    loadTrendlyneWidget(selectedSym, activeTLTab);
+  }
+}
+
 function loadTrendlyneWidget(sym, type = activeTLTab) {
   const container = document.getElementById('tl-widget-container');
   if (!container || !sym) return;
@@ -298,14 +304,7 @@ function loadTrendlyneWidget(sym, type = activeTLTab) {
   const directLink = `https://trendlyne.com/equity/${cleanSym}/`;
 
   container.innerHTML = `
-    <div style="position: relative; width: 100%; min-height: 280px; background: var(--bg2); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);">
-      <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: var(--bg3); border-bottom: 1px solid var(--border); font-size: 10px;">
-        <span style="color: var(--muted); font-weight: 600;">⚡ Trendlyne ${type.toUpperCase()} · <strong style="color: var(--text-lt);">${sym}</strong></span>
-        <div style="display: flex; gap: 8px; align-items: center;">
-          <button onclick="loadTrendlyneWidget('${sym}', '${type}')" style="background: transparent; border: 1px solid var(--border); color: var(--muted-lt); padding: 2px 7px; border-radius: 4px; font-size: 9.5px; cursor: pointer;" title="Reload Widget">↻ Reload</button>
-          <a href="${directLink}" target="_blank" rel="noopener noreferrer" style="color: var(--up); text-decoration: none; font-weight: 700; font-size: 10px; display: inline-flex; align-items: center; gap: 3px;">Open Live ↗</a>
-        </div>
-      </div>
+    <div style="position: relative; width: 100%; min-height: 280px; background: var(--bg2); border-radius: var(--radius); overflow: hidden;">
       <iframe src="${widgetUrl}" 
         id="tl-iframe-${sym}"
         loading="lazy"
@@ -314,11 +313,9 @@ function loadTrendlyneWidget(sym, type = activeTLTab) {
         style="width: 100%; height: 280px; border: none; background: transparent; display: block;"
         onload="const sk=document.getElementById('tl-skeleton-${sym}'); if(sk) sk.style.display='none';"
       ></iframe>
-      <div id="tl-skeleton-${sym}" style="position: absolute; top: 32px; left: 0; right: 0; bottom: 0; background: var(--bg2); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; gap: 8px;">
+      <div id="tl-skeleton-${sym}" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg2); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; gap: 8px;">
         <div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div>
-        <div style="font-size: 11px; font-weight: 600; color: var(--text-lt);">Connecting to Trendlyne ${type.toUpperCase()} Card...</div>
-        <div style="font-size: 10px; color: var(--muted); max-width: 280px;">If your browser ad-blocker or tracking protection blocks the embedded widget:</div>
-        <a href="${directLink}" target="_blank" rel="noopener noreferrer" style="background: var(--up-dim); color: var(--up); border: 1px solid var(--up); padding: 5px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; text-decoration: none;">View ${sym} on Trendlyne ↗</a>
+        <div style="font-size: 11px; font-weight: 600; color: var(--text-lt);">Loading Trendlyne ${type.toUpperCase()} Card...</div>
       </div>
     </div>
   `;
@@ -331,7 +328,7 @@ function loadTrendlyneWidget(sym, type = activeTLTab) {
       sk.style.transition = 'opacity 0.4s ease';
       setTimeout(() => { if (sk) sk.style.display = 'none'; }, 400);
     }
-  }, 3000);
+  }, 2500);
 }
 
 function toggleWatchFromModal() {
