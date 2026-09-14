@@ -422,6 +422,114 @@ function computeRSRatings(stocks) {
   return stocks;
 }
 
+// Institutional Accumulation / Distribution (A/D) Grade Engine (William O'Neil / Wyckoff methodology)
+function calcAccumulationDistribution(candles, period = 20) {
+  const len = candles ? candles.length : 0;
+  if (len < 5) {
+    return {
+      ad_grade: 'C',
+      money_flow_ratio: 0,
+      up_down_vol_ratio: 1.0,
+      accumulation_score: 50,
+      status: 'Neutral'
+    };
+  }
+
+  const slice = candles.slice(Math.max(0, len - period));
+  let totalVol = 0;
+  let totalMfv = 0;
+  let upVol = 0;
+  let downVol = 0;
+
+  for (let i = 0; i < slice.length; i++) {
+    const c = slice[i];
+    const prevC = i > 0 ? slice[i - 1] : c;
+    const range = c.h - c.l;
+    const clv = range > 0.0001 ? ((c.c - c.l) - (c.h - c.c)) / range : 0;
+    const vol = c.v || 0;
+    
+    totalVol += vol;
+    totalMfv += (clv * vol);
+
+    if (c.c > prevC.c) {
+      upVol += vol;
+    } else if (c.c < prevC.c) {
+      downVol += vol;
+    } else {
+      upVol += vol * 0.5;
+      downVol += vol * 0.5;
+    }
+  }
+
+  const mfr = totalVol > 0 ? totalMfv / totalVol : 0;
+  const udr = downVol > 0 ? upVol / downVol : (upVol > 0 ? 3.0 : 1.0);
+
+  let grade = 'C';
+  let status = 'Neutral';
+  let score = 50;
+
+  if (mfr >= 0.30 || (mfr >= 0.18 && udr >= 1.6)) {
+    grade = 'A+';
+    status = 'Heavy Accumulation';
+    score = Math.min(99, Math.round(85 + (mfr * 30)));
+  } else if (mfr >= 0.12 || udr >= 1.3) {
+    grade = 'A';
+    status = 'Institutional Buying';
+    score = Math.min(84, Math.round(72 + (mfr * 35)));
+  } else if (mfr >= 0.02 || udr >= 1.05) {
+    grade = 'B';
+    status = 'Moderate Inflow';
+    score = Math.min(71, Math.round(58 + (mfr * 40)));
+  } else if (mfr >= -0.12 && udr >= 0.85) {
+    grade = 'C';
+    status = 'Neutral / Absorption';
+    score = Math.round(50 + (mfr * 30));
+  } else if (mfr >= -0.28 || udr >= 0.65) {
+    grade = 'D';
+    status = 'Distribution / Selling';
+    score = Math.max(15, Math.round(35 + (mfr * 35)));
+  } else {
+    grade = 'E';
+    status = 'Heavy Institutional Exit';
+    score = Math.max(1, Math.round(15 + (mfr * 25)));
+  }
+
+  return {
+    ad_grade: grade,
+    money_flow_ratio: parseFloat(mfr.toFixed(3)),
+    up_down_vol_ratio: parseFloat(udr.toFixed(2)),
+    accumulation_score: score,
+    status: status
+  };
+}
+
+// Delivery Spurt & Volume Accumulation Calculation
+function calcDeliverySpurt(delivQty, avgDelivQty, delivPct) {
+  const dQty = typeof delivQty === 'number' && !isNaN(delivQty) ? delivQty : 0;
+  const aQty = typeof avgDelivQty === 'number' && !isNaN(avgDelivQty) && avgDelivQty > 0 ? avgDelivQty : dQty || 1;
+  const ratio = parseFloat((dQty / aQty).toFixed(2));
+  const pct = typeof delivPct === 'number' && !isNaN(delivPct) ? parseFloat(delivPct.toFixed(1)) : null;
+
+  let label = 'Normal';
+  let isSpurt = false;
+  if (ratio >= 2.0) {
+    label = '2× Delivery Surge';
+    isSpurt = true;
+  } else if (ratio >= 1.5) {
+    label = 'Elevated Delivery';
+    isSpurt = true;
+  } else if (ratio <= 0.6) {
+    label = 'Low Delivery';
+  }
+
+  return {
+    deliv_ratio: ratio,
+    deliv_pct: pct,
+    is_spurt: isSpurt,
+    deliv_label: label
+  };
+}
+
 // Module export for Node.js / Universal export for browser
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -431,7 +539,9 @@ if (typeof module !== 'undefined' && module.exports) {
     calcPocketPivot,
     calcIchimoku,
     calcARS,
-    computeRSRatings
+    computeRSRatings,
+    calcAccumulationDistribution,
+    calcDeliverySpurt
   };
 } else if (typeof window !== 'undefined') {
   window.Indicators = {
@@ -441,6 +551,9 @@ if (typeof module !== 'undefined' && module.exports) {
     calcPocketPivot,
     calcIchimoku,
     calcARS,
-    computeRSRatings
+    computeRSRatings,
+    calcAccumulationDistribution,
+    calcDeliverySpurt
   };
 }
+

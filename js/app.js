@@ -16,7 +16,7 @@ let allData      = [];
 let globalScreenerData = [];
 let liveCache    = {};
 let prevDataMap  = {};
-let filters      = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
+let filters      = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
 let activePreset = null;
 let stParam      = '14';
 let activeTab    = 'screener';
@@ -60,6 +60,14 @@ function passes(d) {
   if (filters.quad1)       ok = ok && getDualRSQuad(d) === 'quad-1';
   if (filters.quad2)       ok = ok && getDualRSQuad(d) === 'quad-2';
   if (filters.ichimoku)    ok = ok && d.ichimoku && (d.ichimoku.status === 'Kumo BUY' || d.ichimoku.kumo_buy || /Bull/i.test(d.ichimoku.status));
+  if (filters.smartmoney) {
+    const inst = d.institutional;
+    ok = ok && (inst ? (['A+', 'A'].includes(inst.ad_grade) || inst.inst_score >= 70 || inst.bulk?.action === 'BUY') : (d.ars > 0 && d.vol_ratio >= 1.2));
+  }
+  if (filters.delivsurge) {
+    const inst = d.institutional;
+    ok = ok && (inst ? (inst.is_spurt || inst.deliv_ratio >= 1.5) : (d.vol_ratio >= 1.5));
+  }
   if (filters.vol)         ok = ok && (d.vol_ratio || 1) >= 1.5;
   if (filters.volsurge)    ok = ok && (d.vol_ratio || 1) >= 2.0;
   if (filters.vcp)         ok = ok && ((d.vcp && d.vcp.is_vcp) || d.is_vcp || ((d.vol_ratio || 1) <= 0.7 && d.hi52_prox >= -0.05));
@@ -76,7 +84,7 @@ function applyPreset(presetName) {
   if (activePreset === presetName) {
     activePreset = null;
     document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
-    filters = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
+    filters = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
     syncChipUI();
     renderAll();
     return;
@@ -88,7 +96,7 @@ function applyPreset(presetName) {
   });
 
   const keepFno = filters.fno;
-  filters = { ars:false, trend:false, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:keepFno, pass:true, groups:true, watchlist:false };
+  filters = { ars:false, trend:false, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:keepFno, pass:true, groups:true, watchlist:false };
 
   if (presetName === 'power-leaders') {
     filters.quad1 = true;
@@ -102,8 +110,8 @@ function applyPreset(presetName) {
     filters.vcp = true;
     filters.ars = true;
   } else if (presetName === 'institutional-surge') {
-    filters.volsurge = true;
-    filters.trend = true;
+    filters.smartmoney = true;
+    filters.delivsurge = true;
     filters.ars = true;
   } else if (presetName === 'stage2-leaders') {
     filters['52w'] = true;
@@ -123,7 +131,7 @@ function applyPreset(presetName) {
 }
 
 function syncChipUI() {
-  const keys = ['ars','trend','srs','mrs','vol','volsurge','vcp','pocketpivot','52w','st','fno','pass','groups','watchlist'];
+  const keys = ['ars','trend','srs','mrs','smartmoney','delivsurge','vol','volsurge','vcp','pocketpivot','52w','st','quad1','quad2','fno','pass','groups','watchlist'];
   keys.forEach(k => {
     const el = document.getElementById('f-' + k);
     if (el) el.classList.toggle('on', !!filters[k]);

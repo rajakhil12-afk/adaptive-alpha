@@ -51,6 +51,14 @@ const TOOLTIP_DEFINITIONS = {
   ichimoku: {
     title: 'Ichimoku Cloud Status',
     body: 'Identifies whether price is trading above the Kumo Cloud (Span A & B) with Tenkan-Kijun bullish alignment.'
+  },
+  inst: {
+    title: 'Institutional Accumulation & Smart Money Flow',
+    body: 'Composite rating combining 20-day Accumulation/Distribution Grade (A+ to E), Money Flow Volume, and bulk institutional disclosures.'
+  },
+  deliv: {
+    title: 'Delivery Volume Surge Ratio',
+    body: 'Ratio of today\'s delivery quantity vs 20-day average delivery. Values ≥2.0× indicate aggressive institutional cash accumulation.'
   }
 };
 

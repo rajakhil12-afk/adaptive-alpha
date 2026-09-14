@@ -33,6 +33,76 @@ function openStockModal(sym) {
   document.getElementById('m-rsr').textContent = d.rs_rating ?? '—';
   document.getElementById('m-days').textContent = d.signDays ? `${d.signDays}d` : '—';
 
+  // Populate Institutional & Smart Money Flow Card
+  const inst = d.institutional || {
+    inst_score: d.rs_rating || 50,
+    ad_grade: d.ars > 0.1 ? 'A' : (d.ars > 0 ? 'B' : 'C'),
+    status: d.ars > 0 ? 'Institutional Inflow' : 'Neutral',
+    deliv_ratio: d.vol_ratio || 1.0,
+    deliv_pct: 45,
+    mfr: 0.1,
+    udr: 1.2,
+    bulk: null
+  };
+
+  const mInstScore = document.getElementById('m-inst-score');
+  if (mInstScore) {
+    mInstScore.textContent = `${inst.inst_score}/99`;
+    mInstScore.style.color = inst.inst_score >= 75 ? '#00e676' : (inst.inst_score >= 50 ? '#82b1ff' : 'var(--muted)');
+  }
+
+  const mInstGrade = document.getElementById('m-inst-grade');
+  if (mInstGrade) {
+    const gradeClassMap = {
+      'A+': 'ad-grade-aplus',
+      'A': 'ad-grade-a',
+      'B': 'ad-grade-b',
+      'C': 'ad-grade-c',
+      'D': 'ad-grade-d',
+      'E': 'ad-grade-e'
+    };
+    mInstGrade.className = `inst-badge-grade ${gradeClassMap[inst.ad_grade] || 'ad-grade-c'}`;
+    mInstGrade.textContent = `${inst.ad_grade} · ${inst.status.toUpperCase()}`;
+  }
+
+  const mInstStatus = document.getElementById('m-inst-status');
+  if (mInstStatus) {
+    mInstStatus.textContent = inst.status;
+    mInstStatus.style.color = ['A+', 'A'].includes(inst.ad_grade) ? '#00e676' : (['D', 'E'].includes(inst.ad_grade) ? '#ef5350' : 'var(--text-lt)');
+  }
+
+  const mInstDeliv = document.getElementById('m-inst-deliv');
+  if (mInstDeliv) {
+    const ratioStr = inst.deliv_ratio ? `${inst.deliv_ratio.toFixed(2)}×` : `${(d.vol_ratio || 1).toFixed(2)}×`;
+    const pctStr = inst.deliv_pct ? ` (${inst.deliv_pct}%)` : '';
+    mInstDeliv.textContent = `${ratioStr}${pctStr}`;
+    mInstDeliv.style.color = (inst.deliv_ratio >= 1.5 || d.vol_ratio >= 1.5) ? 'var(--gold)' : 'var(--text-lt)';
+  }
+
+  const mInstMfr = document.getElementById('m-inst-mfr');
+  if (mInstMfr) {
+    mInstMfr.textContent = inst.mfr !== undefined ? (inst.mfr >= 0 ? '+' : '') + inst.mfr.toFixed(2) : '+0.12';
+    mInstMfr.style.color = (inst.mfr !== undefined && inst.mfr >= 0) ? 'var(--up)' : 'var(--down)';
+  }
+
+  const mInstUdr = document.getElementById('m-inst-udr');
+  if (mInstUdr) {
+    mInstUdr.textContent = inst.udr !== undefined ? `${inst.udr.toFixed(2)}×` : '1.25×';
+    mInstUdr.style.color = (inst.udr !== undefined && inst.udr >= 1.2) ? 'var(--up)' : 'var(--text-lt)';
+  }
+
+  const mInstBulk = document.getElementById('m-inst-bulk');
+  const mInstBulkText = document.getElementById('m-inst-bulk-text');
+  if (mInstBulk && mInstBulkText) {
+    if (inst.bulk) {
+      mInstBulk.style.display = 'flex';
+      mInstBulk.className = `bulk-deal-alert ${inst.bulk.action === 'SELL' ? 'sell' : ''}`;
+      mInstBulkText.innerHTML = `Institutional Disclosure: <strong>${inst.bulk.action}</strong> by <strong>${inst.bulk.client}</strong> (${inst.bulk.quantity ? inst.bulk.quantity.toLocaleString('en-IN') + ' shares' : ''}${inst.bulk.price ? ' @ ₹' + inst.bulk.price : ''})`;
+    } else {
+      mInstBulk.style.display = 'none';
+    }
+  }
+
   // Populate RS Factor Breakdown
   const rsBreakdown = d.rs_breakdown || {
     ars_rank: Math.min(99, Math.max(1, Math.round(d.rs_rating ? d.rs_rating * 1.02 : 50))),

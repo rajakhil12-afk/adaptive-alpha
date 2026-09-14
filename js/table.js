@@ -102,6 +102,20 @@ function rowHtml(d) {
   const quadPillHtml = `<span class="quad-pill ${quadKey}">${quadLabels[quadKey]}</span>`;
 
   const tags = [];
+  if (d.institutional) {
+    if (d.institutional.bulk) {
+      tags.push(`<span class="tag ${d.institutional.bulk.action === 'BUY' ? 'tag-bulk-buy' : 'tag-bulk-sell'}">🚨 BULK ${d.institutional.bulk.action}</span>`);
+    }
+    if (d.institutional.is_spurt || (d.institutional.deliv_ratio >= 1.5)) {
+      tags.push(`<span class="tag tag-deliv-surge">📦 ${d.institutional.deliv_ratio}× Deliv</span>`);
+    }
+    if (d.institutional.ad_grade === 'A+' || d.institutional.ad_grade === 'A') {
+      tags.push(`<span class="tag tag-inst-a">🏛️ ${d.institutional.ad_grade} Inst</span>`);
+    } else if (d.institutional.ad_grade === 'D' || d.institutional.ad_grade === 'E') {
+      tags.push('<span class="tag tag-inst-d">⚠️ Inst Exit</span>');
+    }
+  }
+
   if (d.ichimoku && (d.ichimoku.status === 'Kumo BUY' || d.ichimoku.kumo_buy || /Bull/i.test(d.ichimoku.status))) tags.push('<span class="tag tag-kumo">☁️ KUMO BUY</span>');
   if (d.pocket_pivot || d.is_pocket_pivot) tags.push('<span class="tag tag-pp" style="background:rgba(227,179,65,0.15);color:var(--gold);border:1px solid rgba(227,179,65,0.3)">⚡ POCKET PIVOT</span>');
   if ((d.vcp && d.vcp.is_vcp) || d.is_vcp) tags.push('<span class="tag tag-vcp" style="background:rgba(94,150,255,0.15);color:#7da9ff;border:1px solid rgba(94,150,255,0.3)">🧘 VCP SQUEEZE</span>');
@@ -220,10 +234,12 @@ function renderTable() {
   if (filters.watchlist) data = data.filter(d => pinnedStocks.includes(d.sym));
   
   data.sort((a,b) => {
-    if (sort==='rs-desc')  return (b.rs_rating ?? 0) - (a.rs_rating ?? 0);
-    if (sort==='ars-desc') return b.ars - a.ars;
-    if (sort==='ars-asc')  return a.ars - b.ars;
-    if (sort==='srs-desc') return b.srs - a.srs;
+    if (sort==='rs-desc')    return (b.rs_rating ?? 0) - (a.rs_rating ?? 0);
+    if (sort==='inst-desc')  return ((b.institutional && b.institutional.inst_score) || (b.rs_rating ?? 0)) - ((a.institutional && a.institutional.inst_score) || (a.rs_rating ?? 0));
+    if (sort==='deliv-desc') return ((b.institutional && b.institutional.deliv_ratio) || (b.vol_ratio ?? 0)) - ((a.institutional && a.institutional.deliv_ratio) || (a.vol_ratio ?? 0));
+    if (sort==='ars-desc')   return b.ars - a.ars;
+    if (sort==='ars-asc')    return a.ars - b.ars;
+    if (sort==='srs-desc')   return b.srs - a.srs;
     if (sort==='st-desc') {
       const aST = stParam === '14' ? a.st14 : a.st10;
       const bST = stParam === '14' ? b.st14 : b.st10;
@@ -231,8 +247,8 @@ function renderTable() {
       const bTrendVal = bST && bST.trend === 'buy' ? 1 : 0;
       return bTrendVal - aTrendVal;
     }
-    if (sort==='vol-desc') return b.vol_ratio - a.vol_ratio;
-    if (sort==='52w-desc') return b.hi52_prox - a.hi52_prox;
+    if (sort==='vol-desc')  return b.vol_ratio - a.vol_ratio;
+    if (sort==='52w-desc')  return b.hi52_prox - a.hi52_prox;
     if (sort==='days-desc') return (b.signDays ?? -1) - (a.signDays ?? -1);
     return a.sym.localeCompare(b.sym);
   });
