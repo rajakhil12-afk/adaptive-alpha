@@ -7,7 +7,9 @@ const {
   calcPocketPivot,
   calcIchimoku,
   calcARS,
-  computeRSRatings
+  computeRSRatings,
+  calcAccumulationDistribution,
+  calcDeliverySpurt
 } = require('../js/indicators');
 
 // Helper to generate synthetic test candles
@@ -145,4 +147,34 @@ test('Ichimoku Cloud status — validates Kumo BUY and kumo_buy flags', () => {
   assert.strictEqual(shortResult.status, 'Neutral');
   assert.strictEqual(shortResult.kumo_buy, false);
 });
+
+test('Institutional Accumulation/Distribution (A/D) Grade — identifies institutional buying vs selling', () => {
+  // Heavy buying candles: higher closes near high of day with high volume
+  const upCandles = generateCandles(30, 100, 2.0, 5000);
+  const upResult = calcAccumulationDistribution(upCandles, 20);
+
+  assert.ok(upResult, 'A/D calculation should return an object');
+  assert.ok(['A+', 'A', 'B'].includes(upResult.ad_grade), `Strong uptrend with heavy volume should receive A+, A, or B grade (got ${upResult.ad_grade})`);
+  assert.ok(upResult.accumulation_score >= 60, 'Accumulation score should be >= 60 in uptrend');
+  assert.strictEqual(typeof upResult.money_flow_ratio, 'number');
+
+  // Distribution candles: downward trend
+  const downCandles = generateCandles(30, 100, -2.5, 5000);
+  const downResult = calcAccumulationDistribution(downCandles, 20);
+  assert.ok(['D', 'E'].includes(downResult.ad_grade), `Downtrend should receive D or E grade (got ${downResult.ad_grade})`);
+  assert.ok(downResult.accumulation_score <= 45, 'Accumulation score should be <= 45 in downtrend');
+});
+
+test('Delivery Spurt Detector — detects volume delivery spikes and ratios', () => {
+  const surge = calcDeliverySpurt(500000, 200000, 65.4);
+  assert.strictEqual(surge.deliv_ratio, 2.5);
+  assert.strictEqual(surge.deliv_pct, 65.4);
+  assert.strictEqual(surge.is_spurt, true);
+  assert.strictEqual(surge.deliv_label, '2× Delivery Surge');
+
+  const normal = calcDeliverySpurt(100000, 120000, 32.1);
+  assert.strictEqual(normal.is_spurt, false);
+  assert.strictEqual(normal.deliv_label, 'Normal');
+});
+
 
