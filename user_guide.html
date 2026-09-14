@@ -472,7 +472,33 @@
       <li><strong>Theme Toggle:</strong> Click the Sun/Moon button (🌙 / ☀️) in the topbar to transition between Light and Dark mode instantly. The selected theme state is saved in the browser and will restore on subsequent visits.</li>
     </ul>
 
-    <h1 class="page-break">6. Support and Operations</h1>
+    <h1 class="page-break">6. 🏛️ Institutional Buying &amp; Smart Money Engine</h1>
+    <p>Adaptive Alpha incorporates multi-tier institutional footprint detection to separate retail speculative moves from high-conviction institutional accumulation:</p>
+
+    <h2>1. Institutional Accumulation/Distribution (A/D) Grade</h2>
+    <p>Calculates the 20-day Volume-weighted Money Flow based on Close Location Value (CLV):</p>
+    <div class="math">
+      CLV = [(Close - Low) - (High - Close)] / (High - Low)<br>
+      Money Flow Volume (MFV) = CLV &times; Total Volume
+    </div>
+    <ul>
+      <li><strong>A+ / A (Heavy Accumulation):</strong> Money Flow Ratio &ge; +0.18 with Up/Down Volume Ratio &ge; 1.30. Indicates relentless institutional buying on rising volume.</li>
+      <li><strong>B (Moderate Inflow):</strong> Steady net buying volume with constructive base building.</li>
+      <li><strong>C (Neutral / Absorption):</strong> Balanced supply and demand during base consolidation.</li>
+      <li><strong>D / E (Distribution / Exit):</strong> Persistent institutional profit booking or aggressive selling on high volume.</li>
+    </ul>
+
+    <h2>2. Delivery Volume Surge Ratio (Deliv Ratio)</h2>
+    <p>Institutions accumulate positions for long-term holding through 100% cash delivery (non-intraday squared off):</p>
+    <div class="math">
+      Delivery Surge Ratio = Today's Delivery Volume / 20-Day Average Delivery Volume
+    </div>
+    <p>A Delivery Surge Ratio &ge; 1.50&times; (and especially &ge; 2.0&times;) on positive price days flags high-probability institutional pocket pivots.</p>
+
+    <h2>3. Daily NSE Bulk &amp; Block Deal Disclosures</h2>
+    <p>The automated daily pipeline parses official NSE Bulk Deal archives (transactions &ge; 0.5% of listed equity) to display named fund transactions (e.g. <em>HDFC MF, Vanguard, Morgan Stanley</em>) directly inside the stock scorecard modal.</p>
+
+    <h1 class="page-break">7. Support and Operations</h1>
     <p>The data pipeline updates automatically every weekday at 8:00 PM IST (14:10 UTC) via GitHub Actions (Node.js 24, Ubuntu). The pipeline includes built-in retry logic (3 attempts with exponential backoff for each stock, 5 attempts for the NIFTY benchmark), graceful fallback when NSE Bhavcopy is unavailable, and global error handlers to prevent silent crashes. If all retries fail, the workflow retries the entire script up to 3 times with 30-second intervals.</p>
     <p>For custom additions to the constituent list (adding new symbols or modifying sector weights), developers can update the centralized universe configuration directly inside <code>config/universe.js</code>.</p>
 

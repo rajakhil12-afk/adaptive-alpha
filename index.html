@@ -97,18 +97,20 @@
   <div id="tab-screener">
     <div class="controls">
       <span class="ctrl-label">Filters:</span>
-      <span class="chip on" id="f-ars" onclick="toggleChip('ars')" data-tooltip="ars">ARS &gt; 0% <span class="info-icon">ⓘ</span></span>
-      <span class="chip on" id="f-trend" onclick="toggleChip('trend')" data-tooltip="slope">Trending (ΔARS+) <span class="info-icon">ⓘ</span></span>
-      <span class="chip" id="f-srs" onclick="toggleChip('srs')" data-tooltip="srs">SRS &gt; 0% (63D) <span class="info-icon">ⓘ</span></span>
-      <span class="chip" id="f-mrs" onclick="toggleChip('mrs')" data-tooltip="mrs">Mansfield RS+ <span class="info-icon">ⓘ</span></span>
-      <span class="chip" id="f-vcp" onclick="toggleChip('vcp')" data-tooltip="vcp">VCP Squeeze <span class="info-icon">ⓘ</span></span>
-      <span class="chip" id="f-pocketpivot" onclick="toggleChip('pocketpivot')" data-tooltip="pocketpivot">Pocket Pivot <span class="info-icon">ⓘ</span></span>
+      <span class="chip on" id="f-ars" onclick="toggleChip('ars')" data-tooltip="ars">ARS &gt; 0% <span class="info-icon">i</span></span>
+      <span class="chip on" id="f-trend" onclick="toggleChip('trend')" data-tooltip="slope">Trending (ΔARS+) <span class="info-icon">i</span></span>
+      <span class="chip" id="f-srs" onclick="toggleChip('srs')" data-tooltip="srs">SRS &gt; 0% (63D) <span class="info-icon">i</span></span>
+      <span class="chip" id="f-smartmoney" onclick="toggleChip('smartmoney')" data-tooltip="inst">🏛️ Smart Money <span class="info-icon">i</span></span>
+      <span class="chip" id="f-delivsurge" onclick="toggleChip('delivsurge')" data-tooltip="deliv">📦 Delivery Surge (1.5×+) <span class="info-icon">i</span></span>
+      <span class="chip" id="f-mrs" onclick="toggleChip('mrs')" data-tooltip="mrs">Mansfield RS+ <span class="info-icon">i</span></span>
+      <span class="chip" id="f-vcp" onclick="toggleChip('vcp')" data-tooltip="vcp">VCP Squeeze <span class="info-icon">i</span></span>
+      <span class="chip" id="f-pocketpivot" onclick="toggleChip('pocketpivot')" data-tooltip="pocketpivot">Pocket Pivot <span class="info-icon">i</span></span>
       <span class="chip" id="f-vol" onclick="toggleChip('vol')" data-tooltip="rsr">Vol &ge; 1.5×</span>
       <span class="chip" id="f-volsurge" onclick="toggleChip('volsurge')" data-tooltip="rsr">Surge &ge; 2.0×</span>
-      <span class="chip" id="f-52w" onclick="toggleChip('52w')" data-tooltip="hi52">Near 52W High <span class="info-icon">ⓘ</span></span>
-      <span class="chip" id="f-st" onclick="toggleChip('st')" data-tooltip="st">Supertrend BUY <span class="info-icon">ⓘ</span></span>
-      <span class="chip" id="f-quad1" onclick="toggleChip('quad1')" data-tooltip="quad">🌟 Q1 Leaders <span class="info-icon">ⓘ</span></span>
-      <span class="chip" id="f-quad2" onclick="toggleChip('quad2')" data-tooltip="quad">🔄 Q2 Turnarounds <span class="info-icon">ⓘ</span></span>
+      <span class="chip" id="f-52w" onclick="toggleChip('52w')" data-tooltip="hi52">Near 52W High <span class="info-icon">i</span></span>
+      <span class="chip" id="f-st" onclick="toggleChip('st')" data-tooltip="st">Supertrend BUY <span class="info-icon">i</span></span>
+      <span class="chip" id="f-quad1" onclick="toggleChip('quad1')" data-tooltip="quad">🌟 Q1 Leaders <span class="info-icon">i</span></span>
+      <span class="chip" id="f-quad2" onclick="toggleChip('quad2')" data-tooltip="quad">🔄 Q2 Turnarounds <span class="info-icon">i</span></span>
 
       <div class="divider"></div>
 
@@ -126,6 +128,8 @@
 
       <select id="sort-sel" onchange="renderTable()" style="margin-left:auto">
         <option value="rs-desc">Sort: RS Rating (High → Low)</option>
+        <option value="inst-desc">Sort: Institutional Accumulation Score</option>
+        <option value="deliv-desc">Sort: Delivery Surge Ratio</option>
         <option value="ars-desc">Sort: ARS Outperformance (High → Low)</option>
         <option value="ars-asc">Sort: ARS Underperformance</option>
         <option value="srs-desc">Sort: SRS (63D Momentum)</option>
@@ -144,14 +148,14 @@
           <div class="tbl-header COL">
             <div class="th" title="Select for compare" style="cursor:default;"></div>
             <div class="th sorted" onclick="setSortCol('alpha')">Ticker <span class="sort-arrow">↕</span></div>
-            <div class="th" onclick="setSortCol('ars-desc')" data-tooltip="ars">ARS % <span class="info-icon">ⓘ</span> <span class="sort-arrow">↕</span></div>
-            <div class="th" onclick="setSortCol('srs-desc')" data-tooltip="srs">SRS (63D) <span class="info-icon">ⓘ</span> <span class="sort-arrow">↕</span></div>
-            <div class="th" onclick="setSortCol('52w-desc')" data-tooltip="hi52">52W Prox <span class="info-icon">ⓘ</span> <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('ars-desc')" data-tooltip="ars">ARS % <span class="info-icon">i</span> <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('srs-desc')" data-tooltip="srs">SRS (63D) <span class="info-icon">i</span> <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('52w-desc')" data-tooltip="hi52">52W Prox <span class="info-icon">i</span> <span class="sort-arrow">↕</span></div>
             <div class="th" onclick="setSortCol('days-desc')" data-tooltip="slope">Days ↕</div>
             <div class="th" onclick="setSortCol('vol-desc')">Vol Ratio ↕</div>
-            <div class="th" onclick="setSortCol('st-desc')" data-tooltip="st">Supertrend <span class="info-icon">ⓘ</span> ↕</div>
+            <div class="th" onclick="setSortCol('st-desc')" data-tooltip="st">Supertrend <span class="info-icon">i</span> ↕</div>
             <div class="th">Price ₹</div>
-            <div class="th" onclick="setSortCol('rs-desc')" data-tooltip="rsr">RS Rating <span class="info-icon">ⓘ</span> ↕</div>
+            <div class="th" onclick="setSortCol('rs-desc')" data-tooltip="rsr">RS Rating <span class="info-icon">i</span> ↕</div>
             <div class="th">TV</div>
           </div>
           <div class="tbl-body" id="tbl-body"></div>
@@ -246,15 +250,49 @@
     </div>
     <div class="modal-body">
       <div class="modal-stats">
-        <div class="ms-card"><div class="ms-label" data-tooltip="ars">ARS Score <span class="info-icon">ⓘ</span></div><div class="ms-val" id="m-ars">—</div></div>
-        <div class="ms-card"><div class="ms-label" data-tooltip="srs">SRS Score <span class="info-icon">ⓘ</span></div><div class="ms-val" id="m-srs">—</div></div>
-        <div class="ms-card"><div class="ms-label" data-tooltip="mrs">Mansfield RS <span class="info-icon">ⓘ</span></div><div class="ms-val" id="m-mrs" style="color:var(--up)">—</div></div>
-        <div class="ms-card"><div class="ms-label" data-tooltip="rsr">RS Rating <span class="info-icon">ⓘ</span></div><div class="ms-val" id="m-rsr">—</div></div>
-        <div class="ms-card"><div class="ms-label" data-tooltip="vcp">VCP Squeeze <span class="info-icon">ⓘ</span></div><div class="ms-val" id="m-vcp" style="color:#7da9ff">—</div></div>
+        <div class="ms-card"><div class="ms-label" data-tooltip="ars">ARS Score <span class="info-icon">i</span></div><div class="ms-val" id="m-ars">—</div></div>
+        <div class="ms-card"><div class="ms-label" data-tooltip="srs">SRS Score <span class="info-icon">i</span></div><div class="ms-val" id="m-srs">—</div></div>
+        <div class="ms-card"><div class="ms-label" data-tooltip="mrs">Mansfield RS <span class="info-icon">i</span></div><div class="ms-val" id="m-mrs" style="color:var(--up)">—</div></div>
+        <div class="ms-card"><div class="ms-label" data-tooltip="rsr">RS Rating <span class="info-icon">i</span></div><div class="ms-val" id="m-rsr">—</div></div>
+        <div class="ms-card"><div class="ms-label" data-tooltip="inst">Inst. Score <span class="info-icon">i</span></div><div class="ms-val" id="m-inst-score" style="color:var(--up)">—</div></div>
+        <div class="ms-card"><div class="ms-label" data-tooltip="vcp">VCP Squeeze <span class="info-icon">i</span></div><div class="ms-val" id="m-vcp" style="color:#7da9ff">—</div></div>
         <div class="ms-card"><div class="ms-label">Days in Trend</div><div class="ms-val" id="m-days">—</div></div>
-        <div class="ms-card"><div class="ms-label" data-tooltip="st">Supertrend <span class="info-icon">ⓘ</span></div><div class="ms-val" id="m-st">—</div></div>
-        <div class="ms-card"><div class="ms-label" data-tooltip="ma">MA Status <span class="info-icon">ⓘ</span></div><div class="ms-val" id="m-ma">—</div></div>
-        <div class="ms-card"><div class="ms-label" data-tooltip="ichimoku">Ichimoku Cloud <span class="info-icon">ⓘ</span></div><div class="ms-val" id="m-ichi" style="color:#e1bee7">—</div></div>
+        <div class="ms-card"><div class="ms-label" data-tooltip="st">Supertrend <span class="info-icon">i</span></div><div class="ms-val" id="m-st">—</div></div>
+        <div class="ms-card"><div class="ms-label" data-tooltip="ma">MA Status <span class="info-icon">i</span></div><div class="ms-val" id="m-ma">—</div></div>
+        <div class="ms-card"><div class="ms-label" data-tooltip="ichimoku">Ichimoku Cloud <span class="info-icon">i</span></div><div class="ms-val" id="m-ichi" style="color:#e1bee7">—</div></div>
+      </div>
+
+      <!-- Institutional Ownership & Smart Money Flow Card -->
+      <div class="inst-card" id="m-inst-card">
+        <div class="inst-header">
+          <div class="inst-title">
+            <span>🏛️ Smart Money & Institutional Flow</span>
+            <span class="info-icon" data-tooltip="inst">i</span>
+          </div>
+          <span id="m-inst-grade" class="inst-badge-grade ad-grade-aplus">A+ HEAVY ACCUMULATION</span>
+        </div>
+        <div class="inst-grid">
+          <div class="inst-stat-box">
+            <span class="inst-stat-lbl">Accumulation Grade</span>
+            <span class="inst-stat-val" id="m-inst-status" style="color:var(--up)">Institutional Buying</span>
+          </div>
+          <div class="inst-stat-box">
+            <span class="inst-stat-lbl">Delivery vs 20D Avg</span>
+            <span class="inst-stat-val" id="m-inst-deliv">—</span>
+          </div>
+          <div class="inst-stat-box">
+            <span class="inst-stat-lbl">Money Flow Ratio</span>
+            <span class="inst-stat-val" id="m-inst-mfr">—</span>
+          </div>
+          <div class="inst-stat-box">
+            <span class="inst-stat-lbl">Up/Down Vol Ratio</span>
+            <span class="inst-stat-val" id="m-inst-udr">—</span>
+          </div>
+        </div>
+        <div id="m-inst-bulk" class="bulk-deal-alert" style="display:none;">
+          <span style="font-size:13px;">🚨</span>
+          <span id="m-inst-bulk-text">Recent Institutional Bulk Deal: <strong>BUY</strong> by HDFC MF</span>
+        </div>
       </div>
 
       <!-- Factor Breakdown Bars -->
