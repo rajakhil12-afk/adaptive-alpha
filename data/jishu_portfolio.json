@@ -2,18 +2,18 @@
   "bot_name": "Jishu",
   "version": "1.0.0",
   "created_at": "2026-09-02T20:25:00+05:30",
-  "last_updated": "2026-09-15T09:33:27.322Z",
+  "last_updated": "2026-09-15T18:08:50.963Z",
   "account": {
     "initial_capital": 1000000,
-    "cash": 3171.310000000027,
-    "invested_capital": 974414.5,
-    "total_equity": 977585.81,
-    "realized_pnl": -13297.740000000013,
-    "unrealized_pnl": -9116.45,
-    "win_rate": 25,
-    "total_trades": 4,
+    "cash": 81.76000000002387,
+    "invested_capital": 949900.15,
+    "total_equity": 949981.91,
+    "realized_pnl": -30182.040000000005,
+    "unrealized_pnl": -19836.05,
+    "win_rate": 16.7,
+    "total_trades": 6,
     "winning_trades": 1,
-    "losing_trades": 3
+    "losing_trades": 5
   },
   "settings": {
     "max_positions": 10,
@@ -25,26 +25,6 @@
     "min_rs_rating": 70
   },
   "open_positions": [
-    {
-      "sym": "GNFC",
-      "name": "GNFC",
-      "ind": "Chemicals",
-      "logoid": "gujarat-narmada-valley-fertilizers-and-chemicals",
-      "entry_date": "2026-09-03",
-      "entry_price": 600.65,
-      "qty": 166,
-      "invested_value": 99707.9,
-      "initial_sl": 540.59,
-      "current_sl": 540.59,
-      "risk_per_share": 60.06,
-      "target_1_price": 720.78,
-      "target_2_price": 780.85,
-      "sl_moved_to_cost": false,
-      "highest_price": 600.65,
-      "current_price": 562.4,
-      "unrealized_pnl": -6349.5,
-      "unrealized_pnl_pct": -6.368101223674354
-    },
     {
       "sym": "BAJAJHLDNG",
       "name": "Bajaj Holdings",
@@ -61,9 +41,9 @@
       "target_2_price": 14792.7,
       "sl_moved_to_cost": false,
       "highest_price": 11379,
-      "current_price": 11134,
-      "unrealized_pnl": -1960,
-      "unrealized_pnl_pct": -2.1530890236400384
+      "current_price": 11100,
+      "unrealized_pnl": -2232,
+      "unrealized_pnl_pct": -2.451885051410493
     },
     {
       "sym": "ELGIEQUIP",
@@ -81,9 +61,9 @@
       "target_2_price": 811.46,
       "sl_moved_to_cost": false,
       "highest_price": 624.2,
-      "current_price": 617.7,
-      "unrealized_pnl": -1040,
-      "unrealized_pnl_pct": -1.0413329061198333
+      "current_price": 612.05,
+      "unrealized_pnl": -1944.0000000000146,
+      "unrealized_pnl_pct": -1.946491509131703
     },
     {
       "sym": "BHEL",
@@ -101,9 +81,9 @@
       "target_2_price": 566.74,
       "sl_moved_to_cost": false,
       "highest_price": 435.95,
-      "current_price": 431,
-      "unrealized_pnl": -1133.5499999999975,
-      "unrealized_pnl_pct": -1.135451313223991
+      "current_price": 412.85,
+      "unrealized_pnl": -5289.899999999992,
+      "unrealized_pnl_pct": -5.298772795045296
     },
     {
       "sym": "BALRAMCHIN",
@@ -121,29 +101,9 @@
       "target_2_price": 852.48,
       "sl_moved_to_cost": false,
       "highest_price": 705.15,
-      "current_price": 691.4,
-      "unrealized_pnl": 5418.7999999999965,
-      "unrealized_pnl_pct": 5.4365230651925245
-    },
-    {
-      "sym": "HAL",
-      "name": "HAL",
-      "ind": "Capital Goods",
-      "logoid": "hindustan-aeronautics-limited",
-      "entry_date": "2026-09-03",
-      "entry_price": 5059,
-      "qty": 19,
-      "invested_value": 96121,
-      "initial_sl": 4553.1,
-      "current_sl": 4553.1,
-      "risk_per_share": 505.9,
-      "target_1_price": 6070.8,
-      "target_2_price": 6576.7,
-      "sl_moved_to_cost": false,
-      "highest_price": 5059,
-      "current_price": 4905,
-      "unrealized_pnl": -2926,
-      "unrealized_pnl_pct": -3.0440798576793835
+      "current_price": 677.1,
+      "unrealized_pnl": 3245.2000000000035,
+      "unrealized_pnl_pct": 3.2558139534883757
     },
     {
       "sym": "GRAPHITE",
@@ -161,9 +121,9 @@
       "target_2_price": 1098.05,
       "sl_moved_to_cost": false,
       "highest_price": 844.65,
-      "current_price": 825.8,
-      "unrealized_pnl": -2224.300000000003,
-      "unrealized_pnl_pct": -2.2316936008997836
+      "current_price": 781.5,
+      "unrealized_pnl": -7451.699999999997,
+      "unrealized_pnl_pct": -7.476469543597937
     },
     {
       "sym": "SUNDRMFAST",
@@ -181,9 +141,9 @@
       "target_2_price": 1632.93,
       "sl_moved_to_cost": false,
       "highest_price": 1270,
-      "current_price": 1270,
-      "unrealized_pnl": 1098.1000000000072,
-      "unrealized_pnl_pct": 1.106599793010118
+      "current_price": 1237.3,
+      "unrealized_pnl": -1485.1999999999964,
+      "unrealized_pnl_pct": -1.496696122920146
     },
     {
       "sym": "GRANULES",
@@ -201,9 +161,9 @@
       "target_2_price": 1182.09,
       "sl_moved_to_cost": false,
       "highest_price": 909.3,
-      "current_price": 909.3,
-      "unrealized_pnl": 0,
-      "unrealized_pnl_pct": 0
+      "current_price": 872.6,
+      "unrealized_pnl": -4000.2999999999925,
+      "unrealized_pnl_pct": -4.036071703508186
     },
     {
       "sym": "RAYMOND",
@@ -221,12 +181,82 @@
       "target_2_price": 1303.64,
       "sl_moved_to_cost": false,
       "highest_price": 1002.8,
-      "current_price": 1002.8,
+      "current_price": 995.95,
+      "unrealized_pnl": -678.149999999991,
+      "unrealized_pnl_pct": -0.6830873554048573
+    },
+    {
+      "sym": "TATAINVEST",
+      "name": "Tata Investment Corp",
+      "ind": "Financial Services",
+      "logoid": null,
+      "entry_date": "2026-09-15",
+      "entry_price": 718.35,
+      "qty": 126,
+      "invested_value": 90512.1,
+      "initial_sl": 646.51,
+      "current_sl": 646.51,
+      "risk_per_share": 71.84,
+      "target_1_price": 862.02,
+      "target_2_price": 933.86,
+      "sl_moved_to_cost": false,
+      "highest_price": 718.35,
+      "current_price": 718.35,
+      "unrealized_pnl": 0,
+      "unrealized_pnl_pct": 0
+    },
+    {
+      "sym": "FSL",
+      "name": "Firstsource Solutions",
+      "ind": "Services",
+      "logoid": "firstsource-solutions",
+      "entry_date": "2026-09-15",
+      "entry_price": 283.35,
+      "qty": 323,
+      "invested_value": 91522.05,
+      "initial_sl": 255.02,
+      "current_sl": 255.02,
+      "risk_per_share": 28.34,
+      "target_1_price": 340.02,
+      "target_2_price": 368.36,
+      "sl_moved_to_cost": false,
+      "highest_price": 283.35,
+      "current_price": 283.35,
       "unrealized_pnl": 0,
       "unrealized_pnl_pct": 0
     }
   ],
   "closed_trades": [
+    {
+      "sym": "HAL",
+      "name": "HAL",
+      "ind": "Capital Goods",
+      "entry_date": "2026-09-03",
+      "exit_date": "2026-09-15",
+      "entry_price": 5059,
+      "exit_price": 4695,
+      "qty": 19,
+      "invested_value": 96121,
+      "realized_pnl": -6916,
+      "return_pct": -7.195097845423996,
+      "exit_reason": "SUPERTREND_BREAKDOWN",
+      "highest_price": 5059
+    },
+    {
+      "sym": "GNFC",
+      "name": "GNFC",
+      "ind": "Chemicals",
+      "entry_date": "2026-09-03",
+      "exit_date": "2026-09-15",
+      "entry_price": 600.65,
+      "exit_price": 540.6,
+      "qty": 166,
+      "invested_value": 99707.9,
+      "realized_pnl": -9968.299999999992,
+      "return_pct": -9.997502705402473,
+      "exit_reason": "SUPERTREND_BREAKDOWN",
+      "highest_price": 600.65
+    },
     {
       "sym": "HINDCOPPER",
       "name": "Hindustan Copper",
@@ -333,9 +363,58 @@
       "realized_pnl": -13297.74,
       "unrealized_pnl": -9116.45,
       "open_positions_count": 10
+    },
+    {
+      "date": "2026-09-15",
+      "cash": 81.76,
+      "invested": 949900.15,
+      "total_equity": 949981.91,
+      "realized_pnl": -30182.04,
+      "unrealized_pnl": -19836.05,
+      "open_positions_count": 10
     }
   ],
   "recent_events": [
+    {
+      "timestamp": "2026-09-15T18:08:50.962Z",
+      "type": "TRADE_EXIT",
+      "symbol": "GNFC",
+      "reason": "SUPERTREND_BREAKDOWN",
+      "pnl": -9968.299999999992,
+      "return_pct": -9.997502705402473,
+      "message": "🛑 [JISHU STOP LOSS] Closed GNFC at ₹540.60 | Reason: SUPERTREND_BREAKDOWN | PnL: ₹-9968.30 (-10.00%)"
+    },
+    {
+      "timestamp": "2026-09-15T18:08:50.962Z",
+      "type": "TRADE_EXIT",
+      "symbol": "HAL",
+      "reason": "SUPERTREND_BREAKDOWN",
+      "pnl": -6916,
+      "return_pct": -7.195097845423996,
+      "message": "🛑 [JISHU STOP LOSS] Closed HAL at ₹4695.00 | Reason: SUPERTREND_BREAKDOWN | PnL: ₹-6916.00 (-7.20%)"
+    },
+    {
+      "timestamp": "2026-09-15T18:08:50.963Z",
+      "type": "BUY_ORDER",
+      "symbol": "TATAINVEST",
+      "entry_price": 718.35,
+      "qty": 126,
+      "target_1": 862.02,
+      "target_2": 933.855,
+      "sl": 646.515,
+      "message": "🟢 [JISHU BUY ORDER] TATAINVEST (Tata Investment Corp) @ ₹718.35 | Qty: 126 | Total: ₹90512.10 | SL: ₹646.51 (-10%) | Target 1 (1:2): ₹862.02 | Target 2 (1:3): ₹933.86"
+    },
+    {
+      "timestamp": "2026-09-15T18:08:50.963Z",
+      "type": "BUY_ORDER",
+      "symbol": "FSL",
+      "entry_price": 283.35,
+      "qty": 323,
+      "target_1": 340.02000000000004,
+      "target_2": 368.355,
+      "sl": 255.01500000000001,
+      "message": "🟢 [JISHU BUY ORDER] FSL (Firstsource Solutions) @ ₹283.35 | Qty: 323 | Total: ₹91522.05 | SL: ₹255.02 (-10%) | Target 1 (1:2): ₹340.02 | Target 2 (1:3): ₹368.36"
+    },
     {
       "timestamp": "2026-09-11T17:44:42.134Z",
       "type": "TRADE_EXIT",
