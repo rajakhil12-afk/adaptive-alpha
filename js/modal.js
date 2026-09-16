@@ -31,6 +31,18 @@ function openStockModal(sym) {
     mVcp.style.color = isVcp ? '#7da9ff' : (d.vol_ratio <= 0.7 ? 'var(--up)' : 'var(--muted)');
   }
 
+  const mVolz = document.getElementById('m-volz');
+  if (mVolz) {
+    if (d.vol_z !== undefined && d.vol_z !== null) {
+      const zVal = (d.vol_z >= 0 ? '+' : '') + d.vol_z.toFixed(1) + 'σ';
+      mVolz.textContent = zVal;
+      mVolz.style.color = d.vol_z >= 3.0 ? '#ffb300' : (d.vol_z >= 2.0 ? '#00e676' : (d.vol_z >= 1.0 ? '#82b1ff' : 'var(--muted)'));
+    } else {
+      mVolz.textContent = (d.vol_ratio || 1.0).toFixed(1) + '×';
+      mVolz.style.color = (d.vol_ratio || 1.0) >= 2.0 ? '#00e676' : 'var(--muted)';
+    }
+  }
+
   document.getElementById('m-rsr').textContent = d.rs_rating ?? '—';
   document.getElementById('m-days').textContent = d.signDays ? `${d.signDays}d` : '—';
 

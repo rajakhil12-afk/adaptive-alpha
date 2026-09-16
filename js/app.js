@@ -16,7 +16,7 @@ let allData      = [];
 let globalScreenerData = [];
 let liveCache    = {};
 let prevDataMap  = {};
-let filters      = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
+let filters      = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
 let activePreset = null;
 let stParam      = '14';
 let activeTab    = 'screener';
@@ -70,6 +70,7 @@ function passes(d) {
   }
   if (filters.vol)         ok = ok && (d.vol_ratio || 1) >= 1.5;
   if (filters.volsurge)    ok = ok && (d.vol_ratio || 1) >= 2.0;
+  if (filters.volz)        ok = ok && ((d.vol_z !== undefined && d.vol_z >= 2.0) || d.vol_anomaly || (d.vol_ratio || 1) >= 2.5);
   if (filters.vcp)         ok = ok && ((d.vcp && d.vcp.is_vcp) || d.is_vcp || ((d.vol_ratio || 1) <= 0.7 && d.hi52_prox >= -0.05));
   if (filters.pocketpivot) ok = ok && (d.pocket_pivot || d.is_pocket_pivot);
   if (filters['52w'])      ok = ok && d.hi52_prox >= -0.05;
@@ -84,7 +85,7 @@ function applyPreset(presetName) {
   if (activePreset === presetName) {
     activePreset = null;
     document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
-    filters = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
+    filters = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
     syncChipUI();
     renderAll();
     return;
@@ -96,7 +97,7 @@ function applyPreset(presetName) {
   });
 
   const keepFno = filters.fno;
-  filters = { ars:false, trend:false, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:keepFno, pass:true, groups:true, watchlist:false };
+  filters = { ars:false, trend:false, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:keepFno, pass:true, groups:true, watchlist:false };
 
   if (presetName === 'power-leaders') {
     filters.quad1 = true;
@@ -109,8 +110,9 @@ function applyPreset(presetName) {
   } else if (presetName === 'vcp-tight') {
     filters.vcp = true;
     filters.ars = true;
-  } else if (presetName === 'institutional-surge') {
-    filters.smartmoney = true;
+  } else if (presetName === 'institutional-surge' || presetName === 'vol-surge' || presetName === 'inst-accumulation') {
+    filters.volsurge = true;
+    filters.volz = true;
     filters.delivsurge = true;
     filters.ars = true;
   } else if (presetName === 'stage2-leaders') {
@@ -121,6 +123,11 @@ function applyPreset(presetName) {
   } else if (presetName === 'bottom-reversal') {
     filters.quad2 = true;
     filters.trend = true;
+  } else if (presetName === 'dip-buy') {
+    filters.ars = true;
+    filters.st = true;
+  } else if (presetName === 'short-watch') {
+    filters.srs = true;
   }
 
   const stSel = document.getElementById('st-param-sel');
@@ -131,7 +138,7 @@ function applyPreset(presetName) {
 }
 
 function syncChipUI() {
-  const keys = ['ars','trend','srs','mrs','smartmoney','delivsurge','vol','volsurge','vcp','pocketpivot','52w','st','quad1','quad2','fno','pass','groups','watchlist'];
+  const keys = ['ars','trend','srs','mrs','smartmoney','delivsurge','vol','volsurge','volz','vcp','pocketpivot','52w','st','quad1','quad2','fno','pass','groups','watchlist'];
   keys.forEach(k => {
     const el = document.getElementById('f-' + k);
     if (el) el.classList.toggle('on', !!filters[k]);

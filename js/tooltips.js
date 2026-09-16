@@ -59,6 +59,10 @@ const TOOLTIP_DEFINITIONS = {
   deliv: {
     title: 'Delivery Volume Surge Ratio',
     body: 'Ratio of today\'s delivery quantity vs 20-day average delivery. Values ≥2.0× indicate aggressive institutional cash accumulation.'
+  },
+  volz: {
+    title: 'Volume Z-Score (Statistical Anomaly)',
+    body: 'Number of standard deviations today\'s volume deviates from the 50-day volume mean. Z ≥ +2.0σ flags a statistical volume anomaly (top 2.5% event); Z ≥ +3.0σ flags an extreme institutional volume spike.'
   }
 };
 

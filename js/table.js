@@ -200,6 +200,7 @@ function rowHtml(d) {
     <div class="td" data-label="Vol">
       <div class="ars-val" style="color:${d.vol_ratio>=1.5?'#7da9ff':'var(--text)'}">${(d.vol_ratio || 1).toFixed(2)}×</div>
       <div class="vol-bar"><div class="vol-fill" style="width:${volPct}%;background:${d.vol_ratio>=1.5?'#7da9ff':'var(--up)'}"></div></div>
+      ${d.vol_z !== undefined && d.vol_z >= 2.0 ? `<div class="cell-sub" style="font-size:8.5px;color:${d.vol_z>=3.0?'#ffb300':'#7da9ff'};font-weight:600;">⚡ +${d.vol_z.toFixed(1)}σ</div>` : ''}
     </div>
     
     <div class="td" data-label="Supertrend">
@@ -213,29 +214,33 @@ function rowHtml(d) {
     
     <div class="td" style="align-items:center;" data-label="RS">
       <span class="rs-badge ${d.rs_rating>=90?'rs-high':(d.rs_rating>=70?'rs-med':'rs-low')}" style="background:${d.rs_rating>=90?'var(--up-dim)':(d.rs_rating>=70?'rgba(94,150,255,0.12)':'rgba(239,83,80,0.08)')};color:${d.rs_rating>=90?'var(--up)':(d.rs_rating>=70?'#7da9ff':'#a85a58')}">${d.rs_rating ?? 1}</span>
-      <div class="cell-sub" style="font-size:8px;margin-top:2px">RS Rating</div>
     </div>
     
-    <div class="td" onclick="event.stopPropagation()" style="align-items:center;justify-content:center;" data-label="TV">
-      <a class="tv-btn" href="${tvUrl}" target="_blank" title="Open in TradingView">↗</a>
+    <div class="td" data-label="TV" style="align-items:center;">
+      <a href="https://in.tradingview.com/chart/?symbol=NSE:${encodeURIComponent(d.sym)}" target="_blank" rel="noopener noreferrer" class="tv-link" title="Open ${d.sym} in TradingView" onclick="event.stopPropagation()">↗</a>
     </div>
   </div>`;
 }
 
 function renderTable() {
-  if (!allData.length) return;
-  const searchEl = document.getElementById('search-box');
-  const search   = searchEl ? searchEl.value.toLowerCase() : '';
-  const sort     = document.getElementById('sort-sel') ? document.getElementById('sort-sel').value : 'rs-desc';
-  let data = allData.map(d => ({...d, pass: passes(d)}));
-  if (search) data = data.filter(d => d.sym.toLowerCase().includes(search) || d.name.toLowerCase().includes(search) || d.ind.toLowerCase().includes(search));
-  if (activeSector) data = data.filter(d => d.ind === activeSector);
-  if (filters.pass) data = data.filter(d => d.pass);
-  if (filters.watchlist) data = data.filter(d => pinnedStocks.includes(d.sym));
+  const q = (document.getElementById('search-box')?.value || '').trim();
+  const search = q.toUpperCase();
+  const sort = document.getElementById('sort-sel')?.value || 'rs-desc';
+  
+  let data = allData.filter(passes);
+
+  if (search) {
+    data = data.filter(d => 
+      d.sym.toUpperCase().includes(search) || 
+      d.name.toUpperCase().includes(search) || 
+      d.ind.toUpperCase().includes(search)
+    );
+  }
   
   data.sort((a,b) => {
     if (sort==='rs-desc')    return (b.rs_rating ?? 0) - (a.rs_rating ?? 0);
-    if (sort==='inst-desc')  return ((b.institutional && b.institutional.inst_score) || (b.rs_rating ?? 0)) - ((a.institutional && a.institutional.inst_score) || (a.rs_rating ?? 0));
+    if (sort==='inst-desc')  return ((b.institutional && b.institutional.inst_score) || b.rs_rating || 0) - ((a.institutional && a.institutional.inst_score) || a.rs_rating || 0);
+    if (sort==='volz-desc')  return (b.vol_z || b.vol_ratio || 0) - (a.vol_z || a.vol_ratio || 0);
     if (sort==='deliv-desc') return ((b.institutional && b.institutional.deliv_ratio) || (b.vol_ratio ?? 0)) - ((a.institutional && a.institutional.deliv_ratio) || (a.vol_ratio ?? 0));
     if (sort==='ars-desc')   return b.ars - a.ars;
     if (sort==='ars-asc')    return a.ars - b.ars;
@@ -309,6 +314,8 @@ function sortData(arr) {
     copy.sort((a,b) => a.ars - b.ars);
   } else if (sortCol === 'srs-desc') {
     copy.sort((a,b) => b.srs - a.srs);
+  } else if (sortCol === 'volz-desc') {
+    copy.sort((a,b) => (b.vol_z || b.vol_ratio || 0) - (a.vol_z || a.vol_ratio || 0));
   } else if (sortCol === 'vol-desc') {
     copy.sort((a,b) => b.vol_ratio - a.vol_ratio);
   } else if (sortCol === '52w-desc') {

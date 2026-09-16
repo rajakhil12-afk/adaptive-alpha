@@ -530,6 +530,53 @@ function calcDeliverySpurt(delivQty, avgDelivQty, delivPct) {
   };
 }
 
+// Statistical Volume Z-Score & Anomaly Detector (50-session standard deviation)
+function calcVolumeZScore(candles, period = 50) {
+  const len = candles ? candles.length : 0;
+  if (len < 10) {
+    return { z_score: 0, mean_vol: 0, std_vol: 0, is_anomaly: false, percentile: 50, label: 'Normal' };
+  }
+
+  // Lookback window on historical volumes prior to current session
+  const lookback = candles.slice(Math.max(0, len - period - 1), len - 1);
+  const volumes = lookback.map(c => typeof c.v === 'number' && !isNaN(c.v) ? c.v : 0);
+  const n = volumes.length || 1;
+
+  const mean = volumes.reduce((s, v) => s + v, 0) / n;
+  const variance = volumes.reduce((s, v) => s + Math.pow(v - mean, 2), 0) / n;
+  const std = Math.sqrt(variance);
+
+  const todayVol = candles[len - 1]?.v || 0;
+  const z = std > 0 ? (todayVol - mean) / std : 0;
+
+  // Empirical percentile rank within the lookback sample
+  const belowCount = volumes.filter(v => v <= todayVol).length;
+  const percentile = Math.min(99, Math.max(1, Math.round((belowCount / n) * 100)));
+
+  let label = 'Normal';
+  let isAnomaly = false;
+  if (z >= 3.0) {
+    label = 'Extreme Spike (≥3σ)';
+    isAnomaly = true;
+  } else if (z >= 2.0) {
+    label = 'Volume Anomaly (≥2σ)';
+    isAnomaly = true;
+  } else if (z >= 1.0) {
+    label = 'Elevated (+1σ)';
+  } else if (z <= -1.0) {
+    label = 'Dry-up (-1σ)';
+  }
+
+  return {
+    z_score: parseFloat(z.toFixed(2)),
+    mean_vol: Math.round(mean),
+    std_vol: Math.round(std),
+    is_anomaly: isAnomaly,
+    percentile,
+    label
+  };
+}
+
 // Module export for Node.js / Universal export for browser
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -541,7 +588,8 @@ if (typeof module !== 'undefined' && module.exports) {
     calcARS,
     computeRSRatings,
     calcAccumulationDistribution,
-    calcDeliverySpurt
+    calcDeliverySpurt,
+    calcVolumeZScore
   };
 } else if (typeof window !== 'undefined') {
   window.Indicators = {
@@ -553,7 +601,8 @@ if (typeof module !== 'undefined' && module.exports) {
     calcARS,
     computeRSRatings,
     calcAccumulationDistribution,
-    calcDeliverySpurt
+    calcDeliverySpurt,
+    calcVolumeZScore
   };
 }
 
