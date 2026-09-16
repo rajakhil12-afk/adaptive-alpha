@@ -11,7 +11,8 @@ const {
   calcARS, 
   computeRSRatings,
   calcAccumulationDistribution,
-  calcDeliverySpurt 
+  calcDeliverySpurt,
+  calcVolumeZScore
 } = require('../js/indicators');
 
 function fetchFiiDiiData() {
@@ -516,6 +517,7 @@ async function run() {
       const vcpData = calcVCP(stockHist);
       const pocketPivot = calcPocketPivot(stockHist);
       const adData = calcAccumulationDistribution(stockHist, 20);
+      const volZData = calcVolumeZScore(stockHist, 50);
 
       // Institutional delivery calculations
       const vSlice20 = stockHist.slice(Math.max(0, stockHist.length - 20));
@@ -529,6 +531,7 @@ async function run() {
       const bulkMatch = bulkDeals[stock.sym] || null;
       let instScore = adData.accumulation_score;
       if (delivSpurt.is_spurt) instScore = Math.min(99, instScore + 8);
+      if (volZData.is_anomaly) instScore = Math.min(99, instScore + 6);
       if (bulkMatch && bulkMatch.action === 'BUY') instScore = Math.min(99, instScore + 12);
       if (bulkMatch && bulkMatch.action === 'SELL') instScore = Math.max(1, instScore - 12);
 
@@ -542,6 +545,10 @@ async function run() {
         mrs: mrsData.mrs,
         mrs_trend: mrsData.mrs_trend,
         vol_ratio: parseFloat(calc.vol_ratio.toFixed(2)),
+        vol_z: volZData.z_score,
+        vol_z_label: volZData.label,
+        vol_percentile: volZData.percentile,
+        vol_anomaly: volZData.is_anomaly,
         hi52_prox: parseFloat(calc.hi52_prox.toFixed(4)),
         price: parseFloat(calc.price.toFixed(2)),
         breakout: calc.breakout,

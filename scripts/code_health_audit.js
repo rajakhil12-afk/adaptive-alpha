@@ -146,7 +146,7 @@ htmlFiles.forEach(htmlFile => {
 // ── CHECK 5: Indicator Mathematical Edge Cases ──
 console.log('\n--- 5. MATHEMATICAL ENGINE EDGE CASE STRESS TEST ---');
 try {
-  const { calcSupertrend, calcARS, calcMansfieldRS, calcVCP, calcPocketPivot, calcIchimoku } = require('../js/indicators');
+  const { calcSupertrend, calcARS, calcMansfieldRS, calcVCP, calcPocketPivot, calcIchimoku, calcVolumeZScore } = require('../js/indicators');
 
   const emptyRes = calcSupertrend([], 10, 3);
   logCheck('Supertrend empty candle array safety', emptyRes && emptyRes.val === 0);
@@ -164,6 +164,9 @@ try {
 
   const ichiFlat = calcIchimoku(flatCandles);
   logCheck('Ichimoku flat price safety', ichiFlat && !isNaN(ichiFlat.tenkan));
+
+  const vzFlat = calcVolumeZScore(flatCandles, 50);
+  logCheck('Volume Z-score flat volume safety', vzFlat && vzFlat.z_score === 0);
 } catch (mathErr) {
   logCheck('Mathematical edge cases', false, mathErr.message);
 }
