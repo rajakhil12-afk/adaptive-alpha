@@ -107,6 +107,7 @@
       <span class="chip" id="f-pocketpivot" onclick="toggleChip('pocketpivot')" data-tooltip="pocketpivot">Pocket Pivot <span class="info-icon">i</span></span>
       <span class="chip" id="f-vol" onclick="toggleChip('vol')" data-tooltip="rsr">Vol &ge; 1.5×</span>
       <span class="chip" id="f-volsurge" onclick="toggleChip('volsurge')" data-tooltip="rsr">Surge &ge; 2.0×</span>
+      <span class="chip" id="f-volz" onclick="toggleChip('volz')" data-tooltip="volz">⚡ Z-Score &ge; 2.0σ <span class="info-icon">i</span></span>
       <span class="chip" id="f-52w" onclick="toggleChip('52w')" data-tooltip="hi52">Near 52W High <span class="info-icon">i</span></span>
       <span class="chip" id="f-st" onclick="toggleChip('st')" data-tooltip="st">Supertrend BUY <span class="info-icon">i</span></span>
       <span class="chip" id="f-quad1" onclick="toggleChip('quad1')" data-tooltip="quad">🌟 Q1 Leaders <span class="info-icon">i</span></span>
@@ -129,6 +130,7 @@
       <select id="sort-sel" onchange="renderTable()" style="margin-left:auto">
         <option value="rs-desc">Sort: RS Rating (High → Low)</option>
         <option value="inst-desc">Sort: Institutional Accumulation Score</option>
+        <option value="volz-desc">Sort: Volume Z-Score Anomaly (σ)</option>
         <option value="deliv-desc">Sort: Delivery Surge Ratio</option>
         <option value="ars-desc">Sort: ARS Outperformance (High → Low)</option>
         <option value="ars-asc">Sort: ARS Underperformance</option>
@@ -255,6 +257,7 @@
         <div class="ms-card"><div class="ms-label" data-tooltip="mrs">Mansfield RS <span class="info-icon">i</span></div><div class="ms-val" id="m-mrs" style="color:var(--up)">—</div></div>
         <div class="ms-card"><div class="ms-label" data-tooltip="rsr">RS Rating <span class="info-icon">i</span></div><div class="ms-val" id="m-rsr">—</div></div>
         <div class="ms-card"><div class="ms-label" data-tooltip="inst">Inst. Score <span class="info-icon">i</span></div><div class="ms-val" id="m-inst-score" style="color:var(--up)">—</div></div>
+        <div class="ms-card"><div class="ms-label" data-tooltip="volz">Vol Z-Score <span class="info-icon">i</span></div><div class="ms-val" id="m-volz" style="color:#7da9ff">—</div></div>
         <div class="ms-card"><div class="ms-label" data-tooltip="vcp">VCP Squeeze <span class="info-icon">i</span></div><div class="ms-val" id="m-vcp" style="color:#7da9ff">—</div></div>
         <div class="ms-card"><div class="ms-label">Days in Trend</div><div class="ms-val" id="m-days">—</div></div>
         <div class="ms-card"><div class="ms-label" data-tooltip="st">Supertrend <span class="info-icon">i</span></div><div class="ms-val" id="m-st">—</div></div>
@@ -386,13 +389,14 @@
       <div class="trendlyne-section" style="margin-top: 14px; background: var(--bg3); border-radius: var(--radius); border: 1px solid var(--border); padding: 12px; box-sizing: border-box;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
           <span style="font-size: 11px; font-weight: 700; color: var(--text);">Trendlyne® Analysis</span>
-          <div class="tl-tab-group" style="display: flex; gap: 4px;">
+          <div class="tl-tab-group" style="display: flex; gap: 4px; align-items: center;">
             <button class="tf-btn active" id="tl-tab-swot" onclick="switchTLTab('swot')">SWOT</button>
             <button class="tf-btn" id="tl-tab-tech" onclick="switchTLTab('tech')">Technicals</button>
             <button class="tf-btn" id="tl-tab-qvt" onclick="switchTLTab('qvt')">QVT Score</button>
+            <button class="tf-btn" onclick="reloadTrendlyneWidget()" title="Reload Widget" style="padding: 4px 8px; font-size: 11px;">↻</button>
           </div>
         </div>
-        <div id="tl-widget-container" style="min-height: 200px; width: 100%; border-radius: var(--radius); overflow: hidden; background: var(--bg2);"></div>
+        <div id="tl-widget-container" style="min-height: 280px; width: 100%; border-radius: var(--radius); overflow: hidden; background: var(--bg2);"></div>
       </div>
 
       <div class="modal-actions" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; gap: 8px;">
