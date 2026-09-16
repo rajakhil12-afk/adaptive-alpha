@@ -9,7 +9,8 @@ const {
   calcARS,
   computeRSRatings,
   calcAccumulationDistribution,
-  calcDeliverySpurt
+  calcDeliverySpurt,
+  calcVolumeZScore
 } = require('../js/indicators');
 
 // Helper to generate synthetic test candles
@@ -175,6 +176,31 @@ test('Delivery Spurt Detector — detects volume delivery spikes and ratios', ()
   const normal = calcDeliverySpurt(100000, 120000, 32.1);
   assert.strictEqual(normal.is_spurt, false);
   assert.strictEqual(normal.deliv_label, 'Normal');
+});
+
+test('Volume Z-Score Anomaly Detector — validates statistical standard deviation spikes', () => {
+  // Generate 60 candles with consistent ~1,000 baseline volume
+  const candles = generateCandles(60, 100, 0, 1000);
+  const len = candles.length;
+
+  // Case 1: Normal volume session
+  const normalRes = calcVolumeZScore(candles, 50);
+  assert.ok(normalRes, 'Z-Score should return analysis object');
+  assert.strictEqual(normalRes.is_anomaly, false);
+  assert.ok(Math.abs(normalRes.z_score) < 2.0, 'Normal baseline should have Z < 2.0');
+
+  // Case 2: Extreme Volume Surge (3.5x standard deviation spike)
+  candles[len - 1].v = 5000; // 5x normal volume
+  const surgeRes = calcVolumeZScore(candles, 50);
+  assert.ok(surgeRes.z_score >= 3.0, `Surge volume should produce Z >= 3.0 (got ${surgeRes.z_score})`);
+  assert.strictEqual(surgeRes.is_anomaly, true);
+  assert.ok(surgeRes.percentile >= 95, 'Surge volume should be in top percentiles');
+  assert.ok(surgeRes.label.includes('≥3σ') || surgeRes.label.includes('Anomaly'));
+
+  // Case 3: Insufficient candles safety
+  const emptyRes = calcVolumeZScore([], 50);
+  assert.strictEqual(emptyRes.z_score, 0);
+  assert.strictEqual(emptyRes.is_anomaly, false);
 });
 
 
