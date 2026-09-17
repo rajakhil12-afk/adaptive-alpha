@@ -3,6 +3,18 @@
  * Handles table row formatting, sparklines, badges, sorting, and tag badges.
  */
 
+const THEMATIC_SECTORS = {
+  'HAL': '🛡️ Defence', 'BEL': '🛡️ Defence', 'BDL': '🛡️ Defence', 'MAZDOCK': '🛡️ Defence', 'COCHINSHIP': '🛡️ Defence', 'GRSE': '🛡️ Defence', 'PARAS': '🛡️ Defence', 'ZENTEC': '🛡️ Defence', 'DATAPATTNS': '🛡️ Defence', 'BEML': '🛡️ Defence', 'BHARATFORG': '🛡️ Defence', 'ASTRAMICRO': '🛡️ Defence', 'SOLARINDS': '🛡️ Defence', 'MTARTECH': '🛡️ Defence',
+  'RVNL': '🚆 Railways', 'IRFC': '🚆 Railways', 'IRCON': '🚆 Railways', 'RAILTEL': '🚆 Railways', 'TITAGARH': '🚆 Railways', 'JUPITERWAG': '🚆 Railways', 'TEXRAIL': '🚆 Railways', 'RITES': '🚆 Railways',
+  'SUZLON': '⚡ Green Energy', 'INOXWIND': '⚡ Green Energy', 'IREDA': '⚡ Green Energy', 'ADANIGREEN': '⚡ Green Energy', 'BORORENEW': '⚡ Green Energy', 'KPIGREEN': '⚡ Green Energy', 'TATAPOWER': '⚡ Green Energy', 'JSWENERGY': '⚡ Green Energy',
+  'DIXON': '🔌 EMS / Electronics', 'KAYNES': '🔌 EMS / Electronics', 'SYRMA': '🔌 EMS / Electronics', 'CYIENTDLM': '🔌 EMS / Electronics', 'PGEL': '🔌 EMS / Electronics', 'AVALON': '🔌 EMS / Electronics', 'AMBER': '🔌 EMS / Electronics',
+  'SBIN': '🏛️ PSU Bank', 'PNB': '🏛️ PSU Bank', 'BANKBARODA': '🏛️ PSU Bank', 'CANBK': '🏛️ PSU Bank', 'UNIONBANK': '🏛️ PSU Bank', 'INDIANB': '🏛️ PSU Bank', 'MAHABANK': '🏛️ PSU Bank', 'CENTRALBK': '🏛️ PSU Bank', 'IOB': '🏛️ PSU Bank', 'UCOBANK': '🏛️ PSU Bank',
+  'INDHOTEL': '✈️ Hotels & Travel', 'EIHOTEL': '✈️ Hotels & Travel', 'LEMONTREE': '✈️ Hotels & Travel', 'CHALET': '✈️ Hotels & Travel', 'INDIGO': '✈️ Hotels & Travel', 'EASEMYTRIP': '✈️ Hotels & Travel', 'BLS': '✈️ Hotels & Travel',
+  'POLYCAB': '🏗️ Cables & Pipes', 'KEI': '🏗️ Cables & Pipes', 'RRKABEL': '🏗️ Cables & Pipes', 'ASTRAL': '🏗️ Cables & Pipes', 'FINPIPE': '🏗️ Cables & Pipes', 'SUPREMEIND': '🏗️ Cables & Pipes', 'PRINCEPIPE': '🏗️ Cables & Pipes',
+  'TITAN': '💎 Jewellery', 'KALYANKJIL': '💎 Jewellery', 'SENCO': '💎 Jewellery', 'THANGAMAYL': '💎 Jewellery',
+  'PIIND': '🌾 Agrochem', 'DEEPAKNTR': '🌾 Agrochem', 'SRF': '🌾 Agrochem', 'COROMANDEL': '🌾 Agrochem', 'CHAMBLFERT': '🌾 Agrochem', 'FACT': '🌾 Agrochem', 'GNFC': '🌾 Agrochem'
+};
+
 function arsClass(v, breakout) {
   if (breakout) return 'c-breakout';
   if (v === null || v === undefined) return 'c-gray';
@@ -123,6 +135,9 @@ function rowHtml(d) {
   else if (d.vol_ratio >= 1.5) tags.push('<span class="tag tag-vol">VOL+</span>');
   else if (d.vol_ratio <= 0.7) tags.push('<span class="tag tag-vcp">🧘 Dry-up</span>');
   
+  const themeTag = THEMATIC_SECTORS[d.sym];
+  if (themeTag) tags.push(`<span class="tag tag-theme" style="background:rgba(59,130,246,0.14);color:#60a5fa;border:1px solid rgba(59,130,246,0.35);font-weight:700;">${themeTag}</span>`);
+
   if (d.mrs != null && d.mrs > 0) tags.push('<span class="tag" style="background:rgba(38,166,154,0.12);color:var(--up);">MRS+</span>');
   if (d.is_fno || (typeof window !== 'undefined' && window.FNO_SET && window.FNO_SET.has(d.sym))) tags.push('<span class="tag tag-fno" style="background:rgba(227,179,65,0.12);color:var(--gold);border:1px solid rgba(227,179,65,0.25)">F&O</span>');
   if (d.breakout)          tags.push('<span class="tag tag-new">*NEW*</span>');
@@ -228,6 +243,16 @@ function renderTable() {
   const sort = document.getElementById('sort-sel')?.value || 'rs-desc';
   
   let data = allData.filter(passes);
+
+  if (activeSector) {
+    const thm = (typeof THEMATIC_GROUPS !== 'undefined') ? THEMATIC_GROUPS.find(g => g.name === activeSector || g.code === activeSector) : null;
+    if (thm) {
+      const symSet = new Set(thm.syms);
+      data = data.filter(d => symSet.has(d.sym));
+    } else {
+      data = data.filter(d => d.ind === activeSector);
+    }
+  }
 
   if (search) {
     data = data.filter(d => 
