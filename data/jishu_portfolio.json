@@ -2,14 +2,14 @@
   "bot_name": "Jishu",
   "version": "1.0.0",
   "created_at": "2026-09-02T20:25:00+05:30",
-  "last_updated": "2026-09-16T18:09:57.996Z",
+  "last_updated": "2026-09-17T18:10:42.734Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 81.76000000002387,
-    "invested_capital": 936506.05,
-    "total_equity": 936587.81,
+    "invested_capital": 947532.8,
+    "total_equity": 947614.56,
     "realized_pnl": -30182.040000000005,
-    "unrealized_pnl": -33230.15,
+    "unrealized_pnl": -22203.4,
     "win_rate": 16.7,
     "total_trades": 6,
     "winning_trades": 1,
@@ -41,9 +41,9 @@
       "target_2_price": 14792.7,
       "sl_moved_to_cost": false,
       "highest_price": 11379,
-      "current_price": 10930,
-      "unrealized_pnl": -3592,
-      "unrealized_pnl_pct": -3.945865190262765
+      "current_price": 11010,
+      "unrealized_pnl": -2952,
+      "unrealized_pnl_pct": -3.2428157131558133
     },
     {
       "sym": "ELGIEQUIP",
@@ -61,9 +61,9 @@
       "target_2_price": 811.46,
       "sl_moved_to_cost": false,
       "highest_price": 624.2,
-      "current_price": 592.5,
-      "unrealized_pnl": -5072.000000000007,
-      "unrealized_pnl_pct": -5.078500480615195
+      "current_price": 593.3,
+      "unrealized_pnl": -4944.000000000015,
+      "unrealized_pnl_pct": -4.950336430631222
     },
     {
       "sym": "BHEL",
@@ -81,9 +81,9 @@
       "target_2_price": 566.74,
       "sl_moved_to_cost": false,
       "highest_price": 435.95,
-      "current_price": 410.6,
-      "unrealized_pnl": -5805.149999999992,
-      "unrealized_pnl_pct": -5.814887028328929
+      "current_price": 429.2,
+      "unrealized_pnl": -1545.75,
+      "unrealized_pnl_pct": -1.5483426998509005
     },
     {
       "sym": "BALRAMCHIN",
@@ -101,9 +101,9 @@
       "target_2_price": 852.48,
       "sl_moved_to_cost": false,
       "highest_price": 705.15,
-      "current_price": 682.6,
-      "unrealized_pnl": 4081.2000000000035,
-      "unrealized_pnl_pct": 4.094548227220743
+      "current_price": 675.7,
+      "unrealized_pnl": 3032.400000000007,
+      "unrealized_pnl_pct": 3.0423179565383216
     },
     {
       "sym": "GRAPHITE",
@@ -121,9 +121,9 @@
       "target_2_price": 1098.05,
       "sl_moved_to_cost": false,
       "highest_price": 844.65,
-      "current_price": 805.05,
-      "unrealized_pnl": -4672.800000000003,
-      "unrealized_pnl_pct": -4.688332445391586
+      "current_price": 814.1,
+      "unrealized_pnl": -3604.8999999999946,
+      "unrealized_pnl_pct": -3.6168827324927433
     },
     {
       "sym": "SUNDRMFAST",
@@ -141,9 +141,9 @@
       "target_2_price": 1632.93,
       "sl_moved_to_cost": false,
       "highest_price": 1270,
-      "current_price": 1219.9,
-      "unrealized_pnl": -2859.7999999999856,
-      "unrealized_pnl_pct": -2.8819361515802737
+      "current_price": 1226.7,
+      "unrealized_pnl": -2322.5999999999894,
+      "unrealized_pnl_pct": -2.3405779794602233
     },
     {
       "sym": "GRANULES",
@@ -161,9 +161,9 @@
       "target_2_price": 1182.09,
       "sl_moved_to_cost": false,
       "highest_price": 909.3,
-      "current_price": 835.6,
-      "unrealized_pnl": -8033.299999999993,
-      "unrealized_pnl_pct": -8.105135818761678
+      "current_price": 870.4,
+      "unrealized_pnl": -4240.099999999998,
+      "unrealized_pnl_pct": -4.278016056307047
     },
     {
       "sym": "RAYMOND",
@@ -181,9 +181,9 @@
       "target_2_price": 1303.64,
       "sl_moved_to_cost": false,
       "highest_price": 1002.8,
-      "current_price": 993.9,
-      "unrealized_pnl": -881.0999999999977,
-      "unrealized_pnl_pct": -0.8875149581172694
+      "current_price": 978.2,
+      "unrealized_pnl": -2435.399999999991,
+      "unrealized_pnl_pct": -2.4531312325488543
     },
     {
       "sym": "TATAINVEST",
@@ -200,10 +200,10 @@
       "target_1_price": 862.02,
       "target_2_price": 933.86,
       "sl_moved_to_cost": false,
-      "highest_price": 718.35,
-      "current_price": 681.95,
-      "unrealized_pnl": -4586.399999999997,
-      "unrealized_pnl_pct": -5.067167815131897
+      "highest_price": 719.3,
+      "current_price": 719.3,
+      "unrealized_pnl": 119.6999999999914,
+      "unrealized_pnl_pct": 0.13224751165865273
     },
     {
       "sym": "FSL",
@@ -221,9 +221,9 @@
       "target_2_price": 368.36,
       "sl_moved_to_cost": false,
       "highest_price": 283.35,
-      "current_price": 277.75,
-      "unrealized_pnl": -1808.8000000000075,
-      "unrealized_pnl_pct": -1.9763543320981198
+      "current_price": 273.1,
+      "unrealized_pnl": -3310.75,
+      "unrealized_pnl_pct": -3.6174342685724366
     }
   ],
   "closed_trades": [
@@ -380,6 +380,15 @@
       "total_equity": 936587.81,
       "realized_pnl": -30182.04,
       "unrealized_pnl": -33230.15,
+      "open_positions_count": 10
+    },
+    {
+      "date": "2026-09-17",
+      "cash": 81.76,
+      "invested": 947532.8,
+      "total_equity": 947614.56,
+      "realized_pnl": -30182.04,
+      "unrealized_pnl": -22203.4,
       "open_positions_count": 10
     }
   ],
