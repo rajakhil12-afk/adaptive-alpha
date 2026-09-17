@@ -213,20 +213,68 @@
 
   <!-- ═══════ TAB 5: SECTOR ROTATION TAB (RRG) ═══════ -->
   <div id="tab-sectors" style="display:none;">
-    <div class="rrg-container">
+    <!-- Active Sector Rotation Summary Banner -->
+    <div class="rrg-summary-banner" id="rrg-summary-banner"></div>
+
+    <!-- Dual Visual Cockpit: RRG Clock (Left) + Sector RS Ranking Donut (Right) -->
+    <div class="rrg-visual-cockpit">
+      <!-- Left: RRG Radar Scatter Clock -->
       <div class="rrg-card-wrap">
-        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
-          <span>Relative Rotation Graph (RRG) Clock</span>
-          <span style="font-size:10px;color:var(--muted)">vs NIFTY 50</span>
+        <div class="rrg-header-row">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="rrg-header-title">🏛️ Relative Rotation Graph (RRG)</span>
+            <span class="badge badge-blue">RS-Ratio vs RS-Momentum</span>
+          </div>
+          <span style="font-size:10px;color:var(--muted);font-family:var(--font-num);">Benchmark: NIFTY 50 (0, 0)</span>
         </div>
         <div id="rrg-clock-container"></div>
-        <div style="font-size:9.5px;color:var(--muted);line-height:1.4;margin-top:8px;">
-          Sectors rotate clockwise: <strong>Improving (Blue) → Leading (Green) → Weakening (Yellow) → Lagging (Red)</strong>.
+        <div class="rrg-rotation-guide">
+          <span>Clockwise Cycle:</span>
+          <span style="color:#3b82f6;font-weight:700;">Improving</span> ➔
+          <span style="color:#10b981;font-weight:700;">Leading</span> ➔
+          <span style="color:#f59e0b;font-weight:700;">Weakening</span> ➔
+          <span style="color:#ef4444;font-weight:700;">Lagging</span>
         </div>
       </div>
-      <div>
-        <div class="sector-grid" id="sector-grid"></div>
+
+      <!-- Right: Interactive Sector RS Ranking Donut Wheel -->
+      <div class="rrg-donut-card-wrap">
+        <div class="rrg-header-row">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="rrg-header-title">🎯 Sector RS Ranking Wheel</span>
+            <span class="badge badge-green" id="donut-mode-badge">Rank #1 to #20</span>
+          </div>
+          <div class="donut-type-toggle">
+            <button class="hm-filter-btn active" id="btn-donut-primary" onclick="setDonutScope('primary')">All Sectors</button>
+            <button class="hm-filter-btn" id="btn-donut-thematic" onclick="setDonutScope('thematic')">🌟 Thematic</button>
+          </div>
+        </div>
+        <div id="rrg-donut-container" style="position:relative;display:flex;align-items:center;justify-content:center;min-height:360px;"></div>
+        <div style="font-size:9.5px;color:var(--muted);text-align:center;margin-top:4px;">
+          Hover slice to inspect sector ranking metrics · Click any slice to filter screener table
+        </div>
       </div>
+    </div>
+
+    <!-- Below: Sector Breakdown Table & Cards -->
+    <div class="rrg-details-wrap" style="margin-top:14px;">
+      <div class="rrg-view-switcher">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Sector View:</span>
+          <div style="display:flex;gap:6px;">
+            <button class="hm-filter-btn active" id="btn-sec-view-table" onclick="setSectorViewMode('table')">📋 Breakdown Table</button>
+            <button class="hm-filter-btn" id="btn-sec-view-cards" onclick="setSectorViewMode('cards')">🃏 Sector Cards</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <span style="font-size:10px;color:var(--muted);font-weight:600;">Filter Scope:</span>
+          <button class="hm-filter-btn active" id="btn-tbl-all" onclick="setSectorFilterScope('all')">All 20 Sectors</button>
+          <button class="hm-filter-btn" id="btn-tbl-thematic" onclick="setSectorFilterScope('thematic')">🌟 Thematic Themes (9)</button>
+        </div>
+      </div>
+
+      <div id="sector-table-container"></div>
+      <div class="sector-grid" id="sector-grid" style="display:none;"></div>
     </div>
     <div class="rrg-tooltip" id="rrg-tooltip"></div>
   </div>
