@@ -494,6 +494,22 @@
   </div>
 </div>
 
+<!-- ═══════ STANDARD & POOR'S / CNN 7-PILLAR MARKET SENTIMENT MODAL ═══════ -->
+<div class="sentiment-modal-overlay" id="sentiment-modal" onclick="closeSentimentModal(event)" style="display:none;">
+  <div class="sentiment-modal-dialog" onclick="event.stopPropagation()">
+    <div class="sentiment-modal-header">
+      <div>
+        <div class="sentiment-modal-title">🌡️ Institutional Market Fear &amp; Greed Index</div>
+        <div class="sentiment-modal-subtitle">Standard &amp; Poor's / CNN 7-Pillar Quantitative Model adapted for Nifty 50 &amp; NSE</div>
+      </div>
+      <button class="sentiment-modal-close" onclick="closeSentimentModal()" title="Close Modal">✕</button>
+    </div>
+    <div class="sentiment-modal-body" id="sentiment-modal-content">
+      <!-- Dynamically generated 7 pillars -->
+    </div>
+  </div>
+</div>
+
 <!-- Stale Toast Notice -->
 <div id="stale-toast">
   <span class="toast-icon">⏱</span>
