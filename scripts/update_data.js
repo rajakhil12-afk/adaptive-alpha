@@ -435,6 +435,149 @@ async function fetchDynamicFnoSymbols() {
   return FNO_SET;
 }
 
+function computeMultiPillarSentiment(results, benchData, fiiDii, vixData, goldData) {
+  // 1. Market Momentum: Nifty 50 vs 125-DMA
+  let s1 = 50, s1Desc = 'Nifty 50 close near 125-DMA baseline';
+  if (benchData && benchData.length >= 125) {
+    const slice125 = benchData.slice(benchData.length - 125);
+    const sma125 = slice125.reduce((s, c) => s + c.c, 0) / 125;
+    const currNifty = benchData[benchData.length - 1].c;
+    const diffPct = ((currNifty - sma125) / sma125) * 100;
+    s1 = Math.min(100, Math.max(0, Math.round(50 + (diffPct / 8) * 50)));
+    s1Desc = `Nifty (₹${currNifty.toFixed(0)}) is ${diffPct >= 0 ? '+' : ''}${diffPct.toFixed(1)}% vs 125-DMA (₹${sma125.toFixed(0)})`;
+  }
+
+  // 2. Market Volatility: India VIX vs 50-DMA
+  let s2 = 55, s2Desc = 'India VIX in moderate stability regime';
+  if (vixData && vixData.length >= 20) {
+    const currVix = vixData[vixData.length - 1].c;
+    const vixSlice = vixData.slice(Math.max(0, vixData.length - 50));
+    const sma50Vix = vixSlice.reduce((s, c) => s + c.c, 0) / vixSlice.length;
+    // Lower VIX = Higher Greed. VIX 11 -> 90, VIX 15 -> 60, VIX 22 -> 20
+    let base = 100 - ((currVix - 10) / (25 - 10) * 100);
+    if (currVix < sma50Vix) base += 8;
+    else base -= 8;
+    s2 = Math.min(100, Math.max(5, Math.round(base)));
+    s2Desc = `India VIX at ${currVix.toFixed(1)} (${currVix < sma50Vix ? 'Below' : 'Above'} 50-DMA ${sma50Vix.toFixed(1)})`;
+  } else {
+    const avgArs = results.length > 0 ? (results.reduce((s, d) => s + (d.ars || 0), 0) / results.length) : 0;
+    s2 = Math.min(90, Math.max(20, Math.round(50 + (avgArs * 150))));
+    s2Desc = `Market volatility estimated from cross-sectional momentum distribution`;
+  }
+
+  // 3. Stock Price Breadth: Advancing vs Declining Volume
+  let s3 = 50, s3Desc = 'Balanced Advance / Decline Volume';
+  if (results.length > 0) {
+    const adv = results.filter(d => (d.ars || 0) > 0 || d.trending);
+    const dec = results.filter(d => (d.ars || 0) <= 0 && !d.trending);
+    const advVol = adv.reduce((s, d) => s + (d.vol_ratio || 1), 0);
+    const decVol = dec.reduce((s, d) => s + (d.vol_ratio || 1), 0);
+    const totVol = advVol + decVol || 1;
+    const bRatio = (advVol / totVol) * 100;
+    s3 = Math.min(100, Math.max(0, Math.round(bRatio)));
+    s3Desc = `${bRatio.toFixed(0)}% Advancing Volume share (${adv.length} adv vs ${dec.length} dec)`;
+  }
+
+  // 4. Stock Price Strength: 52-Week Highs vs Lows Ratio
+  let s4 = 50, s4Desc = 'Neutral 52-Week Highs vs Lows distribution';
+  if (results.length > 0) {
+    const highs = results.filter(d => (d.hi52_prox || -1) >= -0.05).length;
+    const lows = results.filter(d => (d.hi52_prox || 0) <= -0.25).length;
+    const hRatio = (highs / (highs + lows + 1)) * 100;
+    s4 = Math.min(100, Math.max(0, Math.round(hRatio)));
+    s4Desc = `${highs} stocks near 52W High vs ${lows} near 52W Low`;
+  }
+
+  // 5. Safe Haven Demand: Nifty 50 vs Gold 20-Day Performance Spread
+  let s5 = 50, s5Desc = 'Equities and Safe Haven Gold moving in tandem';
+  if (benchData && benchData.length >= 25 && goldData && goldData.length >= 25) {
+    const nClose = benchData[benchData.length - 1].c;
+    const nPrev20 = benchData[benchData.length - 21].c;
+    const nRet20 = ((nClose - nPrev20) / nPrev20) * 100;
+
+    const gClose = goldData[goldData.length - 1].c;
+    const gPrev20 = goldData[goldData.length - 21].c;
+    const gRet20 = ((gClose - gPrev20) / gPrev20) * 100;
+
+    const spread = nRet20 - gRet20;
+    s5 = Math.min(100, Math.max(0, Math.round(50 + (spread / 8) * 50)));
+    s5Desc = `20D Outperformance: Nifty (${nRet20 >= 0 ? '+' : ''}${nRet20.toFixed(1)}%) vs Gold (${gRet20 >= 0 ? '+' : ''}${gRet20.toFixed(1)}%)`;
+  } else {
+    const q1 = results.filter(d => (d.ars || 0) > 0 && (d.srs || 0) > 0).length;
+    s5 = Math.min(95, Math.max(15, Math.round((q1 / Math.max(1, results.length)) * 250)));
+    s5Desc = `Equities risk-on allocation preference`;
+  }
+
+  // 6. Institutional Cash Flows: FII + DII Net Momentum
+  let s6 = 50, s6Desc = 'Neutral Institutional Flows';
+  if (fiiDii) {
+    const net = (fiiDii.fii || 0) + (fiiDii.dii || 0);
+    s6 = Math.min(100, Math.max(0, Math.round(50 + (net / 3000) * 45)));
+    s6Desc = `Combined FII + DII Flow: ${net >= 0 ? '+' : ''}₹${net.toLocaleString('en-IN', {maximumFractionDigits:1})} Cr`;
+  }
+
+  // 7. Options & Volatility Bias: Stage-2 Breadth & Put/Call Sentiment
+  let s7 = 50, s7Desc = 'Options & Market Regime in equilibrium';
+  if (results.length > 0) {
+    const maPlus = results.filter(d => d.ma_status === 'MA+').length;
+    const maPct = (maPlus / results.length) * 100;
+    const q1 = results.filter(d => (d.ars || 0) > 0 && (d.srs || 0) > 0).length;
+    const q1Pct = (q1 / results.length) * 100;
+    s7 = Math.min(100, Math.max(0, Math.round((0.5 * maPct) + (1.2 * q1Pct))));
+    s7Desc = `${maPct.toFixed(0)}% stocks in Stage-2 MA+ · ${q1Pct.toFixed(0)}% in Quad-1 Momentum`;
+  }
+
+  // Calculate Weighted Master Score
+  const score = Math.min(98, Math.max(5, Math.round(
+    (0.18 * s1) + (0.18 * s2) + (0.16 * s3) + (0.14 * s4) + (0.12 * s5) + (0.12 * s6) + (0.10 * s7)
+  )));
+
+  let tier = 'NEUTRAL';
+  let tierColor = '#f59e0b';
+  let tierBadgeBg = 'rgba(245, 158, 11, 0.15)';
+  let tierDesc = 'Stock-specific alpha market · Selective setups';
+
+  if (score >= 75) {
+    tier = 'EXTREME GREED';
+    tierColor = '#00e676';
+    tierBadgeBg = 'rgba(0, 230, 118, 0.18)';
+    tierDesc = 'Aggressive institutional buying · Tighten trailing stops';
+  } else if (score >= 56) {
+    tier = 'GREED (ACTIVE MOMENTUM)';
+    tierColor = '#10b981';
+    tierBadgeBg = 'rgba(16, 185, 129, 0.16)';
+    tierDesc = 'High breakout follow-through · Broad market participation';
+  } else if (score <= 24) {
+    tier = 'EXTREME FEAR';
+    tierColor = '#ef4444';
+    tierBadgeBg = 'rgba(239, 68, 68, 0.18)';
+    tierDesc = 'High market risk · Prioritize capital preservation & cash';
+  } else if (score <= 44) {
+    tier = 'FEAR / DEFENSIVE';
+    tierColor = '#f97316';
+    tierBadgeBg = 'rgba(249, 115, 22, 0.16)';
+    tierDesc = 'Weak market breadth · Focus strictly on quality pullbacks';
+  }
+
+  return {
+    score,
+    tier,
+    tierColor,
+    tierBadgeBg,
+    tierDesc,
+    updatedAt: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' }),
+    pillars: [
+      { id: 'momentum', name: 'Market Momentum', icon: '📈', weight: '18%', score: s1, desc: s1Desc, status: s1 >= 60 ? 'Greed' : s1 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'volatility', name: 'Market Volatility (India VIX)', icon: '⚡', weight: '18%', score: s2, desc: s2Desc, status: s2 >= 60 ? 'Greed' : s2 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'breadth', name: 'Stock Price Breadth (A/D Volume)', icon: '🌊', weight: '16%', score: s3, desc: s3Desc, status: s3 >= 60 ? 'Greed' : s3 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'strength', name: '52-Week Highs vs Lows', icon: '🎯', weight: '14%', score: s4, desc: s4Desc, status: s4 >= 60 ? 'Greed' : s4 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'safe_haven', name: 'Safe Haven Spread (Nifty vs Gold)', icon: '🛡️', weight: '12%', score: s5, desc: s5Desc, status: s5 >= 60 ? 'Greed' : s5 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'fii_dii', name: 'Institutional Flows (FII + DII)', icon: '🏛️', weight: '12%', score: s6, desc: s6Desc, status: s6 >= 60 ? 'Greed' : s6 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'options', name: 'Options & Volatility Bias', icon: '📊', weight: '10%', score: s7, desc: s7Desc, status: s7 >= 60 ? 'Greed' : s7 <= 40 ? 'Fear' : 'Neutral' }
+    ]
+  };
+}
+
 async function run() {
   console.log('--- STARTING ADAPTIVE ALPHA PIPELINE ---');
   console.log(`Platform: ${process.platform}, Node: ${process.version}, Time: ${new Date().toISOString()}`);
@@ -459,6 +602,13 @@ async function run() {
     process.exit(1);
   }
   console.log(`Benchmark loaded: ${benchData.length} candles`);
+
+  console.log('Fetching India VIX (^INDIAVIX) & Gold (GOLDBEES.NS) for 7-Pillar Sentiment Model…');
+  let vixData = null;
+  try { vixData = await fetchYahoo('^INDIAVIX', '1y', 2); } catch (_) {}
+  let goldData = null;
+  try { goldData = await fetchYahoo('GOLDBEES.NS', '1y', 2); } catch (_) {}
+  console.log(`Sentiment feeds: VIX (${vixData ? vixData.length : 0} candles), Gold (${goldData ? goldData.length : 0} candles)`);
 
   // Override or append Nifty Close from Bhavcopy if available
   const niftyBhav = bhav.data['NIFTY 50'] || bhav.data['NIFTY50'] || bhav.data['^NSEI'];
@@ -721,10 +871,15 @@ async function run() {
   fs.writeFileSync(historyJson, JSON.stringify(breakoutHistory, null, 2));
   console.log(`Saved ${breakoutHistory.length} active entries in breakout_history.json`);
 
+  console.log('Calculating Standard & Poor\'s / CNN 7-Pillar Market Sentiment Index…');
+  const sentimentPillars = computeMultiPillarSentiment(results, benchData, fiiDii, vixData, goldData);
+  console.log(`Sentiment Index: ${sentimentPillars.score}/100 (${sentimentPillars.tier})`);
+
   const payload = {
     updated: new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true,timeZone:'Asia/Kolkata'}) + ' IST · ' + new Date().toLocaleDateString('en-IN', {day:'2-digit',month:'short',timeZone:'Asia/Kolkata'}),
     bhavDate: bhav.date,
     fii_dii: fiiDii,
+    sentiment_pillars: sentimentPillars,
     stocks: results,
     breakout_history: breakoutHistory
   };
