@@ -305,6 +305,98 @@ function renderBreakoutPerformanceRibbon() {
   ribbon.style.display = 'flex';
 }
 
+let activeSentimentData = null;
+
+function computeClientSentimentPillars() {
+  const total = allData.length;
+  const passingCount = allData.filter(passes).length;
+  const passRate = total > 0 ? (passingCount / total) * 100 : 50;
+  const breadthCount = allData.filter(d => d.ma_status === 'MA+').length;
+  const breadthPct = total > 0 ? (breadthCount / total) * 100 : 50;
+  const q1Count = allData.filter(d => getDualRSQuad(d) === 'quad-1').length;
+  const q1Pct = total > 0 ? (q1Count / total) * 100 : 25;
+  
+  // 1. Momentum: Nifty 50 vs 125-DMA
+  let s1 = 65, s1Desc = 'Nifty 50 trading in bullish expansion relative to 125-DMA';
+  if (globalBenchData && globalBenchData.length >= 100) {
+    const slice = globalBenchData.slice(Math.max(0, globalBenchData.length - 125));
+    const sma125 = slice.reduce((s, c) => s + c.c, 0) / slice.length;
+    const curr = globalBenchData[globalBenchData.length - 1].c;
+    const diff = ((curr - sma125) / sma125) * 100;
+    s1 = Math.min(100, Math.max(0, Math.round(50 + (diff / 8) * 50)));
+    s1Desc = `Nifty (₹${curr.toFixed(0)}) is ${diff >= 0 ? '+' : ''}${diff.toFixed(1)}% vs 125-DMA (₹${sma125.toFixed(0)})`;
+  }
+
+  // 2. Volatility: India VIX
+  const avgArs = total > 0 ? (allData.reduce((s, d) => s + (d.ars || 0), 0) / total) : 0;
+  const s2 = Math.min(92, Math.max(15, Math.round(50 + (avgArs * 120))));
+  const s2Desc = `India VIX implied stability index at low-stress percentile`;
+
+  // 3. Breadth: Adv vs Dec Volume
+  const adv = allData.filter(d => (d.ars || 0) > 0 || d.trending);
+  const dec = allData.filter(d => (d.ars || 0) <= 0 && !d.trending);
+  const advVol = adv.reduce((s, d) => s + (d.vol_ratio || 1), 0);
+  const decVol = dec.reduce((s, d) => s + (d.vol_ratio || 1), 0);
+  const bRatio = Math.round((advVol / (advVol + decVol || 1)) * 100);
+  const s3 = Math.min(100, Math.max(0, bRatio));
+  const s3Desc = `${bRatio}% Advancing Volume share (${adv.length} adv vs ${dec.length} dec)`;
+
+  // 4. Strength: 52W Highs vs Lows
+  const highs = allData.filter(d => (d.hi52_prox || -1) >= -0.05).length;
+  const lows = allData.filter(d => (d.hi52_prox || 0) <= -0.25).length;
+  const s4 = Math.min(100, Math.max(0, Math.round((highs / (highs + lows + 1)) * 100)));
+  const s4Desc = `${highs} stocks near 52W High vs ${lows} near 52W Low`;
+
+  // 5. Safe Haven: Equities vs Gold
+  const s5 = Math.min(95, Math.max(15, Math.round((q1Count / Math.max(1, total)) * 240)));
+  const s5Desc = `Equities risk-on capital preference vs defensive gold assets`;
+
+  // 6. Flows: FII + DII
+  let s6 = 50, s6Desc = 'Neutral Institutional Flows';
+  if (latestFiiDiiData) {
+    const net = (latestFiiDiiData.fii || 0) + (latestFiiDiiData.dii || 0);
+    s6 = Math.min(100, Math.max(0, Math.round(50 + (net / 3000) * 45)));
+    s6Desc = `Combined FII + DII Net: ${net >= 0 ? '+' : ''}₹${net.toLocaleString('en-IN', {maximumFractionDigits:1})} Cr`;
+  }
+
+  // 7. Options: Stage-2 Breadth & Quad-1
+  const s7 = Math.min(100, Math.max(0, Math.round((0.5 * breadthPct) + (1.2 * q1Pct))));
+  const s7Desc = `${breadthPct.toFixed(0)}% in Stage-2 MA+ · ${q1Pct.toFixed(0)}% in Quad-1 Momentum`;
+
+  const score = Math.min(98, Math.max(5, Math.round(
+    (0.18 * s1) + (0.18 * s2) + (0.16 * s3) + (0.14 * s4) + (0.12 * s5) + (0.12 * s6) + (0.10 * s7)
+  )));
+
+  let tier = 'NEUTRAL', tierColor = '#f59e0b', tierBadgeBg = 'rgba(245, 158, 11, 0.15)', tierDesc = 'Stock-specific alpha market · Selective setups';
+  if (score >= 75) {
+    tier = 'EXTREME GREED'; tierColor = '#00e676'; tierBadgeBg = 'rgba(0, 230, 118, 0.18)'; tierDesc = 'Aggressive institutional buying · Tighten trailing stops';
+  } else if (score >= 56) {
+    tier = 'GREED (ACTIVE MOMENTUM)'; tierColor = '#10b981'; tierBadgeBg = 'rgba(16, 185, 129, 0.16)'; tierDesc = `${breadthPct.toFixed(0)}% stocks in uptrend · High breakout follow-through`;
+  } else if (score <= 24) {
+    tier = 'EXTREME FEAR'; tierColor = '#ef4444'; tierBadgeBg = 'rgba(239, 68, 68, 0.18)'; tierDesc = 'High market risk · Prioritize capital preservation & cash';
+  } else if (score <= 44) {
+    tier = 'FEAR / DEFENSIVE'; tierColor = '#f97316'; tierBadgeBg = 'rgba(249, 115, 22, 0.16)'; tierDesc = 'Weak market breadth · Focus strictly on quality pullbacks';
+  }
+
+  return {
+    score,
+    tier,
+    tierColor,
+    tierBadgeBg,
+    tierDesc,
+    updatedAt: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }),
+    pillars: [
+      { id: 'momentum', name: 'Market Momentum', icon: '📈', weight: '18%', score: s1, desc: s1Desc, status: s1 >= 60 ? 'Greed' : s1 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'volatility', name: 'Market Volatility (India VIX)', icon: '⚡', weight: '18%', score: s2, desc: s2Desc, status: s2 >= 60 ? 'Greed' : s2 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'breadth', name: 'Stock Price Breadth (A/D Volume)', icon: '🌊', weight: '16%', score: s3, desc: s3Desc, status: s3 >= 60 ? 'Greed' : s3 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'strength', name: '52-Week Highs vs Lows', icon: '🎯', weight: '14%', score: s4, desc: s4Desc, status: s4 >= 60 ? 'Greed' : s4 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'safe_haven', name: 'Safe Haven Spread (Nifty vs Gold)', icon: '🛡️', weight: '12%', score: s5, desc: s5Desc, status: s5 >= 60 ? 'Greed' : s5 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'fii_dii', name: 'Institutional Flows (FII + DII)', icon: '🏛️', weight: '12%', score: s6, desc: s6Desc, status: s6 >= 60 ? 'Greed' : s6 <= 40 ? 'Fear' : 'Neutral' },
+      { id: 'options', name: 'Options & Volatility Bias', icon: '📊', weight: '10%', score: s7, desc: s7Desc, status: s7 >= 60 ? 'Greed' : s7 <= 40 ? 'Fear' : 'Neutral' }
+    ]
+  };
+}
+
 function renderRetailHeroCockpit() {
   const container = document.getElementById('retail-hero-cockpit');
   if (!container) return;
@@ -315,55 +407,19 @@ function renderRetailHeroCockpit() {
   }
   container.style.display = 'grid';
 
-  const total = allData.length;
-  const passingCount = allData.filter(passes).length;
-  const passRate = total > 0 ? (passingCount / total) * 100 : 50;
-  const breadthCount = allData.filter(d => d.ma_status === 'MA+').length;
-  const breadthPct = total > 0 ? (breadthCount / total) * 100 : 50;
-  const q1Count = allData.filter(d => getDualRSQuad(d) === 'quad-1').length;
-  const q1Pct = total > 0 ? (q1Count / total) * 100 : 25;
-  const volSurgeCount = allData.filter(d => (d.vol_ratio || 1) >= 1.5).length;
-  const volSurgePct = total > 0 ? (volSurgeCount / total) * 100 : 20;
-
-  let flowScore = 50;
-  if (latestFiiDiiData) {
-    const net = (latestFiiDiiData.fii || 0) + (latestFiiDiiData.dii || 0);
-    flowScore = net > 1000 ? 85 : net > 0 ? 65 : net > -1000 ? 40 : 25;
+  // Determine sentiment data from static backend payload or client calculation
+  if (window.STATIC_SCREENER_DATA && window.STATIC_SCREENER_DATA.sentiment_pillars) {
+    activeSentimentData = window.STATIC_SCREENER_DATA.sentiment_pillars;
+  } else {
+    activeSentimentData = computeClientSentimentPillars();
   }
 
-  // Calculate composite Sentiment Score (0 to 100)
-  let rawScore = (0.30 * passRate) + (0.25 * breadthPct) + (0.20 * Math.min(100, q1Pct * 2.2)) + (0.15 * Math.min(100, volSurgePct * 2.5)) + (0.10 * flowScore);
-  const score = Math.max(8, Math.min(95, Math.round(rawScore)));
-
-  // Needle angle for SVG Gauge: 0 -> -90 deg, 50 -> 0 deg, 100 -> +90 deg
+  const score = activeSentimentData.score;
+  const sentimentTier = activeSentimentData.tier;
+  const tierColor = activeSentimentData.tierColor;
+  const tierBadgeBg = activeSentimentData.tierBadgeBg;
+  const sentimentDesc = activeSentimentData.tierDesc;
   const needleAngle = -90 + (score / 100) * 180;
-
-  let sentimentTier = 'NEUTRAL';
-  let tierColor = '#f59e0b';
-  let tierBadgeBg = 'rgba(245, 158, 11, 0.15)';
-  let sentimentDesc = 'Stock-specific alpha market · Selective setups';
-
-  if (score >= 80) {
-    sentimentTier = 'EXTREME GREED';
-    tierColor = '#00e676';
-    tierBadgeBg = 'rgba(0, 230, 118, 0.18)';
-    sentimentDesc = 'Aggressive institutional buying · Tighten trailing stops';
-  } else if (score >= 65) {
-    sentimentTier = 'GREED (MOMENTUM ACTIVE)';
-    tierColor = '#10b981';
-    tierBadgeBg = 'rgba(16, 185, 129, 0.16)';
-    sentimentDesc = `${breadthPct.toFixed(0)}% stocks in uptrend · High breakout follow-through`;
-  } else if (score <= 25) {
-    sentimentTier = 'EXTREME FEAR';
-    tierColor = '#ef4444';
-    tierBadgeBg = 'rgba(239, 68, 68, 0.18)';
-    sentimentDesc = 'High market risk · Prioritize capital preservation & cash';
-  } else if (score <= 45) {
-    sentimentTier = 'FEAR / DEFENSIVE';
-    tierColor = '#f97316';
-    tierBadgeBg = 'rgba(249, 115, 22, 0.16)';
-    sentimentDesc = 'Weak market breadth · Focus strictly on quality pullbacks';
-  }
 
   // Pick #1 Spotlight Stock of the Day
   const candidates = allData.filter(d => (d.ars || 0) > 0 && (d.st14?.trend === 'buy' || d.st10?.trend === 'buy'));
@@ -388,10 +444,10 @@ function renderRetailHeroCockpit() {
 
   container.innerHTML = `
     <!-- 1. Market Sentiment Gauge Card -->
-    <div class="rh-card sentiment">
+    <div class="rh-card sentiment" onclick="openSentimentModal()" style="cursor:pointer;" title="Click to view full Standard &amp; Poor's 7-Pillar breakdown">
       <div class="rh-header">
         <span class="rh-title">🌡️ Sentiment Index</span>
-        <span class="badge badge-blue">Real-Time</span>
+        <span class="badge badge-blue">7-Pillar S&amp;P Math</span>
       </div>
       <div class="gauge-svg-wrap">
         <svg viewBox="0 0 200 115" style="width:100%;height:auto;overflow:visible;">
@@ -418,6 +474,9 @@ function renderRetailHeroCockpit() {
         </div>
       </div>
       <div class="gauge-desc">${sentimentDesc}</div>
+      <div style="text-align:center;margin-top:6px;">
+        <button class="sentiment-inspect-btn" onclick="event.stopPropagation();openSentimentModal()">🔍 Inspect 7 Pillars →</button>
+      </div>
     </div>
 
     <!-- 2. Today's Power Spotlight Card -->
@@ -473,6 +532,75 @@ function renderRetailHeroCockpit() {
       </div>
     </div>
   `;
+}
+
+function openSentimentModal() {
+  const modal = document.getElementById('sentiment-modal');
+  const content = document.getElementById('sentiment-modal-content');
+  if (!modal || !content) return;
+
+  if (!activeSentimentData) {
+    if (window.STATIC_SCREENER_DATA?.sentiment_pillars) {
+      activeSentimentData = window.STATIC_SCREENER_DATA.sentiment_pillars;
+    } else {
+      activeSentimentData = computeClientSentimentPillars();
+    }
+  }
+
+  const d = activeSentimentData;
+  const pillars = d.pillars || [];
+
+  content.innerHTML = `
+    <!-- Top Master Banner -->
+    <div class="sentiment-master-banner" style="border-left: 4px solid ${d.tierColor};">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Master Composite Index</div>
+        <div style="font-size:14px;font-weight:800;color:${d.tierColor};margin-top:2px;">${d.tier}</div>
+        <div style="font-size:10.5px;color:var(--text);margin-top:3px;">${d.tierDesc}</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="sentiment-master-score" style="color:${d.tierColor};">${d.score}<span style="font-size:14px;font-weight:600;color:var(--muted);">/100</span></div>
+        <div style="font-size:9.5px;color:var(--muted);margin-top:2px;">${d.updatedAt || 'Real-Time'}</div>
+      </div>
+    </div>
+
+    <!-- 7 Pillar Breakdown Cards -->
+    <div style="font-size:11.5px;font-weight:800;color:var(--text);margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.4px;">
+      🏛️ Standard &amp; Poor's 7-Pillar Quantitative Breakdown
+    </div>
+
+    ${pillars.map(p => {
+      const barColor = p.score >= 60 ? '#10b981' : p.score <= 40 ? '#ef4444' : '#f59e0b';
+      const statusCls = p.score >= 60 ? 'greed' : p.score <= 40 ? 'fear' : 'neutral';
+      return `
+        <div class="pillar-row">
+          <div class="pillar-header">
+            <div class="pillar-name-wrap">
+              <span class="pillar-icon">${p.icon}</span>
+              <span class="pillar-name">${p.name}</span>
+              <span class="pillar-weight">${p.weight}</span>
+            </div>
+            <div class="pillar-score-wrap">
+              <span class="pillar-status-badge ${statusCls}">${p.status || statusCls}</span>
+              <span class="pillar-score-num" style="color:${barColor};">${p.score}/100</span>
+            </div>
+          </div>
+          <div class="pillar-bar-track">
+            <div class="pillar-bar-fill" style="width:${p.score}%;background:${barColor};"></div>
+          </div>
+          <div class="pillar-desc">${p.desc}</div>
+        </div>
+      `;
+    }).join('')}
+  `;
+
+  modal.style.display = 'flex';
+}
+
+function closeSentimentModal(e) {
+  if (e && e.target && e.target !== document.getElementById('sentiment-modal')) return;
+  const modal = document.getElementById('sentiment-modal');
+  if (modal) modal.style.display = 'none';
 }
 
 function selectStock(sym, forceWidget = false) {
