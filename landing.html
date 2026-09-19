@@ -378,6 +378,58 @@
     will-change:transform, left, top;
   }
 
+  /* ---------- HERO LIVE COCKPIT & ALPHA SPOTLIGHT ---------- */
+  .hero-live-cockpit{
+    margin-top:28px; display:flex; flex-direction:column; gap:12px; max-width:520px;
+  }
+  .hero-sentiment-badge{
+    display:inline-flex; align-items:center; gap:8px; font-size:12px;
+    background:rgba(255,255,255,0.7); border:1px solid var(--glass-border);
+    padding:6px 14px; border-radius:999px; width:fit-content; backdrop-filter:blur(10px);
+    box-shadow:0 4px 12px rgba(20,35,90,0.06); font-family:'IBM Plex Mono', monospace;
+  }
+  .pulse-dot-sm{
+    width:8px; height:8px; border-radius:50%; background:#10B981; box-shadow:0 0 6px #10B981;
+    animation:pulse-dot 1.6s infinite ease-in-out;
+  }
+  @keyframes pulse-dot{0%,100%{transform:scale(1); opacity:1;} 50%{transform:scale(1.3); opacity:0.6;}}
+  .hero-spotlight-card{
+    background:var(--glass-strong); border:1px solid rgba(232,162,58,0.4);
+    border-radius:var(--radius-md); padding:14px 18px; backdrop-filter:blur(16px);
+    box-shadow:0 10px 30px rgba(232,162,58,0.12); transition:transform .2s, box-shadow .2s;
+  }
+  .hero-spotlight-card:hover{
+    transform:translateY(-2px); box-shadow:0 14px 36px rgba(232,162,58,0.18);
+  }
+  .spotlight-badge-label{
+    font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:700; color:#8A5A0F;
+    letter-spacing:0.06em; margin-bottom:6px;
+  }
+  .hero-spotlight-content{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+  .spot-sym{
+    font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; color:var(--ink); display:block;
+  }
+  .spot-name{
+    font-size:11px; color:var(--ink-soft);
+  }
+  .spot-metrics{
+    display:flex; align-items:center; gap:8px;
+  }
+  .spot-gain{
+    font-family:'IBM Plex Mono',monospace; font-weight:700; color:#0E9E70; font-size:13px;
+  }
+  .spot-tag{
+    font-size:10px; font-family:'IBM Plex Mono',monospace; background:rgba(20,184,166,0.12);
+    color:#0C7266; padding:3px 7px; border-radius:6px;
+  }
+  .spot-inspect-link{
+    font-size:11.5px; font-weight:700; color:#fff; background:linear-gradient(135deg, var(--accent), #1A2FB8);
+    padding:6px 12px; border-radius:8px; text-decoration:none; transition:opacity .15s;
+  }
+  .spot-inspect-link:hover{opacity:0.9;}
+
   /* ---------- PRODUCT PREVIEW MOCKUP ---------- */
   .preview-frame{
     border-radius:20px; overflow:hidden; background:#0E1220; box-shadow:var(--shadow-lift);
@@ -392,12 +444,19 @@
     background:rgba(255,255,255,0.05); padding:5px 12px; border-radius:8px; flex:1; max-width:320px;
   }
   .preview-body{padding:22px; background:linear-gradient(180deg, #0E1220, #10152A);}
-  .pv-row{display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap;}
+  .pv-row{display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;}
   .pv-chip{
     font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:#B9C2E0; background:rgba(255,255,255,0.06);
-    border:1px solid rgba(255,255,255,0.1); padding:6px 12px; border-radius:999px;
+    border:1px solid rgba(255,255,255,0.1); padding:6px 12px; border-radius:999px; cursor:pointer; transition:all .15s;
   }
-  .pv-chip.on{background:rgba(42,70,232,0.35); border-color:rgba(42,70,232,0.6); color:#DCE2FF;}
+  .pv-chip:hover{
+    background:rgba(255,255,255,0.14); color:#fff;
+  }
+  .pv-chip.active, .pv-chip.on{
+    background:linear-gradient(135deg, rgba(42,70,232,0.6), rgba(26,47,184,0.8)) !important;
+    border-color:rgba(147,197,253,0.6) !important; color:#fff !important;
+    box-shadow:0 4px 12px rgba(42,70,232,0.3);
+  }
   .pv-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:10px;}
   .pv-card{
     background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px;
@@ -441,6 +500,29 @@
           <a class="btn-primary" href="index.html">⚡ Launch Screener Terminal</a>
           <a class="btn-secondary" href="#matrix">See how the matrix works</a>
         </div>
+        
+        <!-- Live Market Pulse & Alpha Spotlight Teaser in Hero -->
+        <div class="hero-live-cockpit" id="heroLiveCockpit">
+          <div class="hero-sentiment-badge" id="heroSentimentBadge">
+            <span class="pulse-dot-sm"></span>
+            <span id="heroSentimentText">Market Sentiment: <strong>67 · Greed (Active Momentum)</strong></span>
+          </div>
+          <div class="hero-spotlight-card" id="heroSpotlightCard">
+            <div class="spotlight-badge-label">⭐ TODAY'S #1 HIGH-CONVICTION SETUP</div>
+            <div class="hero-spotlight-content">
+              <div>
+                <strong class="spot-sym" id="heroSpotSym">BEL</strong>
+                <span class="spot-name" id="heroSpotName">Bharat Electronics · Capital Goods</span>
+              </div>
+              <div class="spot-metrics">
+                <span class="spot-gain" id="heroSpotGain">+46.5% ARS</span>
+                <span class="spot-tag" id="heroSpotTag">⚡ 2.4× Vol · Inst A+</span>
+              </div>
+              <a href="index.html" class="spot-inspect-link">Inspect Setup →</a>
+            </div>
+          </div>
+        </div>
+
         <div class="hero-meta">
           <div><strong>500+</strong> NSE equities scanned</div>
           <div><strong>4</strong> momentum regimes</div>
@@ -509,12 +591,12 @@
           <span class="url">rajakhil12-afk.github.io/adaptive-alpha</span>
         </div>
         <div class="preview-body">
-          <div class="pv-row">
-            <span class="pv-chip on">🌟 Quad 1 Leaders</span>
-            <span class="pv-chip">🔄 Quad 2 Turnarounds</span>
-            <span class="pv-chip">⏸️ Quad 3 Dip Buys</span>
-            <span class="pv-chip">Supertrend BUY</span>
-            <span class="pv-chip">Vol Surge 2x+</span>
+          <div class="pv-row" id="pvFilterRow">
+            <span class="pv-chip active" data-filter="rocket" onclick="setPreviewFilter('rocket')">🚀 Rocket Breakouts</span>
+            <span class="pv-chip" data-filter="whale" onclick="setPreviewFilter('whale')">🐋 Whale Footprints (Inst A+)</span>
+            <span class="pv-chip" data-filter="leaders" onclick="setPreviewFilter('leaders')">🌟 Power Leaders (Q1)</span>
+            <span class="pv-chip" data-filter="reversal" onclick="setPreviewFilter('reversal')">🔄 Dip-Buyer's Reversal</span>
+            <span class="pv-chip" data-filter="multibagger" onclick="setPreviewFilter('multibagger')">💎 Multibagger (VCP/PP)</span>
           </div>
           <div class="pv-grid">
             <div class="pv-card"><div class="pv-sym">TRENT</div><div class="pv-bar"><i style="width:86%; background:#E8A23A"></i></div><div class="pv-val" style="color:#3FD68C">+142.6%</div></div>
@@ -930,19 +1012,38 @@
         var activeTab = document.querySelector('.board-tabs button.active');
         renderBoard(activeTab ? activeTab.getAttribute('data-tab') : 'all');
 
-        // 3. Update preview cards with top 6 live RS leaders
-        var previewCards = document.querySelectorAll('.pv-grid .pv-card');
-        var topLeaders = allStocks.filter(s => s.ars > 0).sort((a,b) => (b.rs_rating || 0) - (a.rs_rating || 0)).slice(0, 6);
-        topLeaders.forEach((s, idx) => {
-          if (previewCards[idx]) {
-            var symEl = previewCards[idx].querySelector('.pv-sym');
-            var valEl = previewCards[idx].querySelector('.pv-val');
-            var barEl = previewCards[idx].querySelector('.pv-bar i');
-            if (symEl) symEl.textContent = s.sym;
-            if (valEl) valEl.textContent = (s.ars >= 0 ? '+' : '') + (s.ars * 100).toFixed(1) + '%';
-            if (barEl) barEl.style.width = Math.min(100, Math.max(15, (s.rs_rating || 50))) + '%';
+        // 3. Update Hero Live Sentiment Pulse & Alpha Spotlight Card
+        if (data.sentiment_pillars) {
+          var sp = data.sentiment_pillars;
+          var sentText = document.getElementById('heroSentimentText');
+          if (sentText) {
+            sentText.innerHTML = 'Market Sentiment: <strong>' + sp.score + ' · ' + sp.tier + '</strong>';
           }
+        }
+
+        // Spotlight Setup
+        var candidates = allStocks.filter(s => (s.ars || 0) > 0 && (s.st14?.trend === 'buy' || s.st10?.trend === 'buy'));
+        candidates.sort((a, b) => {
+          var scoreA = ((a.rs_rating || 50) * 0.3) + ((a.ars || 0) * 25) + (Math.min(3, a.vol_ratio || 1) * 15) + (a.signDays != null && a.signDays <= 15 ? 15 : 0) + (a.institutional?.ad_grade === 'A+' ? 15 : 0);
+          var scoreB = ((b.rs_rating || 50) * 0.3) + ((b.ars || 0) * 25) + (Math.min(3, b.vol_ratio || 1) * 15) + (b.signDays != null && b.signDays <= 15 ? 15 : 0) + (b.institutional?.ad_grade === 'A+' ? 15 : 0);
+          return scoreB - scoreA;
         });
+        var spot = candidates[0] || allStocks[0];
+        if (spot) {
+          var symEl = document.getElementById('heroSpotSym');
+          var nameEl = document.getElementById('heroSpotName');
+          var gainEl = document.getElementById('heroSpotGain');
+          var tagEl = document.getElementById('heroSpotTag');
+          if (symEl) symEl.textContent = spot.sym;
+          if (nameEl) nameEl.textContent = spot.name + ' · ' + (spot.ind || 'Equities');
+          if (gainEl) gainEl.textContent = (spot.ars >= 0 ? '+' : '') + (spot.ars * 100).toFixed(1) + '% ARS';
+          if (tagEl) tagEl.textContent = '⚡ ' + (spot.vol_ratio ? spot.vol_ratio.toFixed(1) : '1.8') + '× Vol · Inst ' + (spot.institutional?.ad_grade || 'A+');
+        }
+
+        window.allLandingStocks = allStocks;
+        if (typeof window.setPreviewFilter === 'function') {
+          window.setPreviewFilter('rocket');
+        }
 
         // 4. Update date badge if available
         if (data.updated) {
@@ -953,6 +1054,45 @@
         console.log('Error loading dynamic landing feed:', err);
       }
     }
+
+    window.setPreviewFilter = function(filterKey) {
+      document.querySelectorAll('#pvFilterRow .pv-chip').forEach(c => {
+        c.classList.toggle('active', c.getAttribute('data-filter') === filterKey);
+      });
+
+      var stocks = window.allLandingStocks || [];
+      if (!stocks.length) return;
+
+      var filtered = [];
+      if (filterKey === 'rocket') {
+        filtered = stocks.filter(s => (s.hi52_prox || -1) >= -0.08 && (s.vol_ratio || 1) >= 1.4 && (s.ars || 0) > 0);
+      } else if (filterKey === 'whale') {
+        filtered = stocks.filter(s => s.institutional?.ad_grade === 'A+' || (s.vol_ratio || 1) >= 2.0);
+      } else if (filterKey === 'reversal') {
+        filtered = stocks.filter(s => (s.ars || 0) <= 0 && (s.srs || 0) > 0);
+      } else if (filterKey === 'multibagger') {
+        filtered = stocks.filter(s => s.is_vcp || s.pocket_pivot || (s.rs_rating || 0) >= 80);
+      } else {
+        filtered = stocks.filter(s => (s.ars || 0) > 0 && (s.srs || 0) > 0);
+      }
+
+      if (filtered.length < 6) {
+        filtered = [...filtered, ...stocks.filter(s => (s.ars || 0) > 0)].slice(0, 6);
+      }
+      filtered.sort((a,b) => (b.rs_rating || 0) - (a.rs_rating || 0));
+
+      var previewCards = document.querySelectorAll('.pv-grid .pv-card');
+      filtered.slice(0, 6).forEach((s, idx) => {
+        if (previewCards[idx]) {
+          var symEl = previewCards[idx].querySelector('.pv-sym');
+          var valEl = previewCards[idx].querySelector('.pv-val');
+          var barEl = previewCards[idx].querySelector('.pv-bar i');
+          if (symEl) symEl.textContent = s.sym;
+          if (valEl) valEl.textContent = (s.ars >= 0 ? '+' : '') + (s.ars * 100).toFixed(1) + '%';
+          if (barEl) barEl.style.width = Math.min(100, Math.max(15, (s.rs_rating || 50))) + '%';
+        }
+      });
+    };
 
     loadLiveFeed();
   })();
