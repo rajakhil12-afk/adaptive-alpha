@@ -427,18 +427,18 @@ function renderRetailHeroCockpit() {
   const isGreed = score > 55 && score <= 75;
   const isExtGreed = score > 75;
 
-  const getZoneStyle = (isActive, activeFill, activeStroke) => {
+  const getZoneAttrs = (isActive, baseGradId, activeGradId, baseBorder, activeBorder) => {
     if (isActive) {
-      return `fill="${activeFill}" stroke="${activeStroke}" stroke-width="2" filter="drop-shadow(0 0 6px ${activeStroke}66)"`;
+      return `fill="url(#${activeGradId})" stroke="#ffffff" stroke-width="2.6" filter="url(#cnn-3d-active-glow)" style="transform-origin: 135px 125px; transform: scale(1.025); transition: all 0.3s;"`;
     }
-    return `fill="rgba(255, 255, 255, 0.04)" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1"`;
+    return `fill="url(#${baseGradId})" stroke="${baseBorder}" stroke-width="1.2" stroke-opacity="0.7"`;
   };
 
-  const zone1Style = getZoneStyle(isExtFear, 'rgba(239, 68, 68, 0.35)', '#ef4444');
-  const zone2Style = getZoneStyle(isFear, 'rgba(248, 113, 113, 0.32)', '#f87171');
-  const zone3Style = getZoneStyle(isNeutral, 'rgba(245, 158, 11, 0.32)', '#f59e0b');
-  const zone4Style = getZoneStyle(isGreed, 'rgba(16, 185, 129, 0.32)', '#10b981');
-  const zone5Style = getZoneStyle(isExtGreed, 'rgba(0, 230, 118, 0.38)', '#00e676');
+  const zone1Style = getZoneAttrs(isExtFear, 'grad-z1-base', 'grad-z1-active', '#ef4444', '#fca5a5');
+  const zone2Style = getZoneAttrs(isFear, 'grad-z2-base', 'grad-z2-active', '#f97316', '#fdba74');
+  const zone3Style = getZoneAttrs(isNeutral, 'grad-z3-base', 'grad-z3-active', '#f59e0b', '#fde68a');
+  const zone4Style = getZoneAttrs(isGreed, 'grad-z4-base', 'grad-z4-active', '#10b981', '#6ee7b7');
+  const zone5Style = getZoneAttrs(isExtGreed, 'grad-z5-base', 'grad-z5-active', '#00e676', '#a7f3d0');
 
   const prevText = score >= 56 ? 'Greed' : (score <= 44 ? 'Fear' : 'Neutral');
   const weekText = score >= 56 ? 'Greed' : (score <= 44 ? 'Fear' : 'Neutral');
@@ -478,9 +478,81 @@ function renderRetailHeroCockpit() {
         <div class="cnn-gauge-pane">
           <svg viewBox="0 0 270 160" class="cnn-svg-gauge">
             <defs>
-              <filter id="cnn-needle-shadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.6"/>
+              <!-- 3D Active Sector Glow & Depth -->
+              <filter id="cnn-3d-active-glow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.85"/>
+                <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="${tierColor}" flood-opacity="0.8"/>
               </filter>
+
+              <!-- 3D Needle Shadow -->
+              <filter id="cnn-needle-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="3" stdDeviation="2" flood-color="#000000" flood-opacity="0.75"/>
+              </filter>
+
+              <!-- 3D Center Hub Pedestal Shadow -->
+              <filter id="cnn-hub-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.8"/>
+              </filter>
+
+              <!-- 3D Center Score Glow -->
+              <filter id="cnn-score-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000000" flood-opacity="0.9"/>
+              </filter>
+
+              <!-- Base Sector Gradients (Rich Color Fills) -->
+              <linearGradient id="grad-z1-base" x1="0%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#7f1d1d" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#ef4444" stop-opacity="0.5"/>
+              </linearGradient>
+              <linearGradient id="grad-z2-base" x1="0%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#9a3412" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#f97316" stop-opacity="0.5"/>
+              </linearGradient>
+              <linearGradient id="grad-z3-base" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#92400e" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.5"/>
+              </linearGradient>
+              <linearGradient id="grad-z4-base" x1="100%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#065f46" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#10b981" stop-opacity="0.5"/>
+              </linearGradient>
+              <linearGradient id="grad-z5-base" x1="100%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#064e3b" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#00e676" stop-opacity="0.55"/>
+              </linearGradient>
+
+              <!-- Active 3D Highlighting Gradients -->
+              <linearGradient id="grad-z1-active" x1="0%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#991b1b"/>
+                <stop offset="50%" stop-color="#ef4444"/>
+                <stop offset="100%" stop-color="#ff8585"/>
+              </linearGradient>
+              <linearGradient id="grad-z2-active" x1="0%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#c2410c"/>
+                <stop offset="50%" stop-color="#f97316"/>
+                <stop offset="100%" stop-color="#fdba74"/>
+              </linearGradient>
+              <linearGradient id="grad-z3-active" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#b45309"/>
+                <stop offset="50%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#fde68a"/>
+              </linearGradient>
+              <linearGradient id="grad-z4-active" x1="100%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#047857"/>
+                <stop offset="50%" stop-color="#10b981"/>
+                <stop offset="100%" stop-color="#6ee7b7"/>
+              </linearGradient>
+              <linearGradient id="grad-z5-active" x1="100%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#064e3b"/>
+                <stop offset="50%" stop-color="#00e676"/>
+                <stop offset="100%" stop-color="#a7f3d0"/>
+              </linearGradient>
+
+              <!-- 3D Center Hub Pedestal Gradient -->
+              <linearGradient id="grad-hub-3d" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1e293b"/>
+                <stop offset="100%" stop-color="#0b1120"/>
+              </linearGradient>
             </defs>
 
             <!-- 5 Zone Arc Sectors -->
@@ -491,30 +563,35 @@ function renderRetailHeroCockpit() {
             <path d="M 212.8 47.2 A 110 110 0 0 1 245.0 125.0 L 213.0 125.0 A 78 78 0 0 0 190.2 69.8 Z" ${zone5Style} />
 
             <!-- Zone Arc Text Labels -->
-            <text x="44" y="86" transform="rotate(-67.5 44 86)" text-anchor="middle" class="cnn-zone-lbl ${isExtFear ? 'active-lbl ext-fear' : ''}">EXTREME<tspan x="44" dy="9">FEAR</tspan></text>
-            <text x="88" y="44" transform="rotate(-27 88 44)" text-anchor="middle" class="cnn-zone-lbl ${isFear ? 'active-lbl fear' : ''}">FEAR</text>
-            <text x="135" y="36" text-anchor="middle" class="cnn-zone-lbl ${isNeutral ? 'active-lbl neutral' : ''}">NEUTRAL</text>
-            <text x="182" y="44" transform="rotate(27 182 44)" text-anchor="middle" class="cnn-zone-lbl ${isGreed ? 'active-lbl greed' : ''}">GREED</text>
-            <text x="226" y="86" transform="rotate(67.5 226 86)" text-anchor="middle" class="cnn-zone-lbl ${isExtGreed ? 'active-lbl ext-greed' : ''}">EXTREME<tspan x="226" dy="9">GREED</tspan></text>
+            <text x="44" y="86" transform="rotate(-67.5 44 86)" text-anchor="middle" class="cnn-zone-lbl ext-fear-lbl ${isExtFear ? 'active-lbl ext-fear' : ''}">EXTREME<tspan x="44" dy="9">FEAR</tspan></text>
+            <text x="88" y="44" transform="rotate(-27 88 44)" text-anchor="middle" class="cnn-zone-lbl fear-lbl ${isFear ? 'active-lbl fear' : ''}">FEAR</text>
+            <text x="135" y="36" text-anchor="middle" class="cnn-zone-lbl neutral-lbl ${isNeutral ? 'active-lbl neutral' : ''}">NEUTRAL</text>
+            <text x="182" y="44" transform="rotate(27 182 44)" text-anchor="middle" class="cnn-zone-lbl greed-lbl ${isGreed ? 'active-lbl greed' : ''}">GREED</text>
+            <text x="226" y="86" transform="rotate(67.5 226 86)" text-anchor="middle" class="cnn-zone-lbl ext-greed-lbl ${isExtGreed ? 'active-lbl ext-greed' : ''}">EXTREME<tspan x="226" dy="9">GREED</tspan></text>
 
             <!-- Dotted Ring Scale & Numbers -->
-            <path d="M 60 125 A 75 75 0 0 1 210 125" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.2" stroke-dasharray="2 4" />
+            <path d="M 60 125 A 75 75 0 0 1 210 125" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" stroke-dasharray="2 4" />
             <text x="68" y="123" class="cnn-scale-tick">0</text>
             <text x="88" y="82" class="cnn-scale-tick">25</text>
             <text x="135" y="63" text-anchor="middle" class="cnn-scale-tick">50</text>
             <text x="182" y="82" class="cnn-scale-tick">75</text>
             <text x="202" y="123" class="cnn-scale-tick">100</text>
 
-            <!-- Animated Needle -->
-            <g class="cnn-needle-group" style="transform-origin: 135px 125px; transform: rotate(${needleAngle}deg);">
-              <line x1="135" y1="125" x2="135" y2="40" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round" filter="url(#cnn-needle-shadow)" />
-              <line x1="135" y1="125" x2="135" y2="40" stroke="#93c5fd" stroke-width="1.2" stroke-linecap="round" />
-              <circle cx="135" cy="125" r="7" fill="#1e40af" stroke="#93c5fd" stroke-width="1.5" />
-              <circle cx="135" cy="125" r="2.5" fill="#ffffff" />
+            <!-- 3D Center Score Hub / Pedestal -->
+            <g class="cnn-3d-hub" filter="url(#cnn-hub-shadow)">
+              <rect x="94" y="112" width="82" height="42" rx="12" fill="url(#grad-hub-3d)" stroke="rgba(255,255,255,0.24)" stroke-width="1.5" />
+              <rect x="96" y="114" width="78" height="38" rx="10" fill="rgba(11, 18, 32, 0.94)" stroke="${tierColor}" stroke-width="1.2" stroke-opacity="0.85" />
+              <text x="135" y="125" text-anchor="middle" class="cnn-hub-tier-lbl" fill="${tierColor}">${sentimentTier.split(' ')[0]}</text>
+              <text x="135" y="146" text-anchor="middle" class="cnn-big-score" fill="#ffffff" filter="url(#cnn-score-glow)">${score}</text>
             </g>
 
-            <!-- Center Score Number -->
-            <text x="135" y="148" text-anchor="middle" class="cnn-big-score" fill="${tierColor}">${score}</text>
+            <!-- Animated High-Precision Needle -->
+            <g class="cnn-needle-group" style="transform-origin: 135px 125px; transform: rotate(${needleAngle}deg);">
+              <line x1="135" y1="125" x2="135" y2="34" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" filter="url(#cnn-needle-shadow)" />
+              <line x1="135" y1="125" x2="135" y2="34" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" />
+              <circle cx="135" cy="125" r="5.5" fill="#0284c7" stroke="#ffffff" stroke-width="1.5" />
+              <circle cx="135" cy="125" r="2" fill="#ffffff" />
+            </g>
           </svg>
           <div class="cnn-last-updated">Last updated: Today at ${activeSentimentData.updatedAt || '05:30 PM'} IST</div>
         </div>
