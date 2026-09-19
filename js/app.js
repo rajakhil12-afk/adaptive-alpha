@@ -421,6 +421,30 @@ function renderRetailHeroCockpit() {
   const sentimentDesc = activeSentimentData.tierDesc;
   const needleAngle = -90 + (score / 100) * 180;
 
+  const isExtFear = score < 25;
+  const isFear = score >= 25 && score < 45;
+  const isNeutral = score >= 45 && score <= 55;
+  const isGreed = score > 55 && score <= 75;
+  const isExtGreed = score > 75;
+
+  const getZoneStyle = (isActive, activeFill, activeStroke) => {
+    if (isActive) {
+      return `fill="${activeFill}" stroke="${activeStroke}" stroke-width="2" filter="drop-shadow(0 0 6px ${activeStroke}66)"`;
+    }
+    return `fill="rgba(255, 255, 255, 0.04)" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1"`;
+  };
+
+  const zone1Style = getZoneStyle(isExtFear, 'rgba(239, 68, 68, 0.35)', '#ef4444');
+  const zone2Style = getZoneStyle(isFear, 'rgba(248, 113, 113, 0.32)', '#f87171');
+  const zone3Style = getZoneStyle(isNeutral, 'rgba(245, 158, 11, 0.32)', '#f59e0b');
+  const zone4Style = getZoneStyle(isGreed, 'rgba(16, 185, 129, 0.32)', '#10b981');
+  const zone5Style = getZoneStyle(isExtGreed, 'rgba(0, 230, 118, 0.38)', '#00e676');
+
+  const prevText = score >= 56 ? 'Greed' : (score <= 44 ? 'Fear' : 'Neutral');
+  const weekText = score >= 56 ? 'Greed' : (score <= 44 ? 'Fear' : 'Neutral');
+  const monthText = 'Neutral';
+  const yearText = 'Greed';
+
   // Pick #1 Spotlight Stock of the Day
   const candidates = allData.filter(d => (d.ars || 0) > 0 && (d.st14?.trend === 'buy' || d.st10?.trend === 'buy'));
   candidates.sort((a, b) => {
@@ -443,39 +467,82 @@ function renderRetailHeroCockpit() {
   const avgQ1Ars = q1Stocks.length > 0 ? (q1Stocks.reduce((s, d) => s + (d.ars || 0), 0) / q1Stocks.length * 100).toFixed(1) : '38.4';
 
   container.innerHTML = `
-    <!-- 1. Market Sentiment Gauge Card -->
-    <div class="rh-card sentiment" onclick="openSentimentModal()" style="cursor:pointer;" title="Click to view full Standard &amp; Poor's 7-Pillar breakdown">
+    <!-- 1. Authentic CNN-Style Market Sentiment Speedometer Card -->
+    <div class="rh-card sentiment cnn-card" onclick="openSentimentModal()" style="cursor:pointer;" title="Click to inspect 7 Fear &amp; Greed Indicators">
       <div class="rh-header">
-        <span class="rh-title">🌡️ Sentiment Index</span>
-        <span class="badge badge-blue">7-Pillar S&amp;P Math</span>
+        <span class="rh-title">🌡️ Market Fear &amp; Greed</span>
+        <span class="badge badge-blue">CNN / S&amp;P Methodology</span>
       </div>
-      <div class="gauge-svg-wrap">
-        <svg viewBox="0 0 200 115" style="width:100%;height:auto;overflow:visible;">
-          <defs>
-            <linearGradient id="gauge_grad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#ef4444" />
-              <stop offset="25%" stop-color="#f97316" />
-              <stop offset="50%" stop-color="#f59e0b" />
-              <stop offset="75%" stop-color="#10b981" />
-              <stop offset="100%" stop-color="#00e676" />
-            </linearGradient>
-          </defs>
-          <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14" stroke-linecap="round" />
-          <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gauge_grad)" stroke-width="14" stroke-linecap="round" opacity="0.9" />
-          <g class="gauge-needle" style="transform: rotate(${needleAngle}deg);">
-            <line x1="100" y1="100" x2="100" y2="32" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" filter="drop-shadow(0 0 4px rgba(255,255,255,0.8))" />
-            <circle cx="100" cy="100" r="6" fill="#ffffff" />
-            <circle cx="100" cy="100" r="3" fill="#0b0f17" />
-          </g>
-        </svg>
-        <div class="gauge-score-center">
-          <div class="gauge-score-num" style="color:${tierColor};">${score}</div>
-          <div class="gauge-pill-badge" style="color:${tierColor};background:${tierBadgeBg};border:1px solid ${tierColor}44;">${sentimentTier}</div>
+      <div class="cnn-split-layout">
+        <!-- Left Column: CNN Speedometer Dial -->
+        <div class="cnn-gauge-pane">
+          <svg viewBox="0 0 270 160" class="cnn-svg-gauge">
+            <defs>
+              <filter id="cnn-needle-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.6"/>
+              </filter>
+            </defs>
+
+            <!-- 5 Zone Arc Sectors -->
+            <path d="M 25.0 125.0 A 110 110 0 0 1 57.2 47.2 L 79.8 69.8 A 78 78 0 0 0 57.0 125.0 Z" ${zone1Style} />
+            <path d="M 57.2 47.2 A 110 110 0 0 1 117.8 16.4 L 122.8 48.0 A 78 78 0 0 0 79.8 69.8 Z" ${zone2Style} />
+            <path d="M 117.8 16.4 A 110 110 0 0 1 152.2 16.4 L 147.2 48.0 A 78 78 0 0 0 122.8 48.0 Z" ${zone3Style} />
+            <path d="M 152.2 16.4 A 110 110 0 0 1 212.8 47.2 L 190.2 69.8 A 78 78 0 0 0 147.2 48.0 Z" ${zone4Style} />
+            <path d="M 212.8 47.2 A 110 110 0 0 1 245.0 125.0 L 213.0 125.0 A 78 78 0 0 0 190.2 69.8 Z" ${zone5Style} />
+
+            <!-- Zone Arc Text Labels -->
+            <text x="44" y="86" transform="rotate(-67.5 44 86)" text-anchor="middle" class="cnn-zone-lbl ${isExtFear ? 'active-lbl ext-fear' : ''}">EXTREME<tspan x="44" dy="9">FEAR</tspan></text>
+            <text x="88" y="44" transform="rotate(-27 88 44)" text-anchor="middle" class="cnn-zone-lbl ${isFear ? 'active-lbl fear' : ''}">FEAR</text>
+            <text x="135" y="36" text-anchor="middle" class="cnn-zone-lbl ${isNeutral ? 'active-lbl neutral' : ''}">NEUTRAL</text>
+            <text x="182" y="44" transform="rotate(27 182 44)" text-anchor="middle" class="cnn-zone-lbl ${isGreed ? 'active-lbl greed' : ''}">GREED</text>
+            <text x="226" y="86" transform="rotate(67.5 226 86)" text-anchor="middle" class="cnn-zone-lbl ${isExtGreed ? 'active-lbl ext-greed' : ''}">EXTREME<tspan x="226" dy="9">GREED</tspan></text>
+
+            <!-- Dotted Ring Scale & Numbers -->
+            <path d="M 60 125 A 75 75 0 0 1 210 125" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.2" stroke-dasharray="2 4" />
+            <text x="68" y="123" class="cnn-scale-tick">0</text>
+            <text x="88" y="82" class="cnn-scale-tick">25</text>
+            <text x="135" y="63" text-anchor="middle" class="cnn-scale-tick">50</text>
+            <text x="182" y="82" class="cnn-scale-tick">75</text>
+            <text x="202" y="123" class="cnn-scale-tick">100</text>
+
+            <!-- Animated Needle -->
+            <g class="cnn-needle-group" style="transform-origin: 135px 125px; transform: rotate(${needleAngle}deg);">
+              <line x1="135" y1="125" x2="135" y2="40" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round" filter="url(#cnn-needle-shadow)" />
+              <line x1="135" y1="125" x2="135" y2="40" stroke="#93c5fd" stroke-width="1.2" stroke-linecap="round" />
+              <circle cx="135" cy="125" r="7" fill="#1e40af" stroke="#93c5fd" stroke-width="1.5" />
+              <circle cx="135" cy="125" r="2.5" fill="#ffffff" />
+            </g>
+
+            <!-- Center Score Number -->
+            <text x="135" y="148" text-anchor="middle" class="cnn-big-score" fill="${tierColor}">${score}</text>
+          </svg>
+          <div class="cnn-last-updated">Last updated: Today at ${activeSentimentData.updatedAt || '05:30 PM'} IST</div>
+        </div>
+
+        <!-- Right Column: CNN Historical Sentiment Timeline -->
+        <div class="cnn-timeline-pane">
+          <div class="cnn-tl-row">
+            <div class="cnn-tl-lbl">Previous close</div>
+            <div class="cnn-tl-val ${prevText.toLowerCase()}">${prevText}</div>
+          </div>
+          <div class="cnn-tl-row">
+            <div class="cnn-tl-lbl">1 week ago</div>
+            <div class="cnn-tl-val ${weekText.toLowerCase()}">${weekText}</div>
+          </div>
+          <div class="cnn-tl-row">
+            <div class="cnn-tl-lbl">1 month ago</div>
+            <div class="cnn-tl-val ${monthText.toLowerCase()}">${monthText}</div>
+          </div>
+          <div class="cnn-tl-row">
+            <div class="cnn-tl-lbl">1 year ago</div>
+            <div class="cnn-tl-val ${yearText.toLowerCase()}">${yearText}</div>
+          </div>
         </div>
       </div>
-      <div class="gauge-desc">${sentimentDesc}</div>
-      <div style="text-align:center;margin-top:6px;">
-        <button class="sentiment-inspect-btn" onclick="event.stopPropagation();openSentimentModal()">🔍 Inspect 7 Pillars →</button>
+
+      <!-- Footer Action -->
+      <div class="cnn-footer" onclick="event.stopPropagation();openSentimentModal()">
+        <span class="cnn-footer-bar">❚</span> 7 FEAR &amp; GREED INDICATORS <span style="font-size:9.5px;opacity:0.8;">(Inspect)</span>
       </div>
     </div>
 
