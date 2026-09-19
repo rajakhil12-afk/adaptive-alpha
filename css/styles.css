@@ -158,38 +158,56 @@ select:focus, button:focus { outline: none; border-color: var(--up); box-shadow:
   max-width: 215px;
   height: auto;
   overflow: visible;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
 }
 .cnn-zone-lbl {
   font-family: var(--font-sans);
   font-size: 7.5px;
   font-weight: 800;
-  fill: var(--muted);
-  letter-spacing: 0.3px;
-  transition: fill 0.3s;
+  letter-spacing: 0.4px;
+  transition: all 0.3s;
 }
+.cnn-zone-lbl.ext-fear-lbl { fill: #fca5a5; opacity: 0.9; }
+.cnn-zone-lbl.fear-lbl { fill: #fed7aa; opacity: 0.9; }
+.cnn-zone-lbl.neutral-lbl { fill: #fef08a; opacity: 0.9; }
+.cnn-zone-lbl.greed-lbl { fill: #a7f3d0; opacity: 0.9; }
+.cnn-zone-lbl.ext-greed-lbl { fill: #6ee7b7; opacity: 0.9; }
+
 .cnn-zone-lbl.active-lbl {
   font-size: 8.5px;
   font-weight: 900;
+  fill: #ffffff !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.9));
 }
-.cnn-zone-lbl.active-lbl.ext-fear { fill: #ef4444; }
-.cnn-zone-lbl.active-lbl.fear { fill: #f87171; }
-.cnn-zone-lbl.active-lbl.neutral { fill: #f59e0b; }
-.cnn-zone-lbl.active-lbl.greed { fill: #10b981; }
-.cnn-zone-lbl.active-lbl.ext-greed { fill: #00e676; }
+.cnn-zone-lbl.active-lbl.ext-fear { filter: drop-shadow(0 0 6px #ef4444); }
+.cnn-zone-lbl.active-lbl.fear { filter: drop-shadow(0 0 6px #f97316); }
+.cnn-zone-lbl.active-lbl.neutral { filter: drop-shadow(0 0 6px #f59e0b); }
+.cnn-zone-lbl.active-lbl.greed { filter: drop-shadow(0 0 6px #10b981); }
+.cnn-zone-lbl.active-lbl.ext-greed { filter: drop-shadow(0 0 6px #00e676); }
 
 .cnn-scale-tick {
   font-family: var(--font-num);
   font-size: 8px;
-  font-weight: 600;
-  fill: var(--muted);
+  font-weight: 700;
+  fill: rgba(255, 255, 255, 0.55);
 }
 .cnn-needle-group {
   transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+.cnn-hub-tier-lbl {
+  font-family: var(--font-sans);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
 .cnn-big-score {
   font-family: var(--font-num);
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 900;
+  letter-spacing: -0.5px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
 }
 .cnn-last-updated {
   font-size: 8.5px;
