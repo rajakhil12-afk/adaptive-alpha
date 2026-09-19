@@ -141,7 +141,113 @@ select:focus, button:focus { outline: none; border-color: var(--up); box-shadow:
   gap: 6px;
 }
 
-/* Fear & Greed Speedometer Arc */
+/* ── CNN-STYLE FEAR & GREED SPEEDOMETER & TIMELINE ── */
+.cnn-split-layout {
+  display: grid;
+  grid-template-columns: 1fr 95px;
+  gap: 8px;
+  align-items: center;
+}
+.cnn-gauge-pane {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.cnn-svg-gauge {
+  width: 100%;
+  max-width: 215px;
+  height: auto;
+  overflow: visible;
+}
+.cnn-zone-lbl {
+  font-family: var(--font-sans);
+  font-size: 7.5px;
+  font-weight: 800;
+  fill: var(--muted);
+  letter-spacing: 0.3px;
+  transition: fill 0.3s;
+}
+.cnn-zone-lbl.active-lbl {
+  font-size: 8.5px;
+  font-weight: 900;
+}
+.cnn-zone-lbl.active-lbl.ext-fear { fill: #ef4444; }
+.cnn-zone-lbl.active-lbl.fear { fill: #f87171; }
+.cnn-zone-lbl.active-lbl.neutral { fill: #f59e0b; }
+.cnn-zone-lbl.active-lbl.greed { fill: #10b981; }
+.cnn-zone-lbl.active-lbl.ext-greed { fill: #00e676; }
+
+.cnn-scale-tick {
+  font-family: var(--font-num);
+  font-size: 8px;
+  font-weight: 600;
+  fill: var(--muted);
+}
+.cnn-needle-group {
+  transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.cnn-big-score {
+  font-family: var(--font-num);
+  font-size: 26px;
+  font-weight: 900;
+}
+.cnn-last-updated {
+  font-size: 8.5px;
+  color: var(--muted);
+  font-family: var(--font-num);
+  margin-top: 2px;
+  text-align: center;
+}
+.cnn-timeline-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-left: 1px solid var(--border);
+  padding-left: 10px;
+}
+.cnn-tl-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.cnn-tl-lbl {
+  font-size: 8.5px;
+  color: var(--muted);
+  text-transform: none;
+}
+.cnn-tl-val {
+  font-size: 10.5px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  color: var(--text);
+}
+.cnn-tl-val.fear { color: #f87171; }
+.cnn-tl-val.greed { color: #10b981; }
+.cnn-tl-val.neutral { color: #f59e0b; }
+
+.cnn-footer {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s;
+}
+.cnn-footer:hover {
+  color: var(--up);
+}
+.cnn-footer-bar {
+  color: var(--up);
+  font-size: 11px;
+}
+
+/* Fear & Greed Speedometer Arc Fallback */
 .gauge-svg-wrap {
   position: relative;
   width: 100%;
