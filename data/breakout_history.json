@@ -6,8 +6,8 @@
     "triggerDate": "2026-08-14",
     "triggerPrice": 133490,
     "maxPrice": 133490,
-    "currentPrice": 124770,
-    "gainPct": -6.53,
+    "currentPrice": 124580,
+    "gainPct": -6.67,
     "maxGainPct": 0,
     "volRatioAtTrigger": 0.49,
     "rsRatingAtTrigger": 40
@@ -32,8 +32,8 @@
     "triggerDate": "2026-08-14",
     "triggerPrice": 1723.2,
     "maxPrice": 1851.72,
-    "currentPrice": 1613.2,
-    "gainPct": -6.38,
+    "currentPrice": 1635.8,
+    "gainPct": -5.07,
     "maxGainPct": 7.46,
     "volRatioAtTrigger": 0.95,
     "rsRatingAtTrigger": 43
@@ -45,8 +45,8 @@
     "triggerDate": "2026-08-10",
     "triggerPrice": 824.65,
     "maxPrice": 824.65,
-    "currentPrice": 763.1,
-    "gainPct": -7.46,
+    "currentPrice": 768.75,
+    "gainPct": -6.78,
     "maxGainPct": 0,
     "volRatioAtTrigger": 0.73,
     "rsRatingAtTrigger": 36
@@ -58,8 +58,8 @@
     "triggerDate": "2026-08-10",
     "triggerPrice": 561.25,
     "maxPrice": 561.25,
-    "currentPrice": 457.5,
-    "gainPct": -18.49,
+    "currentPrice": 464.2,
+    "gainPct": -17.29,
     "maxGainPct": 0,
     "volRatioAtTrigger": 0.84,
     "rsRatingAtTrigger": 62
@@ -71,8 +71,8 @@
     "triggerDate": "2026-08-12",
     "triggerPrice": 331.75,
     "maxPrice": 357.71,
-    "currentPrice": 320.5,
-    "gainPct": -3.39,
+    "currentPrice": 316.4,
+    "gainPct": -4.63,
     "maxGainPct": 7.83,
     "volRatioAtTrigger": 0.72,
     "rsRatingAtTrigger": 55
@@ -84,10 +84,10 @@
     "triggerDate": "2026-09-03",
     "triggerPrice": 5308.5,
     "maxPrice": 5419,
-    "currentPrice": 5373,
+    "currentPrice": 5394,
     "volRatioAtTrigger": 0.84,
     "rsRatingAtTrigger": 47,
-    "gainPct": 1.22,
+    "gainPct": 1.61,
     "maxGainPct": 2.08
   },
   {
@@ -97,10 +97,10 @@
     "triggerDate": "2026-09-03",
     "triggerPrice": 497.5,
     "maxPrice": 513.65,
-    "currentPrice": 474.7,
+    "currentPrice": 475,
     "volRatioAtTrigger": 0.82,
     "rsRatingAtTrigger": 33,
-    "gainPct": -4.58,
+    "gainPct": -4.52,
     "maxGainPct": 3.25
   },
   {
@@ -110,10 +110,10 @@
     "triggerDate": "2026-09-03",
     "triggerPrice": 165.43,
     "maxPrice": 165.43,
-    "currentPrice": 164.41,
+    "currentPrice": 164.12,
     "volRatioAtTrigger": 0.86,
     "rsRatingAtTrigger": 46,
-    "gainPct": -0.62,
+    "gainPct": -0.79,
     "maxGainPct": 0
   },
   {
@@ -122,10 +122,10 @@
     "ind": "Financial Services",
     "triggerDate": "2026-08-11",
     "triggerPrice": 1733,
-    "maxPrice": 1870,
-    "currentPrice": 1805,
-    "gainPct": 4.15,
-    "maxGainPct": 7.91,
+    "maxPrice": 1886.3,
+    "currentPrice": 1886.3,
+    "gainPct": 8.85,
+    "maxGainPct": 8.85,
     "volRatioAtTrigger": 0.68,
     "rsRatingAtTrigger": 59
   },
@@ -136,8 +136,8 @@
     "triggerDate": "2026-09-03",
     "triggerPrice": 234.36,
     "maxPrice": 238.48,
-    "currentPrice": 227.21,
-    "gainPct": -3.05,
+    "currentPrice": 225.34,
+    "gainPct": -3.85,
     "maxGainPct": 1.76,
     "volRatioAtTrigger": 1.1,
     "rsRatingAtTrigger": 61
@@ -148,10 +148,10 @@
     "ind": "Financial Services",
     "triggerDate": "2026-09-03",
     "triggerPrice": 408.1,
-    "maxPrice": 423.2,
-    "currentPrice": 423.2,
-    "gainPct": 3.7,
-    "maxGainPct": 3.7,
+    "maxPrice": 428,
+    "currentPrice": 428,
+    "gainPct": 4.88,
+    "maxGainPct": 4.88,
     "volRatioAtTrigger": 5.34,
     "rsRatingAtTrigger": 63
   },
@@ -162,8 +162,8 @@
     "triggerDate": "2026-08-19",
     "triggerPrice": 894.5,
     "maxPrice": 1111.3,
-    "currentPrice": 1079,
-    "gainPct": 20.63,
+    "currentPrice": 1072.2,
+    "gainPct": 19.87,
     "maxGainPct": 24.24,
     "volRatioAtTrigger": 0.21,
     "rsRatingAtTrigger": 51
@@ -175,8 +175,8 @@
     "triggerDate": "2026-08-18",
     "triggerPrice": 2877.4,
     "maxPrice": 2958.1,
-    "currentPrice": 2873.6,
-    "gainPct": -0.13,
+    "currentPrice": 2876.9,
+    "gainPct": -0.02,
     "maxGainPct": 2.8,
     "volRatioAtTrigger": 0.29,
     "rsRatingAtTrigger": 50
@@ -188,8 +188,8 @@
     "triggerDate": "2026-09-02",
     "triggerPrice": 250.72,
     "maxPrice": 252.3,
-    "currentPrice": 243.2,
-    "gainPct": -3,
+    "currentPrice": 248.7,
+    "gainPct": -0.81,
     "maxGainPct": 0.63,
     "volRatioAtTrigger": 0.54,
     "rsRatingAtTrigger": 18
@@ -201,10 +201,10 @@
     "triggerDate": "2026-09-04",
     "triggerPrice": 5300,
     "maxPrice": 5419,
-    "currentPrice": 5373,
+    "currentPrice": 5394,
     "volRatioAtTrigger": 1,
     "rsRatingAtTrigger": 48,
-    "gainPct": 1.38,
+    "gainPct": 1.77,
     "maxGainPct": 2.25
   },
   {
@@ -214,10 +214,10 @@
     "triggerDate": "2026-09-04",
     "triggerPrice": 499.15,
     "maxPrice": 513.65,
-    "currentPrice": 474.7,
+    "currentPrice": 475,
     "volRatioAtTrigger": 0.67,
     "rsRatingAtTrigger": 28,
-    "gainPct": -4.9,
+    "gainPct": -4.84,
     "maxGainPct": 2.9
   },
   {
@@ -227,8 +227,8 @@
     "triggerDate": "2026-09-04",
     "triggerPrice": 229.91,
     "maxPrice": 231.2,
-    "currentPrice": 187.41,
-    "gainPct": -18.49,
+    "currentPrice": 191.16,
+    "gainPct": -16.85,
     "maxGainPct": 0.56,
     "volRatioAtTrigger": 6.31,
     "rsRatingAtTrigger": 75
@@ -240,10 +240,10 @@
     "triggerDate": "2026-09-07",
     "triggerPrice": 513.65,
     "maxPrice": 513.65,
-    "currentPrice": 474.7,
+    "currentPrice": 475,
     "volRatioAtTrigger": 1.59,
     "rsRatingAtTrigger": 40,
-    "gainPct": -7.58,
+    "gainPct": -7.52,
     "maxGainPct": 0
   },
   {
@@ -253,8 +253,8 @@
     "triggerDate": "2026-09-07",
     "triggerPrice": 427.3,
     "maxPrice": 434.45,
-    "currentPrice": 389.9,
-    "gainPct": -8.75,
+    "currentPrice": 404.85,
+    "gainPct": -5.25,
     "maxGainPct": 1.67,
     "volRatioAtTrigger": 0.59,
     "rsRatingAtTrigger": 52
@@ -266,10 +266,10 @@
     "triggerDate": "2026-09-08",
     "triggerPrice": 128245,
     "maxPrice": 128315,
-    "currentPrice": 124770,
+    "currentPrice": 124580,
     "volRatioAtTrigger": 0.7,
     "rsRatingAtTrigger": 36,
-    "gainPct": -2.71,
+    "gainPct": -2.86,
     "maxGainPct": 0.05
   },
   {
@@ -279,10 +279,10 @@
     "triggerDate": "2026-09-08",
     "triggerPrice": 503.35,
     "maxPrice": 503.35,
-    "currentPrice": 474.7,
+    "currentPrice": 475,
     "volRatioAtTrigger": 0.87,
     "rsRatingAtTrigger": 29,
-    "gainPct": -5.69,
+    "gainPct": -5.63,
     "maxGainPct": 0
   },
   {
@@ -292,8 +292,8 @@
     "triggerDate": "2026-09-08",
     "triggerPrice": 1051.5,
     "maxPrice": 1051.5,
-    "currentPrice": 1007,
-    "gainPct": -4.23,
+    "currentPrice": 1042.5,
+    "gainPct": -0.86,
     "maxGainPct": 0,
     "volRatioAtTrigger": 0.72,
     "rsRatingAtTrigger": 53
@@ -305,10 +305,10 @@
     "triggerDate": "2026-09-09",
     "triggerPrice": 5218,
     "maxPrice": 5419,
-    "currentPrice": 5373,
+    "currentPrice": 5394,
     "volRatioAtTrigger": 0.97,
     "rsRatingAtTrigger": 46,
-    "gainPct": 2.97,
+    "gainPct": 3.37,
     "maxGainPct": 3.85
   },
   {
@@ -318,10 +318,10 @@
     "triggerDate": "2026-09-09",
     "triggerPrice": 501.95,
     "maxPrice": 502.2,
-    "currentPrice": 474.7,
+    "currentPrice": 475,
     "volRatioAtTrigger": 1.42,
     "rsRatingAtTrigger": 35,
-    "gainPct": -5.43,
+    "gainPct": -5.37,
     "maxGainPct": 0.05
   },
   {
@@ -331,10 +331,10 @@
     "triggerDate": "2026-09-09",
     "triggerPrice": 349.4,
     "maxPrice": 366.2,
-    "currentPrice": 329.05,
+    "currentPrice": 328.5,
     "volRatioAtTrigger": 1.49,
     "rsRatingAtTrigger": 47,
-    "gainPct": -5.82,
+    "gainPct": -5.98,
     "maxGainPct": 4.81
   },
   {
@@ -344,10 +344,10 @@
     "triggerDate": "2026-09-10",
     "triggerPrice": 502.2,
     "maxPrice": 502.2,
-    "currentPrice": 474.7,
+    "currentPrice": 475,
     "volRatioAtTrigger": 0.73,
     "rsRatingAtTrigger": 25,
-    "gainPct": -5.48,
+    "gainPct": -5.42,
     "maxGainPct": 0
   },
   {
@@ -357,10 +357,10 @@
     "triggerDate": "2026-09-11",
     "triggerPrice": 5221.5,
     "maxPrice": 5419,
-    "currentPrice": 5373,
+    "currentPrice": 5394,
     "volRatioAtTrigger": 0.48,
     "rsRatingAtTrigger": 38,
-    "gainPct": 2.9,
+    "gainPct": 3.3,
     "maxGainPct": 3.78
   },
   {
@@ -370,10 +370,10 @@
     "triggerDate": "2026-09-11",
     "triggerPrice": 495.65,
     "maxPrice": 495.65,
-    "currentPrice": 474.7,
+    "currentPrice": 475,
     "volRatioAtTrigger": 0.82,
     "rsRatingAtTrigger": 24,
-    "gainPct": -4.23,
+    "gainPct": -4.17,
     "maxGainPct": 0
   },
   {
@@ -383,10 +383,10 @@
     "triggerDate": "2026-09-11",
     "triggerPrice": 161.32,
     "maxPrice": 164.99,
-    "currentPrice": 164.41,
+    "currentPrice": 164.12,
     "volRatioAtTrigger": 0.71,
     "rsRatingAtTrigger": 45,
-    "gainPct": 1.92,
+    "gainPct": 1.74,
     "maxGainPct": 2.27
   },
   {
@@ -395,12 +395,12 @@
     "ind": "Financial Services",
     "triggerDate": "2026-09-11",
     "triggerPrice": 1026.5,
-    "maxPrice": 1026.5,
-    "currentPrice": 1007,
+    "maxPrice": 1042.5,
+    "currentPrice": 1042.5,
     "volRatioAtTrigger": 0.49,
     "rsRatingAtTrigger": 43,
-    "gainPct": -1.9,
-    "maxGainPct": 0
+    "gainPct": 1.56,
+    "maxGainPct": 1.56
   },
   {
     "sym": "SIGNATURE",
@@ -408,12 +408,12 @@
     "ind": "Realty",
     "triggerDate": "2026-09-11",
     "triggerPrice": 760.85,
-    "maxPrice": 763.1,
-    "currentPrice": 763.1,
+    "maxPrice": 768.75,
+    "currentPrice": 768.75,
     "volRatioAtTrigger": 1.01,
     "rsRatingAtTrigger": 44,
-    "gainPct": 0.3,
-    "maxGainPct": 0.3
+    "gainPct": 1.04,
+    "maxGainPct": 1.04
   },
   {
     "sym": "DODLA",
@@ -422,8 +422,8 @@
     "triggerDate": "2026-09-15",
     "triggerPrice": 1090.8,
     "maxPrice": 1090.8,
-    "currentPrice": 1047.6,
-    "gainPct": -3.96,
+    "currentPrice": 1048.6,
+    "gainPct": -3.87,
     "maxGainPct": 0,
     "volRatioAtTrigger": 0.63,
     "rsRatingAtTrigger": 40
@@ -435,10 +435,10 @@
     "triggerDate": "2026-09-15",
     "triggerPrice": 5166,
     "maxPrice": 5419,
-    "currentPrice": 5373,
+    "currentPrice": 5394,
     "volRatioAtTrigger": 1.21,
     "rsRatingAtTrigger": 58,
-    "gainPct": 4.01,
+    "gainPct": 4.41,
     "maxGainPct": 4.9
   },
   {
@@ -448,10 +448,10 @@
     "triggerDate": "2026-09-15",
     "triggerPrice": 125795,
     "maxPrice": 125795,
-    "currentPrice": 124770,
+    "currentPrice": 124580,
     "volRatioAtTrigger": 0.77,
     "rsRatingAtTrigger": 38,
-    "gainPct": -0.81,
+    "gainPct": -0.97,
     "maxGainPct": 0
   },
   {
@@ -461,10 +461,10 @@
     "triggerDate": "2026-09-15",
     "triggerPrice": 225.78,
     "maxPrice": 235.79,
-    "currentPrice": 227.21,
+    "currentPrice": 225.34,
     "volRatioAtTrigger": 0.49,
     "rsRatingAtTrigger": 48,
-    "gainPct": 0.63,
+    "gainPct": -0.19,
     "maxGainPct": 4.43
   },
   {
@@ -474,10 +474,10 @@
     "triggerDate": "2026-09-15",
     "triggerPrice": 26125,
     "maxPrice": 27270,
-    "currentPrice": 27225,
+    "currentPrice": 26935,
     "volRatioAtTrigger": 1.36,
     "rsRatingAtTrigger": 55,
-    "gainPct": 4.21,
+    "gainPct": 3.1,
     "maxGainPct": 4.38
   },
   {
@@ -487,8 +487,8 @@
     "triggerDate": "2026-09-16",
     "triggerPrice": 1000.1,
     "maxPrice": 1013.7,
-    "currentPrice": 984.1,
-    "gainPct": -1.6,
+    "currentPrice": 994.3,
+    "gainPct": -0.58,
     "maxGainPct": 1.36,
     "volRatioAtTrigger": 1.47,
     "rsRatingAtTrigger": 38
@@ -500,8 +500,8 @@
     "triggerDate": "2026-09-17",
     "triggerPrice": 1376.3,
     "maxPrice": 1394.5,
-    "currentPrice": 1384.1,
-    "gainPct": 0.57,
+    "currentPrice": 1383,
+    "gainPct": 0.49,
     "maxGainPct": 1.32,
     "volRatioAtTrigger": 0.91,
     "rsRatingAtTrigger": 45
@@ -513,8 +513,8 @@
     "triggerDate": "2026-09-18",
     "triggerPrice": 660.7,
     "maxPrice": 660.7,
-    "currentPrice": 626.25,
-    "gainPct": -5.21,
+    "currentPrice": 625.25,
+    "gainPct": -5.37,
     "maxGainPct": 0,
     "volRatioAtTrigger": 15.72,
     "rsRatingAtTrigger": 43
@@ -526,8 +526,8 @@
     "triggerDate": "2026-09-18",
     "triggerPrice": 1065.4,
     "maxPrice": 1070.85,
-    "currentPrice": 1070.85,
-    "gainPct": 0.51,
+    "currentPrice": 1058,
+    "gainPct": -0.69,
     "maxGainPct": 0.51,
     "volRatioAtTrigger": 0.89,
     "rsRatingAtTrigger": 47
@@ -539,10 +539,10 @@
     "triggerDate": "2026-09-21",
     "triggerPrice": 2437.8,
     "maxPrice": 2480,
-    "currentPrice": 2480,
+    "currentPrice": 2465,
     "volRatioAtTrigger": 4.34,
     "rsRatingAtTrigger": 57,
-    "gainPct": 1.73,
+    "gainPct": 1.12,
     "maxGainPct": 1.73
   },
   {
@@ -551,12 +551,12 @@
     "ind": "FMCG",
     "triggerDate": "2026-09-21",
     "triggerPrice": 396.2,
-    "maxPrice": 404,
-    "currentPrice": 404,
+    "maxPrice": 409.45,
+    "currentPrice": 409.45,
     "volRatioAtTrigger": 7.21,
     "rsRatingAtTrigger": 49,
-    "gainPct": 1.97,
-    "maxGainPct": 1.97
+    "gainPct": 3.34,
+    "maxGainPct": 3.34
   },
   {
     "sym": "PIRAMALFIN",
@@ -564,12 +564,12 @@
     "ind": "Financial Services",
     "triggerDate": "2026-09-22",
     "triggerPrice": 2206.7,
-    "maxPrice": 2206.7,
-    "currentPrice": 2206.7,
+    "maxPrice": 2226.5,
+    "currentPrice": 2226.5,
     "volRatioAtTrigger": 0.64,
     "rsRatingAtTrigger": 48,
-    "gainPct": 0,
-    "maxGainPct": 0
+    "gainPct": 0.9,
+    "maxGainPct": 0.9
   },
   {
     "sym": "SIGNATURE",
@@ -577,12 +577,12 @@
     "ind": "Realty",
     "triggerDate": "2026-09-22",
     "triggerPrice": 763.1,
-    "maxPrice": 763.1,
-    "currentPrice": 763.1,
+    "maxPrice": 768.75,
+    "currentPrice": 768.75,
     "volRatioAtTrigger": 1.29,
     "rsRatingAtTrigger": 57,
-    "gainPct": 0,
-    "maxGainPct": 0
+    "gainPct": 0.74,
+    "maxGainPct": 0.74
   },
   {
     "sym": "MOIL",
@@ -590,12 +590,12 @@
     "ind": "Metals & Mining",
     "triggerDate": "2026-09-22",
     "triggerPrice": 243.2,
-    "maxPrice": 243.2,
-    "currentPrice": 243.2,
+    "maxPrice": 248.7,
+    "currentPrice": 248.7,
     "volRatioAtTrigger": 0.44,
     "rsRatingAtTrigger": 19,
-    "gainPct": 0,
-    "maxGainPct": 0
+    "gainPct": 2.26,
+    "maxGainPct": 2.26
   },
   {
     "sym": "NAZARA",
@@ -604,8 +604,8 @@
     "triggerDate": "2026-08-28",
     "triggerPrice": 374.6,
     "maxPrice": 374.6,
-    "currentPrice": 370.45,
-    "gainPct": -1.11,
+    "currentPrice": 372.7,
+    "gainPct": -0.51,
     "maxGainPct": 0,
     "volRatioAtTrigger": 0.32,
     "rsRatingAtTrigger": 53
