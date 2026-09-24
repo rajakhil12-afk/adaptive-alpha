@@ -1,4 +1,4 @@
-{
+window.STATIC_JISHU_PORTFOLIO = {
   "bot_name": "Jishu",
   "version": "1.0.0",
   "created_at": "2026-09-02T20:25:00+05:30",
@@ -364,4 +364,4 @@
       "message": "Jishu Paper Desk initialized with ₹10,00,000 virtual capital."
     }
   ]
-}
+};
