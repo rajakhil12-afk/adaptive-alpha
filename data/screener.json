@@ -1,5 +1,5 @@
 {
-  "updated": "08:45 pm IST · 24 Sept",
+  "updated": "11:55 pm IST · 24 Sept",
   "bhavDate": "2026-09-24",
   "fii_dii": {
     "date": "24-Sep-2026",
@@ -12,7 +12,7 @@
     "tierColor": "#f59e0b",
     "tierBadgeBg": "rgba(245, 158, 11, 0.15)",
     "tierDesc": "Stock-specific alpha market · Selective setups",
-    "updatedAt": "08:45 pm",
+    "updatedAt": "11:55 pm",
     "pillars": [
       {
         "id": "momentum",
@@ -17332,7 +17332,7 @@
       "breakout": false,
       "trending": true,
       "signDays": 0,
-      "signSince": 1790262833,
+      "signSince": 1790274211,
       "signPrice": 472.95,
       "st14": {
         "trend": "buy",
@@ -19819,7 +19819,7 @@
       "breakout": false,
       "trending": true,
       "signDays": 0,
-      "signSince": 1790262833,
+      "signSince": 1790274211,
       "signPrice": 2104.3,
       "st14": {
         "trend": "sell",
@@ -20476,7 +20476,7 @@
       "breakout": false,
       "trending": true,
       "signDays": 0,
-      "signSince": 1790262833,
+      "signSince": 1790274211,
       "signPrice": 45,
       "st14": {
         "trend": "buy",
@@ -24423,7 +24423,7 @@
       "breakout": false,
       "trending": true,
       "signDays": 0,
-      "signSince": 1790262833,
+      "signSince": 1790274211,
       "signPrice": 1045.7,
       "st14": {
         "trend": "sell",
