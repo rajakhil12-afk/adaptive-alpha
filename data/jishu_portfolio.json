@@ -2,18 +2,18 @@
   "bot_name": "Jishu",
   "version": "1.0.0",
   "created_at": "2026-09-02T20:25:00+05:30",
-  "last_updated": "2026-09-25T18:31:18.926Z",
+  "last_updated": "2026-09-28T20:32:07.868Z",
   "account": {
     "initial_capital": 1000000,
-    "cash": 1235.6300000000338,
-    "invested_capital": 953719.25,
-    "total_equity": 954954.88,
-    "realized_pnl": -34702.54,
-    "unrealized_pnl": -10342.58,
+    "cash": 231.83000000003085,
+    "invested_capital": 945178.56,
+    "total_equity": 945410.39,
+    "realized_pnl": -39334.54,
+    "unrealized_pnl": -15255.07,
     "win_rate": 0,
-    "total_trades": 4,
+    "total_trades": 5,
     "winning_trades": 0,
-    "losing_trades": 4
+    "losing_trades": 5
   },
   "settings": {
     "max_positions": 10,
@@ -41,9 +41,9 @@
       "target_2_price": 2510.3,
       "sl_moved_to_cost": false,
       "highest_price": 1931,
-      "current_price": 1858.5,
-      "unrealized_pnl": -3697.5,
-      "unrealized_pnl_pct": -3.754531330916624
+      "current_price": 1830,
+      "unrealized_pnl": -5151,
+      "unrealized_pnl_pct": -5.2304505437597095
     },
     {
       "sym": "GNFC",
@@ -61,29 +61,9 @@
       "target_2_price": 780.85,
       "sl_moved_to_cost": false,
       "highest_price": 630.3,
-      "current_price": 630.3,
-      "unrealized_pnl": 4921.899999999996,
-      "unrealized_pnl_pct": 4.936318987763253
-    },
-    {
-      "sym": "BAJAJHLDNG",
-      "name": "Bajaj Holdings",
-      "ind": "Financial Services",
-      "logoid": "bajaj-holdings-and-investment-lt",
-      "entry_date": "2026-09-03",
-      "entry_price": 11379,
-      "qty": 8,
-      "invested_value": 91032,
-      "initial_sl": 10241.1,
-      "current_sl": 10241.1,
-      "risk_per_share": 1137.9,
-      "target_1_price": 13654.8,
-      "target_2_price": 14792.7,
-      "sl_moved_to_cost": false,
-      "highest_price": 11379,
-      "current_price": 10940,
-      "unrealized_pnl": -3512,
-      "unrealized_pnl_pct": -3.8579840056243957
+      "current_price": 620.65,
+      "unrealized_pnl": 3320,
+      "unrealized_pnl_pct": 3.3297261300258056
     },
     {
       "sym": "ELGIEQUIP",
@@ -101,9 +81,9 @@
       "target_2_price": 811.46,
       "sl_moved_to_cost": false,
       "highest_price": 624.2,
-      "current_price": 603,
-      "unrealized_pnl": -3392.0000000000073,
-      "unrealized_pnl_pct": -3.3963473245754634
+      "current_price": 598.85,
+      "unrealized_pnl": -4056.0000000000036,
+      "unrealized_pnl_pct": -4.061198333867353
     },
     {
       "sym": "BHEL",
@@ -121,9 +101,9 @@
       "target_2_price": 566.74,
       "sl_moved_to_cost": false,
       "highest_price": 435.95,
-      "current_price": 418.95,
-      "unrealized_pnl": -3893,
-      "unrealized_pnl_pct": -3.899529762587453
+      "current_price": 411.9,
+      "unrealized_pnl": -5507.450000000003,
+      "unrealized_pnl_pct": -5.51668769354284
     },
     {
       "sym": "BALRAMCHIN",
@@ -141,9 +121,9 @@
       "target_2_price": 852.48,
       "sl_moved_to_cost": false,
       "highest_price": 685.8,
-      "current_price": 685.8,
-      "unrealized_pnl": 4567.599999999993,
-      "unrealized_pnl_pct": 4.582539077392292
+      "current_price": 680.7,
+      "unrealized_pnl": 3792.400000000007,
+      "unrealized_pnl_pct": 3.8048036599313835
     },
     {
       "sym": "CARBORUNIV",
@@ -161,9 +141,9 @@
       "target_2_price": 1685.45,
       "sl_moved_to_cost": false,
       "highest_price": 1296.5,
-      "current_price": 1278.5,
-      "unrealized_pnl": -1296,
-      "unrealized_pnl_pct": -1.3883532587736214
+      "current_price": 1247.8,
+      "unrealized_pnl": -3506.4000000000033,
+      "unrealized_pnl_pct": -3.7562668723486348
     },
     {
       "sym": "JAMNAAUTO",
@@ -180,10 +160,10 @@
       "target_1_price": 166.07,
       "target_2_price": 179.91,
       "sl_moved_to_cost": false,
-      "highest_price": 138.39,
-      "current_price": 138.2,
-      "unrealized_pnl": -129.57999999999845,
-      "unrealized_pnl_pct": -0.13729315702001427
+      "highest_price": 139.68,
+      "current_price": 139.68,
+      "unrealized_pnl": 879.780000000014,
+      "unrealized_pnl_pct": 0.9321482766095965
     },
     {
       "sym": "CAPLIPOINT",
@@ -201,9 +181,9 @@
       "target_2_price": 3727.62,
       "sl_moved_to_cost": false,
       "highest_price": 2867.4,
-      "current_price": 2835.1,
-      "unrealized_pnl": -1033.6000000000058,
-      "unrealized_pnl_pct": -1.1264560228778748
+      "current_price": 2854,
+      "unrealized_pnl": -428.8000000000029,
+      "unrealized_pnl_pct": -0.467322312896704
     },
     {
       "sym": "MCX",
@@ -221,12 +201,47 @@
       "target_2_price": 4456.01,
       "sl_moved_to_cost": false,
       "highest_price": 3427.7,
-      "current_price": 3324.9,
-      "unrealized_pnl": -2878.3999999999924,
-      "unrealized_pnl_pct": -2.999095603465873
+      "current_price": 3263.5,
+      "unrealized_pnl": -4597.599999999995,
+      "unrealized_pnl_pct": -4.790384222656587
+    },
+    {
+      "sym": "GESHIP",
+      "name": "Great Eastern Shipping",
+      "ind": "Services",
+      "logoid": "great-eastern-shipping",
+      "entry_date": "2026-09-28",
+      "entry_price": 1533.4,
+      "qty": 57,
+      "invested_value": 87403.8,
+      "initial_sl": 1380.06,
+      "current_sl": 1380.06,
+      "risk_per_share": 153.34,
+      "target_1_price": 1840.08,
+      "target_2_price": 1993.42,
+      "sl_moved_to_cost": false,
+      "highest_price": 1533.4,
+      "current_price": 1533.4,
+      "unrealized_pnl": 0,
+      "unrealized_pnl_pct": 0
     }
   ],
   "closed_trades": [
+    {
+      "sym": "BAJAJHLDNG",
+      "name": "Bajaj Holdings",
+      "ind": "Financial Services",
+      "entry_date": "2026-09-03",
+      "exit_date": "2026-09-28",
+      "entry_price": 11379,
+      "exit_price": 10800,
+      "qty": 8,
+      "invested_value": 91032,
+      "realized_pnl": -4632,
+      "return_pct": -5.088320590561561,
+      "exit_reason": "SUPERTREND_BREAKDOWN",
+      "highest_price": 11379
+    },
     {
       "sym": "ASHOKLEY",
       "name": "Ashok Leyland",
@@ -324,9 +339,38 @@
       "realized_pnl": -34702.54,
       "unrealized_pnl": -10342.58,
       "open_positions_count": 10
+    },
+    {
+      "date": "2026-09-28",
+      "cash": 231.83,
+      "invested": 945178.56,
+      "total_equity": 945410.39,
+      "realized_pnl": -39334.54,
+      "unrealized_pnl": -15255.07,
+      "open_positions_count": 10
     }
   ],
   "recent_events": [
+    {
+      "timestamp": "2026-09-28T20:32:07.868Z",
+      "type": "TRADE_EXIT",
+      "symbol": "BAJAJHLDNG",
+      "reason": "SUPERTREND_BREAKDOWN",
+      "pnl": -4632,
+      "return_pct": -5.088320590561561,
+      "message": "🛑 [JISHU STOP LOSS] Closed BAJAJHLDNG at ₹10800.00 | Reason: SUPERTREND_BREAKDOWN | PnL: ₹-4632.00 (-5.09%)"
+    },
+    {
+      "timestamp": "2026-09-28T20:32:07.868Z",
+      "type": "BUY_ORDER",
+      "symbol": "GESHIP",
+      "entry_price": 1533.4,
+      "qty": 57,
+      "target_1": 1840.0800000000002,
+      "target_2": 1993.42,
+      "sl": 1380.0600000000002,
+      "message": "🟢 [JISHU BUY ORDER] GESHIP (Great Eastern Shipping) @ ₹1533.40 | Qty: 57 | Total: ₹87403.80 | SL: ₹1380.06 (-10%) | Target 1 (1:2): ₹1840.08 | Target 2 (1:3): ₹1993.42"
+    },
     {
       "timestamp": "2026-09-24T15:15:24.960Z",
       "type": "TRADE_EXIT",
