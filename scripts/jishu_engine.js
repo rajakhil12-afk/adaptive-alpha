@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORTFOLIO_PATH = path.join(__dirname, '..', 'data', 'jishu_portfolio.json');
+const PORTFOLIO_JS_PATH = path.join(__dirname, '..', 'data', 'jishu_portfolio.js');
 const SCREENER_PATH = path.join(__dirname, '..', 'data', 'screener.json');
 
 function loadJSON(filePath, defaultValue) {
@@ -49,10 +50,12 @@ function runJishuEngine(customScreenerData = null) {
         max_positions: 10,
         max_capital_per_trade_pct: 10,
         fixed_sl_pct: 10,
-        target_1_rr: 2,
-        target_2_rr: 3,
+        target_1_rr: 1,
+        target_2_rr: 2,
         min_volume_ratio: 1.2,
-        min_rs_rating: 70
+        min_rs_rating: 75,
+        max_distance_from_st_pct: 7.0,
+        min_market_sentiment_score: 35
       },
       open_positions: [],
       closed_trades: [],
@@ -60,23 +63,30 @@ function runJishuEngine(customScreenerData = null) {
       recent_events: []
     };
   } else {
-    // Ensure settings are synced with latest rules (10% SL)
+    // Ensure settings are synced with latest rules
     if (!portfolio.settings) portfolio.settings = {};
     portfolio.settings.fixed_sl_pct = 10;
-    portfolio.settings.target_1_rr = 2;
-    portfolio.settings.target_2_rr = 3;
+    portfolio.settings.target_1_rr = 1;
+    portfolio.settings.target_2_rr = 2;
+    portfolio.settings.min_rs_rating = 75;
+    portfolio.settings.max_distance_from_st_pct = 7.0;
+    portfolio.settings.min_market_sentiment_score = 35;
     
-    // Update existing open positions to 10% risk if they haven't trailed to cost
+    // Update existing open positions to 10% risk, 1:1 T1 and 1:2 T2
     if (Array.isArray(portfolio.open_positions)) {
       portfolio.open_positions.forEach(pos => {
         const riskPerShare = pos.entry_price * 0.10;
         pos.risk_per_share = Number(riskPerShare.toFixed(2));
         pos.initial_sl = Number((pos.entry_price - riskPerShare).toFixed(2));
-        if (!pos.sl_moved_to_cost) {
+        pos.target_1_price = Number((pos.entry_price + (1 * riskPerShare)).toFixed(2));
+        pos.target_2_price = Number((pos.entry_price + (2 * riskPerShare)).toFixed(2));
+        if (!pos.sl_moved_to_cost && !pos.sl_moved_to_t1) {
           pos.current_sl = pos.initial_sl;
+        } else if (pos.sl_moved_to_t1) {
+          pos.current_sl = Math.max(pos.current_sl || 0, pos.target_1_price);
+        } else if (pos.sl_moved_to_cost) {
+          pos.current_sl = Math.max(pos.current_sl || 0, pos.entry_price);
         }
-        pos.target_1_price = Number((pos.entry_price + (2 * riskPerShare)).toFixed(2));
-        pos.target_2_price = Number((pos.entry_price + (3 * riskPerShare)).toFixed(2));
       });
     }
   }
@@ -108,36 +118,59 @@ function runJishuEngine(customScreenerData = null) {
     let exitReason = null;
     let exitPrice = curPrice;
 
-    // 1. Check Target 2 (1:3 Target Hit -> Full Profit Booking)
-    if (curPrice >= pos.target_2_price) {
-      exitReason = 'TARGET_1_3_HIT';
+    // 1. Check Stop Loss Hits (Initial SL, Cost SL, or Trailing Target 1 SL)
+    if (curPrice <= pos.current_sl) {
+      if (pos.sl_moved_to_t1) {
+        exitReason = 'TRAILING_PROFIT_SL_HIT';
+      } else if (pos.sl_moved_to_cost) {
+        exitReason = 'COST_SL_HIT';
+      } else {
+        exitReason = 'STOP_LOSS_HIT';
+      }
       exitPrice = curPrice;
     }
-    // 2. Check Stop Loss Hits
-    else if (curPrice <= pos.current_sl) {
-      exitReason = pos.sl_moved_to_cost ? 'COST_SL_HIT' : 'STOP_LOSS_HIT';
-      exitPrice = curPrice;
-    }
-    // 3. Check Fixed -10% Drop
+    // 2. Check Fixed -10% Drop
     else if (((curPrice - pos.entry_price) / pos.entry_price) <= -(portfolio.settings.fixed_sl_pct / 100)) {
       exitReason = 'FIXED_10_SL';
       exitPrice = curPrice;
     }
-    // 4. Check Supertrend Breakdown (if ST10 turns Sell and price is below ST10)
+    // 3. Check Supertrend Breakdown (if ST10 turns Sell and price is below ST10)
     else if (stock.st10 && stock.st10.trend === 'sell' && curPrice < (stock.st10.val || curPrice)) {
       exitReason = 'SUPERTREND_BREAKDOWN';
       exitPrice = curPrice;
     }
-    // 5. Check Quadrant Downgrade (Leaves Quad 1: ARS <= 0 or SRS <= 0)
+    // 4. Check Quadrant Downgrade (Leaves Quad 1: ARS <= 0 or SRS <= 0)
     else if (stock.ars <= 0 || stock.srs <= 0) {
       exitReason = 'QUAD_DOWNGRADE';
       exitPrice = curPrice;
     }
-    // 6. Check Target 1 (1:2 RR Hit -> Move SL to Cost Price / Breakeven)
-    else if (curPrice >= pos.target_1_price && !pos.sl_moved_to_cost) {
+    // 5. Check Target 2 (1:2 RR Hit -> Move SL to Target 1 price & activate Trailing)
+    else if (curPrice >= pos.target_2_price) {
+      if (!pos.sl_moved_to_t1) {
+        pos.sl_moved_to_t1 = true;
+        pos.sl_moved_to_cost = true;
+        pos.current_sl = pos.target_1_price; // Locked in Target 1 profit!
+        const trailMsg = `🎯 [JISHU TRAIL] ${pos.sym} reached 1:2 Target (₹${pos.target_2_price.toFixed(2)}). Stop Loss adjusted to TARGET 1 (₹${pos.target_1_price.toFixed(2)} / +10% Profit Locked). Running dynamic trailing stop!`;
+        console.log(trailMsg);
+        events.push({
+          timestamp: new Date().toISOString(),
+          type: 'TRAILING_SL_TARGET1',
+          symbol: pos.sym,
+          message: trailMsg
+        });
+      } else {
+        // Dynamic Trailing: trail 10% below peak/current price, guaranteed >= target_1_price
+        const dynamicTrail = Number((curPrice * 0.90).toFixed(2));
+        if (dynamicTrail > pos.current_sl) {
+          pos.current_sl = Math.max(pos.target_1_price, dynamicTrail);
+        }
+      }
+    }
+    // 6. Check Target 1 (1:1 RR Hit -> Move SL to Cost Price / Breakeven)
+    else if (curPrice >= pos.target_1_price && !pos.sl_moved_to_cost && !pos.sl_moved_to_t1) {
       pos.sl_moved_to_cost = true;
       pos.current_sl = pos.entry_price; // Risk free trade now!
-      const trailMsg = `🛡️ [JISHU TRAIL] ${pos.sym} reached 1:2 Target (₹${pos.target_1_price ? pos.target_1_price.toFixed(2) : pos.entry_price.toFixed(2)}). Stop Loss adjusted to COST PRICE (₹${pos.entry_price.toFixed(2)}). Trade is now RISK-FREE!`;
+      const trailMsg = `🛡️ [JISHU TRAIL] ${pos.sym} reached 1:1 Target (₹${pos.target_1_price.toFixed(2)}). Stop Loss adjusted to COST PRICE (₹${pos.entry_price.toFixed(2)}). Trade is now RISK-FREE!`;
       console.log(trailMsg);
       events.push({
         timestamp: new Date().toISOString(),
@@ -199,31 +232,70 @@ function runJishuEngine(customScreenerData = null) {
   portfolio.open_positions = activePositions;
 
   // ==========================================
-  // STEP 2: EVALUATE NEW ENTRIES (QUAD 1 + SUPERTREND)
+  // STEP 2: EVALUATE NEW ENTRIES WITH REGIME & PROXIMITY GATES
   // ==========================================
   const maxPositions = portfolio.settings.max_positions || 10;
   const heldSymbols = new Set(portfolio.open_positions.map(p => p.sym));
   const openSlots = maxPositions - portfolio.open_positions.length;
 
-  if (openSlots > 0 && portfolio.account.cash >= 10000) {
+  // Macro Gate: Check Market Sentiment and Severe Institutional Outflow
+  const marketSentimentScore = screener.sentiment_pillars?.score ?? 50;
+  const fiiNet = screener.fii_dii?.fii ?? 0;
+  const minSentiment = portfolio.settings.min_market_sentiment_score || 35;
+  const isMarketHostile = marketSentimentScore < minSentiment || fiiNet < -6000;
+
+  if (isMarketHostile && openSlots > 0) {
+    const pauseMsg = `🛡️ [JISHU MACRO GATE] New entries paused to protect capital (Market Sentiment: ${marketSentimentScore}/100 | FII: ₹${fiiNet} Cr). Preserving cash.`;
+    console.log(pauseMsg);
+    events.push({
+      timestamp: new Date().toISOString(),
+      type: 'MACRO_REGIME_PAUSE',
+      message: pauseMsg
+    });
+  }
+
+  if (openSlots > 0 && portfolio.account.cash >= 10000 && !isMarketHostile) {
+    const minRs = portfolio.settings.min_rs_rating || 75;
+    const maxDistSt = portfolio.settings.max_distance_from_st_pct || 7.0;
+    const minVolRatio = portfolio.settings.min_volume_ratio || 1.2;
+
     const candidates = screener.stocks.filter(s => {
       if (heldSymbols.has(s.sym)) return false;
       if (!s.price || s.price < 20) return false;
+      
       // 1. Must be in Quad 1 (Power Leader: ARS > 0 & SRS > 0)
       if (s.ars <= 0 || s.srs <= 0) return false;
-      // 2. Supertrend 10/3 must be Bullish Buy
+      
+      // 2. High Relative Strength Rating (Top Tier: RS Rating >= 75)
+      if ((s.rs_rating || 0) < minRs) return false;
+      
+      // 3. Supertrend 10/3 must be Bullish Buy
       if (!s.st10 || s.st10.trend !== 'buy') return false;
-      // 3. Volume confirmation (>= 1.2x 20MA volume)
-      if (!s.vol_ratio || s.vol_ratio < portfolio.settings.min_volume_ratio) return false;
-      // 4. Trend filter: MA+ (Price above 50 & 200 EMA)
+      
+      // 4. No-Chase Pivot Proximity Gate: Must be within <= 7% of Supertrend support
+      if (s.st10.val && s.st10.val > 0) {
+        const distFromSt = ((s.price - s.st10.val) / s.price) * 100;
+        if (distFromSt > maxDistSt) return false;
+      }
+      
+      // 5. Volume confirmation (>= 1.2x 20MA volume)
+      if (!s.vol_ratio || s.vol_ratio < minVolRatio) return false;
+      
+      // 6. Trend filter: MA+ (Price above 50 & 200 EMA)
       if (s.ma_status !== 'MA+') return false;
+      
       return true;
     });
 
-    // Score & rank candidates by institutional momentum
+    // Score & rank candidates with Institutional Accumulation & Pattern bonuses
     candidates.sort((a, b) => {
-      const scoreA = (a.rs_rating || 50) * 0.4 + (a.vol_ratio || 1) * 20 + (a.ars_slope || 0) * 10;
-      const scoreB = (b.rs_rating || 50) * 0.4 + (b.vol_ratio || 1) * 20 + (b.ars_slope || 0) * 10;
+      const isInstA = a.institutional?.ad_grade === 'A+' || a.institutional?.ad_grade === 'A' ? 15 : 0;
+      const isInstB = b.institutional?.ad_grade === 'A+' || b.institutional?.ad_grade === 'A' ? 15 : 0;
+      const patternA = (a.vcp?.is_vcp ? 10 : 0) + (a.pocket_pivot?.is_pivot ? 10 : 0);
+      const patternB = (b.vcp?.is_vcp ? 10 : 0) + (b.pocket_pivot?.is_pivot ? 10 : 0);
+      
+      const scoreA = (a.rs_rating || 50) * 0.4 + (a.vol_ratio || 1) * 20 + (a.ars_slope || 0) * 10 + isInstA + patternA;
+      const scoreB = (b.rs_rating || 50) * 0.4 + (b.vol_ratio || 1) * 20 + (b.ars_slope || 0) * 10 + isInstB + patternB;
       return scoreB - scoreA;
     });
 
@@ -246,8 +318,8 @@ function runJishuEngine(customScreenerData = null) {
       const fixedRiskPct = portfolio.settings.fixed_sl_pct / 100; // 0.10
       const riskPerShare = entryPrice * fixedRiskPct;
       const initialSl = entryPrice - riskPerShare;
-      const target1Price = entryPrice + (portfolio.settings.target_1_rr * riskPerShare); // 1:2 RR
-      const target2Price = entryPrice + (portfolio.settings.target_2_rr * riskPerShare); // 1:3 RR
+      const target1Price = entryPrice + (portfolio.settings.target_1_rr * riskPerShare); // 1:1 RR
+      const target2Price = entryPrice + (portfolio.settings.target_2_rr * riskPerShare); // 1:2 RR
 
       portfolio.account.cash -= investedValue;
 
@@ -266,6 +338,7 @@ function runJishuEngine(customScreenerData = null) {
         target_1_price: Number(target1Price.toFixed(2)),
         target_2_price: Number(target2Price.toFixed(2)),
         sl_moved_to_cost: false,
+        sl_moved_to_t1: false,
         highest_price: entryPrice,
         current_price: entryPrice,
         unrealized_pnl: 0,
@@ -274,7 +347,7 @@ function runJishuEngine(customScreenerData = null) {
 
       portfolio.open_positions.push(newPosition);
 
-      const buyMsg = `🟢 [JISHU BUY ORDER] ${stock.sym} (${stock.name || stock.sym}) @ ₹${entryPrice.toFixed(2)} | Qty: ${qty} | Total: ₹${investedValue.toFixed(2)} | SL: ₹${initialSl.toFixed(2)} (-${portfolio.settings.fixed_sl_pct}%) | Target 1 (1:2): ₹${target1Price.toFixed(2)} | Target 2 (1:3): ₹${target2Price.toFixed(2)}`;
+      const buyMsg = `🟢 [JISHU BUY ORDER] ${stock.sym} (${stock.name || stock.sym}) @ ₹${entryPrice.toFixed(2)} | Qty: ${qty} | Total: ₹${investedValue.toFixed(2)} | SL: ₹${initialSl.toFixed(2)} (-${portfolio.settings.fixed_sl_pct}%) | Target 1 (1:1): ₹${target1Price.toFixed(2)} | Target 2 (1:2): ₹${target2Price.toFixed(2)}`;
       console.log(buyMsg);
       events.push({
         timestamp: new Date().toISOString(),
@@ -337,6 +410,11 @@ function runJishuEngine(customScreenerData = null) {
   }
 
   saveJSON(PORTFOLIO_PATH, portfolio);
+  try {
+    fs.writeFileSync(PORTFOLIO_JS_PATH, 'window.STATIC_JISHU_PORTFOLIO = ' + JSON.stringify(portfolio, null, 2) + ';', 'utf8');
+  } catch (jsErr) {
+    console.warn('[Jishu] Could not write jishu_portfolio.js:', jsErr.message);
+  }
   console.log(`[Jishu] Execution finished. Total Equity: ₹${portfolio.account.total_equity} | Open Positions: ${portfolio.open_positions.length} | Realized PnL: ₹${portfolio.account.realized_pnl}`);
 
   return {
@@ -346,11 +424,79 @@ function runJishuEngine(customScreenerData = null) {
   };
 }
 
+function resetPortfolio(initialCapital = 1000000) {
+  const currentDateStr = new Date().toISOString().split('T')[0];
+  const freshPortfolio = {
+    bot_name: 'Jishu',
+    version: '2.0.0',
+    created_at: new Date().toISOString(),
+    last_updated: new Date().toISOString(),
+    account: {
+      initial_capital: initialCapital,
+      cash: initialCapital,
+      invested_capital: 0,
+      total_equity: initialCapital,
+      realized_pnl: 0,
+      unrealized_pnl: 0,
+      win_rate: 0,
+      total_trades: 0,
+      winning_trades: 0,
+      losing_trades: 0
+    },
+    settings: {
+      max_positions: 10,
+      max_capital_per_trade_pct: 10,
+      fixed_sl_pct: 10,
+      target_1_rr: 1,
+      target_2_rr: 2,
+      min_volume_ratio: 1.2,
+      min_rs_rating: 75,
+      max_distance_from_st_pct: 7.0,
+      min_market_sentiment_score: 35
+    },
+    open_positions: [],
+    closed_trades: [],
+    daily_equity: [
+      {
+        date: currentDateStr,
+        cash: initialCapital,
+        invested: 0,
+        total_equity: initialCapital,
+        realized_pnl: 0,
+        unrealized_pnl: 0,
+        open_positions_count: 0
+      }
+    ],
+    recent_events: [
+      {
+        timestamp: new Date().toISOString(),
+        type: 'PORTFOLIO_RESET',
+        message: `🚀 Jishu Institutional Desk reset to ₹${initialCapital.toLocaleString('en-IN')} with v2.0 Pro Regime Filters.`
+      }
+    ]
+  };
+
+  saveJSON(PORTFOLIO_PATH, freshPortfolio);
+  try {
+    fs.writeFileSync(PORTFOLIO_JS_PATH, 'window.STATIC_JISHU_PORTFOLIO = ' + JSON.stringify(freshPortfolio, null, 2) + ';', 'utf8');
+  } catch (jsErr) {
+    console.warn('[Jishu] Could not write jishu_portfolio.js:', jsErr.message);
+  }
+  console.log(`[Jishu] Portfolio reset to ₹${initialCapital.toLocaleString('en-IN')} completed.`);
+  return freshPortfolio;
+}
+
 module.exports = {
   runJishuEngine,
+  resetPortfolio,
   PORTFOLIO_PATH
 };
 
 if (require.main === module) {
-  runJishuEngine();
+  const args = process.argv.slice(2);
+  if (args.includes('--reset')) {
+    resetPortfolio();
+  } else {
+    runJishuEngine();
+  }
 }
