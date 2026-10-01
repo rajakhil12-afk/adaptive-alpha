@@ -424,13 +424,13 @@ function runJishuEngine(customScreenerData = null) {
   };
 }
 
-function resetPortfolio(initialCapital = 1000000) {
-  const currentDateStr = new Date().toISOString().split('T')[0];
+function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
+  const currentDateStr = startDate;
   const freshPortfolio = {
     bot_name: 'Jishu',
     version: '2.0.0',
-    created_at: new Date().toISOString(),
-    last_updated: new Date().toISOString(),
+    created_at: `${startDate}T09:15:00.000Z`,
+    last_updated: `${startDate}T14:00:00.000Z`,
     account: {
       initial_capital: initialCapital,
       cash: initialCapital,
@@ -469,9 +469,9 @@ function resetPortfolio(initialCapital = 1000000) {
     ],
     recent_events: [
       {
-        timestamp: new Date().toISOString(),
+        timestamp: `${startDate}T09:15:00.000Z`,
         type: 'PORTFOLIO_RESET',
-        message: `🚀 Jishu Institutional Desk reset to ₹${initialCapital.toLocaleString('en-IN')} with v2.0 Pro Regime Filters.`
+        message: `🚀 Jishu Institutional Desk fresh launch on 01 Oct 2026 with ₹${initialCapital.toLocaleString('en-IN')} starting capital.`
       }
     ]
   };
@@ -482,7 +482,7 @@ function resetPortfolio(initialCapital = 1000000) {
   } catch (jsErr) {
     console.warn('[Jishu] Could not write jishu_portfolio.js:', jsErr.message);
   }
-  console.log(`[Jishu] Portfolio reset to ₹${initialCapital.toLocaleString('en-IN')} completed.`);
+  console.log(`[Jishu] Portfolio reset to ₹${initialCapital.toLocaleString('en-IN')} (Start Date: ${startDate}) completed.`);
   return freshPortfolio;
 }
 
