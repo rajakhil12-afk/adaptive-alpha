@@ -78,19 +78,6 @@
     "rsRatingAtTrigger": 51
   },
   {
-    "sym": "GLAXO",
-    "name": "GlaxoSmithKline Pharma",
-    "ind": "Healthcare",
-    "triggerDate": "2026-08-18",
-    "triggerPrice": 2877.4,
-    "maxPrice": 2958.1,
-    "currentPrice": 2771.1,
-    "gainPct": -3.69,
-    "maxGainPct": 2.8,
-    "volRatioAtTrigger": 0.29,
-    "rsRatingAtTrigger": 50
-  },
-  {
     "sym": "MOIL",
     "name": "MOIL Ltd",
     "ind": "Metals & Mining",
@@ -661,5 +648,57 @@
     "rsRatingAtTrigger": 69,
     "gainPct": 0.91,
     "maxGainPct": 0.91
+  },
+  {
+    "sym": "CREDITACC",
+    "name": "CreditAccess Grameen",
+    "ind": "Financial Services",
+    "triggerDate": "2026-10-01",
+    "triggerPrice": 1239,
+    "maxPrice": 1239,
+    "currentPrice": 1239,
+    "volRatioAtTrigger": 2.04,
+    "rsRatingAtTrigger": 28,
+    "gainPct": 0,
+    "maxGainPct": 0
+  },
+  {
+    "sym": "RELINFRA",
+    "name": "Reliance Infrastructure",
+    "ind": "Power",
+    "triggerDate": "2026-10-01",
+    "triggerPrice": 46.48,
+    "maxPrice": 46.48,
+    "currentPrice": 46.48,
+    "volRatioAtTrigger": 3.43,
+    "rsRatingAtTrigger": 27,
+    "gainPct": 0,
+    "maxGainPct": 0
+  },
+  {
+    "sym": "SIGNATURE",
+    "name": "Signatureglobal",
+    "ind": "Realty",
+    "triggerDate": "2026-10-01",
+    "triggerPrice": 737.45,
+    "maxPrice": 737.45,
+    "currentPrice": 737.45,
+    "volRatioAtTrigger": 0.66,
+    "rsRatingAtTrigger": 38,
+    "gainPct": 0,
+    "maxGainPct": 0
+  },
+  {
+    "sym": "ISGEC",
+    "name": "ISGEC Heavy Eng",
+    "ind": "Capital Goods",
+    "triggerDate": "2026-10-01",
+    "triggerPrice": 919.7,
+    "maxPrice": 919.7,
+    "currentPrice": 919.7,
+    "volRatioAtTrigger": 2.04,
+    "rsRatingAtTrigger": 57,
+    "gainPct": 0,
+    "maxGainPct": 0
   }
 ]

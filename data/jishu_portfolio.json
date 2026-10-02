@@ -2,11 +2,11 @@
   "bot_name": "Jishu",
   "version": "2.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-01T19:29:03.756Z",
+  "last_updated": "2026-10-02T19:12:32.858Z",
   "account": {
     "initial_capital": 1000000,
-    "cash": 277816.37,
-    "invested_capital": 657642.5,
+    "cash": 187106.37,
+    "invested_capital": 748352.5,
     "total_equity": 935458.87,
     "realized_pnl": -64541.13000000002,
     "unrealized_pnl": 0,
@@ -173,6 +173,27 @@
       "current_price": 1104.6,
       "unrealized_pnl": 0,
       "unrealized_pnl_pct": 0
+    },
+    {
+      "sym": "PHOENIXLTD",
+      "name": "Phoenix Mills",
+      "ind": "Realty",
+      "logoid": "phoenix-mills",
+      "entry_date": "2026-10-01",
+      "entry_price": 1930,
+      "qty": 47,
+      "invested_value": 90710,
+      "initial_sl": 1737,
+      "current_sl": 1737,
+      "risk_per_share": 193,
+      "target_1_price": 2123,
+      "target_2_price": 2316,
+      "sl_moved_to_cost": false,
+      "sl_moved_to_t1": false,
+      "highest_price": 1930,
+      "current_price": 1930,
+      "unrealized_pnl": 0,
+      "unrealized_pnl_pct": 0
     }
   ],
   "closed_trades": [
@@ -285,15 +306,26 @@
   "daily_equity": [
     {
       "date": "2026-10-01",
-      "cash": 277816.37,
-      "invested": 657642.5,
+      "cash": 187106.37,
+      "invested": 748352.5,
       "total_equity": 935458.87,
       "realized_pnl": -64541.13,
       "unrealized_pnl": 0,
-      "open_positions_count": 7
+      "open_positions_count": 8
     }
   ],
   "recent_events": [
+    {
+      "timestamp": "2026-10-02T19:12:32.858Z",
+      "type": "BUY_ORDER",
+      "symbol": "PHOENIXLTD",
+      "entry_price": 1930,
+      "qty": 47,
+      "target_1": 2123,
+      "target_2": 2316,
+      "sl": 1737,
+      "message": "🟢 [JISHU BUY ORDER] PHOENIXLTD (Phoenix Mills) @ ₹1930.00 | Qty: 47 | Total: ₹90710.00 | SL: ₹1737.00 (-10%) | Target 1 (1:1): ₹2123.00 | Target 2 (1:2): ₹2316.00"
+    },
     {
       "timestamp": "2026-10-01T19:29:03.755Z",
       "type": "TRADE_EXIT",
