@@ -395,17 +395,19 @@
 
   <main class="container">
 
-    <!-- Strategy Rule Banner -->
-    <div class="strategy-banner">
-      <div>
-        <strong style="color: #FFF; font-size: 14px;">Strategy Parameters &amp; Execution Rules:</strong>
+    <!-- Strategy Rule Banner with Agent 1 Macro Sentinel -->
+    <div class="strategy-banner" id="macroSentinelBanner">
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <strong style="color: #FFF; font-size: 14px;">🛰️ Macro Regime Sentinel:</strong>
+        <span id="macroRegimeBadge" class="rule-pill" style="background: rgba(16,185,129,0.18); color: var(--accent-green); border-color: rgba(16,185,129,0.35); font-weight: 700;">🟢 BULL MOMENTUM (10 Slots Active)</span>
       </div>
       <div class="rules-list">
         <span class="rule-pill">Regime: Quad 1 (ARS &gt; 0, SRS &gt; 0)</span>
+        <span class="rule-pill">No-Chase Gate: &le; 7% from Support</span>
+        <span class="rule-pill">Smart Money: Inst A/A+ &amp; Vol Z &ge; 1.5&sigma;</span>
         <span class="rule-pill">Stop Loss: -10% / Supertrend</span>
-        <span class="rule-pill">Target 1 (1:1): Move SL to Cost (Risk-Free)</span>
-        <span class="rule-pill">Target 2 (1:2): Trail SL to Target 1 (+10% Locked)</span>
-        <span class="rule-pill">Max Slots: 10 Positions</span>
+        <span class="rule-pill">Target 1 (1:1): Breakeven Trail</span>
+        <span class="rule-pill">Target 2 (1:2): +10% Lock Trail</span>
       </div>
     </div>
 
@@ -424,15 +426,54 @@
       </div>
 
       <div class="kpi-card">
-        <span class="kpi-title">Unrealized P&amp;L</span>
-        <span class="kpi-val" id="unrealizedPnl">₹0</span>
-        <span class="kpi-sub" id="openPositionsSub">0 Active Positions</span>
+        <span class="kpi-title">Quant Profit Factor</span>
+        <span class="kpi-val" id="profitFactorVal" style="color: var(--accent-cyan);">0.0x</span>
+        <span class="kpi-sub" id="payoffSub">Payoff Ratio: 0.0 · Exp: ₹0</span>
       </div>
 
       <div class="kpi-card">
-        <span class="kpi-title">Cash vs Invested</span>
-        <span class="kpi-val" id="cashBalance" style="font-size: 20px;">₹10,00,000</span>
-        <span class="kpi-sub" id="investedBalance">Invested: ₹0</span>
+        <span class="kpi-title">Max Drawdown &amp; Sharpe</span>
+        <span class="kpi-val" id="mddVal" style="color: var(--accent-amber);">0.0%</span>
+        <span class="kpi-sub" id="sharpeSub">Sharpe: 0.00 · Sortino: 0.00</span>
+      </div>
+    </div>
+
+    <!-- Multi-Sleeve Portfolio Allocation (Agent 4) -->
+    <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+      <div class="kpi-card" style="border-left: 4px solid var(--accent-green);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="kpi-title">🚀 SLEEVE A: ALPHA MOMENTUM</span>
+          <span class="brand-tag" id="sleeveAPctBadge">50% Target</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:6px;">
+          <span class="kpi-val" id="sleeveAInvested" style="font-size:22px;">₹0</span>
+          <span style="font-size:12px; color:var(--text-muted);" id="sleeveACapacity">Cap: ₹5,00,000 (0/5)</span>
+        </div>
+        <div class="progress-track" style="margin-top:8px;"><div class="progress-fill" id="sleeveAFill" style="width: 0%; background: var(--accent-green);"></div></div>
+      </div>
+
+      <div class="kpi-card" style="border-left: 4px solid var(--accent-cyan);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="kpi-title">🎯 SLEEVE B: LEADER DIP / RETEST</span>
+          <span class="brand-tag" id="sleeveBPctBadge">30% Target</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:6px;">
+          <span class="kpi-val" id="sleeveBInvested" style="font-size:22px;">₹0</span>
+          <span style="font-size:12px; color:var(--text-muted);" id="sleeveBCapacity">Cap: ₹3,00,000 (0/3)</span>
+        </div>
+        <div class="progress-track" style="margin-top:8px;"><div class="progress-fill" id="sleeveBFill" style="width: 0%; background: var(--accent-cyan);"></div></div>
+      </div>
+
+      <div class="kpi-card" style="border-left: 4px solid #f59e0b;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="kpi-title">🛡️ SLEEVE C: LIQUIDITY BUFFER</span>
+          <span class="brand-tag" id="sleeveCPctBadge">20% Target</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:6px;">
+          <span class="kpi-val" id="sleeveCCash" style="font-size:22px;">₹10,00,000</span>
+          <span style="font-size:12px; color:var(--accent-green);" id="sleeveCStatus">100% LIQUID</span>
+        </div>
+        <div class="progress-track" style="margin-top:8px;"><div class="progress-fill" id="sleeveCFill" style="width: 100%; background: #f59e0b;"></div></div>
       </div>
     </div>
 
@@ -446,22 +487,32 @@
           <thead>
             <tr>
               <th>Stock</th>
+              <th>Sleeve</th>
+              <th>Smart Money</th>
               <th>Entry Date</th>
               <th>Entry Price</th>
               <th>Current Price</th>
               <th>Invested</th>
               <th>Unrealized P&amp;L</th>
               <th>Stop Loss</th>
-              <th>1:1 Target (Trail)</th>
-              <th>1:2 Target (Trail)</th>
+              <th>1:1 Target</th>
+              <th>1:2 Target</th>
               <th>Risk Status</th>
             </tr>
           </thead>
           <tbody id="openPositionsTable">
-            <tr><td colspan="10" class="empty-state">No active positions. The engine will deploy capital on the next Quad 1 momentum setup.</td></tr>
+            <tr><td colspan="12" class="empty-state">No active positions. Capital ready for next Quad 1 setup.</td></tr>
           </tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Quant Insights & Recommendations (Agent 6) -->
+    <div class="section-card" id="quantRecsCard" style="display:none;">
+      <div class="section-header">
+        <h2>🧠 AI Quant Strategy &amp; Self-Correction Engine</h2>
+      </div>
+      <div class="event-feed" id="quantRecsList"></div>
     </div>
 
     <!-- Recent Actions & Activity Feed -->
@@ -487,6 +538,7 @@
           <thead>
             <tr>
               <th>Stock</th>
+              <th>Sleeve</th>
               <th>Entry Date</th>
               <th>Exit Date</th>
               <th>Entry Price</th>
@@ -498,7 +550,7 @@
             </tr>
           </thead>
           <tbody id="closedTradesTable">
-            <tr><td colspan="9" class="empty-state">No completed trades yet.</td></tr>
+            <tr><td colspan="10" class="empty-state">No completed trades yet.</td></tr>
           </tbody>
         </table>
       </div>
@@ -509,7 +561,6 @@
   <script src="data/jishu_portfolio.js"></script>
   <script>
     async function loadPortfolioData() {
-      // First attempt HTTP fetch
       try {
         const res = await fetch('data/jishu_portfolio.json?nocache=' + Date.now());
         if (res.ok) {
@@ -521,7 +572,6 @@
         console.warn('HTTP fetch failed, attempting static JS fallback:', err.message);
       }
 
-      // Offline / Direct File Protocol Fallback
       if (typeof window.STATIC_JISHU_PORTFOLIO !== 'undefined' && window.STATIC_JISHU_PORTFOLIO) {
         renderDashboard(window.STATIC_JISHU_PORTFOLIO);
       } else {
@@ -537,7 +587,7 @@
       const unrealized = acc.unrealized_pnl || 0;
       const returnPct = ((equity - initial) / initial) * 100;
 
-      // KPIs
+      // Primary KPIs
       document.getElementById('totalEquity').innerText = '₹' + equity.toLocaleString('en-IN');
       const retEl = document.getElementById('totalReturnPct');
       retEl.innerText = `Initial: ₹${initial.toLocaleString('en-IN')} (${returnPct >= 0 ? '+' : ''}${returnPct.toFixed(2)}%)`;
@@ -548,16 +598,46 @@
       realEl.className = 'kpi-val ' + (realized >= 0 ? 'val-positive' : 'val-negative');
       document.getElementById('winRateSub').innerText = `Win Rate: ${acc.win_rate || 0}% (${acc.winning_trades || 0}W / ${acc.losing_trades || 0}L)`;
 
-      const unrelEl = document.getElementById('unrealizedPnl');
-      unrelEl.innerText = (unrealized >= 0 ? '+' : '') + '₹' + unrealized.toLocaleString('en-IN');
-      unrelEl.className = 'kpi-val ' + (unrealized >= 0 ? 'val-positive' : 'val-negative');
+      // Quant KPIs (Agent 6)
+      const quant = data.quant_metrics || {};
+      document.getElementById('profitFactorVal').innerText = (quant.profitFactor != null ? quant.profitFactor : '0.0') + 'x';
+      document.getElementById('payoffSub').innerText = `Payoff: ${quant.payoffRatio || 0} · Exp: ₹${quant.expectancy || 0}`;
+      document.getElementById('mddVal').innerText = (quant.maxDrawdownPct != null ? quant.maxDrawdownPct : '0.0') + '%';
+      document.getElementById('sharpeSub').innerText = `Sharpe: ${quant.sharpeRatio || '0.00'} · Sortino: ${quant.sortinoRatio || '0.00'}`;
+
+      // Multi-Sleeve Allocations (Agent 4)
+      const sleeves = data.sleeves || {};
+      if (sleeves.sleeveA) {
+        document.getElementById('sleeveAPctBadge').innerText = `${sleeves.sleeveA.targetPct}% Target`;
+        document.getElementById('sleeveAInvested').innerText = '₹' + (sleeves.sleeveA.investedCapital || 0).toLocaleString('en-IN');
+        document.getElementById('sleeveACapacity').innerText = `Cap: ₹${(sleeves.sleeveA.targetCapital || 500000).toLocaleString('en-IN')} (${sleeves.sleeveA.openPositions || 0}/5)`;
+        document.getElementById('sleeveAFill').style.width = `${Math.min(100, sleeves.sleeveA.utilizationPct || 0)}%`;
+      }
+      if (sleeves.sleeveB) {
+        document.getElementById('sleeveBPctBadge').innerText = `${sleeves.sleeveB.targetPct}% Target`;
+        document.getElementById('sleeveBInvested').innerText = '₹' + (sleeves.sleeveB.investedCapital || 0).toLocaleString('en-IN');
+        document.getElementById('sleeveBCapacity').innerText = `Cap: ₹${(sleeves.sleeveB.targetCapital || 300000).toLocaleString('en-IN')} (${sleeves.sleeveB.openPositions || 0}/3)`;
+        document.getElementById('sleeveBFill').style.width = `${Math.min(100, sleeves.sleeveB.utilizationPct || 0)}%`;
+      }
+      if (sleeves.sleeveC) {
+        document.getElementById('sleeveCPctBadge').innerText = `${sleeves.sleeveC.targetPct}% Target`;
+        document.getElementById('sleeveCCash').innerText = '₹' + (acc.cash || 0).toLocaleString('en-IN');
+        document.getElementById('sleeveCStatus').innerText = sleeves.sleeveC.status || 'ACTIVE BUFFER';
+      }
 
       const openPos = data.open_positions || [];
-      document.getElementById('openPositionsSub').innerText = `${openPos.length} Active Positions`;
-      document.getElementById('openCountBadge').innerText = `${openPos.length} / ${data.settings?.max_positions || 10}`;
+      document.getElementById('openCountBadge').innerText = `${openPos.length} / ${data.macro_regime?.maxAllowedSlots || data.settings?.max_positions || 10}`;
 
-      document.getElementById('cashBalance').innerText = '₹' + (acc.cash || 0).toLocaleString('en-IN');
-      document.getElementById('investedBalance').innerText = 'Invested: ₹' + (acc.invested_capital || 0).toLocaleString('en-IN');
+      if (data.macro_regime) {
+        const mr = data.macro_regime;
+        const b = document.getElementById('macroRegimeBadge');
+        if (b) {
+          b.innerText = `${mr.regime} (Max ${mr.maxAllowedSlots} Slots · ${mr.marketScore}/100)`;
+          b.style.color = mr.regimeColor || '#10b981';
+          b.style.background = mr.regimeBadgeBg || 'rgba(16,185,129,0.18)';
+          b.title = mr.guidance || '';
+        }
+      }
 
       if (data.last_updated) {
         document.getElementById('lastUpdatedText').innerText = 'Last Updated: ' + new Date(data.last_updated).toLocaleString('en-IN');
@@ -566,7 +646,7 @@
       // Open Positions Table
       const openTbody = document.getElementById('openPositionsTable');
       if (openPos.length === 0) {
-        openTbody.innerHTML = '<tr><td colspan="10" class="empty-state">No active positions. Capital ready for next Quad 1 setup.</td></tr>';
+        openTbody.innerHTML = '<tr><td colspan="12" class="empty-state">No active positions. Capital ready for next Quad 1 setup.</td></tr>';
       } else {
         openTbody.innerHTML = openPos.map(p => {
           const curP = p.current_price || p.entry_price;
@@ -582,6 +662,11 @@
             riskStatus = '<span class="status-badge badge-breakeven">🛡️ Risk-Free (Cost SL)</span>';
           }
 
+          const smScore = p.smart_money_score || 75;
+          const smTier = p.smart_money_tier || (smScore >= 80 ? '🐋 Whale' : '🏛️ Inst');
+          const smColor = smScore >= 80 ? 'var(--accent-green)' : smScore >= 60 ? '#06b6d4' : '#f59e0b';
+          const sleeveTag = p.sleeve === 'SLEEVE_B' ? '<span class="brand-tag" style="color:var(--accent-cyan);">🎯 SLEEVE B</span>' : '<span class="brand-tag" style="color:var(--accent-green);">🚀 SLEEVE A</span>';
+
           const progressToT2 = Math.min(100, Math.max(0, ((curP - p.entry_price) / (p.target_2_price - p.entry_price)) * 100));
 
           return `
@@ -591,6 +676,11 @@
                   <span class="stock-sym">${p.sym}</span>
                   <span class="stock-ind">${p.ind || 'Equities'} · Qty: ${p.qty}</span>
                 </div>
+              </td>
+              <td>${sleeveTag}</td>
+              <td class="mono-cell">
+                <span style="font-weight:700; color:${smColor};">${smScore}/100</span>
+                <div style="font-size:10px; color:var(--text-dim);">${smTier}</div>
               </td>
               <td>${p.entry_date || '-'}</td>
               <td class="mono-cell">₹${p.entry_price?.toFixed(2)}</td>
@@ -609,12 +699,25 @@
         }).join('');
       }
 
+      // Quant Recommendations (Agent 6)
+      const recs = data.quant_recommendations || [];
+      const recsCard = document.getElementById('quantRecsCard');
+      const recsList = document.getElementById('quantRecsList');
+      if (recs.length > 0 && recsCard && recsList) {
+        recsCard.style.display = 'block';
+        recsList.innerHTML = recs.map(r => `
+          <div class="event-item">
+            <span><strong>[${r.badge}]</strong> ${r.text}</span>
+          </div>
+        `).join('');
+      }
+
       // Closed Trades
       const closed = data.closed_trades || [];
       document.getElementById('closedCountBadge').innerText = `${closed.length} Trades`;
       const closedTbody = document.getElementById('closedTradesTable');
       if (closed.length === 0) {
-        closedTbody.innerHTML = '<tr><td colspan="9" class="empty-state">No completed trades yet.</td></tr>';
+        closedTbody.innerHTML = '<tr><td colspan="10" class="empty-state">No completed trades yet.</td></tr>';
       } else {
         closedTbody.innerHTML = closed.map(c => {
           const pnlClass = c.realized_pnl >= 0 ? 'val-positive' : 'val-negative';
@@ -628,9 +731,12 @@
             badgeClass = 'badge-exit-stop';
           }
 
+          const sleeveBadge = c.sleeve === 'SLEEVE_B' ? '🎯 B' : '🚀 A';
+
           return `
             <tr>
               <td><span class="stock-sym">${c.sym}</span></td>
+              <td><span class="brand-tag">${sleeveBadge}</span></td>
               <td>${c.entry_date || '-'}</td>
               <td>${c.exit_date || '-'}</td>
               <td class="mono-cell">₹${c.entry_price?.toFixed(2)}</td>
