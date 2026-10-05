@@ -1,5 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const { evaluateMacroRegime } = require('./macro_regime_sentinel');
+const { validateBreakoutQuality } = require('./breakout_validator');
+const { computeSmartMoneyFootprint } = require('./smart_money_detective');
+const { calculateSleeveAllocations, classifyCandidateSleeve, SLEEVE_CONFIG } = require('./multi_sleeve_portfolio');
+const { calculatePositionSize } = require('./position_sizer');
+const { calculateQuantMetrics } = require('./quant_analytics');
 
 const PORTFOLIO_PATH = path.join(__dirname, '..', 'data', 'jishu_portfolio.json');
 const PORTFOLIO_JS_PATH = path.join(__dirname, '..', 'data', 'jishu_portfolio.js');
@@ -29,67 +35,17 @@ function runJishuEngine(customScreenerData = null) {
 
   let portfolio = loadJSON(PORTFOLIO_PATH, null);
   if (!portfolio) {
-    portfolio = {
-      bot_name: 'Jishu',
-      version: '1.0.0',
-      created_at: new Date().toISOString(),
-      last_updated: new Date().toISOString(),
-      account: {
-        initial_capital: 1000000,
-        cash: 1000000,
-        invested_capital: 0,
-        total_equity: 1000000,
-        realized_pnl: 0,
-        unrealized_pnl: 0,
-        win_rate: 0,
-        total_trades: 0,
-        winning_trades: 0,
-        losing_trades: 0
-      },
-      settings: {
-        max_positions: 10,
-        max_capital_per_trade_pct: 10,
-        fixed_sl_pct: 10,
-        target_1_rr: 1,
-        target_2_rr: 2,
-        min_volume_ratio: 1.2,
-        min_rs_rating: 75,
-        max_distance_from_st_pct: 7.0,
-        min_market_sentiment_score: 35
-      },
-      open_positions: [],
-      closed_trades: [],
-      daily_equity: [],
-      recent_events: []
-    };
-  } else {
-    // Ensure settings are synced with latest rules
-    if (!portfolio.settings) portfolio.settings = {};
-    portfolio.settings.fixed_sl_pct = 10;
-    portfolio.settings.target_1_rr = 1;
-    portfolio.settings.target_2_rr = 2;
-    portfolio.settings.min_rs_rating = 75;
-    portfolio.settings.max_distance_from_st_pct = 7.0;
-    portfolio.settings.min_market_sentiment_score = 35;
-    
-    // Update existing open positions to 10% risk, 1:1 T1 and 1:2 T2
-    if (Array.isArray(portfolio.open_positions)) {
-      portfolio.open_positions.forEach(pos => {
-        const riskPerShare = pos.entry_price * 0.10;
-        pos.risk_per_share = Number(riskPerShare.toFixed(2));
-        pos.initial_sl = Number((pos.entry_price - riskPerShare).toFixed(2));
-        pos.target_1_price = Number((pos.entry_price + (1 * riskPerShare)).toFixed(2));
-        pos.target_2_price = Number((pos.entry_price + (2 * riskPerShare)).toFixed(2));
-        if (!pos.sl_moved_to_cost && !pos.sl_moved_to_t1) {
-          pos.current_sl = pos.initial_sl;
-        } else if (pos.sl_moved_to_t1) {
-          pos.current_sl = Math.max(pos.current_sl || 0, pos.target_1_price);
-        } else if (pos.sl_moved_to_cost) {
-          pos.current_sl = Math.max(pos.current_sl || 0, pos.entry_price);
-        }
-      });
-    }
+    portfolio = resetPortfolio(1000000, screener.bhavDate || '2026-10-01');
   }
+
+  // Ensure default settings
+  if (!portfolio.settings) portfolio.settings = {};
+  portfolio.settings.fixed_sl_pct = 10;
+  portfolio.settings.target_1_rr = 1;
+  portfolio.settings.target_2_rr = 2;
+  portfolio.settings.min_rs_rating = 75;
+  portfolio.settings.max_distance_from_st_pct = 7.0;
+  portfolio.settings.risk_pct_per_trade = 1.0; // 1% portfolio equity risk
 
   const currentDateStr = screener.bhavDate || new Date().toISOString().split('T')[0];
   const stocksMap = new Map();
@@ -99,12 +55,11 @@ function runJishuEngine(customScreenerData = null) {
   const activePositions = [];
 
   // ==========================================
-  // STEP 1: EVALUATE OPEN POSITIONS (EXITS & TRAILING)
+  // STEP 1: EVALUATE OPEN POSITIONS (EXITS & DYNAMIC TRAILING)
   // ==========================================
   for (const pos of portfolio.open_positions) {
     const stock = stocksMap.get(pos.sym);
     if (!stock || typeof stock.price !== 'number' || stock.price <= 0) {
-      // Retain position if stock data is missing for today
       activePositions.push(pos);
       continue;
     }
@@ -129,17 +84,17 @@ function runJishuEngine(customScreenerData = null) {
       }
       exitPrice = curPrice;
     }
-    // 2. Check Fixed -10% Drop
+    // 2. Check Hard Stop Loss Drop
     else if (((curPrice - pos.entry_price) / pos.entry_price) <= -(portfolio.settings.fixed_sl_pct / 100)) {
       exitReason = 'FIXED_10_SL';
       exitPrice = curPrice;
     }
-    // 3. Check Supertrend Breakdown (if ST10 turns Sell and price is below ST10)
+    // 3. Check Supertrend Breakdown
     else if (stock.st10 && stock.st10.trend === 'sell' && curPrice < (stock.st10.val || curPrice)) {
       exitReason = 'SUPERTREND_BREAKDOWN';
       exitPrice = curPrice;
     }
-    // 4. Check Quadrant Downgrade (Leaves Quad 1: ARS <= 0 or SRS <= 0)
+    // 4. Check Quadrant Downgrade (Leaves Quad 1)
     else if (stock.ars <= 0 || stock.srs <= 0) {
       exitReason = 'QUAD_DOWNGRADE';
       exitPrice = curPrice;
@@ -150,7 +105,7 @@ function runJishuEngine(customScreenerData = null) {
         pos.sl_moved_to_t1 = true;
         pos.sl_moved_to_cost = true;
         pos.current_sl = pos.target_1_price; // Locked in Target 1 profit!
-        const trailMsg = `🎯 [JISHU TRAIL] ${pos.sym} reached 1:2 Target (₹${pos.target_2_price.toFixed(2)}). Stop Loss adjusted to TARGET 1 (₹${pos.target_1_price.toFixed(2)} / +10% Profit Locked). Running dynamic trailing stop!`;
+        const trailMsg = `🎯 [JISHU TRAIL] ${pos.sym} hit 1:2 Target (₹${pos.target_2_price.toFixed(2)}). Stop Loss adjusted to TARGET 1 (₹${pos.target_1_price.toFixed(2)} / Profit Locked). Dynamic trailing engaged!`;
         console.log(trailMsg);
         events.push({
           timestamp: new Date().toISOString(),
@@ -159,8 +114,8 @@ function runJishuEngine(customScreenerData = null) {
           message: trailMsg
         });
       } else {
-        // Dynamic Trailing: trail 10% below peak/current price, guaranteed >= target_1_price
-        const dynamicTrail = Number((curPrice * 0.90).toFixed(2));
+        // Dynamic Trailing: trail 10% below highest peak, guaranteed >= target_1_price
+        const dynamicTrail = Number((pos.highest_price * 0.90).toFixed(2));
         if (dynamicTrail > pos.current_sl) {
           pos.current_sl = Math.max(pos.target_1_price, dynamicTrail);
         }
@@ -169,8 +124,8 @@ function runJishuEngine(customScreenerData = null) {
     // 6. Check Target 1 (1:1 RR Hit -> Move SL to Cost Price / Breakeven)
     else if (curPrice >= pos.target_1_price && !pos.sl_moved_to_cost && !pos.sl_moved_to_t1) {
       pos.sl_moved_to_cost = true;
-      pos.current_sl = pos.entry_price; // Risk free trade now!
-      const trailMsg = `🛡️ [JISHU TRAIL] ${pos.sym} reached 1:1 Target (₹${pos.target_1_price.toFixed(2)}). Stop Loss adjusted to COST PRICE (₹${pos.entry_price.toFixed(2)}). Trade is now RISK-FREE!`;
+      pos.current_sl = pos.entry_price; // Risk-free breakeven
+      const trailMsg = `🛡️ [JISHU TRAIL] ${pos.sym} hit 1:1 Target (₹${pos.target_1_price.toFixed(2)}). Stop Loss adjusted to COST PRICE (₹${pos.entry_price.toFixed(2)}). Trade is RISK-FREE!`;
       console.log(trailMsg);
       events.push({
         timestamp: new Date().toISOString(),
@@ -198,6 +153,8 @@ function runJishuEngine(customScreenerData = null) {
         sym: pos.sym,
         name: pos.name,
         ind: pos.ind,
+        sleeve: pos.sleeve || 'SLEEVE_A',
+        setup_type: pos.setup_type || 'ALPHA_BREAKOUT',
         entry_date: pos.entry_date,
         exit_date: currentDateStr,
         entry_price: pos.entry_price,
@@ -207,7 +164,8 @@ function runJishuEngine(customScreenerData = null) {
         realized_pnl: realizedTradePnl,
         return_pct: returnPct,
         exit_reason: exitReason,
-        highest_price: pos.highest_price
+        highest_price: pos.highest_price,
+        smart_money_score: pos.smart_money_score || 50
       };
       portfolio.closed_trades.unshift(closedTrade);
 
@@ -232,20 +190,17 @@ function runJishuEngine(customScreenerData = null) {
   portfolio.open_positions = activePositions;
 
   // ==========================================
-  // STEP 2: EVALUATE NEW ENTRIES WITH REGIME & PROXIMITY GATES
+  // STEP 2: MULTI-AGENT INTAKE & SLEEVE ALLOCATION
   // ==========================================
-  const maxPositions = portfolio.settings.max_positions || 10;
-  const heldSymbols = new Set(portfolio.open_positions.map(p => p.sym));
-  const openSlots = maxPositions - portfolio.open_positions.length;
+  const macro = evaluateMacroRegime(screener);
+  portfolio.macro_regime = macro;
 
-  // Macro Gate: Check Market Sentiment and Severe Institutional Outflow
-  const marketSentimentScore = screener.sentiment_pillars?.score ?? 50;
-  const fiiNet = screener.fii_dii?.fii ?? 0;
-  const minSentiment = portfolio.settings.min_market_sentiment_score || 35;
-  const isMarketHostile = marketSentimentScore < minSentiment || fiiNet < -6000;
+  const currentEquity = portfolio.account.cash + portfolio.open_positions.reduce((acc, p) => acc + (p.current_price || p.entry_price) * p.qty, 0);
+  const sleeveAllocations = calculateSleeveAllocations(currentEquity, portfolio.open_positions, macro);
+  portfolio.sleeves = sleeveAllocations;
 
-  if (isMarketHostile && openSlots > 0) {
-    const pauseMsg = `🛡️ [JISHU MACRO GATE] New entries paused to protect capital (Market Sentiment: ${marketSentimentScore}/100 | FII: ₹${fiiNet} Cr). Preserving cash.`;
+  if (macro.circuitBreakerActive) {
+    const pauseMsg = `🛡️ [MACRO SENTINEL CIRCUIT BREAKER] Regime: ${macro.regime} (${macro.marketScore}/100) | VIX: ${macro.vixLevel} | FII: ₹${macro.fiiNet} Cr. New buying paused to preserve cash.`;
     console.log(pauseMsg);
     events.push({
       timestamp: new Date().toISOString(),
@@ -254,89 +209,105 @@ function runJishuEngine(customScreenerData = null) {
     });
   }
 
-  if (openSlots > 0 && portfolio.account.cash >= 10000 && !isMarketHostile) {
-    const minRs = portfolio.settings.min_rs_rating || 75;
-    const maxDistSt = portfolio.settings.max_distance_from_st_pct || 7.0;
-    const minVolRatio = portfolio.settings.min_volume_ratio || 1.2;
+  const heldSymbols = new Set(portfolio.open_positions.map(p => p.sym));
 
-    const candidates = screener.stocks.filter(s => {
+  if (!macro.circuitBreakerActive && portfolio.account.cash >= 10000) {
+    const minRs = portfolio.settings.min_rs_rating || 75;
+
+    // Filter Candidates across agents (Agent 2 Breakout Validator + Agent 3 Smart Money)
+    const validCandidates = screener.stocks.filter(s => {
       if (heldSymbols.has(s.sym)) return false;
       if (!s.price || s.price < 20) return false;
-      
+
       // 1. Must be in Quad 1 (Power Leader: ARS > 0 & SRS > 0)
       if (s.ars <= 0 || s.srs <= 0) return false;
-      
-      // 2. High Relative Strength Rating (Top Tier: RS Rating >= 75)
-      if ((s.rs_rating || 0) < minRs) return false;
-      
-      // 3. Supertrend 10/3 must be Bullish Buy
+
+      // 2. Sleeve-Aware Relative Strength Filter
+      const sleeveType = classifyCandidateSleeve(s);
+      const minRsForStock = sleeveType.sleeveId === 'SLEEVE_B' ? 65 : (portfolio.settings.min_rs_rating || 75);
+      if ((s.rs_rating || 0) < minRsForStock) return false;
+
+      // 3. Supertrend Bullish Buy
       if (!s.st10 || s.st10.trend !== 'buy') return false;
-      
-      // 4. No-Chase Pivot Proximity Gate: Must be within <= 7% of Supertrend support
-      if (s.st10.val && s.st10.val > 0) {
-        const distFromSt = ((s.price - s.st10.val) / s.price) * 100;
-        if (distFromSt > maxDistSt) return false;
-      }
-      
-      // 5. Volume confirmation (>= 1.2x 20MA volume)
-      if (!s.vol_ratio || s.vol_ratio < minVolRatio) return false;
-      
-      // 6. Trend filter: MA+ (Price above 50 & 200 EMA)
-      if (s.ma_status !== 'MA+') return false;
-      
+
+      // 4. Agent 2: Price Action & False Breakout Validation Gate
+      const paValidation = validateBreakoutQuality(s);
+      if (!paValidation.isValid) return false;
+
       return true;
     });
 
-    // Score & rank candidates with Institutional Accumulation & Pattern bonuses
-    candidates.sort((a, b) => {
-      const isInstA = a.institutional?.ad_grade === 'A+' || a.institutional?.ad_grade === 'A' ? 15 : 0;
-      const isInstB = b.institutional?.ad_grade === 'A+' || b.institutional?.ad_grade === 'A' ? 15 : 0;
-      const patternA = (a.vcp?.is_vcp ? 10 : 0) + (a.pocket_pivot?.is_pivot ? 10 : 0);
-      const patternB = (b.vcp?.is_vcp ? 10 : 0) + (b.pocket_pivot?.is_pivot ? 10 : 0);
-      
-      const scoreA = (a.rs_rating || 50) * 0.4 + (a.vol_ratio || 1) * 20 + (a.ars_slope || 0) * 10 + isInstA + patternA;
-      const scoreB = (b.rs_rating || 50) * 0.4 + (b.vol_ratio || 1) * 20 + (b.ars_slope || 0) * 10 + isInstB + patternB;
+    // Score & Rank Candidates with Smart Money Footprint
+    validCandidates.sort((a, b) => {
+      const smA = computeSmartMoneyFootprint(a);
+      const smB = computeSmartMoneyFootprint(b);
+      const paA = validateBreakoutQuality(a);
+      const paB = validateBreakoutQuality(b);
+
+      const scoreA = (a.rs_rating || 50) * 0.30 + (a.vol_ratio || 1) * 15 + (smA.score * 0.35) + (paA.qualityScore * 0.20);
+      const scoreB = (b.rs_rating || 50) * 0.30 + (b.vol_ratio || 1) * 15 + (smB.score * 0.35) + (paB.qualityScore * 0.20);
       return scoreB - scoreA;
     });
 
-    const selectedEntries = candidates.slice(0, openSlots);
+    // Allocate across Sleeve A and Sleeve B
+    for (const stock of validCandidates) {
+      if (portfolio.account.cash < 10000) break;
 
-    for (const stock of selectedEntries) {
-      const maxAllocPerTrade = (portfolio.account.initial_capital * portfolio.settings.max_capital_per_trade_pct) / 100; // ₹1,00,000
-      const availablePerSlot = portfolio.account.cash / (maxPositions - portfolio.open_positions.length);
-      const allocatedCapital = Math.min(maxAllocPerTrade, availablePerSlot, portfolio.account.cash);
+      const sleeveInfo = classifyCandidateSleeve(stock);
+      const sleeveState = sleeveInfo.sleeveId === 'SLEEVE_B' ? sleeveAllocations.sleeveB : sleeveAllocations.sleeveA;
 
-      if (allocatedCapital < 10000 || allocatedCapital < stock.price) continue;
+      if (sleeveState.openSlots <= 0 || sleeveState.availableCapital < 10000) {
+        continue; // Sleeve capacity full
+      }
 
-      const qty = Math.floor(allocatedCapital / stock.price);
-      if (qty <= 0) continue;
+      const sm = computeSmartMoneyFootprint(stock);
 
-      const entryPrice = stock.price;
-      const investedValue = qty * entryPrice;
+      // Agent 5: Volatility-Adjusted Kelly / ATR Position Sizing
+      const sizing = calculatePositionSize({
+        stock,
+        totalEquity: currentEquity,
+        availableCash: portfolio.account.cash,
+        sleeveAvailableCapital: sleeveState.availableCapital,
+        smartMoneyFootprint: sm,
+        riskPctPerTrade: portfolio.settings.risk_pct_per_trade || 1.0,
+        fixedSlPct: portfolio.settings.fixed_sl_pct || 10.0,
+        maxCapitalPerTradePct: macro.maxCapitalPerTradePct || 10.0
+      });
 
-      // Risk calculation: fixed 10% risk or distance to Supertrend
-      const fixedRiskPct = portfolio.settings.fixed_sl_pct / 100; // 0.10
-      const riskPerShare = entryPrice * fixedRiskPct;
-      const initialSl = entryPrice - riskPerShare;
-      const target1Price = entryPrice + (portfolio.settings.target_1_rr * riskPerShare); // 1:1 RR
-      const target2Price = entryPrice + (portfolio.settings.target_2_rr * riskPerShare); // 1:2 RR
+      if (!sizing.valid || sizing.qty <= 0) continue;
+
+      const entryPrice = sizing.entryPrice;
+      const qty = sizing.qty;
+      const investedValue = sizing.investedValue;
+      const initialSl = sizing.stopLossPrice;
+      const target1Price = sizing.target1Price;
+      const target2Price = sizing.target2Price;
 
       portfolio.account.cash -= investedValue;
+      sleeveState.availableCapital -= investedValue;
+      sleeveState.openSlots -= 1;
+      heldSymbols.add(stock.sym);
 
       const newPosition = {
         sym: stock.sym,
         name: stock.name,
         ind: stock.ind,
         logoid: stock.logoid,
+        sleeve: sleeveInfo.sleeveId,
+        setup_type: sleeveInfo.setupType,
         entry_date: currentDateStr,
         entry_price: entryPrice,
         qty: qty,
         invested_value: investedValue,
-        initial_sl: Number(initialSl.toFixed(2)),
-        current_sl: Number(initialSl.toFixed(2)),
-        risk_per_share: Number(riskPerShare.toFixed(2)),
-        target_1_price: Number(target1Price.toFixed(2)),
-        target_2_price: Number(target2Price.toFixed(2)),
+        initial_sl: initialSl,
+        current_sl: initialSl,
+        risk_per_share: sizing.stopDistance,
+        actual_dollar_risk: sizing.actualDollarRisk,
+        risk_pct_of_equity: sizing.riskPctOfEquity,
+        target_1_price: target1Price,
+        target_2_price: target2Price,
+        smart_money_score: sm.score,
+        smart_money_tier: sm.tier,
         sl_moved_to_cost: false,
         sl_moved_to_t1: false,
         highest_price: entryPrice,
@@ -347,14 +318,16 @@ function runJishuEngine(customScreenerData = null) {
 
       portfolio.open_positions.push(newPosition);
 
-      const buyMsg = `🟢 [JISHU BUY ORDER] ${stock.sym} (${stock.name || stock.sym}) @ ₹${entryPrice.toFixed(2)} | Qty: ${qty} | Total: ₹${investedValue.toFixed(2)} | SL: ₹${initialSl.toFixed(2)} (-${portfolio.settings.fixed_sl_pct}%) | Target 1 (1:1): ₹${target1Price.toFixed(2)} | Target 2 (1:2): ₹${target2Price.toFixed(2)}`;
+      const buyMsg = `🟢 [JISHU BUY] [${sleeveInfo.icon} ${sleeveInfo.sleeveId}] ${stock.sym} @ ₹${entryPrice.toFixed(2)} | Qty: ${qty} | Total: ₹${investedValue.toFixed(2)} | Risk: ₹${sizing.actualDollarRisk} (${sizing.riskPctOfEquity}%) | Smart Money: ${sm.score}/100 (${sm.tier}) | SL: ₹${initialSl.toFixed(2)} | T1: ₹${target1Price.toFixed(2)} | T2: ₹${target2Price.toFixed(2)}`;
       console.log(buyMsg);
       events.push({
         timestamp: new Date().toISOString(),
         type: 'BUY_ORDER',
         symbol: stock.sym,
+        sleeve: sleeveInfo.sleeveId,
         entry_price: entryPrice,
         qty: qty,
+        smart_money: sm.score,
         target_1: target1Price,
         target_2: target2Price,
         sl: initialSl,
@@ -364,7 +337,7 @@ function runJishuEngine(customScreenerData = null) {
   }
 
   // ==========================================
-  // STEP 3: UPDATE AGGREGATE ACCOUNT METRICS
+  // STEP 3: UPDATE AGGREGATE ACCOUNT & QUANT METRICS (AGENT 6)
   // ==========================================
   let totalInvested = 0;
   let totalUnrealizedPnl = 0;
@@ -381,6 +354,11 @@ function runJishuEngine(customScreenerData = null) {
   portfolio.account.win_rate = portfolio.account.total_trades > 0 
     ? Number(((portfolio.account.winning_trades / portfolio.account.total_trades) * 100).toFixed(1)) 
     : 0;
+
+  // Agent 6: Compute Deep Quant Metrics
+  const quantAnalytics = calculateQuantMetrics(portfolio);
+  portfolio.quant_metrics = quantAnalytics ? quantAnalytics.kpis : null;
+  portfolio.quant_recommendations = quantAnalytics ? quantAnalytics.recommendations : [];
 
   portfolio.last_updated = new Date().toISOString();
 
@@ -415,7 +393,7 @@ function runJishuEngine(customScreenerData = null) {
   } catch (jsErr) {
     console.warn('[Jishu] Could not write jishu_portfolio.js:', jsErr.message);
   }
-  console.log(`[Jishu] Execution finished. Total Equity: ₹${portfolio.account.total_equity} | Open Positions: ${portfolio.open_positions.length} | Realized PnL: ₹${portfolio.account.realized_pnl}`);
+  console.log(`[Jishu] Execution finished. Total Equity: ₹${portfolio.account.total_equity} | Open: ${portfolio.open_positions.length} | Realized PnL: ₹${portfolio.account.realized_pnl}`);
 
   return {
     portfolio,
@@ -428,7 +406,7 @@ function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
   const currentDateStr = startDate;
   const freshPortfolio = {
     bot_name: 'Jishu',
-    version: '2.0.0',
+    version: '3.0.0',
     created_at: `${startDate}T09:15:00.000Z`,
     last_updated: `${startDate}T14:00:00.000Z`,
     account: {
@@ -452,6 +430,7 @@ function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
       min_volume_ratio: 1.2,
       min_rs_rating: 75,
       max_distance_from_st_pct: 7.0,
+      risk_pct_per_trade: 1.0,
       min_market_sentiment_score: 35
     },
     open_positions: [],
@@ -471,7 +450,7 @@ function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
       {
         timestamp: `${startDate}T09:15:00.000Z`,
         type: 'PORTFOLIO_RESET',
-        message: `🚀 Jishu Institutional Desk fresh launch on 01 Oct 2026 with ₹${initialCapital.toLocaleString('en-IN')} starting capital.`
+        message: `🚀 Jishu Institutional Multi-Agent Desk fresh launch on 01 Oct 2026 with ₹${initialCapital.toLocaleString('en-IN')} starting capital.`
       }
     ]
   };

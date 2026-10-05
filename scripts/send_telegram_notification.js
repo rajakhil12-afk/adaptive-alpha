@@ -322,11 +322,20 @@ async function run() {
       const positions = Array.isArray(jishu.open_positions) ? jishu.open_positions : [];
       const events = Array.isArray(jishu.recent_events) ? jishu.recent_events : [];
       
+      const macro = jishu.macro_regime || {};
+      const quant = jishu.quant_metrics || {};
+      const sleeves = jishu.sleeves || {};
       let jishuSec = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
-      jishuSec += `🤖 <b>JISHU PAPER TRADING DESK (₹10L Portfolio)</b>\n`;
-      jishuSec += `• <b>Total Equity:</b> ₹${(acc.total_equity || 1000000).toLocaleString('en-IN')}\n`;
-      jishuSec += `• <b>Cash Available:</b> ₹${(acc.cash || 0).toLocaleString('en-IN')} | <b>Invested:</b> ₹${(acc.invested_capital || 0).toLocaleString('en-IN')}\n`;
-      jishuSec += `• <b>Realized P&L:</b> ${acc.realized_pnl >= 0 ? '+' : ''}₹${(acc.realized_pnl || 0).toLocaleString('en-IN')} | <b>Win Rate:</b> <code>${acc.win_rate || 0}%</code> (${acc.winning_trades || 0}W / ${acc.losing_trades || 0}L)\n\n`;
+      jishuSec += `🤖 <b>JISHU MULTI-AGENT QUANT DESK (₹10L Portfolio)</b>\n`;
+      if (macro.regime) {
+        jishuSec += `🛰️ <b>Macro Sentinel:</b> <code>${macro.regime}</code> (Score: ${macro.marketScore || 50}/100 | Max ${macro.maxAllowedSlots || 10} Slots)\n`;
+      }
+      if (quant.profitFactor != null) {
+        jishuSec += `📊 <b>Quant KPIs:</b> Profit Factor: <code>${quant.profitFactor}x</code> | MDD: <code>${quant.maxDrawdownPct || 0}%</code> | Expectancy: <code>₹${quant.expectancy || 0}</code>\n`;
+      }
+      jishuSec += `• <b>Total Equity:</b> ₹${Number(acc.total_equity || 1000000).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n`;
+      jishuSec += `• <b>Cash Available:</b> ₹${Number(acc.cash || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} | <b>Invested:</b> ₹${Number(acc.invested_capital || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n`;
+      jishuSec += `• <b>Realized P&L:</b> ${Number(acc.realized_pnl || 0) >= 0 ? '+' : ''}₹${Number(acc.realized_pnl || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} | <b>Win Rate:</b> <code>${acc.win_rate || 0}%</code> (${acc.winning_trades || 0}W / ${acc.losing_trades || 0}L)\n\n`;
 
       // Recent Actions / Executions today
       const todayEvents = events.filter(e => {
@@ -346,13 +355,20 @@ async function run() {
 
       // Active Holdings
       if (positions.length > 0) {
-        jishuSec += `💼 <b>Active Open Positions (${positions.length}/10):</b>\n`;
+        jishuSec += `💼 <b>Active Open Positions (${positions.length}/${macro.maxAllowedSlots || 10}):</b>\n`;
         positions.forEach(p => {
           const curP = p.current_price || p.entry_price;
           const pnlPct = ((curP - p.entry_price) / p.entry_price) * 100;
           const pnlStr = pnlPct >= 0 ? `+${pnlPct.toFixed(1)}%` : `${pnlPct.toFixed(1)}%`;
-          const trailBadge = p.sl_moved_to_cost ? '🛡️ Risk-Free' : `SL: ₹${p.current_sl}`;
-          jishuSec += `• <b>${escapeHtml(p.sym)}</b>: ₹${curP} (<code>${pnlStr}</code>) | ${trailBadge} | T2: ₹${p.target_2_price}\n`;
+          let trailBadge = `SL: ₹${fmtPrice(p.current_sl)}`;
+          if (p.sl_moved_to_t1) {
+            trailBadge = `🎯 T1 Locked (SL: ₹${fmtPrice(p.current_sl)})`;
+          } else if (p.sl_moved_to_cost) {
+            trailBadge = '🛡️ Risk-Free (Cost SL)';
+          }
+          const sleeveTag = p.sleeve === 'SLEEVE_B' ? '🎯 B' : '🚀 A';
+          const smTag = p.smart_money_score ? ` | 🐋 ${p.smart_money_score}/100` : '';
+          jishuSec += `• [${sleeveTag}] <b>${escapeHtml(p.sym)}</b>: ₹${fmtPrice(curP)} (<code>${pnlStr}</code>)${smTag} | ${trailBadge} | T2: ₹${fmtPrice(p.target_2_price)}\n`;
         });
         jishuSec += `\n`;
       }
