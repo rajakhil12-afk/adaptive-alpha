@@ -2,7 +2,7 @@ window.STATIC_JISHU_PORTFOLIO = {
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-01T14:00:00.000Z",
+  "last_updated": "2026-10-05T04:51:30.828Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 1000000,
@@ -42,9 +42,93 @@ window.STATIC_JISHU_PORTFOLIO = {
   ],
   "recent_events": [
     {
+      "timestamp": "2026-10-05T04:51:30.827Z",
+      "type": "MACRO_REGIME_PAUSE",
+      "message": "🛡️ [MACRO SENTINEL CIRCUIT BREAKER] Regime: CORRECTION_DEFENSE (40/100) | VIX: 14.5 | FII: ₹0 Cr. New buying paused to preserve cash."
+    },
+    {
       "timestamp": "2026-10-01T09:15:00.000Z",
       "type": "PORTFOLIO_RESET",
       "message": "🚀 Jishu Institutional Multi-Agent Desk fresh launch on 01 Oct 2026 with ₹10,00,000 starting capital."
+    }
+  ],
+  "macro_regime": {
+    "regime": "CORRECTION_DEFENSE",
+    "regimeColor": "#f97316",
+    "regimeBadgeBg": "rgba(249, 115, 22, 0.18)",
+    "marketScore": 40,
+    "vixLevel": 14.5,
+    "vixRegime": "ELEVATED_CHOPPY",
+    "fiiNet": 0,
+    "diiNet": 0,
+    "combinedNet": 0,
+    "circuitBreakerActive": true,
+    "maxAllowedSlots": 3,
+    "maxCapitalPerTradePct": 7.5,
+    "guidance": "⚠️ Market in pullback correction. New aggressive breakouts paused. Limit exposure to max 3 slots."
+  },
+  "sleeves": {
+    "sleeveA": {
+      "id": "SLEEVE_A",
+      "name": "Alpha Breakouts & Super Momentum",
+      "icon": "🚀",
+      "targetAllocPct": 50,
+      "maxPositions": 5,
+      "minRsRating": 80,
+      "maxHoldingDays": 15,
+      "targetPct": 20,
+      "targetCapital": 200000,
+      "investedCapital": 0,
+      "availableCapital": 200000,
+      "openPositions": 0,
+      "openSlots": 5,
+      "utilizationPct": 0
+    },
+    "sleeveB": {
+      "id": "SLEEVE_B",
+      "name": "Leader Retest & Dip Buys",
+      "icon": "🎯",
+      "targetAllocPct": 30,
+      "maxPositions": 3,
+      "minRsRating": 65,
+      "maxHoldingDays": 30,
+      "targetPct": 30,
+      "targetCapital": 300000,
+      "investedCapital": 0,
+      "availableCapital": 300000,
+      "openPositions": 0,
+      "openSlots": 3,
+      "utilizationPct": 0
+    },
+    "sleeveC": {
+      "id": "SLEEVE_C",
+      "name": "Dynamic Liquidity & Cash Buffer",
+      "icon": "🛡️",
+      "targetAllocPct": 20,
+      "maxPositions": 0,
+      "targetPct": 50,
+      "targetCapital": 500000,
+      "status": "ACTIVE BUFFER"
+    }
+  },
+  "quant_metrics": {
+    "profitFactor": 0,
+    "sharpeRatio": 0,
+    "sortinoRatio": 0,
+    "maxDrawdownPct": 0,
+    "maxDrawdownValue": 0,
+    "payoffRatio": 0,
+    "expectancy": 0,
+    "totalGains": 0,
+    "totalLosses": 0,
+    "totalClosedTrades": 0,
+    "winRatePct": 0
+  },
+  "quant_recommendations": [
+    {
+      "type": "CAPITAL_HEALTH",
+      "badge": "✅ STABLE",
+      "text": "Capital curve is well-protected. Max Drawdown contained at 0.0% (Institutional standard < 8%)."
     }
   ]
 };

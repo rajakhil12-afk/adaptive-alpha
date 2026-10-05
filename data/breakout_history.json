@@ -65,19 +65,6 @@
     "rsRatingAtTrigger": 63
   },
   {
-    "sym": "CYIENT",
-    "name": "Cyient",
-    "ind": "IT",
-    "triggerDate": "2026-08-19",
-    "triggerPrice": 894.5,
-    "maxPrice": 1111.3,
-    "currentPrice": 1104.6,
-    "gainPct": 23.49,
-    "maxGainPct": 24.24,
-    "volRatioAtTrigger": 0.21,
-    "rsRatingAtTrigger": 51
-  },
-  {
     "sym": "MOIL",
     "name": "MOIL Ltd",
     "ind": "Metals & Mining",
@@ -668,12 +655,12 @@
     "ind": "Power",
     "triggerDate": "2026-10-01",
     "triggerPrice": 46.48,
-    "maxPrice": 46.48,
-    "currentPrice": 46.48,
+    "maxPrice": 48.8,
+    "currentPrice": 48.8,
     "volRatioAtTrigger": 3.43,
     "rsRatingAtTrigger": 27,
-    "gainPct": 0,
-    "maxGainPct": 0
+    "gainPct": 4.99,
+    "maxGainPct": 4.99
   },
   {
     "sym": "SIGNATURE",
