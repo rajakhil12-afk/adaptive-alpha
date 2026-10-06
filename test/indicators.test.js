@@ -203,4 +203,55 @@ test('Volume Z-Score Anomaly Detector — validates statistical standard deviati
   assert.strictEqual(emptyRes.is_anomaly, false);
 });
 
+test('Multi-Timeframe Confluence (D·W·M) — validates triple timeframe alignment', () => {
+  const { calcMultiTimeframeConfluence } = require('../js/indicators');
+  
+  // Case 1: Strong Triple Confluence
+  const bullStock = {
+    ars: 0.15,
+    srs: 0.08,
+    ma_status: 'MA+',
+    hi52_prox: -0.02,
+    rs_rating: 92
+  };
+  const bullRes = calcMultiTimeframeConfluence(bullStock);
+  assert.strictEqual(bullRes.score, 3, 'All 3 timeframes should align for bull stock');
+  assert.strictEqual(bullRes.is_triple_confluence, true);
+  assert.strictEqual(bullRes.badge, '🟢 🟢 🟢');
+
+  // Case 2: Bearish Divergence
+  const bearStock = {
+    ars: -0.08,
+    srs: -0.05,
+    ma_status: 'MA-',
+    hi52_prox: -0.35,
+    rs_rating: 25
+  };
+  const bearRes = calcMultiTimeframeConfluence(bearStock);
+  assert.strictEqual(bearRes.score, 0);
+  assert.strictEqual(bearRes.is_triple_confluence, false);
+  assert.strictEqual(bearRes.badge, '⚪ ⚪ ⚪');
+});
+
+test('Minervini 3-Weeks Tight Base Detector — detects narrow consolidation variance', () => {
+  const { calcTightBase3W } = require('../js/indicators');
+  
+  // Case 1: Tight 15-day consolidation
+  const tightCandles = generateCandles(30, 500, 0);
+  const len = tightCandles.length;
+  for (let i = len - 15; i < len; i++) {
+    tightCandles[i].c = 500 + (Math.sin(i) * 2); // only +/- 2 variance on 500 (~0.8% range)
+  }
+  const tightRes = calcTightBase3W(tightCandles, 501, -0.02);
+  assert.strictEqual(tightRes.is_tight, true, 'Narrow price variance should be flagged as tight base');
+  assert.ok(tightRes.variance_pct <= 3.0, 'Variance should be small');
+
+  // Case 2: Volatile wide base
+  for (let i = len - 15; i < len; i++) {
+    tightCandles[i].c = 450 + (i % 2 === 0 ? 50 : -20); // 15% wild swing
+  }
+  const wideRes = calcTightBase3W(tightCandles, 500, -0.10);
+  assert.strictEqual(wideRes.is_tight, false, 'Wide volatility swings should NOT be flagged as tight base');
+});
+
 
