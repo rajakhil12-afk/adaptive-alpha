@@ -62,6 +62,19 @@
   <button class="preset-btn" data-preset="bottom-reversal" onclick="applyPreset('bottom-reversal')">🔄 Q2 Turnaround</button>
 </div>
 
+<!-- ═══════ THEMATIC HIGH-GROWTH BASKETS BAR ═══════ -->
+<div class="preset-bar theme-bar" style="margin-top: -6px; border-top: none; background: rgba(255,255,255,0.015);">
+  <span class="preset-title" style="color: #60a5fa;">🏛️ Thematic Baskets:</span>
+  <button class="preset-btn theme-btn-chip" data-theme="defence" onclick="applyThematicBasket('defence')">🛡️ Defence &amp; Aero</button>
+  <button class="preset-btn theme-btn-chip" data-theme="railways" onclick="applyThematicBasket('railways')">🚆 Railways Capex</button>
+  <button class="preset-btn theme-btn-chip" data-theme="green_energy" onclick="applyThematicBasket('green_energy')">⚡ Green Energy</button>
+  <button class="preset-btn theme-btn-chip" data-theme="ems" onclick="applyThematicBasket('ems')">🔌 EMS Electronics</button>
+  <button class="preset-btn theme-btn-chip" data-theme="psu" onclick="applyThematicBasket('psu')">🏛️ High-Yield PSU</button>
+  <button class="preset-btn theme-btn-chip" data-theme="travel" onclick="applyThematicBasket('travel')">✈️ Travel &amp; Hotels</button>
+  <button class="preset-btn theme-btn-chip" data-theme="jewellery" onclick="applyThematicBasket('jewellery')">💎 Jewellery &amp; Retail</button>
+  <button class="preset-btn theme-btn-chip" data-theme="cables" onclick="applyThematicBasket('cables')">🏗️ Cables &amp; Pipes</button>
+</div>
+
 <!-- ═══════ MAIN VIEWPORT ═══════ -->
 <div class="main">
 
@@ -103,6 +116,8 @@
       <span class="chip on" id="f-ars" onclick="toggleChip('ars')" data-tooltip="ars">ARS &gt; 0% <span class="info-icon">i</span></span>
       <span class="chip on" id="f-trend" onclick="toggleChip('trend')" data-tooltip="slope">Trending (ΔARS+) <span class="info-icon">i</span></span>
       <span class="chip" id="f-srs" onclick="toggleChip('srs')" data-tooltip="srs">SRS &gt; 0% (63D) <span class="info-icon">i</span></span>
+      <span class="chip" id="f-mtf" onclick="toggleChip('mtf')" data-tooltip="mtf">🎯 Triple Confluence (D·W·M) <span class="info-icon">i</span></span>
+      <span class="chip" id="f-tightbase" onclick="toggleChip('tightbase')" data-tooltip="tightbase">🧘 3W Tight Base <span class="info-icon">i</span></span>
       <span class="chip" id="f-smartmoney" onclick="toggleChip('smartmoney')" data-tooltip="inst">🏛️ Smart Money <span class="info-icon">i</span></span>
       <span class="chip" id="f-delivsurge" onclick="toggleChip('delivsurge')" data-tooltip="deliv">📦 Delivery Surge (1.5×+) <span class="info-icon">i</span></span>
       <span class="chip" id="f-mrs" onclick="toggleChip('mrs')" data-tooltip="mrs">Mansfield RS+ <span class="info-icon">i</span></span>
@@ -307,6 +322,7 @@
         <div class="ms-card"><div class="ms-label" data-tooltip="srs">SRS Score <span class="info-icon">i</span></div><div class="ms-val" id="m-srs">—</div></div>
         <div class="ms-card"><div class="ms-label" data-tooltip="mrs">Mansfield RS <span class="info-icon">i</span></div><div class="ms-val" id="m-mrs" style="color:var(--up)">—</div></div>
         <div class="ms-card"><div class="ms-label" data-tooltip="rsr">RS Rating <span class="info-icon">i</span></div><div class="ms-val" id="m-rsr">—</div></div>
+        <div class="ms-card"><div class="ms-label" data-tooltip="mtf">MTF Confluence <span class="info-icon">i</span></div><div class="ms-val" id="m-mtf-badge" style="color:var(--up); font-size: 13px; font-weight: 700;">🟢 🟢 🟢</div></div>
         <div class="ms-card"><div class="ms-label" data-tooltip="inst">Inst. Score <span class="info-icon">i</span></div><div class="ms-val" id="m-inst-score" style="color:var(--up)">—</div></div>
         <div class="ms-card"><div class="ms-label" data-tooltip="volz">Vol Z-Score <span class="info-icon">i</span></div><div class="ms-val" id="m-volz" style="color:#7da9ff">—</div></div>
         <div class="ms-card"><div class="ms-label" data-tooltip="vcp">VCP Squeeze <span class="info-icon">i</span></div><div class="ms-val" id="m-vcp" style="color:#7da9ff">—</div></div>
@@ -346,6 +362,19 @@
         <div id="m-inst-bulk" class="bulk-deal-alert" style="display:none;">
           <span style="font-size:13px;">🚨</span>
           <span id="m-inst-bulk-text">Recent Institutional Bulk Deal: <strong>BUY</strong> by HDFC MF</span>
+        </div>
+      </div>
+
+      <!-- 🧠 AI Quant Thesis & Executive Strategy Card (Phase 3) -->
+      <div class="inst-card ai-thesis-card" id="m-ai-thesis-card" style="border-color: rgba(124, 58, 237, 0.35); background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), var(--bg3) 60%); margin-top: 10px;">
+        <div class="inst-header">
+          <div class="inst-title" style="color: #a78bfa;">
+            <span>🧠 AI Quantitative Thesis &amp; Strategy Blueprint</span>
+          </div>
+          <button class="tf-btn" onclick="copyAIThesisToClipboard()" style="padding: 2px 8px; font-size: 10px; background: rgba(124, 58, 237, 0.2); color: #c4b5fd; border-color: rgba(124, 58, 237, 0.4);" title="Copy formatted thesis to clipboard">📋 Copy Thesis</button>
+        </div>
+        <div id="m-ai-thesis-body" style="font-size: 11px; line-height: 1.5; color: var(--text); display: flex; flex-direction: column; gap: 6px; padding: 4px 2px;">
+          <!-- Populated dynamically by renderAIThesisCard() -->
         </div>
       </div>
 
@@ -398,12 +427,23 @@
         </div>
       </div>
 
-      <!-- Position Size & Risk Calculator -->
+      <!-- Advanced Position Size, Volatility & Risk Calculator -->
       <div class="calc-card" id="m-calc-card">
         <div class="calc-title">
-          <span>🧮 Position Size & Risk Calculator</span>
+          <span>🧮 Volatility Position Sizer &amp; Execution Copilot</span>
           <span id="m-calc-quad-tag" class="quad-pill quad-1">🌟 QUAD 1 LEADER</span>
         </div>
+        
+        <!-- Stop Loss Quick Presets -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+          <span style="font-size:10px; color:var(--muted); font-weight:600;">⚡ Quick Stop-Loss:</span>
+          <div style="display:flex; gap:4px;">
+            <button class="tf-btn" style="padding:2px 8px; font-size:10px;" onclick="setStopLossMode('st')" title="Align with 10/3 Supertrend support">Supertrend</button>
+            <button class="tf-btn" style="padding:2px 8px; font-size:10px;" onclick="setStopLossMode('fixed10')" title="Fixed 10% Hard SL">-10% Hard</button>
+            <button class="tf-btn" style="padding:2px 8px; font-size:10px;" onclick="setStopLossMode('fixed5')" title="Tight 5% Swing SL">-5% Tight</button>
+          </div>
+        </div>
+
         <div class="calc-grid">
           <div class="calc-field">
             <label class="calc-lbl">Portfolio Capital ₹</label>
@@ -418,20 +458,38 @@
             <input type="number" id="calc-sl-price" class="calc-input" value="0" step="0.5" oninput="recalcPositionSize()">
           </div>
           <div class="calc-field">
-            <label class="calc-lbl">Position Shares</label>
-            <div id="calc-qty" class="calc-val">—</div>
+            <label class="calc-lbl">Position Quantity</label>
+            <div id="calc-qty" class="calc-val" style="color:var(--up); font-weight:700;">—</div>
           </div>
           <div class="calc-field">
-            <label class="calc-lbl">Total Investment</label>
+            <label class="calc-lbl">Total Capital Invested</label>
             <div id="calc-inv" class="calc-val" style="color:var(--text)">—</div>
           </div>
           <div class="calc-field">
-            <label class="calc-lbl">Target 1 (1:2 R:R)</label>
+            <label class="calc-lbl">Risk Amount (₹)</label>
+            <div id="calc-risk-amount" class="calc-val" style="color:var(--down)">—</div>
+          </div>
+          <div class="calc-field">
+            <label class="calc-lbl">Target 1 (1:1 Breakeven)</label>
             <div id="calc-t1" class="target-pill">—</div>
           </div>
           <div class="calc-field">
-            <label class="calc-lbl">Target 2 (1:3 R:R)</label>
+            <label class="calc-lbl">Target 2 (1:2 Trailing Lock)</label>
             <div id="calc-t2" class="target-pill" style="background:rgba(94,150,255,0.12);color:#7da9ff">—</div>
+          </div>
+          <div class="calc-field">
+            <label class="calc-lbl">Target 3 (1:3 Multibagger)</label>
+            <div id="calc-t3" class="target-pill" style="background:rgba(227,179,65,0.14);color:var(--gold)">—</div>
+          </div>
+        </div>
+
+        <!-- 1-Click Direct Broker Order Bridge -->
+        <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+          <span style="font-size:10px; color:var(--muted); font-weight:600;">⚡ 1-Click Broker Order:</span>
+          <div style="display:flex; gap:6px;">
+            <button id="broker-kite-btn" class="tf-btn" style="background:rgba(235,94,40,0.15); color:#eb5e28; border-color:rgba(235,94,40,0.3); font-weight:700; padding:4px 10px;">⚡ Zerodha Kite</button>
+            <button id="broker-dhan-btn" class="tf-btn" style="background:rgba(124,58,237,0.15); color:#a78bfa; border-color:rgba(124,58,237,0.3); font-weight:700; padding:4px 10px;">🎯 Dhan Web</button>
+            <button id="broker-groww-btn" class="tf-btn" style="background:rgba(16,185,129,0.15); color:#10b981; border-color:rgba(16,185,129,0.3); font-weight:700; padding:4px 10px;">🌱 Groww</button>
           </div>
         </div>
       </div>
