@@ -78,19 +78,24 @@ select:focus, button:focus { outline: none; border-color: var(--up); box-shadow:
 }
 .perf-title { font-weight: 800; color: var(--up); font-size: 11px; display: flex; align-items: center; gap: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
 .perf-stat { display: flex; align-items: center; gap: 5px; font-family: var(--font-num); }
-/* ── RETAIL HERO COCKPIT (SPOTLIGHT + SENTIMENT GAUGE + ALPHA EDGE) ── */
+/* ── RETAIL HERO COCKPIT (SPOTLIGHT + SENTIMENT GAUGE + MARKET BREADTH + ALPHA EDGE) ── */
 .retail-hero-cockpit {
   display: grid;
-  grid-template-columns: minmax(290px, 1.15fr) minmax(320px, 1.35fr) minmax(260px, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
   gap: 12px;
   margin-bottom: 14px;
+}
+@media (min-width: 1400px) {
+  .retail-hero-cockpit {
+    grid-template-columns: 1.1fr 1.2fr 1.1fr 0.9fr;
+  }
 }
 @media (max-width: 1100px) {
   .retail-hero-cockpit {
     grid-template-columns: 1fr 1fr;
   }
 }
-@media (max-width: 768px) {
+@media (max-width: 680px) {
   .retail-hero-cockpit {
     grid-template-columns: 1fr;
   }
@@ -1696,6 +1701,142 @@ body.light-theme .rrg-clock {
   background: rgba(56, 189, 248, 0.14); color: #38bdf8;
   padding: 1px 7px; border-radius: 8px;
   font-family: var(--font-num);
+.bo-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.bo-pills-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.bo-cap-pill {
+  padding: 4px 11px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  transition: all 0.15s ease;
+  user-select: none;
+}
+.bo-cap-pill:hover {
+  border-color: var(--gold);
+  color: var(--text);
+}
+.bo-cap-pill.active {
+  background: rgba(227, 179, 65, 0.16);
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 700;
+}
+.bo-scope-info {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--font-num);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.bo-category-sub {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--muted-lt);
+  padding: 10px 14px 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.bo-tag-pill {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  vertical-align: middle;
+}
+.bo-tag-breakout {
+  background: rgba(227, 179, 65, 0.16);
+  color: var(--gold);
+  border: 1px solid rgba(227, 179, 65, 0.35);
+}
+.bo-tag-nearhigh {
+  background: rgba(239, 83, 80, 0.16);
+  color: #f87171;
+  border: 1px solid rgba(239, 83, 80, 0.35);
+}
+.setup-radar-box {
+  margin: 10px 14px 14px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.setup-radar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.setup-radar-row {
+  margin-bottom: 8px;
+}
+.setup-radar-row:last-child {
+  margin-bottom: 0;
+}
+.setup-radar-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.setup-chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.setup-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: var(--font-num);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: var(--text);
+}
+.setup-chip:hover {
+  border-color: var(--gold);
+  background: rgba(227, 179, 65, 0.08);
+  transform: translateY(-1px);
+}
+.setup-chip .chip-rs {
+  font-size: 9px;
+  color: var(--gold);
+  font-weight: 600;
 }
 
 @media (max-width: 700px) {
