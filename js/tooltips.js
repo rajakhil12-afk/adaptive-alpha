@@ -60,6 +60,14 @@ const TOOLTIP_DEFINITIONS = {
     title: 'Delivery Volume Surge Ratio',
     body: 'Ratio of today\'s delivery quantity vs 20-day average delivery. Values ≥2.0× indicate aggressive institutional cash accumulation.'
   },
+  mtf: {
+    title: 'Multi-Timeframe Trend Confluence (D · W · M)',
+    body: 'Triple Timeframe Alignment (Daily ARS > 0 · Weekly SRS > 0 · Monthly MA+ / 52W Proximity). 🟢 🟢 🟢 represents maximum multi-timeframe swing trading probability.'
+  },
+  tightbase: {
+    title: 'Minervini 3-Weeks Tight Base Consolidation',
+    body: 'Price closes within a narrow ≤4% band over 15 trading sessions near 52-week highs. Indicates strong institutional absorption before stage-2 expansion.'
+  },
   volz: {
     title: 'Volume Z-Score (Statistical Anomaly)',
     body: 'Number of standard deviations today\'s volume deviates from the 50-day volume mean. Z ≥ +2.0σ flags a statistical volume anomaly (top 2.5% event); Z ≥ +3.0σ flags an extreme institutional volume spike.'

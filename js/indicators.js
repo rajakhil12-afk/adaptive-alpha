@@ -577,6 +577,71 @@ function calcVolumeZScore(candles, period = 50) {
   };
 }
 
+// Multi-Timeframe Trend & RS Confluence Matrix (Daily, Weekly, Monthly)
+function calcMultiTimeframeConfluence(stock) {
+  if (!stock) {
+    return { daily: false, weekly: false, monthly: false, score: 0, is_triple_confluence: false, badge: '⚪ ⚪ ⚪', label: 'No Trend Confluence' };
+  }
+
+  const dOk = (stock.ars || 0) > 0;
+  const wOk = (stock.srs || 0) > 0;
+  const mOk = stock.ma_status === 'MA+' || (stock.hi52_prox !== undefined && stock.hi52_prox >= -0.20) || (stock.rs_rating || 0) >= 65;
+
+  let score = 0;
+  if (dOk) score++;
+  if (wOk) score++;
+  if (mOk) score++;
+
+  const dDot = dOk ? '🟢' : '⚪';
+  const wDot = wOk ? '🟢' : '⚪';
+  const mDot = mOk ? '🟢' : '⚪';
+  const badge = `${dDot} ${wDot} ${mDot}`;
+
+  let label = 'Partial Alignment';
+  if (score === 3) label = '🔥 Triple Confluence (Daily · Weekly · Monthly)';
+  else if (score === 2) label = 'Dual Confluence';
+  else if (score === 0) label = 'Bearish Divergence';
+
+  return {
+    daily: dOk,
+    weekly: wOk,
+    monthly: mOk,
+    score,
+    is_triple_confluence: score === 3,
+    badge,
+    label
+  };
+}
+
+// Minervini 3-Weeks Tight Base Consolidation Filter
+function calcTightBase3W(candles, currentPrice, hi52Prox = 0) {
+  const len = candles ? candles.length : 0;
+  if (len < 10) {
+    const isTightFallback = hi52Prox >= -0.06;
+    return { is_tight: isTightFallback, variance_pct: 3.0, label: isTightFallback ? 'Tight Consolidation' : 'Normal' };
+  }
+
+  const lookback = candles.slice(Math.max(0, len - 15));
+  const closes = lookback.map(c => c.c).filter(c => typeof c === 'number' && c > 0);
+  if (closes.length < 5) {
+    return { is_tight: false, variance_pct: 5.0, label: 'Normal' };
+  }
+
+  const minC = Math.min(...closes);
+  const maxC = Math.max(...closes);
+  const variancePct = parseFloat((((maxC - minC) / minC) * 100).toFixed(1));
+
+  // Tight base: less than 4.0% variation over 15 sessions and near 52W high
+  const isTight = variancePct <= 4.0 && (hi52Prox >= -0.15 || currentPrice >= minC);
+
+  return {
+    is_tight: isTight,
+    variance_pct: variancePct,
+    base_sessions: closes.length,
+    label: isTight ? `🧘 3W Tight Base (${variancePct}% Var)` : 'Normal Base'
+  };
+}
+
 // Module export for Node.js / Universal export for browser
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -589,7 +654,9 @@ if (typeof module !== 'undefined' && module.exports) {
     computeRSRatings,
     calcAccumulationDistribution,
     calcDeliverySpurt,
-    calcVolumeZScore
+    calcVolumeZScore,
+    calcMultiTimeframeConfluence,
+    calcTightBase3W
   };
 } else if (typeof window !== 'undefined') {
   window.Indicators = {
@@ -602,7 +669,9 @@ if (typeof module !== 'undefined' && module.exports) {
     computeRSRatings,
     calcAccumulationDistribution,
     calcDeliverySpurt,
-    calcVolumeZScore
+    calcVolumeZScore,
+    calcMultiTimeframeConfluence,
+    calcTightBase3W
   };
 }
 

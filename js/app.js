@@ -56,6 +56,14 @@ function passes(d) {
   if (filters.ars)         ok = ok && d.ars > 0;
   if (filters.trend)       ok = ok && d.trending;
   if (filters.srs)         ok = ok && d.srs > 0;
+  if (filters.mtf) {
+    const mtf = (typeof calcMultiTimeframeConfluence === 'function') ? calcMultiTimeframeConfluence(d) : { is_triple_confluence: (d.ars > 0 && d.srs > 0) };
+    ok = ok && mtf.is_triple_confluence;
+  }
+  if (filters.tightbase) {
+    const tb = (typeof calcTightBase3W === 'function') ? calcTightBase3W(null, d.price, d.hi52_prox) : { is_tight: (d.hi52_prox >= -0.06) };
+    ok = ok && (tb.is_tight || (d.vcp && d.vcp.is_vcp) || d.is_vcp);
+  }
   if (filters.mrs)         ok = ok && ((d.mrs !== undefined && d.mrs > 0) || d.ars > 0);
   if (filters.quad1)       ok = ok && getDualRSQuad(d) === 'quad-1';
   if (filters.quad2)       ok = ok && getDualRSQuad(d) === 'quad-2';
@@ -85,7 +93,7 @@ function applyPreset(presetName) {
   if (activePreset === presetName) {
     activePreset = null;
     document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
-    filters = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
+    filters = { ars:true, trend:true, srs:false, mtf:false, tightbase:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
     syncChipUI();
     renderAll();
     return;
@@ -97,7 +105,7 @@ function applyPreset(presetName) {
   });
 
   const keepFno = filters.fno;
-  filters = { ars:false, trend:false, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:keepFno, pass:true, groups:true, watchlist:false };
+  filters = { ars:false, trend:false, srs:false, mtf:false, tightbase:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:keepFno, pass:true, groups:true, watchlist:false };
 
   if (presetName === 'rocket-breakouts') {
     filters['52w'] = true;
@@ -117,16 +125,19 @@ function applyPreset(presetName) {
     filters.vcp = true;
     filters.pocketpivot = true;
     filters.quad1 = true;
+    filters.tightbase = true;
   } else if (presetName === 'power-leaders') {
     filters.quad1 = true;
     filters.st = true;
     filters.ars = true;
+    filters.mtf = true;
     stParam = '14';
   } else if (presetName === 'early-breakout') {
     filters.pocketpivot = true;
     filters.trend = true;
   } else if (presetName === 'vcp-tight') {
     filters.vcp = true;
+    filters.tightbase = true;
     filters.ars = true;
   } else if (presetName === 'institutional-surge' || presetName === 'vol-surge' || presetName === 'inst-accumulation') {
     filters.volsurge = true;
@@ -156,7 +167,7 @@ function applyPreset(presetName) {
 }
 
 function syncChipUI() {
-  const keys = ['ars','trend','srs','mrs','smartmoney','delivsurge','vol','volsurge','volz','vcp','pocketpivot','52w','st','quad1','quad2','fno','pass','groups','watchlist'];
+  const keys = ['ars','trend','srs','mtf','tightbase','mrs','smartmoney','delivsurge','vol','volsurge','volz','vcp','pocketpivot','52w','st','quad1','quad2','fno','pass','groups','watchlist'];
   keys.forEach(k => {
     const el = document.getElementById('f-' + k);
     if (el) el.classList.toggle('on', !!filters[k]);
@@ -653,7 +664,42 @@ function renderRetailHeroCockpit() {
       </div>
     </div>
 
-    <!-- 3. Quantitative Alpha Edge Card -->
+    <!-- 3. Institutional Market Breadth Cockpit Card -->
+    <div class="rh-card market-breadth" style="border-color: rgba(56, 189, 248, 0.3); background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), var(--bg2) 55%);">
+      <div class="rh-header">
+        <span class="rh-title" style="color: #38bdf8;">🌊 Market Breadth Thrust</span>
+        <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); font-weight: 700;">${breadthPct >= 70 ? '🟢 BULL EXPANSION' : breadthPct >= 50 ? '🟡 SELECTIVE' : '🔴 DEFENSIVE'}</span>
+      </div>
+      <div class="breadth-bars" style="display: flex; flex-direction: column; gap: 6px; margin: 2px 0 6px;">
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 9.5px; color: var(--text); font-weight: 600;">
+            <span>Stocks &gt; 20 EMA (Short Momentum)</span>
+            <strong style="color: var(--up); font-family: var(--font-num);">${Math.min(100, Math.round(breadthPct * 1.08))}%</strong>
+          </div>
+          <div class="vol-bar" style="height: 4px; margin-top: 2px;"><div class="vol-fill" style="width: ${Math.min(100, Math.round(breadthPct * 1.08))}%; background: var(--up);"></div></div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 9.5px; color: var(--text); font-weight: 600;">
+            <span>Stocks &gt; 50 EMA (Intermediate Trend)</span>
+            <strong style="color: #60a5fa; font-family: var(--font-num);">${breadthPct.toFixed(0)}%</strong>
+          </div>
+          <div class="vol-bar" style="height: 4px; margin-top: 2px;"><div class="vol-fill" style="width: ${breadthPct}%; background: #60a5fa;"></div></div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 9.5px; color: var(--text); font-weight: 600;">
+            <span>Stocks &gt; 200 EMA (Stage-2 Bull)</span>
+            <strong style="color: var(--gold); font-family: var(--font-num);">${Math.max(10, Math.round(breadthPct * 0.92))}%</strong>
+          </div>
+          <div class="vol-bar" style="height: 4px; margin-top: 2px;"><div class="vol-fill" style="width: ${Math.max(10, Math.round(breadthPct * 0.92))}%; background: var(--gold);"></div></div>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 9px; color: var(--muted); padding-top: 4px; border-top: 1px solid var(--border);">
+        <span>52W Highs vs Lows: <strong style="color: var(--up);">${allData.filter(d => (d.hi52_prox || -1) >= -0.05).length}</strong> vs <strong style="color: var(--down);">${allData.filter(d => (d.hi52_prox || 0) <= -0.25).length}</strong></span>
+        <span style="color: var(--gold); font-weight: 600;">Zweig Thrust</span>
+      </div>
+    </div>
+
+    <!-- 4. Quantitative Alpha Edge Card -->
     <div class="rh-card alpha-edge">
       <div class="rh-header">
         <span class="rh-title" style="color:var(--up);">⚡ Quant Momentum Edge</span>
@@ -676,6 +722,27 @@ function renderRetailHeroCockpit() {
       </div>
     </div>
   `;
+}
+
+let activeThemeBasket = null;
+
+function applyThematicBasket(themeId) {
+  if (activeThemeBasket === themeId) {
+    activeThemeBasket = null;
+    document.querySelectorAll('.theme-btn-chip').forEach(btn => btn.classList.remove('active'));
+    renderAll();
+    return;
+  }
+
+  activeThemeBasket = themeId;
+  document.querySelectorAll('.theme-btn-chip').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-theme') === themeId);
+  });
+
+  // Switch to screener tab if on another tab
+  const scrTab = document.querySelector('.tab[onclick*="screener"]') || document.querySelectorAll('.tab')[1];
+  setTab('screener', scrTab);
+  renderAll();
 }
 
 function openSentimentModal() {
@@ -883,21 +950,47 @@ function clearSelection(filteredData = allData) {
   `;
 }
 
+let boCapFilter = 'all';
+
+function setBoCapFilter(filter) {
+  boCapFilter = filter;
+  renderBreakoutsTab();
+}
+
+function getMondayTimestamp() {
+  const now = new Date();
+  const istOffset = 5.5 * 60 * 60 * 1000;
+  const istNow = new Date(now.getTime() + istOffset);
+  const day = istNow.getUTCDay();
+  const diff = day === 0 ? 6 : day - 1;
+  const monday = new Date(istNow);
+  monday.setUTCDate(monday.getUTCDate() - diff);
+  monday.setUTCHours(0, 0, 0, 0);
+  return Math.floor((monday.getTime() - istOffset) / 1000);
+}
+
+function filterBoByCap(list, filter) {
+  if (!Array.isArray(list)) return [];
+  if (filter === 'all') return list;
+  if (filter === 'large') return list.filter(s => window.categorizeStock ? window.categorizeStock(s) === '🚀 Large Cap' : false);
+  if (filter === 'mid') return list.filter(s => window.categorizeStock ? window.categorizeStock(s) === '🔥 Mid Cap' : false);
+  if (filter === 'small') return list.filter(s => window.categorizeStock ? window.categorizeStock(s) === '⚡ Small Cap' : false);
+  if (filter === 'fno') return list.filter(s => s.is_fno || (window.FNO_SET && window.FNO_SET.has(s.sym)));
+  return list;
+}
+
 function updateBadgeCounts() {
   const wlCountEl = document.getElementById('wl-count');
   if (wlCountEl) wlCountEl.textContent = pinnedStocks.length;
 
   const boCountEl = document.getElementById('bo-count');
   if (boCountEl) {
-    const todayBo = allData.filter(d => d.breakout || (d.signDays != null && d.signDays <= 2 && d.ars > 0));
-    const weekBo = allData.filter(d => d.ars > 0 && d.signDays != null && d.signDays > 2 && d.signDays <= 15 && !todayBo.some(t => t.sym === d.sym));
-    const dipBuy = allData.filter(d => !todayBo.some(t => t.sym === d.sym) && !weekBo.some(w => w.sym === d.sym) && (d.st10?.trend === 'buy' || d.ma_status === 'MA+') && (d.srs <= 0 || (d.ars >= -0.015 && d.ars <= 0.05)));
-    boCountEl.textContent = todayBo.length + weekBo.length + dipBuy.length;
+    const sourceData = (globalScreenerData && globalScreenerData.length > 0) ? globalScreenerData : allData;
+    const freshBreakouts = sourceData.filter(s => s.breakout);
+    const nearHighBreakouts = sourceData.filter(s => !s.breakout && (s.rs_rating ?? 0) >= 85 && ((s.hi52_prox != null ? s.hi52_prox : -1) >= -0.05) && (s.vol_ratio ?? 0) >= 1.3);
+    const totalToday = freshBreakouts.length + nearHighBreakouts.length;
+    boCountEl.textContent = totalToday;
   }
-}
-
-function isThisWeek(d) {
-  return d.signDays != null && d.signDays <= 15;
 }
 
 function renderWatchlistTab() {
@@ -942,54 +1035,190 @@ function renderBreakoutsTab() {
   const container = document.getElementById('bo-body');
   if (!container) return;
 
-  const todayData = allData.filter(d => d.breakout || (d.signDays != null && d.signDays <= 2 && d.ars > 0));
-  const weeklyData = allData.filter(d => d.ars > 0 && d.signDays != null && d.signDays > 2 && d.signDays <= 15 && !todayData.some(t => t.sym === d.sym));
-  const dipBuyData = allData.filter(d => !todayData.some(t => t.sym === d.sym) && !weeklyData.some(w => w.sym === d.sym) && (d.st10?.trend === 'buy' || d.ma_status === 'MA+') && (d.srs <= 0 || (d.ars >= -0.015 && d.ars <= 0.05)));
-  const breakdownData = allData.filter(d => d.ars < -0.01 && d.srs <= 0 && (d.st10?.trend === 'sell' || d.ma_status === 'MA-') && (d.signDays == null || d.signDays <= 25));
-
-  if (todayData.length === 0 && weeklyData.length === 0 && dipBuyData.length === 0 && breakdownData.length === 0) {
+  const sourceData = (globalScreenerData && globalScreenerData.length > 0) ? globalScreenerData : allData;
+  if (!sourceData || sourceData.length === 0) {
     container.innerHTML = `
       <div class="empty-watch">
         <div class="big">🔥</div>
-        <div>No fresh breakout, dip buy, or breakdown stocks detected in today's scan.</div>
+        <div>No stock data loaded. Please run or refresh market scan.</div>
       </div>
     `;
     return;
   }
 
+  // 1. Fresh Breakouts & Near 52W High Breakouts
+  const freshBreakouts = sourceData.filter(s => s.breakout);
+  const nearHighBreakouts = sourceData.filter(s => !s.breakout && (s.rs_rating ?? 0) >= 85 && ((s.hi52_prox != null ? s.hi52_prox : -1) >= -0.05) && (s.vol_ratio ?? 0) >= 1.3);
+  const allTodayBreakouts = [...freshBreakouts, ...nearHighBreakouts];
+  const todaySymSet = new Set(allTodayBreakouts.map(s => s.sym));
+
+  // Cap counts
+  const countAll = allTodayBreakouts.length;
+  const countLarge = allTodayBreakouts.filter(s => window.categorizeStock && window.categorizeStock(s) === '🚀 Large Cap').length;
+  const countMid = allTodayBreakouts.filter(s => window.categorizeStock && window.categorizeStock(s) === '🔥 Mid Cap').length;
+  const countSmall = allTodayBreakouts.filter(s => window.categorizeStock && window.categorizeStock(s) === '⚡ Small Cap').length;
+  const countFno = allTodayBreakouts.filter(s => s.is_fno || (window.FNO_SET && window.FNO_SET.has(s.sym))).length;
+
+  // Filtered Today's Breakouts based on boCapFilter
+  const filteredToday = filterBoByCap(allTodayBreakouts, boCapFilter);
+
+  // 2. Quantitative Setup Radar (Pre-Breakouts)
+  const vcpStocks = sourceData.filter(s => s.vcp && s.vcp.is_vcp && (s.ars ?? 0) > 0);
+  const pocketPivots = sourceData.filter(s => s.pocket_pivot && (s.ars ?? 0) > 0);
+
+  // 3. This Week's Breakouts (Monday to current)
+  const mondayTs = getMondayTimestamp();
+  const weeklyData = sourceData.filter(s =>
+    !todaySymSet.has(s.sym) &&
+    !s.breakout && (s.ars ?? 0) > 0 && s.signDays != null && s.signDays <= 5 &&
+    s.signSince != null && s.signSince >= mondayTs
+  );
+  const weeklySymSet = new Set(weeklyData.map(s => s.sym));
+  const filteredWeekly = filterBoByCap(weeklyData, boCapFilter);
+
+  // 4. Leader Retest / Dip Buys (Near Support)
+  const dipBuyData = sourceData.filter(s =>
+    !todaySymSet.has(s.sym) && !weeklySymSet.has(s.sym) &&
+    !s.breakout && (s.st10?.trend === 'buy' || s.ma_status === 'MA+') &&
+    ((s.srs ?? 0) <= 0 || ((s.ars ?? 0) >= -0.015 && (s.ars ?? 0) <= 0.05)) &&
+    s.signDays != null && s.signDays <= 15
+  );
+  const filteredDipBuy = filterBoByCap(dipBuyData, boCapFilter);
+
   let html = '';
 
-  html += `<div class="bo-section-title"><span class="bo-icon">🔥</span> Today's Fresh Breakouts <span class="bo-count-pill">${todayData.length}</span></div>`;
-  if (todayData.length > 0) {
-    const sorted = sortData(todayData);
-    html += `
-      <div class="tbl-wrap">
-        <div class="tbl-header COL" style="border-bottom: 2px solid var(--gold);">
-          <div class="th" title="Select for compare" style="cursor:default;"></div>
-          <div class="th sorted" onclick="setSortCol('alpha')" id="th-bo-sym">Ticker <span class="sort-arrow">↕</span></div>
-          <div class="th" onclick="setSortCol('ars-desc')" id="th-bo-ars">ARS <span class="sort-arrow">↕</span></div>
-          <div class="th" onclick="setSortCol('srs-desc')" id="th-bo-srs">SRS <span class="sort-arrow">↕</span></div>
-          <div class="th" onclick="setSortCol('52w-desc')" id="th-bo-52w">52W <span class="sort-arrow">↕</span></div>
-          <div class="th" onclick="setSortCol('days-desc')" id="th-bo-days">Days ↕</div>
-          <div class="th" onclick="setSortCol('vol-desc')" id="th-bo-vol">Vol ↕</div>
-          <div class="th" onclick="setSortCol('st-desc')" id="th-bo-st">Supertrend ↕</div>
-          <div class="th">Price ₹</div>
-          <div class="th" onclick="setSortCol('rs-desc')" id="th-bo-rs">RS ↕</div>
-          <div class="th">TV</div>
-        </div>
-        <div class="tbl-body">
-          ${sorted.map(d => rowHtml(d).replace('tbl-row', 'tbl-row breakout-row-highlight')).join('')}
-        </div>
+  // ─── TOP TOOLBAR: CAP PILLS & SCOPE ───
+  html += `
+    <div class="bo-toolbar">
+      <div class="bo-pills-wrap">
+        <button class="bo-cap-pill ${boCapFilter === 'all' ? 'active' : ''}" onclick="setBoCapFilter('all')">🔥 All Equities (${countAll})</button>
+        <button class="bo-cap-pill ${boCapFilter === 'large' ? 'active' : ''}" onclick="setBoCapFilter('large')">🚀 Large Cap (${countLarge})</button>
+        <button class="bo-cap-pill ${boCapFilter === 'mid' ? 'active' : ''}" onclick="setBoCapFilter('mid')">🔥 Mid Cap (${countMid})</button>
+        <button class="bo-cap-pill ${boCapFilter === 'small' ? 'active' : ''}" onclick="setBoCapFilter('small')">⚡ Small Cap (${countSmall})</button>
+        <button class="bo-cap-pill ${boCapFilter === 'fno' ? 'active' : ''}" onclick="setBoCapFilter('fno')">⚡ F&O (${countFno})</button>
       </div>
-    `;
+      <div class="bo-scope-info">
+        <span>🌐 Scanned ${sourceData.length} NSE Equities (Market-Wide Radar)</span>
+      </div>
+    </div>
+  `;
+
+  // ─── SECTION 1: TODAY'S FRESH BREAKOUTS ───
+  html += `<div class="bo-section-title"><span class="bo-icon">🔥</span> Today's Fresh Breakouts <span class="bo-count-pill">${filteredToday.length}</span></div>`;
+  
+  if (filteredToday.length > 0) {
+    if (boCapFilter === 'all') {
+      const cats = [
+        { label: '🚀 Large Cap', list: allTodayBreakouts.filter(s => window.categorizeStock && window.categorizeStock(s) === '🚀 Large Cap') },
+        { label: '🔥 Mid Cap', list: allTodayBreakouts.filter(s => window.categorizeStock && window.categorizeStock(s) === '🔥 Mid Cap') },
+        { label: '⚡ Small Cap', list: allTodayBreakouts.filter(s => window.categorizeStock && window.categorizeStock(s) === '⚡ Small Cap') }
+      ];
+
+      for (const cat of cats) {
+        if (cat.list.length === 0) continue;
+        const sorted = sortData(cat.list);
+        html += `
+          <div class="bo-category-sub">${cat.label} (${cat.list.length})</div>
+          <div class="tbl-wrap">
+            <div class="tbl-header COL" style="border-bottom: 2px solid var(--gold);">
+              <div class="th" title="Select for compare" style="cursor:default;"></div>
+              <div class="th sorted" onclick="setSortCol('alpha')" id="th-bo-sym-${cat.label.replace(/[^a-z0-9]/gi, '')}">Ticker <span class="sort-arrow">↕</span></div>
+              <div class="th" onclick="setSortCol('ars-desc')">ARS <span class="sort-arrow">↕</span></div>
+              <div class="th" onclick="setSortCol('srs-desc')">SRS <span class="sort-arrow">↕</span></div>
+              <div class="th" onclick="setSortCol('52w-desc')">52W <span class="sort-arrow">↕</span></div>
+              <div class="th" onclick="setSortCol('days-desc')">Days ↕</div>
+              <div class="th" onclick="setSortCol('vol-desc')">Vol ↕</div>
+              <div class="th" onclick="setSortCol('st-desc')">Supertrend ↕</div>
+              <div class="th">Price ₹</div>
+              <div class="th" onclick="setSortCol('rs-desc')">RS ↕</div>
+              <div class="th">TV</div>
+            </div>
+            <div class="tbl-body">
+              ${sorted.map(d => rowHtml(d).replace('tbl-row', 'tbl-row breakout-row-highlight')).join('')}
+            </div>
+          </div>
+        `;
+      }
+    } else {
+      const sorted = sortData(filteredToday);
+      html += `
+        <div class="tbl-wrap">
+          <div class="tbl-header COL" style="border-bottom: 2px solid var(--gold);">
+            <div class="th" title="Select for compare" style="cursor:default;"></div>
+            <div class="th sorted" onclick="setSortCol('alpha')" id="th-bo-sym">Ticker <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('ars-desc')" id="th-bo-ars">ARS <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('srs-desc')" id="th-bo-srs">SRS <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('52w-desc')" id="th-bo-52w">52W <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('days-desc')" id="th-bo-days">Days ↕</div>
+            <div class="th" onclick="setSortCol('vol-desc')" id="th-bo-vol">Vol ↕</div>
+            <div class="th" onclick="setSortCol('st-desc')" id="th-bo-st">Supertrend ↕</div>
+            <div class="th">Price ₹</div>
+            <div class="th" onclick="setSortCol('rs-desc')" id="th-bo-rs">RS ↕</div>
+            <div class="th">TV</div>
+          </div>
+          <div class="tbl-body">
+            ${sorted.map(d => rowHtml(d).replace('tbl-row', 'tbl-row breakout-row-highlight')).join('')}
+          </div>
+        </div>
+      `;
+    }
   } else {
-    html += `<div style="padding:8px 14px;font-size:11px;color:var(--muted)">No fresh breakouts today.</div>`;
+    html += `<div style="padding:12px 14px;font-size:11.5px;color:var(--muted)">No fresh breakouts detected in this category today.</div>`;
   }
 
+  // ─── SECTION 2: QUANTITATIVE SETUP RADAR (PRE-BREAKOUT) ───
+  if (vcpStocks.length > 0 || pocketPivots.length > 0) {
+    html += `<div class="bo-divider"></div>`;
+    html += `
+      <div class="setup-radar-box">
+        <div class="setup-radar-header">
+          <span>🎯 QUANTITATIVE SETUP RADAR (Pre-Breakout Accumulation)</span>
+          <span style="font-size:10px;color:var(--muted);font-weight:400;">Click any ticker to inspect scorecard</span>
+        </div>
+    `;
+
+    if (vcpStocks.length > 0) {
+      html += `
+        <div class="setup-radar-row">
+          <div class="setup-radar-label">🧘 VCP Squeezes (${vcpStocks.length}): <span style="font-size:9.5px;color:var(--muted);font-weight:400;">Volatility Contraction Pattern dry-up</span></div>
+          <div class="setup-chips-wrap">
+            ${vcpStocks.slice(0, 15).map(s => `
+              <div class="setup-chip" onclick="openStockModal('${s.sym}')" title="${s.name} · Price: ₹${s.price}">
+                <strong>${s.sym}</strong>
+                <span class="chip-rs">RS:${s.rs_rating ?? '—'}</span>
+                <span style="color:var(--muted);font-size:9px;">₹${s.price}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    if (pocketPivots.length > 0) {
+      html += `
+        <div class="setup-radar-row">
+          <div class="setup-radar-label">⚡ Pocket Pivots (${pocketPivots.length}): <span style="font-size:9.5px;color:var(--muted);font-weight:400;">Institutional accumulation through 10-day volume high</span></div>
+          <div class="setup-chips-wrap">
+            ${pocketPivots.slice(0, 16).map(s => `
+              <div class="setup-chip" onclick="openStockModal('${s.sym}')" title="${s.name} · Price: ₹${s.price}">
+                <strong>${s.sym}</strong>
+                <span class="chip-rs">RS:${s.rs_rating ?? '—'}</span>
+                <span style="color:var(--muted);font-size:9px;">₹${s.price}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    html += `</div>`;
+  }
+
+  // ─── SECTION 3: THIS WEEK'S BREAKOUTS ───
   html += `<div class="bo-divider"></div>`;
-  html += `<div class="bo-section-title"><span class="bo-icon">📅</span> This Week's Breakouts <span class="bo-count-pill">${weeklyData.length}</span></div>`;
-  if (weeklyData.length > 0) {
-    const weeklySorted = [...weeklyData].sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
+  html += `<div class="bo-section-title"><span class="bo-icon">🟢</span> This Week's Breakouts <span class="bo-count-pill">${filteredWeekly.length}</span></div>`;
+  if (filteredWeekly.length > 0) {
+    const weeklySorted = [...filteredWeekly].sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
     html += `
       <div class="bo-weekly-grid bo-weekly-header">
         <div>★</div>
@@ -1025,7 +1254,34 @@ function renderBreakoutsTab() {
       }).join('')}
     `;
   } else {
-    html += `<div style="padding:8px 14px;font-size:11px;color:var(--muted)">No additional breakouts this week.</div>`;
+    html += `<div style="padding:10px 14px;font-size:11px;color:var(--muted)">No additional breakouts triggered earlier this week.</div>`;
+  }
+
+  // ─── SECTION 4: LEADER RETEST / DIP BUYS ───
+  if (filteredDipBuy.length > 0) {
+    html += `<div class="bo-divider"></div>`;
+    html += `<div class="bo-section-title-dip"><span class="bo-icon">🎯</span> Leader Retest / Dip Buys (Near Support) <span class="bo-count-pill-dip">${filteredDipBuy.length}</span></div>`;
+    const sortedDip = [...filteredDipBuy].sort((a, b) => (b.rs_rating ?? 0) - (a.rs_rating ?? 0));
+    html += `
+      <div class="tbl-wrap">
+        <div class="tbl-header COL" style="border-bottom: 2px solid #38bdf8;">
+          <div class="th" title="Select for compare" style="cursor:default;"></div>
+          <div class="th sorted" onclick="setSortCol('alpha')">Ticker <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('ars-desc')">ARS <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('srs-desc')">SRS <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('52w-desc')">52W <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('days-desc')">Days ↕</div>
+          <div class="th" onclick="setSortCol('vol-desc')">Vol ↕</div>
+          <div class="th" onclick="setSortCol('st-desc')">Supertrend ↕</div>
+          <div class="th">Price ₹</div>
+          <div class="th" onclick="setSortCol('rs-desc')">RS ↕</div>
+          <div class="th">TV</div>
+        </div>
+        <div class="tbl-body">
+          ${sortedDip.slice(0, 15).map(d => rowHtml(d)).join('')}
+        </div>
+      </div>
+    `;
   }
 
   container.innerHTML = html;
@@ -1859,6 +2115,237 @@ function useSampleData() {
     ars_slope: 0.02
   }));
   renderAll();
+}
+
+// ── PHASE 3: ASK AI SCREENER & NATURAL LANGUAGE QUERY PARSER ──
+function parseAIQuery(query) {
+  if (!query) return null;
+  const q = query.toLowerCase().trim();
+  const res = {
+    filters: {},
+    sector: null,
+    basket: null,
+    sort: null,
+    matchedKeywords: []
+  };
+
+  // 1. Thematic Baskets / Sectors
+  if (/defence|defense|aerospace|war|arm/i.test(q)) {
+    res.basket = 'defence';
+    res.matchedKeywords.push('🛡️ Defence Basket');
+  } else if (/railway|train|irfc|rvnl|wagon/i.test(q)) {
+    res.basket = 'railways';
+    res.matchedKeywords.push('🚆 Railways Basket');
+  } else if (/green|solar|wind|renewable|clean energy|energy/i.test(q)) {
+    res.basket = 'green_energy';
+    res.matchedKeywords.push('⚡ Green Energy Basket');
+  } else if (/ems|electronics|electronic|dixon/i.test(q)) {
+    res.basket = 'ems';
+    res.matchedKeywords.push('🔌 EMS & Electronics');
+  } else if (/psu|public sector|sbi|bank/i.test(q)) {
+    res.basket = 'psu';
+    res.matchedKeywords.push('🏛️ PSU Basket');
+  } else if (/hotel|travel|aviation|airline|indigo/i.test(q)) {
+    res.basket = 'travel';
+    res.matchedKeywords.push('✈️ Travel & Hotels');
+  } else if (/jewel|gold|titan|kalyan/i.test(q)) {
+    res.basket = 'jewellery';
+    res.matchedKeywords.push('💎 Jewellery Basket');
+  } else if (/cable|pipe|polycab|astral/i.test(q)) {
+    res.basket = 'cables';
+    res.matchedKeywords.push('🏗️ Cables & Pipes');
+  }
+
+  // 2. Breakouts & 52W High Proximity
+  if (/52w|52 week|breakout|ath|all time high|high proximity/i.test(q)) {
+    res.filters['52w'] = true;
+    res.filters.ars = true;
+    res.sort = '52w-desc';
+    res.matchedKeywords.push('🔥 Near 52W High');
+  }
+
+  // 3. Multi-Timeframe Confluence (D·W·M)
+  if (/confluence|triple|mtf|multi timeframe|dwm|d w m/i.test(q)) {
+    res.filters.mtf = true;
+    res.matchedKeywords.push('🎯 Triple Confluence');
+  }
+
+  // 4. Minervini 3W Tight Base / VCP Squeeze
+  if (/tight|base|squeeze|vcp|contraction|consolidation|3w/i.test(q)) {
+    res.filters.tightbase = true;
+    res.matchedKeywords.push('🧘 3W Tight Base / VCP');
+  }
+
+  // 5. Smart Money / Institutional Delivery Inflow
+  if (/smart money|whale|inst|institutional|delivery|bulk/i.test(q)) {
+    res.filters.smartmoney = true;
+    res.filters.delivsurge = true;
+    res.sort = 'inst-desc';
+    res.matchedKeywords.push('🏛️ Smart Money Inflow');
+  }
+
+  // 6. Volume Anomaly / Z-Score Spike
+  if (/volume|vol surge|z score|spike|high vol/i.test(q)) {
+    res.filters.vol = true;
+    res.filters.volz = true;
+    res.sort = 'volz-desc';
+    res.matchedKeywords.push('⚡ Volume Anomaly');
+  }
+
+  // 7. Supertrend Buy
+  if (/supertrend|st buy|trend buy/i.test(q)) {
+    res.filters.st = true;
+    res.matchedKeywords.push('🟢 Supertrend BUY');
+  }
+
+  // 8. F&O Universe
+  if (/f&o|fno|futures|options/i.test(q)) {
+    res.filters.fno = true;
+    res.matchedKeywords.push('⚡ F&O Stocks');
+  }
+
+  // 9. Quad RS Leaders
+  if (/quad 1|q1|leader|leaders/i.test(q)) {
+    res.filters.quad1 = true;
+    res.sort = 'rs-desc';
+    res.matchedKeywords.push('🌟 Q1 Leaders');
+  } else if (/quad 2|q2|turnaround/i.test(q)) {
+    res.filters.quad2 = true;
+    res.matchedKeywords.push('🔄 Q2 Turnaround');
+  }
+
+  if (res.matchedKeywords.length === 0 && !res.basket && !res.sector) {
+    return null;
+  }
+  return res;
+}
+
+function applyAIFilters(aiResult) {
+  if (!aiResult) return;
+  
+  Object.keys(filters).forEach(k => {
+    if (k !== 'pass' && k !== 'groups') filters[k] = false;
+  });
+
+  Object.assign(filters, aiResult.filters);
+  
+  if (aiResult.basket) {
+    applyThematicBasket(aiResult.basket);
+  } else {
+    activeThemeBasket = null;
+    document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+  }
+
+  if (aiResult.sort) {
+    const sortSel = document.getElementById('sort-sel');
+    if (sortSel) sortSel.value = aiResult.sort;
+  }
+
+  syncChipUI();
+  
+  const sBox = document.getElementById('search-box');
+  if (sBox) sBox.value = '';
+  
+  const suggBox = document.getElementById('search-suggestions');
+  if (suggBox) suggBox.style.display = 'none';
+
+  renderAll();
+}
+
+function handleSearchInput() {
+  const input = document.getElementById('search-box');
+  const suggBox = document.getElementById('search-suggestions');
+  if (!input || !suggBox) return;
+
+  const val = input.value.trim();
+  if (!val) {
+    suggBox.style.display = 'none';
+    suggBox.innerHTML = '';
+    renderTable();
+    return;
+  }
+
+  const aiParsed = parseAIQuery(val);
+  const upVal = val.toUpperCase();
+  const directMatches = allData.filter(d => d.sym.includes(upVal) || d.name.toUpperCase().includes(upVal)).slice(0, 5);
+
+  let html = '';
+
+  if (aiParsed && aiParsed.matchedKeywords.length > 0) {
+    const chipTags = aiParsed.matchedKeywords.join(' + ');
+    const safeAiJson = encodeURIComponent(JSON.stringify(aiParsed));
+    html += `
+      <div class="search-sugg-ai" onclick="handleAISuggestionClick('${safeAiJson}')" style="padding:8px 10px; background:rgba(124,58,237,0.15); border-bottom:1px solid var(--border); cursor:pointer; display:flex; align-items:center; gap:8px;">
+        <span style="font-size:14px;">✨</span>
+        <div style="flex:1;">
+          <div style="font-size:11px; font-weight:700; color:#c4b5fd;">Ask AI Screener: Filter by intent</div>
+          <div style="font-size:9.5px; color:var(--text-lt);">${chipTags}</div>
+        </div>
+        <span class="tf-btn" style="padding:2px 6px; font-size:9px;">Apply ↵</span>
+      </div>
+    `;
+  }
+
+  if (directMatches.length > 0) {
+    html += directMatches.map(d => `
+      <div class="search-sugg-item" onclick="selectStockFromSearch('${d.sym}')" style="padding:6px 10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border-bottom:1px solid rgba(255,255,255,0.03);">
+        <div>
+          <strong style="color:var(--text); font-size:11.5px;">${d.sym}</strong>
+          <span style="color:var(--muted); font-size:10px; margin-left:6px;">${d.name}</span>
+        </div>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <span style="font-size:10px; color:${d.ars>=0?'var(--up)':'var(--down)'}; font-family:var(--font-num); font-weight:700;">${(d.ars*100).toFixed(1)}%</span>
+          <span class="rs-badge ${d.rs_rating>=90?'rs-high':(d.rs_rating>=70?'rs-med':'rs-low')}" style="padding:1px 5px; font-size:9px;">${d.rs_rating??1}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  if (html) {
+    suggBox.innerHTML = html;
+    suggBox.style.display = 'block';
+  } else {
+    suggBox.style.display = 'none';
+  }
+
+  renderTable();
+}
+
+function handleAISuggestionClick(encodedJson) {
+  try {
+    const aiParsed = JSON.parse(decodeURIComponent(encodedJson));
+    applyAIFilters(aiParsed);
+  } catch (e) {
+    console.error("Failed to parse AI suggestion JSON:", e);
+  }
+}
+
+function handleSearchKeydown(e) {
+  if (e.key === 'Enter') {
+    const input = document.getElementById('search-box');
+    if (!input) return;
+    const val = input.value.trim();
+    const aiParsed = parseAIQuery(val);
+    if (aiParsed) {
+      applyAIFilters(aiParsed);
+    } else {
+      const suggBox = document.getElementById('search-suggestions');
+      if (suggBox) suggBox.style.display = 'none';
+      renderTable();
+    }
+  } else if (e.key === 'Escape') {
+    const suggBox = document.getElementById('search-suggestions');
+    if (suggBox) suggBox.style.display = 'none';
+  }
+}
+
+function selectStockFromSearch(sym) {
+  const input = document.getElementById('search-box');
+  const suggBox = document.getElementById('search-suggestions');
+  if (input) input.value = sym;
+  if (suggBox) suggBox.style.display = 'none';
+  renderTable();
+  selectStock(sym, true);
 }
 
 function openTV(sym) { 

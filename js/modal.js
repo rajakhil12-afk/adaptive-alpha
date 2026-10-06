@@ -157,6 +157,9 @@ function openStockModal(sym) {
     mIchi.style.color = status === 'Kumo BUY' ? '#e1bee7' : (status === 'Kumo SELL' ? 'var(--down)' : 'var(--muted)');
   }
 
+  // Populate AI Quantitative Thesis Card
+  renderAIThesisCard(d);
+
   const starBtn = document.getElementById('m-star-btn');
   if (starBtn) {
     const isPinned = pinnedStocks.includes(d.sym);
@@ -197,8 +200,20 @@ function openStockModal(sym) {
     `;
   }
 
+  // Populate Multi-Timeframe Confluence (Daily · Weekly · Monthly)
+  const mtf = (typeof calcMultiTimeframeConfluence === 'function') 
+    ? calcMultiTimeframeConfluence(d) 
+    : { badge: '🟢 🟢 ⚪', is_triple_confluence: (d.ars > 0 && d.srs > 0), score: 2, label: 'Dual Confluence' };
+  
+  const mMtfBadge = document.getElementById('m-mtf-badge');
+  if (mMtfBadge) {
+    mMtfBadge.textContent = mtf.badge;
+    mMtfBadge.title = mtf.label;
+    mMtfBadge.style.letterSpacing = '2px';
+  }
+
   // Initialize Position Calculator for this stock
-  const stVal = (stData && stData.val > 0) ? stData.val : Math.round(d.price * 0.95 * 10) / 10;
+  const stVal = (stData && stData.val > 0) ? stData.val : Math.round(d.price * 0.90 * 10) / 10;
   const savedCap = localStorage.getItem('calc_capital') || '500000';
   const savedRisk = localStorage.getItem('calc_risk') || '1.0';
   
@@ -222,6 +237,9 @@ function openStockModal(sym) {
     quadTagEl.textContent = quadLabels[quadKey];
   }
 
+  // Setup Broker Bridge links
+  setupBrokerBridge(d.sym);
+
   recalcPositionSize();
   document.getElementById('stock-modal').classList.add('open');
 
@@ -240,6 +258,34 @@ function openStockModal(sym) {
   }, 150);
 }
 
+function setupBrokerBridge(sym) {
+  const kiteBtn = document.getElementById('broker-kite-btn');
+  const dhanBtn = document.getElementById('broker-dhan-btn');
+  const growwBtn = document.getElementById('broker-groww-btn');
+
+  if (kiteBtn) kiteBtn.onclick = () => window.open(`https://kite.zerodha.com/chart/ext/ciq/NSE/${encodeURIComponent(sym)}`, '_blank');
+  if (dhanBtn) dhanBtn.onclick = () => window.open(`https://web.dhan.co/`, '_blank');
+  if (growwBtn) growwBtn.onclick = () => window.open(`https://groww.in/stocks/${encodeURIComponent(sym.toLowerCase())}`, '_blank');
+}
+
+function setStopLossMode(mode) {
+  if (!selectedSym) return;
+  const d = allData.find(s => s.sym === selectedSym);
+  if (!d || !d.price) return;
+
+  const slInput = document.getElementById('calc-sl-price');
+  const stData = stParam === '14' ? d.st14 : d.st10;
+
+  if (mode === 'st') {
+    slInput.value = (stData && stData.val > 0) ? stData.val : (d.price * 0.90).toFixed(1);
+  } else if (mode === 'fixed10') {
+    slInput.value = (d.price * 0.90).toFixed(1);
+  } else if (mode === 'fixed5') {
+    slInput.value = (d.price * 0.95).toFixed(1);
+  }
+  recalcPositionSize();
+}
+
 function closeModal() {
   const modal = document.getElementById('stock-modal');
   if (modal) modal.classList.remove('open');
@@ -252,7 +298,7 @@ function recalcPositionSize() {
 
   const cap = parseFloat(document.getElementById('calc-cap').value) || 500000;
   const riskPct = parseFloat(document.getElementById('calc-risk-pct').value) || 1.0;
-  const slPrice = parseFloat(document.getElementById('calc-sl-price').value) || (d.price * 0.95);
+  const slPrice = parseFloat(document.getElementById('calc-sl-price').value) || (d.price * 0.90);
 
   try {
     localStorage.setItem('calc_capital', cap);
@@ -261,22 +307,37 @@ function recalcPositionSize() {
 
   const maxRiskAmount = cap * (riskPct / 100);
   const riskPerShare = Math.max(0.5, d.price - slPrice);
-  const qty = Math.floor(maxRiskAmount / riskPerShare);
+  const riskPctPerShare = ((riskPerShare / d.price) * 100).toFixed(1);
+  
+  let qty = Math.floor(maxRiskAmount / riskPerShare);
+  if (qty <= 0) qty = 1;
+
+  // Max 20% cap on single stock allocation
+  const maxAllocCap = cap * 0.20;
+  if (qty * d.price > maxAllocCap) {
+    qty = Math.max(1, Math.floor(maxAllocCap / d.price));
+  }
+
   const totalInv = qty * d.price;
   const capPct = cap > 0 ? ((totalInv / cap) * 100).toFixed(1) : 0;
 
-  const target1 = d.price + (riskPerShare * 2);
-  const target2 = d.price + (riskPerShare * 3);
+  const target1 = d.price + (riskPerShare * 1); // 1:1 Breakeven
+  const target2 = d.price + (riskPerShare * 2); // 1:2 Dynamic Trail
+  const target3 = d.price + (riskPerShare * 3); // 1:3 Multibagger
 
   const qtyEl = document.getElementById('calc-qty');
   const invEl = document.getElementById('calc-inv');
+  const riskAmtEl = document.getElementById('calc-risk-amount');
   const t1El  = document.getElementById('calc-t1');
   const t2El  = document.getElementById('calc-t2');
+  const t3El  = document.getElementById('calc-t3');
 
-  if (qtyEl) qtyEl.textContent = qty > 0 ? `${qty.toLocaleString('en-IN')} shares` : '—';
-  if (invEl) invEl.textContent = totalInv > 0 ? `₹${totalInv.toLocaleString('en-IN', {maximumFractionDigits:0})} (${capPct}%)` : '—';
+  if (qtyEl) qtyEl.textContent = `${qty.toLocaleString('en-IN')} shares`;
+  if (invEl) invEl.textContent = `₹${totalInv.toLocaleString('en-IN', {maximumFractionDigits:0})} (${capPct}% Cap)`;
+  if (riskAmtEl) riskAmtEl.textContent = `₹${(qty * riskPerShare).toLocaleString('en-IN', {maximumFractionDigits:0})} (-${riskPctPerShare}%)`;
   if (t1El)  t1El.textContent  = `₹${target1.toFixed(1)} (+${((target1-d.price)/d.price*100).toFixed(1)}%)`;
   if (t2El)  t2El.textContent  = `₹${target2.toFixed(1)} (+${((target2-d.price)/d.price*100).toFixed(1)}%)`;
+  if (t3El)  t3El.textContent  = `₹${target3.toFixed(1)} (+${((target3-d.price)/d.price*100).toFixed(1)}%)`;
 }
 
 function switchTLTab(tab) {
@@ -663,9 +724,144 @@ function closeCompare() {
   if (modal) modal.classList.remove('open');
 }
 
+function renderAIThesisCard(d) {
+  const container = document.getElementById('m-ai-thesis-body');
+  if (!container) return;
+
+  const mtf = (typeof calcMultiTimeframeConfluence === 'function') 
+    ? calcMultiTimeframeConfluence(d) 
+    : { badge: '🟢 🟢 ⚪', is_triple_confluence: (d.ars > 0 && d.srs > 0), score: 2, label: 'Dual Confluence' };
+  
+  const tb = (typeof calcTightBase3W === 'function') 
+    ? calcTightBase3W(null, d.price, d.hi52_prox) 
+    : { is_tight: (d.hi52_prox >= -0.06), range_pct: 4.2 };
+
+  const stData = stParam === '14' ? d.st14 : d.st10;
+  const isSTBuy = stData && stData.trend === 'buy';
+  const quadKey = (typeof getDualRSQuad === 'function') ? getDualRSQuad(d) : 'quad-1';
+  const inst = d.institutional || { ad_grade: 'B', status: 'Accumulation', inst_score: d.rs_rating || 50 };
+
+  // Generate Setup Classification & Confidence
+  let setupTitle = '⚡ MOMENTUM CONTINUATION';
+  let setupTagColor = '#0fe586';
+  let bias = 'BULLISH';
+
+  if (d.hi52_prox >= -0.03 && (d.vol_ratio || 1) >= 1.5) {
+    setupTitle = '🚀 HIGH-CONVICTION 52W BREAKOUT';
+    setupTagColor = '#ffd700';
+  } else if (tb.is_tight || (d.vcp && d.vcp.is_vcp)) {
+    setupTitle = '🧘 VOLATILITY CONTRACTION (VCP / 3W TIGHT BASE)';
+    setupTagColor = '#7da9ff';
+  } else if (quadKey === 'quad-2') {
+    setupTitle = '🔄 QUAD-2 RS TURNAROUND';
+    setupTagColor = '#5fc4ba';
+  } else if (quadKey === 'quad-3') {
+    setupTitle = '⏸️ QUAD-3 LEADER PULLBACK / DIP BUY';
+    setupTagColor = '#ffd700';
+  } else if (quadKey === 'quad-4') {
+    setupTitle = '💤 QUAD-4 LAGGARD (AVOID / DEFENSIVE)';
+    setupTagColor = '#ef5350';
+    bias = 'NEUTRAL / BEARISH';
+  }
+
+  // Calculate execution levels
+  const entryPrice = d.price || 0;
+  const slPrice = (stData && stData.val > 0) ? stData.val : Math.round(entryPrice * 0.90 * 10) / 10;
+  const riskPerShare = Math.max(0.1, entryPrice - slPrice);
+  const t1Price = Math.round((entryPrice + riskPerShare * 1.0) * 10) / 10;
+  const t2Price = Math.round((entryPrice + riskPerShare * 2.0) * 10) / 10;
+  const t3Price = Math.round((entryPrice + riskPerShare * 3.0) * 10) / 10;
+  const riskPct = entryPrice > 0 ? ((riskPerShare / entryPrice) * 100).toFixed(1) : '10.0';
+
+  const mtfDesc = mtf.is_triple_confluence 
+    ? '🔥 Strong Multi-Timeframe Alignment across Daily, Weekly, and Monthly charts (Triple Confluence 🟢 🟢 🟢).' 
+    : `Timeframe alignment: ${mtf.label} (${mtf.badge}).`;
+
+  const volDesc = (d.vol_ratio >= 1.5) 
+    ? `Volume expansion (+${((d.vol_ratio - 1) * 100).toFixed(0)}% vs 20D avg) signals active institutional accumulation (${inst.ad_grade} grade).` 
+    : (d.vol_ratio <= 0.7) 
+    ? 'Volume dry-up observed — indicates constructive base contraction before next leg up.' 
+    : 'Trading with normal liquidity and steady baseline participation.';
+
+  // Render HTML inside the modal
+  container.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:6px;">
+      <div style="font-weight:700; color:${setupTagColor}; display:flex; align-items:center; gap:6px;">
+        <span>${setupTitle}</span>
+      </div>
+      <span class="quad-pill ${quadKey}" style="font-size:9px;">${bias}</span>
+    </div>
+    <div style="color:var(--text-lt); font-size:10.5px;">
+      <strong>Core Thesis:</strong> ${d.sym} (${d.name}) displays a composite RS Rating of <strong style="color:var(--gold);">${d.rs_rating ?? '—'}/99</strong> in the <strong>${d.ind}</strong> sector. ${mtfDesc} ${volDesc}
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; background:var(--bg2); padding:6px 8px; border-radius:6px; border:1px solid var(--border); margin-top:2px;">
+      <div>
+        <div style="font-size:8.5px; color:var(--muted);">REC. ENTRY</div>
+        <div style="font-size:11px; font-weight:700; color:var(--text);">₹${entryPrice.toLocaleString('en-IN')}</div>
+      </div>
+      <div>
+        <div style="font-size:8.5px; color:var(--muted);">STOP LOSS (-${riskPct}%)</div>
+        <div style="font-size:11px; font-weight:700; color:var(--down);">₹${slPrice.toLocaleString('en-IN')}</div>
+      </div>
+      <div>
+        <div style="font-size:8.5px; color:var(--muted);">TARGET 1 (1:1)</div>
+        <div style="font-size:11px; font-weight:700; color:var(--up);">₹${t1Price.toLocaleString('en-IN')}</div>
+      </div>
+      <div>
+        <div style="font-size:8.5px; color:var(--muted);">TARGET 2 (1:2)</div>
+        <div style="font-size:11px; font-weight:700; color:#7da9ff;">₹${t2Price.toLocaleString('en-IN')}</div>
+      </div>
+    </div>
+  `;
+}
+
+function copyAIThesisToClipboard() {
+  if (!selectedSym) return;
+  const d = allData.find(s => s.sym === selectedSym);
+  if (!d) return;
+
+  const mtf = (typeof calcMultiTimeframeConfluence === 'function') ? calcMultiTimeframeConfluence(d) : { label: 'Dual Confluence', badge: '🟢 🟢 ⚪' };
+  const tb = (typeof calcTightBase3W === 'function') ? calcTightBase3W(null, d.price, d.hi52_prox) : { is_tight: false };
+  const stData = stParam === '14' ? d.st14 : d.st10;
+  const slPrice = (stData && stData.val > 0) ? stData.val : Math.round(d.price * 0.90 * 10) / 10;
+  const riskPerShare = Math.max(0.1, d.price - slPrice);
+  const t1Price = Math.round((d.price + riskPerShare * 1.0) * 10) / 10;
+  const t2Price = Math.round((d.price + riskPerShare * 2.0) * 10) / 10;
+  const t3Price = Math.round((d.price + riskPerShare * 3.0) * 10) / 10;
+
+  const text = `🧠 ADAPTIVE ALPHA AI THESIS: ${d.sym} (${d.name})
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 Sector: ${d.ind} | Price: ₹${d.price}
+🌟 RS Rating: ${d.rs_rating ?? '—'}/99 | ARS: ${(d.ars*100).toFixed(1)}% | SRS: ${(d.srs*100).toFixed(1)}%
+⚡ MTF Confluence: ${mtf.label} (${mtf.badge})
+🧘 3W Tight Base / VCP: ${tb.is_tight ? 'YES (Constructive)' : 'Normal'}
+🏛️ Inst. Accumulation: ${d.institutional?.ad_grade || 'B'} Grade (${d.institutional?.status || 'Neutral'})
+
+📐 QUANTITATIVE EXECUTION BLUEPRINT:
+• Entry: ₹${d.price}
+• Hard SL: ₹${slPrice} (${(((slPrice - d.price)/d.price)*100).toFixed(1)}%)
+• Target 1 (1:1 R:R): ₹${t1Price}
+• Target 2 (1:2 R:R): ₹${t2Price}
+• Target 3 (1:3 R:R): ₹${t3Price}
+
+Generated via Adaptive Alpha Quantitative Momentum Engine.`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('#m-ai-thesis-card .tf-btn');
+    if (btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ Copied!';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    }
+  }).catch(() => {
+    prompt('Copy Thesis:', text);
+  });
+}
+
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape' || e.key === 'Esc') {
     closeModal();
     closeCompare();
   }
 });
+

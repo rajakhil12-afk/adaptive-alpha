@@ -11,8 +11,19 @@ const THEMATIC_SECTORS = {
   'SBIN': '🏛️ PSU Bank', 'PNB': '🏛️ PSU Bank', 'BANKBARODA': '🏛️ PSU Bank', 'CANBK': '🏛️ PSU Bank', 'UNIONBANK': '🏛️ PSU Bank', 'INDIANB': '🏛️ PSU Bank', 'MAHABANK': '🏛️ PSU Bank', 'CENTRALBK': '🏛️ PSU Bank', 'IOB': '🏛️ PSU Bank', 'UCOBANK': '🏛️ PSU Bank',
   'INDHOTEL': '✈️ Hotels & Travel', 'EIHOTEL': '✈️ Hotels & Travel', 'LEMONTREE': '✈️ Hotels & Travel', 'CHALET': '✈️ Hotels & Travel', 'INDIGO': '✈️ Hotels & Travel', 'EASEMYTRIP': '✈️ Hotels & Travel', 'BLS': '✈️ Hotels & Travel',
   'POLYCAB': '🏗️ Cables & Pipes', 'KEI': '🏗️ Cables & Pipes', 'RRKABEL': '🏗️ Cables & Pipes', 'ASTRAL': '🏗️ Cables & Pipes', 'FINPIPE': '🏗️ Cables & Pipes', 'SUPREMEIND': '🏗️ Cables & Pipes', 'PRINCEPIPE': '🏗️ Cables & Pipes',
-  'TITAN': '💎 Jewellery', 'KALYANKJIL': '💎 Jewellery', 'SENCO': '💎 Jewellery', 'THANGAMAYL': '💎 Jewellery',
+  'TITAN': '💎 Jewellery', 'KALYANKJIL': '💎 Jewellery', 'SENCO': '💎 Jewellery', 'THANGAMAYL': '💎 Jewellery', 'TRENT': '💎 Jewellery',
   'PIIND': '🌾 Agrochem', 'DEEPAKNTR': '🌾 Agrochem', 'SRF': '🌾 Agrochem', 'COROMANDEL': '🌾 Agrochem', 'CHAMBLFERT': '🌾 Agrochem', 'FACT': '🌾 Agrochem', 'GNFC': '🌾 Agrochem'
+};
+
+const THEMATIC_BASKETS = {
+  defence: { name: '🛡️ Defence & Aerospace', syms: new Set(['HAL', 'BEL', 'BDL', 'MAZDOCK', 'COCHINSHIP', 'GRSE', 'PARAS', 'ZENTEC', 'DATAPATTNS', 'BEML', 'BHARATFORG', 'ASTRAMICRO', 'SOLARINDS', 'MTARTECH']) },
+  railways: { name: '🚆 Railways & Capex', syms: new Set(['RVNL', 'IRFC', 'IRCON', 'RAILTEL', 'TITAGARH', 'JUPITERWAG', 'TEXRAIL', 'RITES']) },
+  green_energy: { name: '⚡ Solar & Green Energy', syms: new Set(['SUZLON', 'INOXWIND', 'IREDA', 'ADANIGREEN', 'BORORENEW', 'KPIGREEN', 'TATAPOWER', 'JSWENERGY']) },
+  ems: { name: '🔌 EMS & Electronics', syms: new Set(['DIXON', 'KAYNES', 'SYRMA', 'CYIENTDLM', 'PGEL', 'AVALON', 'AMBER']) },
+  psu: { name: '🏛️ High-Yield PSU Leaders', syms: new Set(['SBIN', 'PNB', 'BANKBARODA', 'CANBK', 'UNIONBANK', 'INDIANB', 'MAHABANK', 'CENTRALBK', 'IOB', 'UCOBANK', 'COALINDIA', 'NTPC', 'ONGC', 'PFC', 'RECLTD', 'BHEL', 'GAIL']) },
+  travel: { name: '✈️ Travel, Hotels & Aviation', syms: new Set(['INDHOTEL', 'EIHOTEL', 'LEMONTREE', 'CHALET', 'INDIGO', 'BLS', 'EASEMYTRIP']) },
+  jewellery: { name: '💎 Jewellery & Premium Retail', syms: new Set(['TITAN', 'KALYANKJIL', 'SENCO', 'THANGAMAYL', 'TRENT']) },
+  cables: { name: '🏗️ Cables, Pipes & Infra', syms: new Set(['POLYCAB', 'KEI', 'RRKABEL', 'ASTRAL', 'FINPIPE', 'SUPREMEIND', 'PRINCEPIPE']) }
 };
 
 function arsClass(v, breakout) {
@@ -135,6 +146,20 @@ function rowHtml(d) {
   else if (d.vol_ratio >= 1.5) tags.push('<span class="tag tag-vol">VOL+</span>');
   else if (d.vol_ratio <= 0.7) tags.push('<span class="tag tag-vcp">🧘 Dry-up</span>');
   
+  // Multi-Timeframe Confluence Tag
+  const mtf = (typeof calcMultiTimeframeConfluence === 'function') 
+    ? calcMultiTimeframeConfluence(d) 
+    : { badge: (d.ars > 0 && d.srs > 0) ? '🟢 🟢 ⚪' : '🟢 ⚪ ⚪', is_triple_confluence: (d.ars > 0 && d.srs > 0), score: (d.ars > 0 && d.srs > 0) ? 2 : 1, label: 'Trend Alignment' };
+  if (mtf.is_triple_confluence) {
+    tags.push('<span class="tag tag-mtf" style="background:rgba(16,185,129,0.18);color:var(--up);border:1px solid rgba(16,185,129,0.35);font-weight:700;" title="Triple Confluence: Daily, Weekly, Monthly Bullish">🎯 D·W·M</span>');
+  }
+
+  // Minervini 3-Weeks Tight Base Tag
+  const tb = (typeof calcTightBase3W === 'function') ? calcTightBase3W(null, d.price, d.hi52_prox) : { is_tight: (d.hi52_prox >= -0.06) };
+  if (tb.is_tight && !((d.vcp && d.vcp.is_vcp) || d.is_vcp)) {
+    tags.push('<span class="tag tag-tight" style="background:rgba(99,102,241,0.15);color:#818cf8;border:1px solid rgba(99,102,241,0.3)">🧘 3W TIGHT</span>');
+  }
+
   const themeTag = THEMATIC_SECTORS[d.sym];
   if (themeTag) tags.push(`<span class="tag tag-theme" style="background:rgba(59,130,246,0.14);color:#60a5fa;border:1px solid rgba(59,130,246,0.35);font-weight:700;">${themeTag}</span>`);
 
@@ -188,6 +213,7 @@ function rowHtml(d) {
       <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
         ${quadPillHtml}
         <span class="streak-badge ${d.signDays >= 50 ? 'streak-long' : ((d.signDays || 0) >= 15 ? 'streak-med' : 'streak-short')}">D:${d.signDays ?? 0}</span>
+        <span style="font-size:9px; letter-spacing:1px; cursor:help;" title="${mtf.label}">${mtf.badge}</span>
       </div>
     </div>
     
@@ -252,6 +278,11 @@ function renderTable() {
     } else {
       data = data.filter(d => d.ind === activeSector);
     }
+  }
+
+  if (typeof activeThemeBasket !== 'undefined' && activeThemeBasket && THEMATIC_BASKETS[activeThemeBasket]) {
+    const bSet = THEMATIC_BASKETS[activeThemeBasket].syms;
+    data = data.filter(d => bSet.has(d.sym));
   }
 
   if (search) {
