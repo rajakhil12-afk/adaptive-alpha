@@ -2,14 +2,14 @@ window.STATIC_JISHU_PORTFOLIO = {
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-06T19:28:41.425Z",
+  "last_updated": "2026-10-07T19:55:37.567Z",
   "account": {
     "initial_capital": 1000000,
-    "cash": 702044.4,
-    "invested_capital": 297955.6,
-    "total_equity": 1000000,
+    "cash": 652066.8,
+    "invested_capital": 346181,
+    "total_equity": 998247.8,
     "realized_pnl": 0,
-    "unrealized_pnl": 0,
+    "unrealized_pnl": -1752.2,
     "win_rate": 0,
     "total_trades": 0,
     "winning_trades": 0,
@@ -51,9 +51,9 @@ window.STATIC_JISHU_PORTFOLIO = {
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 732.65,
-      "current_price": 732.65,
-      "unrealized_pnl": 0,
-      "unrealized_pnl_pct": 0
+      "current_price": 716.4,
+      "unrealized_pnl": -2210,
+      "unrealized_pnl_pct": -2.217975841124684
     },
     {
       "sym": "LAURUSLABS",
@@ -77,10 +77,10 @@ window.STATIC_JISHU_PORTFOLIO = {
       "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 2050,
-      "current_price": 2050,
-      "unrealized_pnl": 0,
-      "unrealized_pnl_pct": 0
+      "highest_price": 2052.8,
+      "current_price": 2052.8,
+      "unrealized_pnl": 134.40000000000873,
+      "unrealized_pnl_pct": 0.13658536585366743
     },
     {
       "sym": "MARKSANS",
@@ -104,8 +104,35 @@ window.STATIC_JISHU_PORTFOLIO = {
       "smart_money_tier": "⚠️ DISTRIBUTION_RISK",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 324.4,
-      "current_price": 324.4,
+      "highest_price": 325.45,
+      "current_price": 325.45,
+      "unrealized_pnl": 323.4000000000035,
+      "unrealized_pnl_pct": 0.3236744759556139
+    },
+    {
+      "sym": "SAILIFE",
+      "name": "Sai Life Sciences",
+      "ind": "Healthcare",
+      "logoid": "sai-life-sciences-ltd",
+      "sleeve": "SLEEVE_A",
+      "setup_type": "ALPHA_BREAKOUT",
+      "entry_date": "2026-10-07",
+      "entry_price": 1561.8,
+      "qty": 32,
+      "invested_value": 49977.6,
+      "initial_sl": 1505.15,
+      "current_sl": 1505.15,
+      "risk_per_share": 56.65,
+      "actual_dollar_risk": 1812.8,
+      "risk_pct_of_equity": 0.18,
+      "target_1_price": 1618.45,
+      "target_2_price": 1675.1,
+      "smart_money_score": 5,
+      "smart_money_tier": "⚠️ DISTRIBUTION_RISK",
+      "sl_moved_to_cost": false,
+      "sl_moved_to_t1": false,
+      "highest_price": 1561.8,
+      "current_price": 1561.8,
       "unrealized_pnl": 0,
       "unrealized_pnl_pct": 0
     }
@@ -129,9 +156,31 @@ window.STATIC_JISHU_PORTFOLIO = {
       "realized_pnl": 0,
       "unrealized_pnl": 0,
       "open_positions_count": 3
+    },
+    {
+      "date": "2026-10-07",
+      "cash": 652066.8,
+      "invested": 346181,
+      "total_equity": 998247.8,
+      "realized_pnl": 0,
+      "unrealized_pnl": -1752.2,
+      "open_positions_count": 4
     }
   ],
   "recent_events": [
+    {
+      "timestamp": "2026-10-07T19:55:37.567Z",
+      "type": "BUY_ORDER",
+      "symbol": "SAILIFE",
+      "sleeve": "SLEEVE_A",
+      "entry_price": 1561.8,
+      "qty": 32,
+      "smart_money": 5,
+      "target_1": 1618.45,
+      "target_2": 1675.1,
+      "sl": 1505.15,
+      "message": "🟢 [JISHU BUY] [🚀 SLEEVE_A] SAILIFE @ ₹1561.80 | Qty: 32 | Total: ₹49977.60 | Risk: ₹1812.8 (0.18%) | Smart Money: 5/100 (⚠️ DISTRIBUTION_RISK) | SL: ₹1505.15 | T1: ₹1618.45 | T2: ₹1675.10"
+    },
     {
       "timestamp": "2026-10-06T19:28:41.425Z",
       "type": "BUY_ORDER",
@@ -181,8 +230,8 @@ window.STATIC_JISHU_PORTFOLIO = {
     "regime": "CHOPPY_CONSOLIDATION",
     "regimeColor": "#eab308",
     "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
-    "marketScore": 47,
-    "vixLevel": 14.8,
+    "marketScore": 45,
+    "vixLevel": 13.6,
     "vixRegime": "ELEVATED_CHOPPY",
     "fiiNet": 0,
     "diiNet": 0,
@@ -202,12 +251,12 @@ window.STATIC_JISHU_PORTFOLIO = {
       "minRsRating": 80,
       "maxHoldingDays": 15,
       "targetPct": 35,
-      "targetCapital": 350000,
-      "investedCapital": 0,
-      "availableCapital": 52044.40000000001,
-      "openPositions": 0,
-      "openSlots": 2,
-      "utilizationPct": 0
+      "targetCapital": 349386.73,
+      "investedCapital": 297955.6,
+      "availableCapital": 1453.5299999999988,
+      "openPositions": 3,
+      "openSlots": 1,
+      "utilizationPct": 85.3
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -218,9 +267,9 @@ window.STATIC_JISHU_PORTFOLIO = {
       "minRsRating": 65,
       "maxHoldingDays": 30,
       "targetPct": 35,
-      "targetCapital": 350000,
+      "targetCapital": 349386.73,
       "investedCapital": 0,
-      "availableCapital": 350000,
+      "availableCapital": 349386.73,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -232,7 +281,7 @@ window.STATIC_JISHU_PORTFOLIO = {
       "targetAllocPct": 20,
       "maxPositions": 0,
       "targetPct": 30,
-      "targetCapital": 300000,
+      "targetCapital": 299474.34,
       "status": "ACTIVE BUFFER"
     }
   },
