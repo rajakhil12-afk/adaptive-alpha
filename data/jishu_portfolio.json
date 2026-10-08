@@ -2,14 +2,14 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-07T19:55:37.567Z",
+  "last_updated": "2026-10-08T19:52:24.460Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 652066.8,
-    "invested_capital": 346181,
-    "total_equity": 998247.8,
+    "invested_capital": 334182.8,
+    "total_equity": 986249.6,
     "realized_pnl": 0,
-    "unrealized_pnl": -1752.2,
+    "unrealized_pnl": -13750.4,
     "win_rate": 0,
     "total_trades": 0,
     "winning_trades": 0,
@@ -51,9 +51,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 732.65,
-      "current_price": 716.4,
-      "unrealized_pnl": -2210,
-      "unrealized_pnl_pct": -2.217975841124684
+      "current_price": 700.75,
+      "unrealized_pnl": -4338.399999999997,
+      "unrealized_pnl_pct": -4.354057189653993
     },
     {
       "sym": "LAURUSLABS",
@@ -78,9 +78,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 2052.8,
-      "current_price": 2052.8,
-      "unrealized_pnl": 134.40000000000873,
-      "unrealized_pnl_pct": 0.13658536585366743
+      "current_price": 1997.9,
+      "unrealized_pnl": -2500.7999999999956,
+      "unrealized_pnl_pct": -2.541463414634142
     },
     {
       "sym": "MARKSANS",
@@ -105,9 +105,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 325.45,
-      "current_price": 325.45,
-      "unrealized_pnl": 323.4000000000035,
-      "unrealized_pnl_pct": 0.3236744759556139
+      "current_price": 307.8,
+      "unrealized_pnl": -5112.799999999989,
+      "unrealized_pnl_pct": -5.117139334155354
     },
     {
       "sym": "SAILIFE",
@@ -132,9 +132,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 1561.8,
-      "current_price": 1561.8,
-      "unrealized_pnl": 0,
-      "unrealized_pnl_pct": 0
+      "current_price": 1505.6,
+      "unrealized_pnl": -1798.4000000000015,
+      "unrealized_pnl_pct": -3.598412088615703
     }
   ],
   "closed_trades": [],
@@ -165,9 +165,23 @@
       "realized_pnl": 0,
       "unrealized_pnl": -1752.2,
       "open_positions_count": 4
+    },
+    {
+      "date": "2026-10-08",
+      "cash": 652066.8,
+      "invested": 334182.8,
+      "total_equity": 986249.6,
+      "realized_pnl": 0,
+      "unrealized_pnl": -13750.4,
+      "open_positions_count": 4
     }
   ],
   "recent_events": [
+    {
+      "timestamp": "2026-10-08T19:52:24.460Z",
+      "type": "MACRO_REGIME_PAUSE",
+      "message": "🛡️ [MACRO SENTINEL CIRCUIT BREAKER] Regime: CORRECTION_DEFENSE (41/100) | VIX: 13.9 | FII: ₹0 Cr. New buying paused to preserve cash."
+    },
     {
       "timestamp": "2026-10-07T19:55:37.567Z",
       "type": "BUY_ORDER",
@@ -227,19 +241,19 @@
     }
   ],
   "macro_regime": {
-    "regime": "CHOPPY_CONSOLIDATION",
-    "regimeColor": "#eab308",
-    "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
-    "marketScore": 45,
-    "vixLevel": 13.6,
+    "regime": "CORRECTION_DEFENSE",
+    "regimeColor": "#f97316",
+    "regimeBadgeBg": "rgba(249, 115, 22, 0.18)",
+    "marketScore": 41,
+    "vixLevel": 13.9,
     "vixRegime": "ELEVATED_CHOPPY",
     "fiiNet": 0,
     "diiNet": 0,
     "combinedNet": 0,
-    "circuitBreakerActive": false,
-    "maxAllowedSlots": 6,
-    "maxCapitalPerTradePct": 10,
-    "guidance": "⚖️ Selective sideways market. Trade only top RS leaders with volume confirmation (max 6 slots)."
+    "circuitBreakerActive": true,
+    "maxAllowedSlots": 3,
+    "maxCapitalPerTradePct": 7.5,
+    "guidance": "⚠️ Market in pullback correction. New aggressive breakouts paused. Limit exposure to max 3 slots."
   },
   "sleeves": {
     "sleeveA": {
@@ -250,13 +264,13 @@
       "maxPositions": 5,
       "minRsRating": 80,
       "maxHoldingDays": 15,
-      "targetPct": 35,
-      "targetCapital": 349386.73,
-      "investedCapital": 297955.6,
-      "availableCapital": 1453.5299999999988,
-      "openPositions": 3,
+      "targetPct": 20,
+      "targetCapital": 197249.92,
+      "investedCapital": 347933.2,
+      "availableCapital": 0,
+      "openPositions": 4,
       "openSlots": 1,
-      "utilizationPct": 85.3
+      "utilizationPct": 176.4
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -266,10 +280,10 @@
       "maxPositions": 3,
       "minRsRating": 65,
       "maxHoldingDays": 30,
-      "targetPct": 35,
-      "targetCapital": 349386.73,
+      "targetPct": 30,
+      "targetCapital": 295874.88,
       "investedCapital": 0,
-      "availableCapital": 349386.73,
+      "availableCapital": 295874.88,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -280,17 +294,17 @@
       "icon": "🛡️",
       "targetAllocPct": 20,
       "maxPositions": 0,
-      "targetPct": 30,
-      "targetCapital": 299474.34,
+      "targetPct": 50,
+      "targetCapital": 493124.8,
       "status": "ACTIVE BUFFER"
     }
   },
   "quant_metrics": {
     "profitFactor": 0,
-    "sharpeRatio": 0,
-    "sortinoRatio": 0,
-    "maxDrawdownPct": 0,
-    "maxDrawdownValue": 0,
+    "sharpeRatio": -20.55,
+    "sortinoRatio": -12.56,
+    "maxDrawdownPct": 0.18,
+    "maxDrawdownValue": 1752.2,
     "payoffRatio": 0,
     "expectancy": 0,
     "totalGains": 0,
@@ -302,7 +316,7 @@
     {
       "type": "CAPITAL_HEALTH",
       "badge": "✅ STABLE",
-      "text": "Capital curve is well-protected. Max Drawdown contained at 0.0% (Institutional standard < 8%)."
+      "text": "Capital curve is well-protected. Max Drawdown contained at 0.2% (Institutional standard < 8%)."
     }
   ]
 }
