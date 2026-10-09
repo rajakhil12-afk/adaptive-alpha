@@ -8,6 +8,7 @@ const { calculatePositionSize } = require('./position_sizer');
 const { calculateQuantMetrics } = require('./quant_analytics');
 
 const PORTFOLIO_PATH = path.join(__dirname, '..', 'data', 'jishu_portfolio.json');
+const BACKUP_PATH = path.join(__dirname, '..', 'data', 'jishu_portfolio_backup.json');
 const PORTFOLIO_JS_PATH = path.join(__dirname, '..', 'data', 'jishu_portfolio.js');
 const SCREENER_PATH = path.join(__dirname, '..', 'data', 'screener.json');
 
@@ -34,8 +35,19 @@ function runJishuEngine(customScreenerData = null) {
   }
 
   let portfolio = loadJSON(PORTFOLIO_PATH, null);
+  const backup = loadJSON(BACKUP_PATH, null);
+
+  // Safeguard: If the loaded portfolio is completely empty (e.g. from an accidental file upload overwrite)
+  // but we have a valid backup with active open positions, recover from backup!
+  if (portfolio && (!portfolio.open_positions || portfolio.open_positions.length === 0) && (!portfolio.closed_trades || portfolio.closed_trades.length === 0)) {
+    if (backup && Array.isArray(backup.open_positions) && backup.open_positions.length > 0) {
+      console.log(`[Jishu] Safeguard: Restoring ${backup.open_positions.length} active positions from backup (accidental upload overwrite prevented).`);
+      portfolio = backup;
+    }
+  }
+
   if (!portfolio) {
-    portfolio = resetPortfolio(1000000, screener.bhavDate || '2026-10-01');
+    portfolio = backup || resetPortfolio(1000000, screener.bhavDate || '2026-10-01');
   }
 
   // Ensure default settings
@@ -388,8 +400,9 @@ function runJishuEngine(customScreenerData = null) {
   }
 
   saveJSON(PORTFOLIO_PATH, portfolio);
+  saveJSON(BACKUP_PATH, portfolio);
   try {
-    fs.writeFileSync(PORTFOLIO_JS_PATH, 'window.STATIC_JISHU_PORTFOLIO = ' + JSON.stringify(portfolio, null, 2) + ';', 'utf8');
+    fs.writeFileSync(PORTFOLIO_JS_PATH, 'window.STATIC_JISHU_PORTFOLIO = ' + JSON.stringify(portfolio, null, 2) + ';\nwindow.JISHU_PORTFOLIO = window.STATIC_JISHU_PORTFOLIO;', 'utf8');
   } catch (jsErr) {
     console.warn('[Jishu] Could not write jishu_portfolio.js:', jsErr.message);
   }

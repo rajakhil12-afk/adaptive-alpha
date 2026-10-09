@@ -333,8 +333,15 @@ async function run() {
       if (quant.profitFactor != null) {
         jishuSec += `📊 <b>Quant KPIs:</b> Profit Factor: <code>${quant.profitFactor}x</code> | MDD: <code>${quant.maxDrawdownPct || 0}%</code> | Expectancy: <code>₹${quant.expectancy || 0}</code>\n`;
       }
-      jishuSec += `• <b>Total Equity:</b> ₹${Number(acc.total_equity || 1000000).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n`;
+      const unPnl = Number(acc.unrealized_pnl || 0);
+      const unPnlFormatted = (unPnl >= 0 ? '+₹' : '-₹') + Math.abs(unPnl).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const unPnlPct = Number(acc.invested_capital || 0) > 0 ? (unPnl / Number(acc.invested_capital) * 100) : 0;
+      const unPnlPctStr = (unPnlPct >= 0 ? '+' : '') + unPnlPct.toFixed(2) + '%';
+      const unPnlEmoji = unPnl >= 0 ? '🟢' : '🔴';
+
+      jishuSec += `• <b>Total Equity (NAV):</b> ₹${Number(acc.total_equity || 1000000).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n`;
       jishuSec += `• <b>Cash Available:</b> ₹${Number(acc.cash || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} | <b>Invested:</b> ₹${Number(acc.invested_capital || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n`;
+      jishuSec += `• <b>Floating P&L (Open):</b> ${unPnlEmoji} <code>${unPnlFormatted} (${unPnlPctStr})</code>\n`;
       jishuSec += `• <b>Realized P&L:</b> ${Number(acc.realized_pnl || 0) >= 0 ? '+' : ''}₹${Number(acc.realized_pnl || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} | <b>Win Rate:</b> <code>${acc.win_rate || 0}%</code> (${acc.winning_trades || 0}W / ${acc.losing_trades || 0}L)\n\n`;
 
       // Recent Actions / Executions today
@@ -353,7 +360,7 @@ async function run() {
         jishuSec += `\n`;
       }
 
-      // Active Holdings
+      // Active Holdings with Day-over-Day tracking
       if (positions.length > 0) {
         jishuSec += `💼 <b>Active Open Positions (${positions.length}/${macro.maxAllowedSlots || 10}):</b>\n`;
         positions.forEach(p => {
@@ -366,9 +373,19 @@ async function run() {
           } else if (p.sl_moved_to_cost) {
             trailBadge = '🛡️ Risk-Free (Cost SL)';
           }
+
+          let daysHeldStr = '';
+          if (p.entry_date) {
+            const eDate = new Date(p.entry_date);
+            const now = new Date();
+            const diffDays = Math.max(0, Math.floor((now - eDate) / (1000 * 60 * 60 * 24)));
+            daysHeldStr = diffDays === 0 ? ' (New Today)' : ` (Held: ${diffDays}d)`;
+          }
+
           const sleeveTag = p.sleeve === 'SLEEVE_B' ? '🎯 B' : '🚀 A';
           const smTag = p.smart_money_score ? ` | 🐋 ${p.smart_money_score}/100` : '';
-          jishuSec += `• [${sleeveTag}] <b>${escapeHtml(p.sym)}</b>: ₹${fmtPrice(curP)} (<code>${pnlStr}</code>)${smTag} | ${trailBadge} | T2: ₹${fmtPrice(p.target_2_price)}\n`;
+          jishuSec += `• [${sleeveTag}] <b>${escapeHtml(p.sym)}</b>: ₹${fmtPrice(curP)} (<code>${pnlStr}</code>)${daysHeldStr}${smTag}\n`;
+          jishuSec += `  └ ${trailBadge} | T1: ₹${fmtPrice(p.target_1_price)} | T2: ₹${fmtPrice(p.target_2_price)}\n`;
         });
         jishuSec += `\n`;
       }
