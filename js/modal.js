@@ -10,7 +10,13 @@ let activeTLTab = 'swot';
 
 function openStockModal(sym) {
   selectedSym = sym;
-  const d = allData.find(s => s.sym === sym);
+  let d = allData && allData.find(s => s.sym === sym);
+  if (!d && typeof globalScreenerData !== 'undefined' && globalScreenerData.length > 0) {
+    d = globalScreenerData.find(s => s.sym === sym);
+  }
+  if (!d && window.STATIC_SCREENER_DATA && Array.isArray(window.STATIC_SCREENER_DATA.stocks)) {
+    d = window.STATIC_SCREENER_DATA.stocks.find(s => s.sym === sym);
+  }
   if (!d) return;
 
   document.getElementById('m-sym').textContent = d.sym;

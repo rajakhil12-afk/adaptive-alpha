@@ -223,7 +223,16 @@ function setSortCol(val) {
 function setTab(name, el) {
   activeTab = name;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  if (el) el.classList.add('active');
+  if (el && el.classList.contains('tab')) el.classList.add('active');
+  else {
+    const matchingTab = Array.from(document.querySelectorAll('.tab')).find(t => t.getAttribute('onclick')?.includes(`'${name}'`));
+    if (matchingTab) matchingTab.classList.add('active');
+  }
+
+  document.querySelectorAll('.mobile-nav-item').forEach(m => {
+    const isTarget = m.getAttribute('onclick')?.includes(`'${name}'`);
+    m.classList.toggle('active', !!isTarget);
+  });
   
   const tabOv = document.getElementById('tab-overview');
   if (tabOv) tabOv.style.display = name==='overview' ? '' : 'none';
@@ -234,6 +243,7 @@ function setTab(name, el) {
   document.getElementById('tab-sectors').style.display = name==='sectors' ? '' : 'none';
 
   if (name === 'overview') {
+    renderRetailHeroCockpit();
     renderOverviewTab();
   } else if (name === 'screener') {
     renderTable();
@@ -409,79 +419,90 @@ function computeClientSentimentPillars() {
 }
 
 function renderRetailHeroCockpit() {
-  const container = document.getElementById('retail-hero-cockpit');
-  if (!container) return;
+  try {
+    const container = document.getElementById('retail-hero-cockpit');
+    if (!container) return;
 
-  if (!allData || allData.length === 0) {
-    container.style.display = 'none';
-    return;
-  }
-  container.style.display = 'grid';
-
-  // Determine sentiment data from static backend payload or client calculation
-  if (window.STATIC_SCREENER_DATA && window.STATIC_SCREENER_DATA.sentiment_pillars) {
-    activeSentimentData = window.STATIC_SCREENER_DATA.sentiment_pillars;
-  } else {
-    activeSentimentData = computeClientSentimentPillars();
-  }
-
-  const score = activeSentimentData.score;
-  const sentimentTier = activeSentimentData.tier;
-  const tierColor = activeSentimentData.tierColor;
-  const tierBadgeBg = activeSentimentData.tierBadgeBg;
-  const sentimentDesc = activeSentimentData.tierDesc;
-  const needleAngle = -90 + (score / 100) * 180;
-
-  const isExtFear = score < 25;
-  const isFear = score >= 25 && score < 45;
-  const isNeutral = score >= 45 && score <= 55;
-  const isGreed = score > 55 && score <= 75;
-  const isExtGreed = score > 75;
-
-  const getZoneAttrs = (isActive, baseGradId, activeGradId, baseBorder, activeBorder) => {
-    if (isActive) {
-      return `fill="url(#${activeGradId})" stroke="#ffffff" stroke-width="2.6" filter="url(#cnn-3d-active-glow)" style="transform-origin: 135px 125px; transform: scale(1.025); transition: all 0.3s;"`;
+    if (!allData || allData.length === 0) {
+      const baseStocks = (window.STATIC_SCREENER_DATA && window.STATIC_SCREENER_DATA.stocks) ? window.STATIC_SCREENER_DATA.stocks : globalScreenerData;
+      if (baseStocks && baseStocks.length > 0) {
+        allData = baseStocks;
+      } else {
+        container.style.display = 'none';
+        return;
+      }
     }
-    return `fill="url(#${baseGradId})" stroke="${baseBorder}" stroke-width="1.2" stroke-opacity="0.7"`;
-  };
+    container.style.display = 'grid';
 
-  const zone1Style = getZoneAttrs(isExtFear, 'grad-z1-base', 'grad-z1-active', '#ef4444', '#fca5a5');
-  const zone2Style = getZoneAttrs(isFear, 'grad-z2-base', 'grad-z2-active', '#f97316', '#fdba74');
-  const zone3Style = getZoneAttrs(isNeutral, 'grad-z3-base', 'grad-z3-active', '#f59e0b', '#fde68a');
-  const zone4Style = getZoneAttrs(isGreed, 'grad-z4-base', 'grad-z4-active', '#10b981', '#6ee7b7');
-  const zone5Style = getZoneAttrs(isExtGreed, 'grad-z5-base', 'grad-z5-active', '#00e676', '#a7f3d0');
+    // Determine sentiment data from static backend payload or client calculation
+    if (window.STATIC_SCREENER_DATA && window.STATIC_SCREENER_DATA.sentiment_pillars) {
+      activeSentimentData = window.STATIC_SCREENER_DATA.sentiment_pillars;
+    } else {
+      activeSentimentData = computeClientSentimentPillars();
+    }
 
-  const prevText = score >= 56 ? 'Greed' : (score <= 44 ? 'Fear' : 'Neutral');
-  const weekText = score >= 56 ? 'Greed' : (score <= 44 ? 'Fear' : 'Neutral');
-  const monthText = 'Neutral';
-  const yearText = 'Greed';
+    const score = activeSentimentData?.score ?? 50;
+    const sentimentTier = activeSentimentData?.tier || 'NEUTRAL';
+    const tierColor = activeSentimentData?.tierColor || '#f59e0b';
+    const tierBadgeBg = activeSentimentData?.tierBadgeBg || 'rgba(245, 158, 11, 0.15)';
+    const sentimentDesc = activeSentimentData?.tierDesc || 'Stock-specific alpha market';
+    const needleAngle = -90 + (score / 100) * 180;
 
-  // Pick #1 Spotlight Stock of the Day
-  const candidates = allData.filter(d => (d.ars || 0) > 0 && (d.st14?.trend === 'buy' || d.st10?.trend === 'buy'));
-  candidates.sort((a, b) => {
-    const scoreA = ((a.rs_rating || 50) * 0.3) + ((a.ars || 0) * 25) + (Math.min(3, a.vol_ratio || 1) * 15) + (a.signDays != null && a.signDays <= 15 ? 15 : 0) + (a.institutional?.ad_grade === 'A+' ? 15 : 0);
-    const scoreB = ((b.rs_rating || 50) * 0.3) + ((b.ars || 0) * 25) + (Math.min(3, b.vol_ratio || 1) * 15) + (b.signDays != null && b.signDays <= 15 ? 15 : 0) + (b.institutional?.ad_grade === 'A+' ? 15 : 0);
-    return scoreB - scoreA;
-  });
+    const isExtFear = score < 25;
+    const isFear = score >= 25 && score < 45;
+    const isNeutral = score >= 45 && score <= 55;
+    const isGreed = score > 55 && score <= 75;
+    const isExtGreed = score > 75;
 
-  const spotlight = candidates[0] || allData[0];
-  const spotSym = spotlight ? spotlight.sym : '—';
-  const spotName = spotlight ? spotlight.name : '—';
-  const spotPrice = spotlight ? `₹${spotlight.price.toLocaleString('en-IN', {maximumFractionDigits:1})}` : '—';
-  const spotArs = spotlight ? `+${(spotlight.ars * 100).toFixed(1)}% ARS` : '—';
-  const spotVol = spotlight?.vol_ratio ? `${spotlight.vol_ratio.toFixed(1)}× Vol` : '1.8× Vol';
-  const spotGrade = spotlight?.institutional?.ad_grade ? `Inst ${spotlight.institutional.ad_grade}` : 'Smart Money';
-  const spotInd = spotlight?.ind || 'Equities';
+    const getZoneAttrs = (isActive, baseGradId, activeGradId, baseBorder, activeBorder) => {
+      if (isActive) {
+        return `fill="url(#${activeGradId})" stroke="#ffffff" stroke-width="2.6" filter="url(#cnn-3d-active-glow)" style="transform-origin: 135px 125px; transform: scale(1.025); transition: all 0.3s;"`;
+      }
+      return `fill="url(#${baseGradId})" stroke="${baseBorder}" stroke-width="1.2" stroke-opacity="0.7"`;
+    };
 
-  // Alpha Edge Calculations
-  const q1Stocks = allData.filter(d => getDualRSQuad(d) === 'quad-1');
-  const avgQ1Ars = q1Stocks.length > 0 ? (q1Stocks.reduce((s, d) => s + (d.ars || 0), 0) / q1Stocks.length * 100).toFixed(1) : '38.4';
+    const zone1Style = getZoneAttrs(isExtFear, 'grad-z1-base', 'grad-z1-active', '#ef4444', '#fca5a5');
+    const zone2Style = getZoneAttrs(isFear, 'grad-z2-base', 'grad-z2-active', '#f97316', '#fdba74');
+    const zone3Style = getZoneAttrs(isNeutral, 'grad-z3-base', 'grad-z3-active', '#f59e0b', '#fde68a');
+    const zone4Style = getZoneAttrs(isGreed, 'grad-z4-base', 'grad-z4-active', '#10b981', '#6ee7b7');
+    const zone5Style = getZoneAttrs(isExtGreed, 'grad-z5-base', 'grad-z5-active', '#00e676', '#a7f3d0');
 
-  container.innerHTML = `
-    <!-- 1. Authentic CNN-Style Market Sentiment Speedometer Card -->
-    <div class="rh-card sentiment cnn-card" onclick="openSentimentModal()" style="cursor:pointer;" title="Click to inspect 7 Fear &amp; Greed Indicators">
-      <div class="rh-header">
-        <span class="rh-title">🌡️ Market Fear &amp; Greed</span>
+    const prevText = score >= 56 ? 'Greed' : (score <= 44 ? 'Fear' : 'Neutral');
+    const weekText = score >= 56 ? 'Greed' : (score <= 44 ? 'Fear' : 'Neutral');
+    const monthText = 'Neutral';
+    const yearText = 'Greed';
+
+    // Pick #1 Spotlight Stock of the Day
+    const candidates = allData.filter(d => (d.ars || 0) > 0 && (d.st14?.trend === 'buy' || d.st10?.trend === 'buy'));
+    candidates.sort((a, b) => {
+      const scoreA = ((a.rs_rating || 50) * 0.3) + ((a.ars || 0) * 25) + (Math.min(3, a.vol_ratio || 1) * 15) + (a.signDays != null && a.signDays <= 15 ? 15 : 0) + (a.institutional?.ad_grade === 'A+' ? 15 : 0);
+      const scoreB = ((b.rs_rating || 50) * 0.3) + ((b.ars || 0) * 25) + (Math.min(3, b.vol_ratio || 1) * 15) + (b.signDays != null && b.signDays <= 15 ? 15 : 0) + (b.institutional?.ad_grade === 'A+' ? 15 : 0);
+      return scoreB - scoreA;
+    });
+
+    const spotlight = candidates[0] || allData[0];
+    const spotSym = spotlight ? spotlight.sym : '—';
+    const spotName = spotlight ? spotlight.name : '—';
+    const spotPrice = (spotlight && spotlight.price != null) ? `₹${Number(spotlight.price).toLocaleString('en-IN', {maximumFractionDigits:1})}` : '—';
+    const spotArs = (spotlight && spotlight.ars != null) ? `${spotlight.ars >= 0 ? '+' : ''}${(spotlight.ars * 100).toFixed(1)}% ARS` : '—';
+    const spotVol = spotlight?.vol_ratio ? `${Number(spotlight.vol_ratio).toFixed(1)}× Vol` : '1.8× Vol';
+    const spotGrade = spotlight?.institutional?.ad_grade ? `Inst ${spotlight.institutional.ad_grade}` : 'Smart Money';
+    const spotInd = spotlight?.ind || 'Equities';
+
+    // Alpha Edge Calculations
+    const q1Stocks = allData.filter(d => getDualRSQuad(d) === 'quad-1');
+    const avgQ1Ars = q1Stocks.length > 0 ? (q1Stocks.reduce((s, d) => s + (d.ars || 0), 0) / q1Stocks.length * 100).toFixed(1) : '38.4';
+
+    // Market Breadth Calculations
+    const totalStocks = allData.length || 1;
+    const breadthCount = allData.filter(d => d.ma_status === 'MA+').length;
+    const breadthPct = (breadthCount / totalStocks) * 100;
+
+    container.innerHTML = `
+      <!-- 1. Authentic CNN-Style Market Sentiment Speedometer Card -->
+      <div class="rh-card sentiment cnn-card" onclick="openSentimentModal()" style="cursor:pointer;" title="Click to inspect 7 Fear &amp; Greed Indicators">
+        <div class="rh-header">
+          <span class="rh-title">🌡️ Market Fear &amp; Greed</span>
         <span class="badge badge-blue">CNN / S&amp;P Methodology</span>
       </div>
       <div class="cnn-split-layout">
@@ -722,6 +743,9 @@ function renderRetailHeroCockpit() {
       </div>
     </div>
   `;
+  } catch (err) {
+    console.error('Error rendering retail hero cockpit:', err);
+  }
 }
 
 let activeThemeBasket = null;
@@ -1063,8 +1087,10 @@ function renderBreakoutsTab() {
   const filteredToday = filterBoByCap(allTodayBreakouts, boCapFilter);
 
   // 2. Quantitative Setup Radar (Pre-Breakouts)
-  const vcpStocks = sourceData.filter(s => s.vcp && s.vcp.is_vcp && (s.ars ?? 0) > 0);
-  const pocketPivots = sourceData.filter(s => s.pocket_pivot && (s.ars ?? 0) > 0);
+  const vcpStocks = sourceData.filter(s => (s.vcp?.is_vcp || s.is_vcp) && (s.ars ?? 0) > 0);
+  const pocketPivots = sourceData.filter(s => (s.pocket_pivot || s.is_pocket_pivot) && (s.ars ?? 0) > 0);
+  const filteredVcp = filterBoByCap(vcpStocks, boCapFilter);
+  const filteredPp = filterBoByCap(pocketPivots, boCapFilter);
 
   // 3. This Week's Breakouts (Monday to current)
   const mondayTs = getMondayTimestamp();
@@ -1168,50 +1194,107 @@ function renderBreakoutsTab() {
 
   // ─── SECTION 2: QUANTITATIVE SETUP RADAR (PRE-BREAKOUT) ───
   if (vcpStocks.length > 0 || pocketPivots.length > 0) {
+    const activeVcp = filteredVcp.length > 0 ? filteredVcp : (boCapFilter === 'all' ? vcpStocks : []);
+    const activePp = filteredPp.length > 0 ? filteredPp : (boCapFilter === 'all' ? pocketPivots : []);
+
+    const renderSetupCards = (stocks, setupType) => {
+      if (!stocks || stocks.length === 0) {
+        return `<div class="setup-empty-note">No active ${setupType} setups detected in current filter view.</div>`;
+      }
+      const sorted = [...stocks].sort((a, b) => (b.rs_rating ?? 0) - (a.rs_rating ?? 0));
+      return sorted.slice(0, 24).map(s => {
+        const rs = s.rs_rating ?? 50;
+        const rsColor = rs >= 80 ? 'var(--up)' : rs >= 60 ? '#60a5fa' : 'var(--gold)';
+        const arsVal = (s.ars || 0) * 100;
+        const arsStr = `${arsVal >= 0 ? '+' : ''}${arsVal.toFixed(1)}% ARS`;
+        const vol = (s.vol_ratio || 1).toFixed(1);
+        const isSTBuy = s.st10?.trend === 'buy' || s.st14?.trend === 'buy';
+        const prox = s.hi52_prox != null ? (s.hi52_prox * 100).toFixed(1) + '%' : '—';
+        const isPinned = pinnedStocks.includes(s.sym);
+        const priceStr = s.price != null ? `₹${Number(s.price).toLocaleString('en-IN', {maximumFractionDigits:1})}` : '—';
+
+        let tagHtml = '';
+        if (setupType === 'VCP Squeeze') {
+          const tightVal = s.vcp?.tightness_pct ?? s.vcp?.tightness;
+          const tight = tightVal != null ? `${Number(tightVal).toFixed(1)}%` : 'Tight Base';
+          tagHtml = `<span class="sc-badge sc-vcp" title="Volatility Contraction Base Tightness">🧘 Base: ${tight}</span>`;
+        } else {
+          tagHtml = `<span class="sc-badge sc-pp" title="Institutional Accumulation via 10-Day Volume High">⚡ 10D High Vol</span>`;
+        }
+
+        return `
+          <div class="setup-card" onclick="openStockModal('${s.sym}')" title="${s.name} · Click to inspect full scorecard">
+            <div class="sc-top">
+              <div class="sc-sym-box">
+                <span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${s.sym}')" title="Pin stock">${isPinned ? '★' : '☆'}</span>
+                <strong class="sc-sym">${s.sym}</strong>
+                <span class="sc-ind">${s.ind || 'Equities'}</span>
+              </div>
+              <div class="sc-price-box">
+                <span class="sc-price">${priceStr}</span>
+                <button class="sc-tv-btn" onclick="event.stopPropagation();openTV('${s.sym}')" title="Open TradingView Chart">↗ TV</button>
+              </div>
+            </div>
+            <div class="sc-badges">
+              <span class="sc-badge sc-rs" style="color:${rsColor};border-color:${rsColor}44;background:${rsColor}18;">RS ${rs}</span>
+              <span class="sc-badge sc-ars">${arsStr}</span>
+              <span class="sc-badge sc-vol">📊 ${vol}× Vol</span>
+              ${tagHtml}
+            </div>
+            <div class="sc-footer">
+              <span class="sc-prox">52W: <strong style="color:var(--text);">${prox}</strong></span>
+              <span class="sc-st ${isSTBuy ? 'st-buy' : 'st-neutral'}">${isSTBuy ? '🟢 ST BUY' : '⚪ Neutral'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
     html += `<div class="bo-divider"></div>`;
     html += `
-      <div class="setup-radar-box">
-        <div class="setup-radar-header">
-          <span>🎯 QUANTITATIVE SETUP RADAR (Pre-Breakout Accumulation)</span>
-          <span style="font-size:10px;color:var(--muted);font-weight:400;">Click any ticker to inspect scorecard</span>
+      <div class="setup-radar-container">
+        <div class="setup-radar-head-bar">
+          <div class="setup-radar-title-group">
+            <span class="setup-radar-title">🎯 QUANTITATIVE SETUP RADAR</span>
+            <span class="badge badge-blue">Pre-Breakout Accumulation</span>
+            <span class="badge badge-green">${activeVcp.length + activePp.length} Setups Active</span>
+          </div>
+          <div class="setup-radar-sub-desc">
+            Algorithmic detection of Institutional Volume Absorption &amp; Volatility Contraction Patterns (VCP) prior to price expansion
+          </div>
         </div>
+
+        <div class="setup-radar-panels-grid">
+          <!-- Panel A: Volatility Contraction Pattern (VCP) -->
+          <div class="setup-panel vcp-panel">
+            <div class="setup-panel-header">
+              <div class="setup-panel-title">
+                <span>🧘 VCP Squeeze Patterns</span>
+                <span class="setup-count-badge vcp-count">${activeVcp.length}</span>
+              </div>
+              <div class="setup-panel-meta">Mark Minervini Stage-2 · Volume contraction within tight consolidation ranges</div>
+            </div>
+            <div class="setup-cards-grid">
+              ${renderSetupCards(activeVcp, 'VCP Squeeze')}
+            </div>
+          </div>
+
+          <!-- Panel B: Pocket Pivots -->
+          <div class="setup-panel pp-panel">
+            <div class="setup-panel-header">
+              <div class="setup-panel-title">
+                <span>⚡ Pocket Pivots (Institutional Entry)</span>
+                <span class="setup-count-badge pp-count">${activePp.length}</span>
+              </div>
+              <div class="setup-panel-meta">Dr. Chris Kacher / Gil Morales · Signature volume exceeding 10-day down volume</div>
+            </div>
+            <div class="setup-cards-grid">
+              ${renderSetupCards(activePp, 'Pocket Pivot')}
+            </div>
+          </div>
+        </div>
+      </div>
     `;
-
-    if (vcpStocks.length > 0) {
-      html += `
-        <div class="setup-radar-row">
-          <div class="setup-radar-label">🧘 VCP Squeezes (${vcpStocks.length}): <span style="font-size:9.5px;color:var(--muted);font-weight:400;">Volatility Contraction Pattern dry-up</span></div>
-          <div class="setup-chips-wrap">
-            ${vcpStocks.slice(0, 15).map(s => `
-              <div class="setup-chip" onclick="openStockModal('${s.sym}')" title="${s.name} · Price: ₹${s.price}">
-                <strong>${s.sym}</strong>
-                <span class="chip-rs">RS:${s.rs_rating ?? '—'}</span>
-                <span style="color:var(--muted);font-size:9px;">₹${s.price}</span>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    }
-
-    if (pocketPivots.length > 0) {
-      html += `
-        <div class="setup-radar-row">
-          <div class="setup-radar-label">⚡ Pocket Pivots (${pocketPivots.length}): <span style="font-size:9.5px;color:var(--muted);font-weight:400;">Institutional accumulation through 10-day volume high</span></div>
-          <div class="setup-chips-wrap">
-            ${pocketPivots.slice(0, 16).map(s => `
-              <div class="setup-chip" onclick="openStockModal('${s.sym}')" title="${s.name} · Price: ₹${s.price}">
-                <strong>${s.sym}</strong>
-                <span class="chip-rs">RS:${s.rs_rating ?? '—'}</span>
-                <span style="color:var(--muted);font-size:9px;">₹${s.price}</span>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    }
-
-    html += `</div>`;
   }
 
   // ─── SECTION 3: THIS WEEK'S BREAKOUTS ───
@@ -1304,6 +1387,12 @@ function switchIndex() {
   activeSector = null;
   prevDataMap = {};
 
+  const errBanner = document.getElementById('err-banner');
+  if (errBanner) {
+    errBanner.style.display = 'none';
+    errBanner.className = 'error-banner';
+  }
+
   if (liveCache[currentIndex]) {
     const cached = liveCache[currentIndex];
     allData = [...cached.data];
@@ -1359,7 +1448,14 @@ function renderOverviewTab() {
   const container = document.getElementById('overview-content');
   if (!container) return;
 
-  if (!allData.length) {
+  if (!allData || !allData.length) {
+    if (typeof filterActiveUniverse === 'function') filterActiveUniverse();
+    if ((!allData || !allData.length) && typeof globalScreenerData !== 'undefined' && globalScreenerData.length > 0) {
+      allData = globalScreenerData;
+    }
+  }
+
+  if (!allData || !allData.length) {
     container.innerHTML = '<div style="color:var(--muted);padding:40px;text-align:center">Loading market overview data…</div>';
     return;
   }
@@ -1376,10 +1472,23 @@ function renderOverviewTab() {
   const q3List = allData.filter(d => getDualRSQuad(d) === 'quad-3');
   const q4List = allData.filter(d => getDualRSQuad(d) === 'quad-4');
 
-  const topQ1 = [...q1List].sort((a,b) => (b.rs_rating||0) - (a.rs_rating||0)).slice(0, 5);
-  const topQ2 = [...q2List].sort((a,b) => (b.srs||0) - (a.srs||0)).slice(0, 5);
-  const topQ3 = [...q3List].sort((a,b) => (b.ars||0) - (a.ars||0)).slice(0, 5);
-  const topQ4 = [...q4List].sort((a,b) => (a.ars||0) - (b.ars||0)).slice(0, 5);
+  const topQ1 = [...q1List].sort((a,b) => (b.rs_rating||0) - (a.rs_rating||0)).slice(0, 8);
+  const topQ2 = [...q2List].sort((a,b) => (b.srs||0) - (a.srs||0)).slice(0, 8);
+  const topQ3 = [...q3List].sort((a,b) => (b.ars||0) - (a.ars||0)).slice(0, 8);
+  const topQ4 = [...q4List].sort((a,b) => (a.ars||0) - (b.ars||0)).slice(0, 8);
+
+  const renderQuadPills = (stocks, badgeCls, valFn) => {
+    if (!stocks || stocks.length === 0) {
+      return `<div class="ov-empty-pill">No stocks in this regime</div>`;
+    }
+    return stocks.map(s => `
+      <div class="ov-ticker-badge ${badgeCls}" onclick="event.stopPropagation();openStockModal('${s.sym}')" title="${s.name} · RS Rating: ${s.rs_rating ?? '—'} · Price: ₹${s.price}">
+        <span class="otb-sym">${s.sym}</span>
+        <span class="otb-rs">RS ${s.rs_rating ?? 50}</span>
+        <span class="otb-val">${valFn(s)}</span>
+      </div>
+    `).join('');
+  };
 
   // Sectors
   const byInd = {};
@@ -1415,21 +1524,65 @@ function renderOverviewTab() {
     <!-- Top Overview Hero -->
     <div class="ov-hero">
       <div class="ov-card" style="border-left: 4px solid ${verdictColor};">
-        <div class="ov-title"><span>Market Regime & Breadth</span><span style="color:${verdictColor};font-family:var(--font-num);">${passRate}% Pass Rate</span></div>
+        <div class="ov-title">
+          <span>Market Regime &amp; Breadth</span>
+          <span class="ov-badge" style="background:${verdictColor}22;color:${verdictColor};border:1px solid ${verdictColor}55;">${passRate}% Pass Rate</span>
+        </div>
         <div class="ov-stat-big" style="color:${verdictColor}">${verdict}</div>
-        <div class="ov-subtext"><strong>${passCount}</strong> of ${totalCount} stocks meet institutional RS momentum criteria · <strong>${breadthPct}%</strong> in Stage-2 uptrend (MA+)</div>
+        <div class="ov-meter-wrap">
+          <div class="ov-meter-fill" style="width:${passRate}%;background:${verdictColor};"></div>
+        </div>
+        <div class="ov-subtext">
+          <span><strong>${passCount}</strong> / ${totalCount} meet RS criteria</span>
+          <span>·</span>
+          <span><strong style="color:var(--up);">${breadthPct}%</strong> in Stage-2 (MA+)</span>
+        </div>
       </div>
+
       <div class="ov-card">
-        <div class="ov-title"><span>🏛️ Institutional Flows</span><span style="font-size:9.5px;color:var(--muted)">Provisional</span></div>
-        <div class="ov-row"><span style="color:var(--muted)">FII Net Flow</span><strong style="font-family:var(--font-num);">${fiiText}</strong></div>
-        <div class="ov-row"><span style="color:var(--muted)">DII Net Flow</span><strong style="font-family:var(--font-num);">${diiText}</strong></div>
-        <div class="ov-row" style="border-top:1px solid var(--border);margin-top:2px;padding-top:4px;"><span style="font-weight:600">Net Combined</span><strong style="font-family:var(--font-num);color:var(--up);">${netText}</strong></div>
+        <div class="ov-title">
+          <span>🏛️ Institutional Flows</span>
+          <span class="badge badge-blue">FII + DII Cash</span>
+        </div>
+        <div class="ov-flows-grid">
+          <div class="ov-flow-item">
+            <span class="ov-flow-lbl">FII Net Flow</span>
+            <strong class="ov-flow-val" style="color:${latestFiiDiiData?.fii >= 0 ? 'var(--up)' : 'var(--down)'};">${fiiText}</strong>
+          </div>
+          <div class="ov-flow-item">
+            <span class="ov-flow-lbl">DII Net Flow</span>
+            <strong class="ov-flow-val" style="color:${latestFiiDiiData?.dii >= 0 ? 'var(--up)' : 'var(--down)'};">${diiText}</strong>
+          </div>
+        </div>
+        <div class="ov-net-flow-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px;">
+          <span style="font-size:11px;color:var(--muted);font-weight:600;">Net Combined Smart Money</span>
+          <strong style="font-family:var(--font-num);font-size:12.5px;color:${(latestFiiDiiData?.fii || 0) + (latestFiiDiiData?.dii || 0) >= 0 ? 'var(--up)' : 'var(--down)'};">${netText}</strong>
+        </div>
       </div>
+
       <div class="ov-card">
-        <div class="ov-title"><span>⚡ Today's Signals</span><span style="color:var(--gold)">Live</span></div>
-        <div class="ov-row"><span style="color:var(--muted)">Fresh Breakouts</span><strong style="color:var(--gold);font-family:var(--font-num);">${breakouts.length} stock${breakouts.length!==1?'s':''}</strong></div>
-        <div class="ov-row"><span style="color:var(--muted)">Vol Surge (&ge;2×)</span><strong style="color:#5e96ff;font-family:var(--font-num);">${volSurges.length} stocks</strong></div>
-        <div class="ov-row"><span style="color:var(--muted)">Near 52W High</span><strong style="color:var(--up);font-family:var(--font-num);">${allData.filter(d=>(d.hi52_prox||-1)>=-0.05).length} stocks</strong></div>
+        <div class="ov-title">
+          <span>⚡ Today's Signals Live</span>
+          <span class="badge badge-green">Real-Time</span>
+        </div>
+        <div class="ov-signal-chips">
+          <div class="ov-signal-chip" onclick="setTab('breakouts', document.querySelectorAll('.tab')[3])">
+            <span class="osc-lbl">🔥 Fresh Breakouts</span>
+            <strong class="osc-val" style="color:var(--gold);">${breakouts.length}</strong>
+          </div>
+          <div class="ov-signal-chip" onclick="applyPreset('whale-footprints')">
+            <span class="osc-lbl">⚡ Vol Surge (&ge;2×)</span>
+            <strong class="osc-val" style="color:#60a5fa;">${volSurges.length}</strong>
+          </div>
+          <div class="ov-signal-chip" onclick="applyPreset('rocket-breakouts')">
+            <span class="osc-lbl">🎯 Near 52W High</span>
+            <strong class="osc-val" style="color:var(--up);">${allData.filter(d=>(d.hi52_prox||-1)>=-0.05).length}</strong>
+          </div>
+          <div class="ov-signal-chip" onclick="setTab('breakouts', document.querySelectorAll('.tab')[3])">
+            <span class="osc-lbl">🧘 VCP &amp; Pocket Pivots</span>
+            <strong class="osc-val" style="color:#c084fc;">${allData.filter(d => (d.vcp?.is_vcp || d.pocket_pivot) && (d.ars||0) > 0).length}</strong>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1443,7 +1596,7 @@ function renderOverviewTab() {
         </div>
         <div class="ov-quad-desc">Strong long-term alpha (ARS+) and rising short-term momentum (SRS+).</div>
         <div class="ov-quad-tickers">
-          ${topQ1.map(s => `<span class="ov-ticker-pill" onclick="event.stopPropagation();selectStock('${s.sym}')">${s.sym}</span>`).join('')}
+          ${renderQuadPills(topQ1, 'q1-badge', s => `+${((s.ars||0)*100).toFixed(0)}%`)}
         </div>
       </div>
 
@@ -1454,7 +1607,7 @@ function renderOverviewTab() {
         </div>
         <div class="ov-quad-desc">Base-building turnaround stocks improving with fresh quarterly momentum.</div>
         <div class="ov-quad-tickers">
-          ${topQ2.map(s => `<span class="ov-ticker-pill" onclick="event.stopPropagation();selectStock('${s.sym}')">${s.sym}</span>`).join('')}
+          ${renderQuadPills(topQ2, 'q2-badge', s => `SRS ${((s.srs||0)*100).toFixed(0)}%`)}
         </div>
       </div>
 
@@ -1465,7 +1618,7 @@ function renderOverviewTab() {
         </div>
         <div class="ov-quad-desc">Leading trend undergoing healthy consolidation or dip-buy setup.</div>
         <div class="ov-quad-tickers">
-          ${topQ3.map(s => `<span class="ov-ticker-pill" onclick="event.stopPropagation();selectStock('${s.sym}')">${s.sym}</span>`).join('')}
+          ${renderQuadPills(topQ3, 'q3-badge', s => `+${((s.ars||0)*100).toFixed(0)}%`)}
         </div>
       </div>
 
@@ -1476,7 +1629,7 @@ function renderOverviewTab() {
         </div>
         <div class="ov-quad-desc">Underperforming benchmark on all timeframes. Capital preservation zone.</div>
         <div class="ov-quad-tickers">
-          ${topQ4.map(s => `<span class="ov-ticker-pill" onclick="event.stopPropagation();selectStock('${s.sym}')">${s.sym}</span>`).join('')}
+          ${renderQuadPills(topQ4, 'q4-badge', s => `${((s.ars||0)*100).toFixed(0)}%`)}
         </div>
       </div>
     </div>
@@ -1640,7 +1793,11 @@ async function loadData() {
 
   showProgress(`Connecting to live market stream…`, 0);
   const errBanner = document.getElementById('err-banner');
-  if (errBanner) errBanner.style.display = 'none';
+  if (errBanner) {
+    errBanner.className = 'error-banner scan-in-progress';
+    errBanner.innerHTML = '<span class="scan-spinner-mini"></span> <span>⚡ <strong>Quantitative scan in progress:</strong> Initializing market data stream…</span>';
+    errBanner.style.display = 'flex';
+  }
 
   const cutoffTs = new Date('2021-01-01').getTime() / 1000;
   let benchData = null;
@@ -1662,6 +1819,11 @@ async function loadData() {
       const stock = activeList[i] || universe[i];
       const pct = Math.round(5 + (i / totalScan) * 92);
       showProgress(`[${i+1}/${totalScan}] Quantitative Momentum Scan: ${stock.sym} (${stock.name})…`, pct);
+      if (errBanner) {
+        errBanner.className = 'error-banner scan-in-progress';
+        errBanner.innerHTML = `<span class="scan-spinner-mini"></span> <span>⚡ <strong>Quantitative scan in progress:</strong> Analyzing [${i+1}/${totalScan}] (${stock.sym})…</span>`;
+        errBanner.style.display = 'flex';
+      }
       if (totalScan <= 50) {
         await new Promise(r => setTimeout(r, 20));
       } else if (i % 5 === 0) {
@@ -1673,18 +1835,18 @@ async function loadData() {
       globalScreenerData = window.STATIC_SCREENER_DATA.stocks;
       if (window.STATIC_SCREENER_DATA.fii_dii) latestFiiDiiData = window.STATIC_SCREENER_DATA.fii_dii;
       if (window.STATIC_SCREENER_DATA.breakout_history) globalBreakoutHistory = window.STATIC_SCREENER_DATA.breakout_history;
-      filterActiveUniverse();
-      const tsEl = document.getElementById('ts');
-      const nowTime = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
-      if (tsEl) tsEl.textContent = nowTime + ' IST · EOD Scan';
     }
+    filterActiveUniverse();
+    const tsEl = document.getElementById('ts');
+    const nowTime = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+    if (tsEl) tsEl.textContent = nowTime + ' IST · EOD Scan';
 
-    const b = document.getElementById('err-banner');
-    if (b) {
-      b.textContent = `⚡ Quantitative scan complete: Analyzed ${allData.length} stocks against closing market database.`;
-      b.style.display = 'block';
-      b.style.borderColor = 'rgba(38,166,154,0.4)';
-      b.style.color = 'var(--up)';
+    renderAll();
+
+    if (errBanner) {
+      errBanner.className = 'error-banner scan-complete';
+      errBanner.innerHTML = `<span>⚡ <strong>Quantitative scan complete:</strong> Analyzed ${allData.length} stocks against closing market database.</span>`;
+      errBanner.style.display = 'flex';
     }
 
     if (scanBtn) {
@@ -1692,8 +1854,6 @@ async function loadData() {
       scanBtn.textContent = '↻ Live Data';
       scanBtn.style.opacity = '1';
     }
-
-    renderAll();
     return;
   }
 
@@ -1705,6 +1865,11 @@ async function loadData() {
     const stock = universe[i];
     const pct = Math.round(5 + (i / universe.length) * 90);
     showProgress(`[${i+1}/${universe.length}] Real-time scan: ${stock.sym} (${stock.name})…`, pct);
+    if (errBanner) {
+      errBanner.className = 'error-banner scan-in-progress';
+      errBanner.innerHTML = `<span class="scan-spinner-mini"></span> <span>⚡ <strong>Quantitative scan in progress:</strong> Analyzing [${i+1}/${universe.length}] (${stock.sym})…</span>`;
+      errBanner.style.display = 'flex';
+    }
     
     const yf = toYF(stock.sym);
     const candles = await fetchYahoo(yf, '5y');
@@ -1792,9 +1957,19 @@ async function loadData() {
     const nowTime = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
     const tsEl = document.getElementById('ts');
     if (tsEl) tsEl.textContent = nowTime + ' IST · Live Scan';
+    
+    renderAll();
+
+    const errBanner = document.getElementById('err-banner');
+    if (errBanner) {
+      errBanner.className = 'error-banner scan-complete';
+      errBanner.innerHTML = `<span>⚡ <strong>Quantitative scan complete:</strong> Analyzed ${allData.length} stocks against live market database.</span>`;
+      errBanner.style.display = 'flex';
+    }
   } else {
     showError('Live scan returned 0 results due to public proxy limits. Displaying stored database.');
     filterActiveUniverse();
+    renderAll();
   }
 
   if (scanBtn) {
@@ -1802,8 +1977,6 @@ async function loadData() {
     scanBtn.textContent = '↻ Live Data';
     scanBtn.style.opacity = '1';
   }
-
-  renderAll();
 }
 
 // ═══════ HYBRID SEARCH & ON-DEMAND NSE STOCK ANALYZER ═══════
