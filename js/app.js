@@ -1297,75 +1297,124 @@ function renderBreakoutsTab() {
     `;
   }
 
-  // ─── SECTION 3: THIS WEEK'S BREAKOUTS ───
-  html += `<div class="bo-divider"></div>`;
-  html += `<div class="bo-section-title"><span class="bo-icon">🟢</span> This Week's Breakouts <span class="bo-count-pill">${filteredWeekly.length}</span></div>`;
-  if (filteredWeekly.length > 0) {
-    const weeklySorted = [...filteredWeekly].sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
     html += `
-      <div class="bo-weekly-grid bo-weekly-header">
-        <div>★</div>
-        <div>Ticker</div>
-        <div>ARS</div>
-        <div class="bo-col-bo-price">BO Price</div>
-        <div>Current ₹</div>
-        <div>Gain</div>
-        <div>BO Date</div>
-        <div class="bo-col-rs">RS</div>
-      </div>
-      ${weeklySorted.map(d => {
-        const boPrice = d.signPrice ?? d.price;
-        const gain = boPrice > 0 ? ((d.price - boPrice) / boPrice * 100) : 0;
-        const gainStr = gain >= 0 ? `+${gain.toFixed(1)}%` : `${gain.toFixed(1)}%`;
-        const gainCls = gain >= 0 ? 'bo-gain-pos' : 'bo-gain-neg';
-        const boDateStr = d.signSince ? new Date(d.signSince * 1000).toLocaleDateString('en-IN', {day:'2-digit', month:'short'}) : '—';
-        const isPinned = pinnedStocks.includes(d.sym);
-        const daysAgo = d.signDays ?? 0;
-        const daysLabel = daysAgo === 1 ? '1d ago' : `${daysAgo}d ago`;
-        return `
-          <div class="bo-weekly-grid bo-weekly-row" onclick="openStockModal('${d.sym}')">
-            <div><span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${d.sym}')">${isPinned ? '★' : '☆'}</span></div>
-            <div><span class="bo-sym">${d.sym}</span><br><span class="bo-name">${d.name}</span></div>
-            <div style="color:var(--up);font-weight:600">${(d.ars * 100).toFixed(1)}%</div>
-            <div class="bo-col-bo-price" style="color:var(--muted-lt)">₹${boPrice.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
-            <div style="font-weight:600">₹${d.price.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
-            <div class="${gainCls}">${gainStr}</div>
-            <div class="bo-date">${boDateStr} <span style="opacity:0.6;font-size:9px">(${daysLabel})</span></div>
-            <div class="bo-col-rs" style="color:var(--gold);font-weight:600">${d.rs_rating ?? '—'}</div>
+      <div class="bo-stats-ribbon">
+        <div class="bo-stat-card" onclick="setBoCapFilter('all')" title="Filter: All Fresh Breakouts">
+          <div class="bsc-icon">🚀</div>
+          <div class="bsc-info">
+            <div class="bsc-num" style="color:var(--gold);">${allTodayBreakouts.length}</div>
+            <div class="bsc-lbl">Today's Breakouts</div>
           </div>
-        `;
-      }).join('')}
-    `;
-  } else {
-    html += `<div style="padding:10px 14px;font-size:11px;color:var(--muted)">No additional breakouts triggered earlier this week.</div>`;
-  }
-
-  // ─── SECTION 4: LEADER RETEST / DIP BUYS ───
-  if (filteredDipBuy.length > 0) {
-    html += `<div class="bo-divider"></div>`;
-    html += `<div class="bo-section-title-dip"><span class="bo-icon">🎯</span> Leader Retest / Dip Buys (Near Support) <span class="bo-count-pill-dip">${filteredDipBuy.length}</span></div>`;
-    const sortedDip = [...filteredDipBuy].sort((a, b) => (b.rs_rating ?? 0) - (a.rs_rating ?? 0));
-    html += `
-      <div class="tbl-wrap">
-        <div class="tbl-header COL" style="border-bottom: 2px solid #38bdf8;">
-          <div class="th" title="Select for compare" style="cursor:default;"></div>
-          <div class="th sorted" onclick="setSortCol('alpha')">Ticker <span class="sort-arrow">↕</span></div>
-          <div class="th" onclick="setSortCol('ars-desc')">ARS <span class="sort-arrow">↕</span></div>
-          <div class="th" onclick="setSortCol('srs-desc')">SRS <span class="sort-arrow">↕</span></div>
-          <div class="th" onclick="setSortCol('52w-desc')">52W <span class="sort-arrow">↕</span></div>
-          <div class="th" onclick="setSortCol('days-desc')">Days ↕</div>
-          <div class="th" onclick="setSortCol('vol-desc')">Vol ↕</div>
-          <div class="th" onclick="setSortCol('st-desc')">Supertrend ↕</div>
-          <div class="th">Price ₹</div>
-          <div class="th" onclick="setSortCol('rs-desc')">RS ↕</div>
-          <div class="th">TV</div>
         </div>
-        <div class="tbl-body">
-          ${sortedDip.slice(0, 15).map(d => rowHtml(d)).join('')}
+        <div class="bo-stat-card" onclick="document.querySelector('.vcp-panel')?.scrollIntoView({behavior:'smooth'})" title="Jump to VCP Squeezes">
+          <div class="bsc-icon">🧘</div>
+          <div class="bsc-info">
+            <div class="bsc-num" style="color:#7da9ff;">${vcpStocks.length}</div>
+            <div class="bsc-lbl">Active VCP Squeezes</div>
+          </div>
+        </div>
+        <div class="bo-stat-card" onclick="document.querySelector('.pp-panel')?.scrollIntoView({behavior:'smooth'})" title="Jump to Pocket Pivots">
+          <div class="bsc-icon">⚡</div>
+          <div class="bsc-info">
+            <div class="bsc-num" style="color:var(--up);">${pocketPivots.length}</div>
+            <div class="bsc-lbl">Pocket Pivot Setups</div>
+          </div>
+        </div>
+        <div class="bo-stat-card" onclick="document.querySelector('.bo-section-title-dip')?.scrollIntoView({behavior:'smooth'})" title="Jump to Leader Retests">
+          <div class="bsc-icon">🎯</div>
+          <div class="bsc-info">
+            <div class="bsc-num" style="color:#38bdf8;">${filteredDipBuy.length}</div>
+            <div class="bsc-lbl">Leader Dip Buys</div>
+          </div>
         </div>
       </div>
     `;
-  }
+
+    // ─── BOTTOM SPLIT GRID: THIS WEEK'S BREAKOUTS & LEADER RETESTS ───
+    html += `<div class="bo-divider"></div>`;
+    html += `<div class="bo-dual-grid">`;
+
+    // Column A: This Week's Breakouts
+    html += `
+      <div class="bo-dual-col">
+        <div class="bo-section-title"><span class="bo-icon">🟢</span> This Week's Breakouts <span class="bo-count-pill">${filteredWeekly.length}</span></div>
+    `;
+    if (filteredWeekly.length > 0) {
+      const weeklySorted = [...filteredWeekly].sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
+      html += `
+        <div class="tbl-wrap">
+          <div class="bo-weekly-grid bo-weekly-header">
+            <div>★</div>
+            <div>Ticker</div>
+            <div>ARS</div>
+            <div class="bo-col-bo-price">BO Price</div>
+            <div>Current ₹</div>
+            <div>Gain</div>
+            <div>BO Date</div>
+            <div class="bo-col-rs">RS</div>
+          </div>
+          ${weeklySorted.map(d => {
+            const boPrice = d.signPrice ?? d.price;
+            const gain = boPrice > 0 ? ((d.price - boPrice) / boPrice * 100) : 0;
+            const gainStr = gain >= 0 ? `+${gain.toFixed(1)}%` : `${gain.toFixed(1)}%`;
+            const gainCls = gain >= 0 ? 'bo-gain-pos' : 'bo-gain-neg';
+            const boDateStr = d.signSince ? new Date(d.signSince * 1000).toLocaleDateString('en-IN', {day:'2-digit', month:'short'}) : '—';
+            const isPinned = pinnedStocks.includes(d.sym);
+            const daysAgo = d.signDays ?? 0;
+            const daysLabel = daysAgo === 1 ? '1d ago' : `${daysAgo}d ago`;
+            return `
+              <div class="bo-weekly-grid bo-weekly-row" onclick="openStockModal('${d.sym}')" style="cursor:pointer;">
+                <div><span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${d.sym}')">${isPinned ? '★' : '☆'}</span></div>
+                <div><span class="bo-sym">${d.sym}</span><br><span class="bo-name">${d.name}</span></div>
+                <div style="color:var(--up);font-weight:600">${(d.ars * 100).toFixed(1)}%</div>
+                <div class="bo-col-bo-price" style="color:var(--muted-lt)">₹${boPrice.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
+                <div style="font-weight:600">₹${d.price.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
+                <div class="${gainCls}">${gainStr}</div>
+                <div class="bo-date">${boDateStr} <span style="opacity:0.6;font-size:9px">(${daysLabel})</span></div>
+                <div class="bo-col-rs" style="color:var(--gold);font-weight:600">${d.rs_rating ?? '—'}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    } else {
+      html += `<div style="padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--muted)">No additional breakouts triggered earlier this week.</div>`;
+    }
+    html += `</div>`; // Close Column A
+
+    // Column B: Leader Retest / Dip Buys
+    html += `
+      <div class="bo-dual-col">
+        <div class="bo-section-title-dip"><span class="bo-icon">🎯</span> Leader Retest / Dip Buys (Near Support) <span class="bo-count-pill-dip">${filteredDipBuy.length}</span></div>
+    `;
+    if (filteredDipBuy.length > 0) {
+      const sortedDip = [...filteredDipBuy].sort((a, b) => (b.rs_rating ?? 0) - (a.rs_rating ?? 0));
+      html += `
+        <div class="tbl-wrap">
+          <div class="tbl-header COL" style="border-bottom: 2px solid #38bdf8;">
+            <div class="th" title="Select for compare" style="cursor:default;"></div>
+            <div class="th sorted" onclick="setSortCol('alpha')">Ticker <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('ars-desc')">ARS <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('srs-desc')">SRS <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('52w-desc')">52W <span class="sort-arrow">↕</span></div>
+            <div class="th" onclick="setSortCol('days-desc')">Days ↕</div>
+            <div class="th" onclick="setSortCol('vol-desc')">Vol ↕</div>
+            <div class="th" onclick="setSortCol('st-desc')">Supertrend ↕</div>
+            <div class="th">Price ₹</div>
+            <div class="th" onclick="setSortCol('rs-desc')">RS ↕</div>
+            <div class="th">TV</div>
+          </div>
+          <div class="tbl-body">
+            ${sortedDip.slice(0, 15).map(d => rowHtml(d)).join('')}
+          </div>
+        </div>
+      `;
+    } else {
+      html += `<div style="padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--muted)">No leader dip-buy candidates near support currently.</div>`;
+    }
+    html += `</div>`; // Close Column B
+
+    html += `</div>`; // Close .bo-dual-grid
 
   container.innerHTML = html;
 }
@@ -1520,142 +1569,214 @@ function renderOverviewTab() {
   if (passRate >= 50) { verdict = 'BULLISH'; verdictColor = 'var(--up)'; }
   else if (passRate <= 25) { verdict = 'BEARISH'; verdictColor = 'var(--down)'; }
 
+  const topAlphaMovers = [...allData]
+    .filter(d => (d.ars || 0) > 0)
+    .sort((a,b) => (b.ars || 0) - (a.ars || 0))
+    .slice(0, 5);
+  const near52wCount = allData.filter(d => (d.hi52_prox || -1) >= -0.05).length;
+  const vcpAndPpCount = allData.filter(d => (d.vcp?.is_vcp || d.pocket_pivot) && (d.ars || 0) > 0).length;
+
   container.innerHTML = `
-    <!-- Top Overview Hero -->
+    <!-- Top Overview Hero Strip -->
     <div class="ov-hero">
-      <div class="ov-card" style="border-left: 4px solid ${verdictColor};">
+      <!-- Card 1: Market Regime & Breadth -->
+      <div class="ov-card ov-card-glow" style="border-top: 3px solid ${verdictColor};">
         <div class="ov-title">
-          <span>Market Regime &amp; Breadth</span>
+          <span>🎯 Market Regime &amp; Health</span>
           <span class="ov-badge" style="background:${verdictColor}22;color:${verdictColor};border:1px solid ${verdictColor}55;">${passRate}% Pass Rate</span>
         </div>
-        <div class="ov-stat-big" style="color:${verdictColor}">${verdict}</div>
+        <div class="ov-hero-stat-row">
+          <div class="ov-stat-big" style="color:${verdictColor}">${verdict}</div>
+          <div class="ov-breadth-chips">
+            <span class="ov-bchip"><strong style="color:var(--up);">${breadthPct}%</strong> Stage-2 (MA+)</span>
+            <span class="ov-bchip"><strong>${passCount}</strong>/${totalCount} RS+</span>
+          </div>
+        </div>
         <div class="ov-meter-wrap">
-          <div class="ov-meter-fill" style="width:${passRate}%;background:${verdictColor};"></div>
+          <div class="ov-meter-fill" style="width:${Math.max(5, passRate)}%;background:${verdictColor};box-shadow:0 0 10px ${verdictColor};"></div>
         </div>
         <div class="ov-subtext">
-          <span><strong>${passCount}</strong> / ${totalCount} meet RS criteria</span>
+          <span>Advancing: <strong style="color:var(--up);">${allData.filter(d => (d.ars||0) > 0).length}</strong></span>
           <span>·</span>
-          <span><strong style="color:var(--up);">${breadthPct}%</strong> in Stage-2 (MA+)</span>
+          <span>Lagging: <strong style="color:var(--down);">${allData.filter(d => (d.ars||0) <= 0).length}</strong></span>
         </div>
       </div>
 
-      <div class="ov-card">
+      <!-- Card 2: Institutional Smart Money Flow -->
+      <div class="ov-card ov-card-glow" style="border-top: 3px solid #60a5fa;">
         <div class="ov-title">
-          <span>🏛️ Institutional Flows</span>
+          <span>🏛️ Institutional Smart Money</span>
           <span class="badge badge-blue">FII + DII Cash</span>
         </div>
         <div class="ov-flows-grid">
           <div class="ov-flow-item">
             <span class="ov-flow-lbl">FII Net Flow</span>
-            <strong class="ov-flow-val" style="color:${latestFiiDiiData?.fii >= 0 ? 'var(--up)' : 'var(--down)'};">${fiiText}</strong>
+            <strong class="ov-flow-val" style="color:${latestFiiDiiData?.fii >= 0 ? 'var(--up)' : (latestFiiDiiData?.fii < 0 ? 'var(--down)' : 'var(--text)')};">${fiiText}</strong>
           </div>
           <div class="ov-flow-item">
             <span class="ov-flow-lbl">DII Net Flow</span>
-            <strong class="ov-flow-val" style="color:${latestFiiDiiData?.dii >= 0 ? 'var(--up)' : 'var(--down)'};">${diiText}</strong>
+            <strong class="ov-flow-val" style="color:${latestFiiDiiData?.dii >= 0 ? 'var(--up)' : (latestFiiDiiData?.dii < 0 ? 'var(--down)' : 'var(--text)')};">${diiText}</strong>
           </div>
         </div>
-        <div class="ov-net-flow-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px;">
+        <div class="ov-net-flow-row" style="border-top:1px solid rgba(255,255,255,0.08);padding-top:6px;margin-top:4px;">
           <span style="font-size:11px;color:var(--muted);font-weight:600;">Net Combined Smart Money</span>
           <strong style="font-family:var(--font-num);font-size:12.5px;color:${(latestFiiDiiData?.fii || 0) + (latestFiiDiiData?.dii || 0) >= 0 ? 'var(--up)' : 'var(--down)'};">${netText}</strong>
         </div>
       </div>
 
-      <div class="ov-card">
+      <!-- Card 3: Today's Real-Time Market Pulse -->
+      <div class="ov-card ov-card-glow" style="border-top: 3px solid #ffd700;">
         <div class="ov-title">
-          <span>⚡ Today's Signals Live</span>
-          <span class="badge badge-green">Real-Time</span>
+          <span>⚡ Real-Time Market Pulse</span>
+          <span class="badge badge-green">Live Scanner</span>
         </div>
         <div class="ov-signal-chips">
-          <div class="ov-signal-chip" onclick="setTab('breakouts', document.querySelectorAll('.tab')[3])">
+          <div class="ov-signal-chip" onclick="setTab('breakouts', document.querySelectorAll('.tab')[3])" title="View Fresh Breakouts">
             <span class="osc-lbl">🔥 Fresh Breakouts</span>
             <strong class="osc-val" style="color:var(--gold);">${breakouts.length}</strong>
           </div>
-          <div class="ov-signal-chip" onclick="applyPreset('whale-footprints')">
-            <span class="osc-lbl">⚡ Vol Surge (&ge;2×)</span>
+          <div class="ov-signal-chip" onclick="applyPreset('whale-footprints')" title="View Volume Surges ≥2×">
+            <span class="osc-lbl">⚡ Vol Surge (≥2×)</span>
             <strong class="osc-val" style="color:#60a5fa;">${volSurges.length}</strong>
           </div>
-          <div class="ov-signal-chip" onclick="applyPreset('rocket-breakouts')">
+          <div class="ov-signal-chip" onclick="applyPreset('rocket-breakouts')" title="View Near 52W High">
             <span class="osc-lbl">🎯 Near 52W High</span>
-            <strong class="osc-val" style="color:var(--up);">${allData.filter(d=>(d.hi52_prox||-1)>=-0.05).length}</strong>
+            <strong class="osc-val" style="color:var(--up);">${near52wCount}</strong>
           </div>
-          <div class="ov-signal-chip" onclick="setTab('breakouts', document.querySelectorAll('.tab')[3])">
-            <span class="osc-lbl">🧘 VCP &amp; Pocket Pivots</span>
-            <strong class="osc-val" style="color:#c084fc;">${allData.filter(d => (d.vcp?.is_vcp || d.pocket_pivot) && (d.ars||0) > 0).length}</strong>
+          <div class="ov-signal-chip" onclick="setTab('breakouts', document.querySelectorAll('.tab')[3])" title="View VCP Squeezes & Pocket Pivots">
+            <span class="osc-lbl">🧘 VCP &amp; Pivots</span>
+            <strong class="osc-val" style="color:#c084fc;">${vcpAndPpCount}</strong>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 4-Regime Quadrants Grid -->
-    <div style="font-size:12px;font-weight:700;color:var(--text);margin-top:4px;">📊 4-Momentum Regime Distribution</div>
-    <div class="ov-quads-grid">
-      <div class="ov-quad-card q1" onclick="applyPreset('power-leaders')">
-        <div class="ov-quad-head">
-          <span class="ov-quad-name" style="color:#0fe586">🌟 QUAD 1: LEADERS</span>
-          <span class="ov-quad-count" style="color:#0fe586">${q1List.length}</span>
-        </div>
-        <div class="ov-quad-desc">Strong long-term alpha (ARS+) and rising short-term momentum (SRS+).</div>
-        <div class="ov-quad-tickers">
-          ${renderQuadPills(topQ1, 'q1-badge', s => `+${((s.ars||0)*100).toFixed(0)}%`)}
-        </div>
-      </div>
-
-      <div class="ov-quad-card q2" onclick="applyPreset('bottom-reversal')">
-        <div class="ov-quad-head">
-          <span class="ov-quad-name" style="color:#5fc4ba">🔄 QUAD 2: TURNAROUNDS</span>
-          <span class="ov-quad-count" style="color:#5fc4ba">${q2List.length}</span>
-        </div>
-        <div class="ov-quad-desc">Base-building turnaround stocks improving with fresh quarterly momentum.</div>
-        <div class="ov-quad-tickers">
-          ${renderQuadPills(topQ2, 'q2-badge', s => `SRS ${((s.srs||0)*100).toFixed(0)}%`)}
-        </div>
-      </div>
-
-      <div class="ov-quad-card q3" onclick="toggleChip('quad1')">
-        <div class="ov-quad-head">
-          <span class="ov-quad-name" style="color:#e3b341">⚠️ QUAD 3: PULLBACKS</span>
-          <span class="ov-quad-count" style="color:#e3b341">${q3List.length}</span>
-        </div>
-        <div class="ov-quad-desc">Leading trend undergoing healthy consolidation or dip-buy setup.</div>
-        <div class="ov-quad-tickers">
-          ${renderQuadPills(topQ3, 'q3-badge', s => `+${((s.ars||0)*100).toFixed(0)}%`)}
-        </div>
-      </div>
-
-      <div class="ov-quad-card q4">
-        <div class="ov-quad-head">
-          <span class="ov-quad-name" style="color:#ef5350">❄️ QUAD 4: LAGGARDS</span>
-          <span class="ov-quad-count" style="color:#ef5350">${q4List.length}</span>
-        </div>
-        <div class="ov-quad-desc">Underperforming benchmark on all timeframes. Capital preservation zone.</div>
-        <div class="ov-quad-tickers">
-          ${renderQuadPills(topQ4, 'q4-badge', s => `${((s.ars||0)*100).toFixed(0)}%`)}
-        </div>
-      </div>
-    </div>
-
-    <!-- Sector Rotation & Shortcuts -->
-    <div class="ov-split-grid">
-      <div class="ov-card">
-        <div class="ov-title"><span>🏛️ Sector Rotation Leaders</span><button class="ov-btn" onclick="setTab('sectors', document.querySelectorAll('.tab')[5])">View RRG Clock →</button></div>
-        ${topSectors.map((s, idx) => `
-          <div class="ov-row" onclick="toggleSector('${s.ind.replace(/'/g,"\\'")}')" style="cursor:pointer;">
-            <span><strong>${idx+1}. ${s.ind}</strong> (${s.count} stocks)</span>
-            <div><span style="color:var(--up);font-weight:700;font-family:var(--font-num);">+${(s.avgArs*100).toFixed(1)}% ARS</span> · <span style="font-size:10px;color:var(--muted)">Top: <strong>${s.topSym}</strong></span></div>
+    <!-- Main Workspace Split: Left (4-Regimes Matrix) + Right (Intelligence Sidebar) -->
+    <div class="ov-main-split">
+      <!-- Left Column: 4-Momentum Regime Matrix -->
+      <div class="ov-main-left">
+        <div class="ov-section-header">
+          <div style="font-size:12.5px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px;">
+            <span>📊 4-Momentum Regime Distribution</span>
+            <span class="badge badge-blue">Dual-RS Quadrants</span>
           </div>
-        `).join('')}
+          <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">Categorized by 1-Year Alpha (ARS) and 63-Day Momentum Slope (SRS)</div>
+        </div>
+
+        <div class="ov-quads-grid-2x2">
+          <!-- QUAD 1 -->
+          <div class="ov-quad-card q1" onclick="applyPreset('power-leaders')">
+            <div class="ov-quad-head">
+              <span class="ov-quad-name" style="color:#0fe586">🌟 QUAD 1: LEADERS</span>
+              <span class="ov-quad-count" style="color:#0fe586">${q1List.length}</span>
+            </div>
+            <div class="ov-quad-desc">Strong long-term alpha (ARS+) and rising short-term momentum (SRS+).</div>
+            <div class="ov-quad-tickers">
+              ${renderQuadPills(topQ1, 'q1-badge', s => `+${((s.ars||0)*100).toFixed(0)}%`)}
+            </div>
+          </div>
+
+          <!-- QUAD 2 -->
+          <div class="ov-quad-card q2" onclick="applyPreset('bottom-reversal')">
+            <div class="ov-quad-head">
+              <span class="ov-quad-name" style="color:#5fc4ba">🔄 QUAD 2: TURNAROUNDS</span>
+              <span class="ov-quad-count" style="color:#5fc4ba">${q2List.length}</span>
+            </div>
+            <div class="ov-quad-desc">Base-building turnaround stocks improving with fresh quarterly momentum.</div>
+            <div class="ov-quad-tickers">
+              ${renderQuadPills(topQ2, 'q2-badge', s => `SRS ${((s.srs||0)*100).toFixed(0)}%`)}
+            </div>
+          </div>
+
+          <!-- QUAD 3 -->
+          <div class="ov-quad-card q3" onclick="toggleChip('quad1')">
+            <div class="ov-quad-head">
+              <span class="ov-quad-name" style="color:#e3b341">⚠️ QUAD 3: PULLBACKS</span>
+              <span class="ov-quad-count" style="color:#e3b341">${q3List.length}</span>
+            </div>
+            <div class="ov-quad-desc">Leading trend undergoing healthy consolidation or dip-buy setup.</div>
+            <div class="ov-quad-tickers">
+              ${renderQuadPills(topQ3, 'q3-badge', s => `+${((s.ars||0)*100).toFixed(0)}%`)}
+            </div>
+          </div>
+
+          <!-- QUAD 4 -->
+          <div class="ov-quad-card q4">
+            <div class="ov-quad-head">
+              <span class="ov-quad-name" style="color:#ef5350">❄️ QUAD 4: LAGGARDS</span>
+              <span class="ov-quad-count" style="color:#ef5350">${q4List.length}</span>
+            </div>
+            <div class="ov-quad-desc">Underperforming benchmark on all timeframes. Capital preservation zone.</div>
+            <div class="ov-quad-tickers">
+              ${renderQuadPills(topQ4, 'q4-badge', s => `${((s.ars||0)*100).toFixed(0)}%`)}
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="ov-card">
-        <div class="ov-title"><span>⚡ Quick Action Hub</span><span>Explore</span></div>
-        <div class="ov-shortcut-row">
-          <button class="ov-btn" onclick="setTab('screener', document.querySelectorAll('.tab')[1])">📊 Full Screener</button>
-          <button class="ov-btn" onclick="applyPreset('power-leaders')">🌟 Power Leaders</button>
-          <button class="ov-btn" onclick="applyPreset('vcp-tight')">🧘 VCP Squeeze</button>
-          <button class="ov-btn" onclick="applyPreset('early-breakout')">🔥 Pocket Pivots</button>
-          <button class="ov-btn" onclick="setTab('heatmap', document.querySelectorAll('.tab')[4])">🗺️ Pro Heatmap</button>
-          <button class="ov-btn" onclick="openShareCardModal()">🎨 Social Card</button>
-          <button class="ov-btn" onclick="exportCSV()">📥 Download CSV</button>
+      <!-- Right Column: High-Value Intelligence Sidebar (Fills the Empty Space) -->
+      <div class="ov-side-column">
+        <!-- 1. Top Alpha Leaders Today -->
+        <div class="ov-card ov-side-card">
+          <div class="ov-title">
+            <span>🔥 Top Alpha Outperformers</span>
+            <span class="badge badge-green">High Conviction</span>
+          </div>
+          <div class="ov-movers-list">
+            ${topAlphaMovers.map(s => `
+              <div class="ov-mover-item" onclick="openStockModal('${s.sym}')" title="${s.name} · Click for Scorecard">
+                <div class="omi-left">
+                  <strong class="omi-sym">${s.sym}</strong>
+                  <span class="omi-name">${s.ind || 'Equities'}</span>
+                </div>
+                <div class="omi-center">
+                  <span class="omi-rs">RS ${s.rs_rating ?? '—'}</span>
+                </div>
+                <div class="omi-right">
+                  <span class="omi-ars">+${((s.ars||0)*100).toFixed(1)}%</span>
+                  <span class="omi-price">₹${Number(s.price).toLocaleString('en-IN', {maximumFractionDigits:1})}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 2. Sector Leadership Barometer -->
+        <div class="ov-card ov-side-card">
+          <div class="ov-title">
+            <span>🏛️ Sector Leadership</span>
+            <button class="ov-btn" onclick="setTab('sectors', document.querySelectorAll('.tab')[5])">RRG Clock →</button>
+          </div>
+          <div class="ov-sectors-list">
+            ${topSectors.map((s, idx) => `
+              <div class="ov-sector-row" onclick="toggleSector('${s.ind.replace(/'/g,"\\'")}')" title="Filter by ${s.ind}">
+                <div class="osr-top">
+                  <span class="osr-name">${idx+1}. ${s.ind} (${s.count})</span>
+                  <span class="osr-pct">+${(s.avgArs*100).toFixed(1)}% ARS</span>
+                </div>
+                <div class="osr-bar-wrap">
+                  <div class="osr-bar-fill" style="width:${Math.min(100, Math.max(10, (s.avgArs * 150)))}%;"></div>
+                </div>
+                <div class="osr-sub">Top Stock: <strong>${s.topSym}</strong></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 3. Quantitative Action Hub -->
+        <div class="ov-card ov-side-card">
+          <div class="ov-title">
+            <span>⚡ Quantitative Action Hub</span>
+            <span style="font-size:9.5px;color:var(--muted)">1-Click Scan</span>
+          </div>
+          <div class="ov-actions-grid">
+            <button class="ov-action-btn" onclick="applyPreset('power-leaders')">🌟 Power Leaders</button>
+            <button class="ov-action-btn" onclick="applyPreset('vcp-tight')">🧘 VCP Squeeze</button>
+            <button class="ov-action-btn" onclick="applyPreset('early-breakout')">⚡ Pocket Pivots</button>
+            <button class="ov-action-btn" onclick="applyPreset('whale-footprints')">📦 Volume Surges</button>
+            <button class="ov-action-btn" onclick="setTab('heatmap', document.querySelectorAll('.tab')[4])">🗺️ Pro Heatmap</button>
+            <button class="ov-action-btn" onclick="exportCSV()">📥 Download CSV</button>
+          </div>
         </div>
       </div>
     </div>
