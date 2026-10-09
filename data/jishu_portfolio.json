@@ -2,18 +2,18 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-09T07:09:53.458Z",
+  "last_updated": "2026-10-09T19:30:30.638Z",
   "account": {
     "initial_capital": 1000000,
-    "cash": 402821.2,
-    "invested_capital": 579132.4,
-    "total_equity": 981953.6,
-    "realized_pnl": 0,
-    "unrealized_pnl": -18046.4,
+    "cash": 496042.4,
+    "invested_capital": 490415.75,
+    "total_equity": 986458.15,
+    "realized_pnl": -6419.199999999991,
+    "unrealized_pnl": -7122.65,
     "win_rate": 0,
-    "total_trades": 0,
+    "total_trades": 1,
     "winning_trades": 0,
-    "losing_trades": 0
+    "losing_trades": 1
   },
   "settings": {
     "max_positions": 10,
@@ -28,19 +28,19 @@
     "min_market_sentiment_score": 35
   },
   "macro_regime": {
-    "regime": "CORRECTION_DEFENSE",
-    "regimeColor": "#f97316",
-    "regimeBadgeBg": "rgba(249, 115, 22, 0.18)",
-    "marketScore": 39,
-    "vixLevel": 14.7,
+    "regime": "CHOPPY_CONSOLIDATION",
+    "regimeColor": "#eab308",
+    "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
+    "marketScore": 42,
+    "vixLevel": 15.3,
     "vixRegime": "ELEVATED_CHOPPY",
     "fiiNet": 0,
     "diiNet": 0,
     "combinedNet": 0,
-    "circuitBreakerActive": true,
-    "maxAllowedSlots": 3,
-    "maxCapitalPerTradePct": 7.5,
-    "guidance": "⚠️ Market in pullback correction. New aggressive breakouts paused. Limit exposure to max 3 slots."
+    "circuitBreakerActive": false,
+    "maxAllowedSlots": 6,
+    "maxCapitalPerTradePct": 10,
+    "guidance": "⚖️ Selective sideways market. Trade only top RS leaders with volume confirmation (max 6 slots)."
   },
   "open_positions": [
     {
@@ -66,9 +66,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 385.8,
-      "current_price": 376,
-      "unrealized_pnl": -2538.200000000003,
-      "unrealized_pnl_pct": -2.5401762571280484
+      "current_price": 377.65,
+      "unrealized_pnl": -2110.850000000009,
+      "unrealized_pnl_pct": -2.112493519958537
     },
     {
       "sym": "BHEL",
@@ -93,9 +93,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 452,
-      "current_price": 429.6,
-      "unrealized_pnl": 139.8000000000053,
-      "unrealized_pnl_pct": 0.13986013986014514
+      "current_price": 433.6,
+      "unrealized_pnl": 1071.8000000000052,
+      "unrealized_pnl_pct": 1.0722610722610775
     },
     {
       "sym": "ADANIPORTS",
@@ -120,36 +120,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 1774,
-      "current_price": 1708,
-      "unrealized_pnl": -3696,
-      "unrealized_pnl_pct": -3.720405862457723
-    },
-    {
-      "sym": "RKFORGE",
-      "name": "Ramkrishna Forgings",
-      "ind": "Capital Goods",
-      "logoid": "ramkrishna-forgings",
-      "sleeve": "SLEEVE_A",
-      "setup_type": "ALPHA_BREAKOUT",
-      "entry_date": "2026-10-06",
-      "entry_price": 732.65,
-      "qty": 136,
-      "invested_value": 99640.4,
-      "initial_sl": 687.43,
-      "current_sl": 687.43,
-      "risk_per_share": 45.22,
-      "actual_dollar_risk": 6149.92,
-      "risk_pct_of_equity": 0.61,
-      "target_1_price": 777.87,
-      "target_2_price": 823.09,
-      "smart_money_score": 42,
-      "smart_money_tier": "⚖️ BALANCED_FLOW",
-      "sl_moved_to_cost": false,
-      "sl_moved_to_t1": false,
-      "highest_price": 732.65,
-      "current_price": 700.75,
-      "unrealized_pnl": -4338.399999999997,
-      "unrealized_pnl_pct": -4.354057189653993
+      "current_price": 1761,
+      "unrealized_pnl": -728,
+      "unrealized_pnl_pct": -0.7328072153325818
     },
     {
       "sym": "LAURUSLABS",
@@ -174,9 +147,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 2050,
-      "current_price": 1997.9,
-      "unrealized_pnl": -2500.7999999999956,
-      "unrealized_pnl_pct": -2.541463414634142
+      "current_price": 2036.6,
+      "unrealized_pnl": -643.2000000000044,
+      "unrealized_pnl_pct": -0.6536585365853702
     },
     {
       "sym": "MARKSANS",
@@ -201,12 +174,31 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 324.4,
-      "current_price": 307.8,
-      "unrealized_pnl": -5112.799999999989,
-      "unrealized_pnl_pct": -5.117139334155354
+      "current_price": 309.1,
+      "unrealized_pnl": -4712.399999999986,
+      "unrealized_pnl_pct": -4.716399506781737
     }
   ],
-  "closed_trades": [],
+  "closed_trades": [
+    {
+      "sym": "RKFORGE",
+      "name": "Ramkrishna Forgings",
+      "ind": "Capital Goods",
+      "sleeve": "SLEEVE_A",
+      "setup_type": "ALPHA_BREAKOUT",
+      "entry_date": "2026-10-06",
+      "exit_date": "2026-10-09",
+      "entry_price": 732.65,
+      "exit_price": 685.45,
+      "qty": 136,
+      "invested_value": 99640.4,
+      "realized_pnl": -6419.199999999991,
+      "return_pct": -6.442366750835997,
+      "exit_reason": "STOP_LOSS_HIT",
+      "highest_price": 732.65,
+      "smart_money_score": 42
+    }
+  ],
   "daily_equity": [
     {
       "date": "2026-10-01",
@@ -243,9 +235,27 @@
       "realized_pnl": 0,
       "unrealized_pnl": -18046.4,
       "open_positions_count": 6
+    },
+    {
+      "date": "2026-10-09",
+      "cash": 496042.4,
+      "invested": 490415.75,
+      "total_equity": 986458.15,
+      "realized_pnl": -6419.2,
+      "unrealized_pnl": -7122.65,
+      "open_positions_count": 5
     }
   ],
   "recent_events": [
+    {
+      "timestamp": "2026-10-09T19:30:30.637Z",
+      "type": "TRADE_EXIT",
+      "symbol": "RKFORGE",
+      "reason": "STOP_LOSS_HIT",
+      "pnl": -6419.199999999991,
+      "return_pct": -6.442366750835997,
+      "message": "🛑 [JISHU STOP LOSS] Closed RKFORGE at ₹685.45 | Reason: STOP_LOSS_HIT | PnL: ₹-6419.20 (-6.44%)"
+    },
     {
       "timestamp": "2026-10-09T07:09:53.457Z",
       "type": "MACRO_REGIME_PAUSE",
@@ -297,13 +307,13 @@
       "maxPositions": 5,
       "minRsRating": 80,
       "maxHoldingDays": 15,
-      "targetPct": 20,
-      "targetCapital": 196390.72,
-      "investedCapital": 597178.8,
+      "targetPct": 35,
+      "targetCapital": 345260.35,
+      "investedCapital": 497538.4,
       "availableCapital": 0,
-      "openPositions": 6,
+      "openPositions": 5,
       "openSlots": 0,
-      "utilizationPct": 304.1
+      "utilizationPct": 144.1
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -313,10 +323,10 @@
       "maxPositions": 3,
       "minRsRating": 65,
       "maxHoldingDays": 30,
-      "targetPct": 30,
-      "targetCapital": 294586.08,
+      "targetPct": 35,
+      "targetCapital": 345260.35,
       "investedCapital": 0,
-      "availableCapital": 294586.08,
+      "availableCapital": 345260.35,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -327,29 +337,29 @@
       "icon": "🛡️",
       "targetAllocPct": 20,
       "maxPositions": 0,
-      "targetPct": 50,
-      "targetCapital": 490976.8,
+      "targetPct": 30,
+      "targetCapital": 295937.45,
       "status": "ACTIVE BUFFER"
     }
   },
   "quant_metrics": {
     "profitFactor": 0,
-    "sharpeRatio": 14.35,
-    "sortinoRatio": 210.76,
-    "maxDrawdownPct": 0,
-    "maxDrawdownValue": 0,
+    "sharpeRatio": -7.96,
+    "sortinoRatio": -7.28,
+    "maxDrawdownPct": 2.33,
+    "maxDrawdownValue": 23405.4,
     "payoffRatio": 0,
-    "expectancy": 0,
+    "expectancy": -6419.2,
     "totalGains": 0,
-    "totalLosses": 0,
-    "totalClosedTrades": 0,
+    "totalLosses": 6419.2,
+    "totalClosedTrades": 1,
     "winRatePct": 0
   },
   "quant_recommendations": [
     {
       "type": "CAPITAL_HEALTH",
       "badge": "✅ STABLE",
-      "text": "Capital curve is well-protected. Max Drawdown contained at 0.0% (Institutional standard < 8%)."
+      "text": "Capital curve is well-protected. Max Drawdown contained at 2.3% (Institutional standard < 8%)."
     }
   ]
 }
