@@ -2,15 +2,15 @@ window.STATIC_JISHU_PORTFOLIO = {
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-07T00:00:00.000Z",
+  "last_updated": "2026-10-09T07:09:53.458Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 402821.2,
-    "invested_capital": 597178.8,
-    "total_equity": 1005359.0,
-    "realized_pnl": 0.0,
-    "unrealized_pnl": 5359.0,
-    "win_rate": 0.0,
+    "invested_capital": 579132.4,
+    "total_equity": 981953.6,
+    "realized_pnl": 0,
+    "unrealized_pnl": -18046.4,
+    "win_rate": 0,
     "total_trades": 0,
     "winning_trades": 0,
     "losing_trades": 0
@@ -23,15 +23,24 @@ window.STATIC_JISHU_PORTFOLIO = {
     "target_2_rr": 2,
     "min_volume_ratio": 1.2,
     "min_rs_rating": 75,
-    "max_distance_from_st_pct": 7.0,
-    "risk_pct_per_trade": 1.0,
+    "max_distance_from_st_pct": 7,
+    "risk_pct_per_trade": 1,
     "min_market_sentiment_score": 35
   },
   "macro_regime": {
-    "regime": "CHOPPY_CONSOLIDATION",
-    "marketScore": 47,
-    "maxAllowedSlots": 6,
-    "cashBufferPct": 40
+    "regime": "CORRECTION_DEFENSE",
+    "regimeColor": "#f97316",
+    "regimeBadgeBg": "rgba(249, 115, 22, 0.18)",
+    "marketScore": 39,
+    "vixLevel": 14.7,
+    "vixRegime": "ELEVATED_CHOPPY",
+    "fiiNet": 0,
+    "diiNet": 0,
+    "combinedNet": 0,
+    "circuitBreakerActive": true,
+    "maxAllowedSlots": 3,
+    "maxCapitalPerTradePct": 7.5,
+    "guidance": "⚠️ Market in pullback correction. New aggressive breakouts paused. Limit exposure to max 3 slots."
   },
   "open_positions": [
     {
@@ -53,13 +62,13 @@ window.STATIC_JISHU_PORTFOLIO = {
       "target_1_price": 414.33,
       "target_2_price": 442.86,
       "smart_money_score": 87,
-      "smart_money_tier": "\ud83d\udc0b WHALE_ACCUMULATION",
+      "smart_money_tier": "🐋 WHALE_ACCUMULATION",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 385.8,
-      "current_price": 385.8,
-      "unrealized_pnl": 0.0,
-      "unrealized_pnl_pct": 0.0
+      "current_price": 376,
+      "unrealized_pnl": -2538.200000000003,
+      "unrealized_pnl_pct": -2.5401762571280484
     },
     {
       "sym": "BHEL",
@@ -69,9 +78,9 @@ window.STATIC_JISHU_PORTFOLIO = {
       "sleeve": "SLEEVE_A",
       "setup_type": "ALPHA_BREAKOUT",
       "entry_date": "2026-10-05",
-      "entry_price": 429.0,
+      "entry_price": 429,
       "qty": 233,
-      "invested_value": 99957.0,
+      "invested_value": 99957,
       "initial_sl": 398.71,
       "current_sl": 398.71,
       "risk_per_share": 30.29,
@@ -80,13 +89,13 @@ window.STATIC_JISHU_PORTFOLIO = {
       "target_1_price": 459.29,
       "target_2_price": 489.58,
       "smart_money_score": 55,
-      "smart_money_tier": "\u2696\ufe0f BALANCED_FLOW",
+      "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 452.0,
-      "current_price": 452.0,
-      "unrealized_pnl": 5359.0,
-      "unrealized_pnl_pct": 5.36
+      "highest_price": 452,
+      "current_price": 429.6,
+      "unrealized_pnl": 139.8000000000053,
+      "unrealized_pnl_pct": 0.13986013986014514
     },
     {
       "sym": "ADANIPORTS",
@@ -96,9 +105,9 @@ window.STATIC_JISHU_PORTFOLIO = {
       "sleeve": "SLEEVE_A",
       "setup_type": "ALPHA_BREAKOUT",
       "entry_date": "2026-10-05",
-      "entry_price": 1774.0,
+      "entry_price": 1774,
       "qty": 56,
-      "invested_value": 99344.0,
+      "invested_value": 99344,
       "initial_sl": 1684.55,
       "current_sl": 1684.55,
       "risk_per_share": 89.45,
@@ -107,13 +116,13 @@ window.STATIC_JISHU_PORTFOLIO = {
       "target_1_price": 1863.45,
       "target_2_price": 1952.9,
       "smart_money_score": 40,
-      "smart_money_tier": "\u2696\ufe0f BALANCED_FLOW",
+      "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 1774.0,
-      "current_price": 1774.0,
-      "unrealized_pnl": 0.0,
-      "unrealized_pnl_pct": 0.0
+      "highest_price": 1774,
+      "current_price": 1708,
+      "unrealized_pnl": -3696,
+      "unrealized_pnl_pct": -3.720405862457723
     },
     {
       "sym": "RKFORGE",
@@ -134,13 +143,13 @@ window.STATIC_JISHU_PORTFOLIO = {
       "target_1_price": 777.87,
       "target_2_price": 823.09,
       "smart_money_score": 42,
-      "smart_money_tier": "\u2696\ufe0f BALANCED_FLOW",
+      "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 732.65,
-      "current_price": 732.65,
-      "unrealized_pnl": 0.0,
-      "unrealized_pnl_pct": 0.0
+      "current_price": 700.75,
+      "unrealized_pnl": -4338.399999999997,
+      "unrealized_pnl_pct": -4.354057189653993
     },
     {
       "sym": "LAURUSLABS",
@@ -150,9 +159,9 @@ window.STATIC_JISHU_PORTFOLIO = {
       "sleeve": "SLEEVE_A",
       "setup_type": "ALPHA_BREAKOUT",
       "entry_date": "2026-10-06",
-      "entry_price": 2050.0,
+      "entry_price": 2050,
       "qty": 48,
-      "invested_value": 98400.0,
+      "invested_value": 98400,
       "initial_sl": 1910.82,
       "current_sl": 1910.82,
       "risk_per_share": 139.18,
@@ -161,13 +170,13 @@ window.STATIC_JISHU_PORTFOLIO = {
       "target_1_price": 2189.18,
       "target_2_price": 2328.36,
       "smart_money_score": 40,
-      "smart_money_tier": "\u2696\ufe0f BALANCED_FLOW",
+      "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 2050.0,
-      "current_price": 2050.0,
-      "unrealized_pnl": 0.0,
-      "unrealized_pnl_pct": 0.0
+      "highest_price": 2050,
+      "current_price": 1997.9,
+      "unrealized_pnl": -2500.7999999999956,
+      "unrealized_pnl_pct": -2.541463414634142
     },
     {
       "sym": "MARKSANS",
@@ -188,81 +197,159 @@ window.STATIC_JISHU_PORTFOLIO = {
       "target_1_price": 346.64,
       "target_2_price": 368.88,
       "smart_money_score": 33,
-      "smart_money_tier": "\u26a0\ufe0f DISTRIBUTION_RISK",
+      "smart_money_tier": "⚠️ DISTRIBUTION_RISK",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 324.4,
-      "current_price": 324.4,
-      "unrealized_pnl": 0.0,
-      "unrealized_pnl_pct": 0.0
+      "current_price": 307.8,
+      "unrealized_pnl": -5112.799999999989,
+      "unrealized_pnl_pct": -5.117139334155354
     }
   ],
   "closed_trades": [],
   "daily_equity": [
     {
       "date": "2026-10-01",
-      "cash": 1000000.0,
-      "invested": 0.0,
-      "total_equity": 1000000.0,
-      "realized_pnl": 0.0,
-      "unrealized_pnl": 0.0,
+      "cash": 1000000,
+      "invested": 0,
+      "total_equity": 1000000,
+      "realized_pnl": 0,
+      "unrealized_pnl": 0,
       "open_positions_count": 0
     },
     {
       "date": "2026-10-05",
       "cash": 700776.8,
       "invested": 299223.2,
-      "total_equity": 1000000.0,
-      "realized_pnl": 0.0,
-      "unrealized_pnl": 0.0,
+      "total_equity": 1000000,
+      "realized_pnl": 0,
+      "unrealized_pnl": 0,
       "open_positions_count": 3
     },
     {
       "date": "2026-10-06",
       "cash": 402821.2,
       "invested": 597178.8,
-      "total_equity": 1005359.0,
-      "realized_pnl": 0.0,
-      "unrealized_pnl": 5359.0,
+      "total_equity": 1005359,
+      "realized_pnl": 0,
+      "unrealized_pnl": 5359,
+      "open_positions_count": 6
+    },
+    {
+      "date": "2026-10-08",
+      "cash": 402821.2,
+      "invested": 579132.4,
+      "total_equity": 981953.6,
+      "realized_pnl": 0,
+      "unrealized_pnl": -18046.4,
       "open_positions_count": 6
     }
   ],
   "recent_events": [
     {
+      "timestamp": "2026-10-09T07:09:53.457Z",
+      "type": "MACRO_REGIME_PAUSE",
+      "message": "🛡️ [MACRO SENTINEL CIRCUIT BREAKER] Regime: CORRECTION_DEFENSE (39/100) | VIX: 14.7 | FII: ₹0 Cr. New buying paused to preserve cash."
+    },
+    {
       "timestamp": "2026-10-06T19:28:41.425Z",
       "type": "BUY_ORDER",
       "symbol": "MARKSANS",
-      "message": "\ud83d\udfe2 [JISHU BUY] [\ud83d\ude80 SLEEVE_A] MARKSANS @ \u20b9324.40 | Qty: 308 | Total: \u20b999915.20 | Risk: \u20b96849.92 (0.68%) | Smart Money: 33/100 (\u26a0\ufe0f DISTRIBUTION_RISK) | SL: \u20b9302.16 | T1: \u20b9346.64 | T2: \u20b9368.88"
+      "message": "🟢 [JISHU BUY] [🚀 SLEEVE_A] MARKSANS @ ₹324.40 | Qty: 308 | Total: ₹99915.20 | Risk: ₹6849.92 (0.68%) | Smart Money: 33/100 (⚠️ DISTRIBUTION_RISK) | SL: ₹302.16 | T1: ₹346.64 | T2: ₹368.88"
     },
     {
       "timestamp": "2026-10-06T19:28:41.425Z",
       "type": "BUY_ORDER",
       "symbol": "LAURUSLABS",
-      "message": "\ud83d\udfe2 [JISHU BUY] [\ud83d\ude80 SLEEVE_A] LAURUSLABS @ \u20b92050.00 | Qty: 48 | Total: \u20b998400.00 | Risk: \u20b96680.64 (0.67%) | Smart Money: 40/100 (\u2696\ufe0f BALANCED_FLOW) | SL: \u20b91910.82 | T1: \u20b92189.18 | T2: \u20b92328.36"
+      "message": "🟢 [JISHU BUY] [🚀 SLEEVE_A] LAURUSLABS @ ₹2050.00 | Qty: 48 | Total: ₹98400.00 | Risk: ₹6680.64 (0.67%) | Smart Money: 40/100 (⚖️ BALANCED_FLOW) | SL: ₹1910.82 | T1: ₹2189.18 | T2: ₹2328.36"
     },
     {
       "timestamp": "2026-10-06T19:28:41.425Z",
       "type": "BUY_ORDER",
       "symbol": "RKFORGE",
-      "message": "\ud83d\udfe2 [JISHU BUY] [\ud83d\ude80 SLEEVE_A] RKFORGE @ \u20b9732.65 | Qty: 136 | Total: \u20b999640.40 | Risk: \u20b96149.92 (0.61%) | Smart Money: 42/100 (\u2696\ufe0f BALANCED_FLOW) | SL: \u20b9687.43 | T1: \u20b9777.87 | T2: \u20b9823.09"
+      "message": "🟢 [JISHU BUY] [🚀 SLEEVE_A] RKFORGE @ ₹732.65 | Qty: 136 | Total: ₹99640.40 | Risk: ₹6149.92 (0.61%) | Smart Money: 42/100 (⚖️ BALANCED_FLOW) | SL: ₹687.43 | T1: ₹777.87 | T2: ₹823.09"
     },
     {
       "timestamp": "2026-10-05T21:28:44.591Z",
       "type": "BUY_ORDER",
       "symbol": "ADANIPORTS",
-      "message": "\ud83d\udfe2 [JISHU BUY] [\ud83d\ude80 SLEEVE_A] ADANIPORTS @ \u20b91774.00 | Qty: 56 | Total: \u20b999344.00 | Risk: \u20b95009.20 (0.50%) | Smart Money: 40/100 (\u2696\ufe0f BALANCED_FLOW) | SL: \u20b91684.55 | T1: \u20b91863.45 | T2: \u20b91952.90"
+      "message": "🟢 [JISHU BUY] [🚀 SLEEVE_A] ADANIPORTS @ ₹1774.00 | Qty: 56 | Total: ₹99344.00 | Risk: ₹5009.20 (0.50%) | Smart Money: 40/100 (⚖️ BALANCED_FLOW) | SL: ₹1684.55 | T1: ₹1863.45 | T2: ₹1952.90"
     },
     {
       "timestamp": "2026-10-05T21:28:44.591Z",
       "type": "BUY_ORDER",
       "symbol": "BHEL",
-      "message": "\ud83d\udfe2 [JISHU BUY] [\ud83d\ude80 SLEEVE_A] BHEL @ \u20b9429.00 | Qty: 233 | Total: \u20b999957.00 | Risk: \u20b97057.57 (0.71%) | Smart Money: 55/100 (\u2696\ufe0f BALANCED_FLOW) | SL: \u20b9398.71 | T1: \u20b9459.29 | T2: \u20b9489.58"
+      "message": "🟢 [JISHU BUY] [🚀 SLEEVE_A] BHEL @ ₹429.00 | Qty: 233 | Total: ₹99957.00 | Risk: ₹7057.57 (0.71%) | Smart Money: 55/100 (⚖️ BALANCED_FLOW) | SL: ₹398.71 | T1: ₹459.29 | T2: ₹489.58"
     },
     {
       "timestamp": "2026-10-05T21:28:44.591Z",
       "type": "BUY_ORDER",
       "symbol": "NAZARA",
-      "message": "\ud83d\udfe2 [JISHU BUY] [\ud83d\ude80 SLEEVE_A] NAZARA @ \u20b9385.80 | Qty: 259 | Total: \u20b999922.20 | Risk: \u20b97389.27 (0.74%) | Smart Money: 87/100 (\ud83d\udc0b WHALE_ACCUMULATION) | SL: \u20b9357.27 | T1: \u20b9414.33 | T2: \u20b9442.86"
+      "message": "🟢 [JISHU BUY] [🚀 SLEEVE_A] NAZARA @ ₹385.80 | Qty: 259 | Total: ₹99922.20 | Risk: ₹7389.27 (0.74%) | Smart Money: 87/100 (🐋 WHALE_ACCUMULATION) | SL: ₹357.27 | T1: ₹414.33 | T2: ₹442.86"
+    }
+  ],
+  "sleeves": {
+    "sleeveA": {
+      "id": "SLEEVE_A",
+      "name": "Alpha Breakouts & Super Momentum",
+      "icon": "🚀",
+      "targetAllocPct": 50,
+      "maxPositions": 5,
+      "minRsRating": 80,
+      "maxHoldingDays": 15,
+      "targetPct": 20,
+      "targetCapital": 196390.72,
+      "investedCapital": 597178.8,
+      "availableCapital": 0,
+      "openPositions": 6,
+      "openSlots": 0,
+      "utilizationPct": 304.1
+    },
+    "sleeveB": {
+      "id": "SLEEVE_B",
+      "name": "Leader Retest & Dip Buys",
+      "icon": "🎯",
+      "targetAllocPct": 30,
+      "maxPositions": 3,
+      "minRsRating": 65,
+      "maxHoldingDays": 30,
+      "targetPct": 30,
+      "targetCapital": 294586.08,
+      "investedCapital": 0,
+      "availableCapital": 294586.08,
+      "openPositions": 0,
+      "openSlots": 3,
+      "utilizationPct": 0
+    },
+    "sleeveC": {
+      "id": "SLEEVE_C",
+      "name": "Dynamic Liquidity & Cash Buffer",
+      "icon": "🛡️",
+      "targetAllocPct": 20,
+      "maxPositions": 0,
+      "targetPct": 50,
+      "targetCapital": 490976.8,
+      "status": "ACTIVE BUFFER"
+    }
+  },
+  "quant_metrics": {
+    "profitFactor": 0,
+    "sharpeRatio": 14.35,
+    "sortinoRatio": 210.76,
+    "maxDrawdownPct": 0,
+    "maxDrawdownValue": 0,
+    "payoffRatio": 0,
+    "expectancy": 0,
+    "totalGains": 0,
+    "totalLosses": 0,
+    "totalClosedTrades": 0,
+    "winRatePct": 0
+  },
+  "quant_recommendations": [
+    {
+      "type": "CAPITAL_HEALTH",
+      "badge": "✅ STABLE",
+      "text": "Capital curve is well-protected. Max Drawdown contained at 0.0% (Institutional standard < 8%)."
     }
   ]
 };
