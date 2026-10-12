@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Adaptive Alpha — Quantitative Momentum Terminal</title>
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/phase6.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -12,6 +13,9 @@
   <script async src="https://cdn-static.trendlyne.com/static/js/webwidgets/tl-widgets.js" charset="utf-8"></script>
 </head>
 <body>
+
+<!-- Icon sprite (Lucide, ISC licence). Use: <svg class="ic"><use href="#i-NAME"/></svg> -->
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 18V5"/> <path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"/> <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/> <path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"/> <path d="M18 18a4 4 0 0 0 2-7.464"/> <path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"/> <path d="M6 18a4 4 0 0 1-2-7.464"/> <path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"/></symbol><symbol id="i-calculator" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2"/> <line x1="8" x2="16" y1="6" y2="6"/> <line x1="16" x2="16" y1="14" y2="18"/> <path d="M16 10h.01"/> <path d="M12 10h.01"/> <path d="M8 10h.01"/> <path d="M12 14h.01"/> <path d="M8 14h.01"/> <path d="M12 18h.01"/> <path d="M8 18h.01"/></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/> <path d="M18 17V9"/> <path d="M13 17V5"/> <path d="M8 17v-3"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol><symbol id="i-circle-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/> <path d="M12 17h.01"/></symbol><symbol id="i-clipboard-copy" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/> <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/> <path d="M16 4h2a2 2 0 0 1 2 2v4"/> <path d="M21 14H11"/> <path d="m15 10-4 4 4 4"/></symbol><symbol id="i-construction" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="8" rx="1"/> <path d="M17 14v7"/> <path d="M7 14v7"/> <path d="M17 3v3"/> <path d="M7 3v3"/> <path d="M10 14 2.3 6.3"/> <path d="m14 6 7.7 7.7"/> <path d="m8 6 8 8"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3"/> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/> <path d="m7 10 5 5 5-5"/></symbol><symbol id="i-fish" viewBox="0 0 24 24"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6s-7.56-2.53-8.5-6Z"/> <path d="M18 12v.5"/> <path d="M16 17.93a9.77 9.77 0 0 1 0-11.86"/> <path d="M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33"/> <path d="M10.46 7.26C10.2 5.88 9.17 4.24 8 3h5.8a2 2 0 0 1 1.98 1.67l.23 1.4"/> <path d="m16.01 17.93-.23 1.4A2 2 0 0 1 13.8 21H9.5a5.96 5.96 0 0 0 1.49-3.98"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></symbol><symbol id="i-gem" viewBox="0 0 24 24"><path d="M10.5 3 8 9l4 13 4-13-2.5-6"/> <path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/> <path d="M2 9h20"/></symbol><symbol id="i-house" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/> <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol><symbol id="i-landmark" viewBox="0 0 24 24"><path d="M10 18v-7"/> <path d="M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z"/> <path d="M14 18v-7"/> <path d="M18 18v-7"/> <path d="M3 22h18"/> <path d="M6 18v-7"/></symbol><symbol id="i-layout-grid" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/> <rect width="7" height="7" x="14" y="3" rx="1"/> <rect width="7" height="7" x="14" y="14" rx="1"/> <rect width="7" height="7" x="3" y="14" rx="1"/></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/> <path d="M15 5.764v15"/> <path d="M9 3.236v15"/></symbol><symbol id="i-minimize-2" viewBox="0 0 24 24"><path d="m14 10 7-7"/> <path d="M20 10h-6V4"/> <path d="m3 21 7-7"/> <path d="M4 14h6v6"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></symbol><symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/> <path d="M12 22V12"/> <polyline points="3.29 7 12 12 20.71 7"/> <path d="m7.5 4.27 9 5.15"/></symbol><symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/> <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/> <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/> <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/> <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></symbol><symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></symbol><symbol id="i-plug" viewBox="0 0 24 24"><path d="M12 22v-5"/> <path d="M15 8V2"/> <path d="M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1z"/> <path d="M9 8V2"/></symbol><symbol id="i-refresh-ccw" viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/> <path d="M3 3v5h5"/> <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/> <path d="M16 16h5v5"/></symbol><symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/> <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/> <path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/> <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/></symbol><symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18"/> <path d="m19 8 3 8a5 5 0 0 1-6 0zV7"/> <path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1"/> <path d="m5 8 3 8a5 5 0 0 1-6 0zV7"/> <path d="M7 21h10"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/> <circle cx="11" cy="11" r="8"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol><symbol id="i-siren" viewBox="0 0 24 24"><path d="M7 18v-6a5 5 0 1 1 10 0v6"/> <path d="M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z"/> <path d="M21 12h1"/> <path d="M18.5 4.5 18 5"/> <path d="M2 12h1"/> <path d="M12 2v1"/> <path d="m4.929 4.929.707.707"/> <path d="M12 12v6"/></symbol><symbol id="i-sliders-horizontal" viewBox="0 0 24 24"><path d="M10 5H3"/> <path d="M12 19H3"/> <path d="M14 3v4"/> <path d="M16 17v4"/> <path d="M21 12h-9"/> <path d="M21 19h-5"/> <path d="M21 5h-7"/> <path d="M8 10v4"/> <path d="M8 12H3"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/> <path d="M20 2v4"/> <path d="M22 4h-4"/> <circle cx="4" cy="20" r="2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/> <path d="M12 2v2"/> <path d="M12 20v2"/> <path d="m4.93 4.93 1.41 1.41"/> <path d="m17.66 17.66 1.41 1.41"/> <path d="M2 12h2"/> <path d="M20 12h2"/> <path d="m6.34 17.66-1.41 1.41"/> <path d="m19.07 4.93-1.41 1.41"/></symbol><symbol id="i-table-2" viewBox="0 0 24 24"><path d="M3 9h18"/> <path d="M9 3v18"/> <rect x="3" y="3" width="18" height="18" rx="2"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <circle cx="12" cy="12" r="6"/> <circle cx="12" cy="12" r="2"/></symbol><symbol id="i-thermometer" viewBox="0 0 24 24"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></symbol><symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2"/> <line x1="12" x2="15" y1="14" y2="11"/> <circle cx="12" cy="14" r="8"/></symbol><symbol id="i-train-front" viewBox="0 0 24 24"><path d="M8 3.1V7a4 4 0 0 0 8 0V3.1"/> <path d="m9 15-1-1"/> <path d="m15 15 1-1"/> <path d="M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Z"/> <path d="m8 19-2 3"/> <path d="m16 19 2 3"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/> <path d="m6 6 12 12"/></symbol><symbol id="i-zap" viewBox="0 0 24 24"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></symbol></svg>
 
 <!-- ═══════ TOP SECTOR TICKER STRIP ═══════ -->
 <div class="ticker-strip">
@@ -32,7 +36,7 @@
   <span class="badge badge-green">Quantitative Engine</span>
 
   <div class="topbar-right">
-    <span class="ts" id="ts">Loading…</span>
+    <span class="ts" id="ts"><i class="skel-bar skel-inline" aria-hidden="true"></i><span class="sr-only">Loading…</span></span>
     <button class="theme-btn" id="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
     <select id="index-sel" onchange="switchIndex()">
       <option value="50">Nifty 50 (Large Cap)</option>
@@ -41,38 +45,43 @@
       <option value="midcap150">Nifty Midcap 150</option>
       <option value="smallcap250">Nifty Smallcap 250</option>
       <option value="500">Nifty 500 (All Equities)</option>
-      <option value="fno">⚡ Nifty F&O (~196)</option>
+      <option value="fno">Nifty F&O (~196)</option>
     </select>
     <button onclick="loadData()" id="live-scan-btn" title="Run manual live Yahoo Finance scan" style="background:var(--up-dim);color:var(--up);border-color:rgba(38,166,154,0.4);">↻ Live Data</button>
-    <button onclick="openShareCardModal()" id="share-card-btn" title="Create Visual Social Card" style="background:rgba(227,179,65,0.15);color:var(--gold);border-color:rgba(227,179,65,0.3)">🎨 Card</button>
-    <button onclick="exportCSV()" id="export-btn" title="Download CSV report">📥 CSV</button>
-    <button onclick="copySummary()" id="share-btn" title="Copy text summary">📋 Copy</button>
-    <button onclick="startTour()" title="Interactive Onboarding Tour">❓ Guide</button>
+    <div class="export-menu" id="export-menu">
+      <button type="button" class="export-trigger" id="export-trigger" aria-haspopup="menu" aria-expanded="false" aria-controls="export-pop" onclick="toggleExportMenu(event)" title="Share &amp; export"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg><span>Export</span><svg class="ic ic-chev" aria-hidden="true"><use href="#i-chevron-down"/></svg></button>
+      <div class="export-pop" id="export-pop" role="menu" hidden>
+        <button type="button" role="menuitem" onclick="openShareCardModal()" id="share-card-btn" title="Create Visual Social Card"><svg class="ic" aria-hidden="true"><use href="#i-palette"/></svg>Share card</button>
+        <button type="button" role="menuitem" onclick="exportCSV()" id="export-btn" title="Download CSV report"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>CSV report</button>
+        <button type="button" role="menuitem" onclick="copySummary()" id="share-btn" title="Copy text summary"><svg class="ic" aria-hidden="true"><use href="#i-clipboard-copy"/></svg>Copy summary</button>
+      </div>
+    </div>
+    <button onclick="startTour()" title="Interactive Onboarding Tour"><svg class="ic" aria-hidden="true"><use href="#i-circle-help"/></svg> Guide</button>
   </div>
 </div>
 
 <!-- ═══════ PRESET STRATEGY BAR ═══════ -->
 <div class="preset-bar">
-  <span class="preset-title">⚡ 1-Click Fast-Filters:</span>
-  <button class="preset-btn" data-preset="rocket-breakouts" onclick="applyPreset('rocket-breakouts')">🚀 Rocket Breakouts (52W + 2× Vol)</button>
-  <button class="preset-btn" data-preset="whale-footprints" onclick="applyPreset('whale-footprints')">🐋 Whale Footprints (Inst A+)</button>
-  <button class="preset-btn" data-preset="dip-reversal" onclick="applyPreset('dip-reversal')">🔄 Dip-Buyer's Reversal</button>
-  <button class="preset-btn" data-preset="multibagger-watch" onclick="applyPreset('multibagger-watch')">💎 Multibagger Watch (VCP/PP)</button>
-  <button class="preset-btn" data-preset="power-leaders" onclick="applyPreset('power-leaders')">🌟 Q1 Leaders</button>
-  <button class="preset-btn" data-preset="bottom-reversal" onclick="applyPreset('bottom-reversal')">🔄 Q2 Turnaround</button>
+  <span class="preset-title"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg> 1-Click Fast-Filters:</span>
+  <button class="preset-btn" data-preset="rocket-breakouts" onclick="applyPreset('rocket-breakouts')"><svg class="ic" aria-hidden="true"><use href="#i-rocket"/></svg> Rocket Breakouts (52W + 2× Vol)</button>
+  <button class="preset-btn" data-preset="whale-footprints" onclick="applyPreset('whale-footprints')"><svg class="ic" aria-hidden="true"><use href="#i-fish"/></svg> Whale Footprints (Inst A+)</button>
+  <button class="preset-btn" data-preset="dip-reversal" onclick="applyPreset('dip-reversal')"><svg class="ic" aria-hidden="true"><use href="#i-refresh-ccw"/></svg> Dip-Buyer's Reversal</button>
+  <button class="preset-btn" data-preset="multibagger-watch" onclick="applyPreset('multibagger-watch')"><svg class="ic" aria-hidden="true"><use href="#i-gem"/></svg> Multibagger Watch (VCP/PP)</button>
+  <button class="preset-btn" data-preset="power-leaders" onclick="applyPreset('power-leaders')"><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> Q1 Leaders</button>
+  <button class="preset-btn" data-preset="bottom-reversal" onclick="applyPreset('bottom-reversal')"><svg class="ic" aria-hidden="true"><use href="#i-refresh-ccw"/></svg> Q2 Turnaround</button>
 </div>
 
 <!-- ═══════ THEMATIC HIGH-GROWTH BASKETS BAR ═══════ -->
 <div class="preset-bar theme-bar" style="margin-top: -6px; border-top: none; background: rgba(255,255,255,0.015);">
-  <span class="preset-title" style="color: #60a5fa;">🏛️ Thematic Baskets:</span>
-  <button class="preset-btn theme-btn-chip" data-theme="defence" onclick="applyThematicBasket('defence')">🛡️ Defence &amp; Aero</button>
-  <button class="preset-btn theme-btn-chip" data-theme="railways" onclick="applyThematicBasket('railways')">🚆 Railways Capex</button>
-  <button class="preset-btn theme-btn-chip" data-theme="green_energy" onclick="applyThematicBasket('green_energy')">⚡ Green Energy</button>
-  <button class="preset-btn theme-btn-chip" data-theme="ems" onclick="applyThematicBasket('ems')">🔌 EMS Electronics</button>
-  <button class="preset-btn theme-btn-chip" data-theme="psu" onclick="applyThematicBasket('psu')">🏛️ High-Yield PSU</button>
-  <button class="preset-btn theme-btn-chip" data-theme="travel" onclick="applyThematicBasket('travel')">✈️ Travel &amp; Hotels</button>
-  <button class="preset-btn theme-btn-chip" data-theme="jewellery" onclick="applyThematicBasket('jewellery')">💎 Jewellery &amp; Retail</button>
-  <button class="preset-btn theme-btn-chip" data-theme="cables" onclick="applyThematicBasket('cables')">🏗️ Cables &amp; Pipes</button>
+  <span class="preset-title" style="color: var(--accent);"><svg class="ic" aria-hidden="true"><use href="#i-landmark"/></svg> Thematic Baskets:</span>
+  <button class="preset-btn theme-btn-chip" data-theme="defence" onclick="applyThematicBasket('defence')"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg> Defence &amp; Aero</button>
+  <button class="preset-btn theme-btn-chip" data-theme="railways" onclick="applyThematicBasket('railways')"><svg class="ic" aria-hidden="true"><use href="#i-train-front"/></svg> Railways Capex</button>
+  <button class="preset-btn theme-btn-chip" data-theme="green_energy" onclick="applyThematicBasket('green_energy')"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg> Green Energy</button>
+  <button class="preset-btn theme-btn-chip" data-theme="ems" onclick="applyThematicBasket('ems')"><svg class="ic" aria-hidden="true"><use href="#i-plug"/></svg> EMS Electronics</button>
+  <button class="preset-btn theme-btn-chip" data-theme="psu" onclick="applyThematicBasket('psu')"><svg class="ic" aria-hidden="true"><use href="#i-landmark"/></svg> High-Yield PSU</button>
+  <button class="preset-btn theme-btn-chip" data-theme="travel" onclick="applyThematicBasket('travel')"><svg class="ic" aria-hidden="true"><use href="#i-plane"/></svg> Travel &amp; Hotels</button>
+  <button class="preset-btn theme-btn-chip" data-theme="jewellery" onclick="applyThematicBasket('jewellery')"><svg class="ic" aria-hidden="true"><use href="#i-gem"/></svg> Jewellery &amp; Retail</button>
+  <button class="preset-btn theme-btn-chip" data-theme="cables" onclick="applyThematicBasket('cables')"><svg class="ic" aria-hidden="true"><use href="#i-construction"/></svg> Cables &amp; Pipes</button>
 </div>
 
 <!-- ═══════ MAIN VIEWPORT ═══════ -->
@@ -83,19 +92,19 @@
 
   <!-- Primary Tab Switcher -->
   <div class="tabs">
-    <div class="tab" onclick="setTab('overview', this)">🏠 Overview</div>
-    <div class="tab active" onclick="setTab('screener', this)">📊 Screener</div>
-    <div class="tab" onclick="setTab('watchlist', this)">★ Watchlist (<span id="wl-count">0</span>)</div>
-    <div class="tab" onclick="setTab('breakouts', this)">🔥 Breakout Radar (<span id="bo-count">0</span>)</div>
-    <div class="tab" onclick="setTab('heatmap', this)">🗺️ Pro Heatmap</div>
-    <div class="tab" onclick="setTab('sectors', this)">🏛️ Sector Rotation (RRG)</div>
+    <div class="tab" onclick="setTab('overview', this)"><svg class="ic" aria-hidden="true"><use href="#i-house"/></svg> Overview</div>
+    <div class="tab active" onclick="setTab('screener', this)"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg> Screener</div>
+    <div class="tab" onclick="setTab('watchlist', this)"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg> Watchlist (<span id="wl-count">0</span>)</div>
+    <div class="tab" onclick="setTab('breakouts', this)"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg> Breakout Radar (<span id="bo-count">0</span>)</div>
+    <div class="tab" onclick="setTab('heatmap', this)"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg> Pro Heatmap</div>
+    <div class="tab" onclick="setTab('sectors', this)"><svg class="ic" aria-hidden="true"><use href="#i-landmark"/></svg> Sector Rotation (RRG)</div>
   </div>
 
   <div class="error-banner" id="err-banner"></div>
 
   <!-- Multi-Stock Compare Bar -->
   <div class="compare-bar" id="compare-bar">
-    <span class="compare-bar-title">⚖️ Compare Selected:</span>
+    <span class="compare-bar-title"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> Compare Selected:</span>
     <div class="compare-chips" id="compare-chips"></div>
     <button onclick="openCompare()" style="background:var(--up);color:#0d1017;padding:3px 10px;font-size:11px;">Compare Now →</button>
     <button onclick="compareStocks=[];updateCompareBar();renderTable();" style="background:transparent;border:none;color:var(--muted);font-size:11px;cursor:pointer;">Clear All</button>
@@ -111,39 +120,13 @@
   <!-- ═══════ TAB 1: SCREENER TERMINAL ═══════ -->
   <div id="tab-screener">
     <div class="controls">
-      <span class="ctrl-label">Filters:</span>
-      <span class="chip on" id="f-ars" onclick="toggleChip('ars')" data-tooltip="ars">ARS &gt; 0% <span class="info-icon">i</span></span>
-      <span class="chip on" id="f-trend" onclick="toggleChip('trend')" data-tooltip="slope">Trending (ΔARS+) <span class="info-icon">i</span></span>
-      <span class="chip" id="f-srs" onclick="toggleChip('srs')" data-tooltip="srs">SRS &gt; 0% (63D) <span class="info-icon">i</span></span>
-      <span class="chip" id="f-mtf" onclick="toggleChip('mtf')" data-tooltip="mtf">🎯 Triple Confluence (D·W·M) <span class="info-icon">i</span></span>
-      <span class="chip" id="f-tightbase" onclick="toggleChip('tightbase')" data-tooltip="tightbase">🧘 3W Tight Base <span class="info-icon">i</span></span>
-      <span class="chip" id="f-smartmoney" onclick="toggleChip('smartmoney')" data-tooltip="inst">🏛️ Smart Money <span class="info-icon">i</span></span>
-      <span class="chip" id="f-delivsurge" onclick="toggleChip('delivsurge')" data-tooltip="deliv">📦 Delivery Surge (1.5×+) <span class="info-icon">i</span></span>
-      <span class="chip" id="f-mrs" onclick="toggleChip('mrs')" data-tooltip="mrs">Mansfield RS+ <span class="info-icon">i</span></span>
-      <span class="chip" id="f-vcp" onclick="toggleChip('vcp')" data-tooltip="vcp">VCP Squeeze <span class="info-icon">i</span></span>
-      <span class="chip" id="f-pocketpivot" onclick="toggleChip('pocketpivot')" data-tooltip="pocketpivot">Pocket Pivot <span class="info-icon">i</span></span>
-      <span class="chip" id="f-vol" onclick="toggleChip('vol')" data-tooltip="rsr">Vol &ge; 1.5×</span>
-      <span class="chip" id="f-volsurge" onclick="toggleChip('volsurge')" data-tooltip="rsr">Surge &ge; 2.0×</span>
-      <span class="chip" id="f-volz" onclick="toggleChip('volz')" data-tooltip="volz">⚡ Z-Score &ge; 2.0σ <span class="info-icon">i</span></span>
-      <span class="chip" id="f-52w" onclick="toggleChip('52w')" data-tooltip="hi52">Near 52W High <span class="info-icon">i</span></span>
-      <span class="chip" id="f-st" onclick="toggleChip('st')" data-tooltip="st">Supertrend BUY <span class="info-icon">i</span></span>
-      <span class="chip" id="f-quad1" onclick="toggleChip('quad1')" data-tooltip="quad">🌟 Q1 Leaders <span class="info-icon">i</span></span>
-      <span class="chip" id="f-quad2" onclick="toggleChip('quad2')" data-tooltip="quad">🔄 Q2 Turnarounds <span class="info-icon">i</span></span>
-
-      <div class="divider"></div>
-
-      <span class="chip" id="f-fno" onclick="toggleChip('fno')">⚡ F&O Only</span>
-      <span class="chip on" id="f-pass" onclick="toggleChip('pass')">Pass Only</span>
-      <span class="chip on" id="f-groups" onclick="toggleChip('groups')">Group Sectors</span>
-      <span class="chip" id="f-watchlist" onclick="toggleChip('watchlist')">★ Watchlist Only</span>
-
-      <div class="divider"></div>
-
+      <button type="button" class="filters-toggle" id="filters-toggle" aria-expanded="false" aria-controls="filter-panel" onclick="toggleFilterPanel()"><svg class="ic" aria-hidden="true"><use href="#i-sliders-horizontal"/></svg><span>Filters</span><span class="filters-count" id="filters-count" data-zero="true">0</span></button>
+      <div class="active-filters" id="active-filters" aria-live="polite"></div>
       <div class="search-wrap">
-        <input type="text" id="search-box" placeholder="🔍 Search stock / sector / ticker…" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)" autocomplete="off">
+        <svg class="ic search-ic" aria-hidden="true"><use href="#i-search"/></svg>
+        <input type="text" id="search-box" placeholder="Search stock / sector / ticker…" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)" autocomplete="off">
         <div id="search-suggestions" class="search-suggestions" style="display:none;"></div>
       </div>
-
       <select id="sort-sel" onchange="renderTable()" style="margin-left:auto">
         <option value="rs-desc">Sort: RS Rating (High → Low)</option>
         <option value="inst-desc">Sort: Institutional Accumulation Score</option>
@@ -158,6 +141,35 @@
         <option value="st-desc">Sort: Supertrend Status</option>
         <option value="alpha">Sort: Alphabetical (A → Z)</option>
       </select>
+
+      <!-- Filter chips live here (collapsible). Chip ids / onclick handlers are unchanged. -->
+      <div class="filter-panel" id="filter-panel" hidden>
+      <span class="ctrl-label">Filters:</span>
+      <span class="chip on" id="f-ars" onclick="toggleChip('ars')" data-tooltip="ars">ARS &gt; 0% <span class="info-icon">i</span></span>
+      <span class="chip on" id="f-trend" onclick="toggleChip('trend')" data-tooltip="slope">Trending (ΔARS+) <span class="info-icon">i</span></span>
+      <span class="chip" id="f-srs" onclick="toggleChip('srs')" data-tooltip="srs">SRS &gt; 0% (63D) <span class="info-icon">i</span></span>
+      <span class="chip" id="f-mtf" onclick="toggleChip('mtf')" data-tooltip="mtf"><svg class="ic" aria-hidden="true"><use href="#i-target"/></svg> Triple Confluence (D·W·M) <span class="info-icon">i</span></span>
+      <span class="chip" id="f-tightbase" onclick="toggleChip('tightbase')" data-tooltip="tightbase"><svg class="ic" aria-hidden="true"><use href="#i-minimize-2"/></svg> 3W Tight Base <span class="info-icon">i</span></span>
+      <span class="chip" id="f-smartmoney" onclick="toggleChip('smartmoney')" data-tooltip="inst"><svg class="ic" aria-hidden="true"><use href="#i-landmark"/></svg> Smart Money <span class="info-icon">i</span></span>
+      <span class="chip" id="f-delivsurge" onclick="toggleChip('delivsurge')" data-tooltip="deliv"><svg class="ic" aria-hidden="true"><use href="#i-package"/></svg> Delivery Surge (1.5×+) <span class="info-icon">i</span></span>
+      <span class="chip" id="f-mrs" onclick="toggleChip('mrs')" data-tooltip="mrs">Mansfield RS+ <span class="info-icon">i</span></span>
+      <span class="chip" id="f-vcp" onclick="toggleChip('vcp')" data-tooltip="vcp">VCP Squeeze <span class="info-icon">i</span></span>
+      <span class="chip" id="f-pocketpivot" onclick="toggleChip('pocketpivot')" data-tooltip="pocketpivot">Pocket Pivot <span class="info-icon">i</span></span>
+      <span class="chip" id="f-vol" onclick="toggleChip('vol')" data-tooltip="rsr">Vol &ge; 1.5×</span>
+      <span class="chip" id="f-volsurge" onclick="toggleChip('volsurge')" data-tooltip="rsr">Surge &ge; 2.0×</span>
+      <span class="chip" id="f-volz" onclick="toggleChip('volz')" data-tooltip="volz"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg> Z-Score &ge; 2.0σ <span class="info-icon">i</span></span>
+      <span class="chip" id="f-52w" onclick="toggleChip('52w')" data-tooltip="hi52">Near 52W High <span class="info-icon">i</span></span>
+      <span class="chip" id="f-st" onclick="toggleChip('st')" data-tooltip="st">Supertrend BUY <span class="info-icon">i</span></span>
+      <span class="chip" id="f-quad1" onclick="toggleChip('quad1')" data-tooltip="quad"><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> Q1 Leaders <span class="info-icon">i</span></span>
+      <span class="chip" id="f-quad2" onclick="toggleChip('quad2')" data-tooltip="quad"><svg class="ic" aria-hidden="true"><use href="#i-refresh-ccw"/></svg> Q2 Turnarounds <span class="info-icon">i</span></span>
+
+      <div class="divider"></div>
+
+      <span class="chip" id="f-fno" onclick="toggleChip('fno')"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg> F&O Only</span>
+      <span class="chip on" id="f-pass" onclick="toggleChip('pass')">Pass Only</span>
+      <span class="chip on" id="f-groups" onclick="toggleChip('groups')">Group Sectors</span>
+      <span class="chip" id="f-watchlist" onclick="toggleChip('watchlist')"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg> Watchlist Only</span>
+      </div>
     </div>
 
     <!-- Screener Two-Column Grid -->
@@ -177,7 +189,20 @@
             <div class="th" onclick="setSortCol('rs-desc')" data-tooltip="rsr">RS Rating <span class="info-icon">i</span> ↕</div>
             <div class="th">TV</div>
           </div>
-          <div class="tbl-body" id="tbl-body"></div>
+          <div class="tbl-body" id="tbl-body">
+            <!-- Skeleton placeholder: replaced automatically when the table renders -->
+            <div class="sr-only" role="status">Loading market data…</div>
+            <div class="tbl-row skel-row" aria-hidden="true"><div class="td"><i class="skel-bar skel-box"></i></div><div class="td"><i class="skel-bar" style="width:62%"></i></div><div class="td"><i class="skel-bar" style="width:48%"></i></div><div class="td"><i class="skel-bar" style="width:44%"></i></div><div class="td"><i class="skel-bar" style="width:52%"></i></div><div class="td"><i class="skel-bar" style="width:30%"></i></div><div class="td"><i class="skel-bar" style="width:40%"></i></div><div class="td"><i class="skel-bar" style="width:56%"></i></div><div class="td"><i class="skel-bar" style="width:50%"></i></div><div class="td"><i class="skel-bar" style="width:46%"></i></div><div class="td"><i class="skel-bar" style="width:22px"></i></div></div>
+            <div class="tbl-row skel-row" aria-hidden="true"><div class="td"><i class="skel-bar skel-box"></i></div><div class="td"><i class="skel-bar" style="width:74%"></i></div><div class="td"><i class="skel-bar" style="width:40%"></i></div><div class="td"><i class="skel-bar" style="width:52%"></i></div><div class="td"><i class="skel-bar" style="width:46%"></i></div><div class="td"><i class="skel-bar" style="width:36%"></i></div><div class="td"><i class="skel-bar" style="width:34%"></i></div><div class="td"><i class="skel-bar" style="width:48%"></i></div><div class="td"><i class="skel-bar" style="width:58%"></i></div><div class="td"><i class="skel-bar" style="width:40%"></i></div><div class="td"><i class="skel-bar" style="width:22px"></i></div></div>
+            <div class="tbl-row skel-row" aria-hidden="true"><div class="td"><i class="skel-bar skel-box"></i></div><div class="td"><i class="skel-bar" style="width:58%"></i></div><div class="td"><i class="skel-bar" style="width:54%"></i></div><div class="td"><i class="skel-bar" style="width:38%"></i></div><div class="td"><i class="skel-bar" style="width:60%"></i></div><div class="td"><i class="skel-bar" style="width:28%"></i></div><div class="td"><i class="skel-bar" style="width:46%"></i></div><div class="td"><i class="skel-bar" style="width:62%"></i></div><div class="td"><i class="skel-bar" style="width:44%"></i></div><div class="td"><i class="skel-bar" style="width:52%"></i></div><div class="td"><i class="skel-bar" style="width:22px"></i></div></div>
+            <div class="tbl-row skel-row" aria-hidden="true"><div class="td"><i class="skel-bar skel-box"></i></div><div class="td"><i class="skel-bar" style="width:68%"></i></div><div class="td"><i class="skel-bar" style="width:44%"></i></div><div class="td"><i class="skel-bar" style="width:56%"></i></div><div class="td"><i class="skel-bar" style="width:42%"></i></div><div class="td"><i class="skel-bar" style="width:34%"></i></div><div class="td"><i class="skel-bar" style="width:38%"></i></div><div class="td"><i class="skel-bar" style="width:52%"></i></div><div class="td"><i class="skel-bar" style="width:54%"></i></div><div class="td"><i class="skel-bar" style="width:44%"></i></div><div class="td"><i class="skel-bar" style="width:22px"></i></div></div>
+            <div class="tbl-row skel-row" aria-hidden="true"><div class="td"><i class="skel-bar skel-box"></i></div><div class="td"><i class="skel-bar" style="width:62%"></i></div><div class="td"><i class="skel-bar" style="width:48%"></i></div><div class="td"><i class="skel-bar" style="width:44%"></i></div><div class="td"><i class="skel-bar" style="width:52%"></i></div><div class="td"><i class="skel-bar" style="width:30%"></i></div><div class="td"><i class="skel-bar" style="width:40%"></i></div><div class="td"><i class="skel-bar" style="width:56%"></i></div><div class="td"><i class="skel-bar" style="width:50%"></i></div><div class="td"><i class="skel-bar" style="width:46%"></i></div><div class="td"><i class="skel-bar" style="width:22px"></i></div></div>
+            <div class="tbl-row skel-row" aria-hidden="true"><div class="td"><i class="skel-bar skel-box"></i></div><div class="td"><i class="skel-bar" style="width:74%"></i></div><div class="td"><i class="skel-bar" style="width:40%"></i></div><div class="td"><i class="skel-bar" style="width:52%"></i></div><div class="td"><i class="skel-bar" style="width:46%"></i></div><div class="td"><i class="skel-bar" style="width:36%"></i></div><div class="td"><i class="skel-bar" style="width:34%"></i></div><div class="td"><i class="skel-bar" style="width:48%"></i></div><div class="td"><i class="skel-bar" style="width:58%"></i></div><div class="td"><i class="skel-bar" style="width:40%"></i></div><div class="td"><i class="skel-bar" style="width:22px"></i></div></div>
+            <div class="tbl-row skel-row" aria-hidden="true"><div class="td"><i class="skel-bar skel-box"></i></div><div class="td"><i class="skel-bar" style="width:58%"></i></div><div class="td"><i class="skel-bar" style="width:54%"></i></div><div class="td"><i class="skel-bar" style="width:38%"></i></div><div class="td"><i class="skel-bar" style="width:60%"></i></div><div class="td"><i class="skel-bar" style="width:28%"></i></div><div class="td"><i class="skel-bar" style="width:46%"></i></div><div class="td"><i class="skel-bar" style="width:62%"></i></div><div class="td"><i class="skel-bar" style="width:44%"></i></div><div class="td"><i class="skel-bar" style="width:52%"></i></div><div class="td"><i class="skel-bar" style="width:22px"></i></div></div>
+            <div class="tbl-row skel-row" aria-hidden="true"><div class="td"><i class="skel-bar skel-box"></i></div><div class="td"><i class="skel-bar" style="width:68%"></i></div><div class="td"><i class="skel-bar" style="width:44%"></i></div><div class="td"><i class="skel-bar" style="width:56%"></i></div><div class="td"><i class="skel-bar" style="width:42%"></i></div><div class="td"><i class="skel-bar" style="width:34%"></i></div><div class="td"><i class="skel-bar" style="width:38%"></i></div><div class="td"><i class="skel-bar" style="width:52%"></i></div><div class="td"><i class="skel-bar" style="width:54%"></i></div><div class="td"><i class="skel-bar" style="width:44%"></i></div><div class="td"><i class="skel-bar" style="width:22px"></i></div></div>
+            <div class="tbl-row skel-row" aria-hidden="true"><div class="td"><i class="skel-bar skel-box"></i></div><div class="td"><i class="skel-bar" style="width:62%"></i></div><div class="td"><i class="skel-bar" style="width:48%"></i></div><div class="td"><i class="skel-bar" style="width:44%"></i></div><div class="td"><i class="skel-bar" style="width:52%"></i></div><div class="td"><i class="skel-bar" style="width:30%"></i></div><div class="td"><i class="skel-bar" style="width:40%"></i></div><div class="td"><i class="skel-bar" style="width:56%"></i></div><div class="td"><i class="skel-bar" style="width:50%"></i></div><div class="td"><i class="skel-bar" style="width:46%"></i></div><div class="td"><i class="skel-bar" style="width:22px"></i></div></div>
+            <div class="tbl-row skel-row" aria-hidden="true"><div class="td"><i class="skel-bar skel-box"></i></div><div class="td"><i class="skel-bar" style="width:74%"></i></div><div class="td"><i class="skel-bar" style="width:40%"></i></div><div class="td"><i class="skel-bar" style="width:52%"></i></div><div class="td"><i class="skel-bar" style="width:46%"></i></div><div class="td"><i class="skel-bar" style="width:36%"></i></div><div class="td"><i class="skel-bar" style="width:34%"></i></div><div class="td"><i class="skel-bar" style="width:48%"></i></div><div class="td"><i class="skel-bar" style="width:58%"></i></div><div class="td"><i class="skel-bar" style="width:40%"></i></div><div class="td"><i class="skel-bar" style="width:22px"></i></div></div>
+          </div>
         </div>
 
         <!-- Legend Matrix -->
@@ -193,7 +218,10 @@
       </div>
 
       <!-- Right Column: Market Pulse & Live Scorecard -->
-      <div class="screener-right" id="screener-right"></div>
+      <div class="screener-right" id="screener-right">
+        <div class="skel-card" aria-hidden="true"><i class="skel-bar" style="width:46%"></i><i class="skel-bar" style="width:88%;height:44px"></i><i class="skel-bar" style="width:70%"></i></div>
+        <div class="skel-card" aria-hidden="true"><i class="skel-bar" style="width:38%"></i><i class="skel-bar" style="width:92%;height:90px"></i><i class="skel-bar" style="width:60%"></i></div>
+      </div>
     </div>
   </div>
 
@@ -313,7 +341,7 @@
         <div class="modal-sym" id="m-sym">—</div>
         <div class="modal-ind" id="m-ind">—</div>
       </div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal()"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
     </div>
     <div class="modal-body">
       <div class="modal-stats">
@@ -335,7 +363,7 @@
       <div class="inst-card" id="m-inst-card">
         <div class="inst-header">
           <div class="inst-title">
-            <span>🏛️ Smart Money & Institutional Flow</span>
+            <span><svg class="ic" aria-hidden="true"><use href="#i-landmark"/></svg> Smart Money & Institutional Flow</span>
             <span class="info-icon" data-tooltip="inst">i</span>
           </div>
           <span id="m-inst-grade" class="inst-badge-grade ad-grade-aplus">A+ HEAVY ACCUMULATION</span>
@@ -359,7 +387,7 @@
           </div>
         </div>
         <div id="m-inst-bulk" class="bulk-deal-alert" style="display:none;">
-          <span style="font-size:13px;">🚨</span>
+          <span style="font-size:13px;"><svg class="ic" aria-hidden="true"><use href="#i-siren"/></svg></span>
           <span id="m-inst-bulk-text">Recent Institutional Bulk Deal: <strong>BUY</strong> by HDFC MF</span>
         </div>
       </div>
@@ -368,7 +396,7 @@
       <div class="inst-card ai-thesis-card" id="m-ai-thesis-card" style="border-color: rgba(124, 58, 237, 0.35); background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), var(--bg3) 60%); margin-top: 10px;">
         <div class="inst-header">
           <div class="inst-title" style="color: #a78bfa;">
-            <span>🧠 AI Quantitative Thesis &amp; Strategy Blueprint</span>
+            <span><svg class="ic" aria-hidden="true"><use href="#i-brain"/></svg> AI Quantitative Thesis &amp; Strategy Blueprint</span>
           </div>
           <button class="tf-btn" onclick="copyAIThesisToClipboard()" style="padding: 2px 8px; font-size: 10px; background: rgba(124, 58, 237, 0.2); color: #c4b5fd; border-color: rgba(124, 58, 237, 0.4);" title="Copy formatted thesis to clipboard">📋 Copy Thesis</button>
         </div>
@@ -429,13 +457,13 @@
       <!-- Advanced Position Size, Volatility & Risk Calculator -->
       <div class="calc-card" id="m-calc-card">
         <div class="calc-title">
-          <span>🧮 Volatility Position Sizer &amp; Execution Copilot</span>
+          <span><svg class="ic" aria-hidden="true"><use href="#i-calculator"/></svg> Volatility Position Sizer &amp; Execution Copilot</span>
           <span id="m-calc-quad-tag" class="quad-pill quad-1">🌟 QUAD 1 LEADER</span>
         </div>
         
         <!-- Stop Loss Quick Presets -->
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-          <span style="font-size:10px; color:var(--muted); font-weight:600;">⚡ Quick Stop-Loss:</span>
+          <span style="font-size:10px; color:var(--muted); font-weight:600;"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg> Quick Stop-Loss:</span>
           <div style="display:flex; gap:4px;">
             <button class="tf-btn" style="padding:2px 8px; font-size:10px;" onclick="setStopLossMode('st')" title="Align with 10/3 Supertrend support">Supertrend</button>
             <button class="tf-btn" style="padding:2px 8px; font-size:10px;" onclick="setStopLossMode('fixed10')" title="Fixed 10% Hard SL">-10% Hard</button>
@@ -484,7 +512,7 @@
 
         <!-- 1-Click Direct Broker Order Bridge -->
         <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
-          <span style="font-size:10px; color:var(--muted); font-weight:600;">⚡ 1-Click Broker Order:</span>
+          <span style="font-size:10px; color:var(--muted); font-weight:600;"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg> 1-Click Broker Order:</span>
           <div style="display:flex; gap:6px;">
             <button id="broker-kite-btn" class="tf-btn" style="background:rgba(235,94,40,0.15); color:#eb5e28; border-color:rgba(235,94,40,0.3); font-weight:700; padding:4px 10px;">⚡ Zerodha Kite</button>
             <button id="broker-dhan-btn" class="tf-btn" style="background:rgba(124,58,237,0.15); color:#a78bfa; border-color:rgba(124,58,237,0.3); font-weight:700; padding:4px 10px;">🎯 Dhan Web</button>
@@ -520,7 +548,7 @@
   <div class="compare-box">
     <div class="cmp-header">
       <div class="cmp-title">Compare Stocks</div>
-      <button class="modal-close" onclick="closeCompare()">✕</button>
+      <button class="modal-close" onclick="closeCompare()" aria-label="Close compare modal"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
     </div>
     <div id="cmp-content" style="padding:14px 16px;overflow-x:auto;"></div>
   </div>
@@ -530,8 +558,8 @@
 <div class="modal-overlay" id="share-card-modal">
   <div class="modal-box" style="width: min(96vw, 760px);">
     <div class="modal-header">
-      <div style="font-size: 14px; font-weight: 700; color: var(--text);">🎨 Daily Market Momentum Card</div>
-      <button class="modal-close" onclick="closeShareCardModal()">✕</button>
+      <div style="font-size: 14px; font-weight: 700; color: var(--text);"><svg class="ic" aria-hidden="true"><use href="#i-palette"/></svg> Daily Market Momentum Card</div>
+      <button class="modal-close" onclick="closeShareCardModal()" aria-label="Close share card"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
     </div>
     <div class="modal-body" style="text-align: center;">
       <!-- Premium Theme Palette Switcher -->
@@ -544,8 +572,8 @@
       </div>
       <canvas id="share-canvas" style="width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow);"></canvas>
       <div style="margin-top: 14px; display: flex; justify-content: center; gap: 10px;">
-        <button onclick="downloadShareCardImage()" style="background: var(--up); color: #0d1017; font-weight: 700; padding: 8px 16px;">💾 Download PNG</button>
-        <button onclick="copyShareCardImage()" style="background: rgba(94, 150, 255, 0.12); color: #7da9ff; border: 1px solid rgba(94,150,255,0.3); padding: 8px 16px;">📋 Copy Image</button>
+        <button onclick="downloadShareCardImage()" style="background: var(--up); color: #0d1017; font-weight: 700; padding: 8px 16px;"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg> Download PNG</button>
+        <button onclick="copyShareCardImage()" style="background: rgba(94, 150, 255, 0.12); color: #7da9ff; border: 1px solid rgba(94,150,255,0.3); padding: 8px 16px;"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg> Copy Image</button>
       </div>
     </div>
   </div>
@@ -556,10 +584,10 @@
   <div class="sentiment-modal-dialog" onclick="event.stopPropagation()">
     <div class="sentiment-modal-header">
       <div>
-        <div class="sentiment-modal-title">🌡️ Institutional Market Fear &amp; Greed Index</div>
+        <div class="sentiment-modal-title"><svg class="ic" aria-hidden="true"><use href="#i-thermometer"/></svg> Institutional Market Fear &amp; Greed Index</div>
         <div class="sentiment-modal-subtitle">Standard &amp; Poor's / CNN 7-Pillar Quantitative Model adapted for Nifty 50 &amp; NSE</div>
       </div>
-      <button class="sentiment-modal-close" onclick="closeSentimentModal()" title="Close Modal">✕</button>
+      <button class="sentiment-modal-close" onclick="closeSentimentModal()" title="Close Modal" aria-label="Close modal"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
     </div>
     <div class="sentiment-modal-body" id="sentiment-modal-content">
       <!-- Dynamically generated 7 pillars -->
@@ -569,35 +597,35 @@
 
 <!-- Stale Toast Notice -->
 <div id="stale-toast">
-  <span class="toast-icon">⏱</span>
+  <span class="toast-icon"><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg></span>
   <span class="toast-msg" id="stale-toast-msg"></span>
-  <button class="toast-close" onclick="hideStaleToast()" title="Dismiss">✕</button>
+  <button class="toast-close" onclick="hideStaleToast()" title="Dismiss"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
 </div>
 
 <!-- Mobile Bottom Navigation -->
 <div class="mobile-bottom-nav">
   <div class="mobile-nav-item" onclick="setTab('overview', document.querySelectorAll('.tab')[0])">
-    <span class="mobile-nav-icon">🏠</span>
+    <span class="mobile-nav-icon"><svg class="ic" aria-hidden="true"><use href="#i-house"/></svg></span>
     <span>Overview</span>
   </div>
   <div class="mobile-nav-item active" onclick="setTab('screener', document.querySelectorAll('.tab')[1])">
-    <span class="mobile-nav-icon">📊</span>
+    <span class="mobile-nav-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg></span>
     <span>Screener</span>
   </div>
   <div class="mobile-nav-item" onclick="setTab('watchlist', document.querySelectorAll('.tab')[2])">
-    <span class="mobile-nav-icon">★</span>
+    <span class="mobile-nav-icon"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg></span>
     <span>Watchlist</span>
   </div>
   <div class="mobile-nav-item" onclick="setTab('breakouts', document.querySelectorAll('.tab')[3])">
-    <span class="mobile-nav-icon">🔥</span>
+    <span class="mobile-nav-icon"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg></span>
     <span>Breakouts</span>
   </div>
   <div class="mobile-nav-item" onclick="setTab('heatmap', document.querySelectorAll('.tab')[4])">
-    <span class="mobile-nav-icon">🗺️</span>
+    <span class="mobile-nav-icon"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg></span>
     <span>Heatmap</span>
   </div>
   <div class="mobile-nav-item" onclick="setTab('sectors', document.querySelectorAll('.tab')[5])">
-    <span class="mobile-nav-icon">🏛️</span>
+    <span class="mobile-nav-icon"><svg class="ic" aria-hidden="true"><use href="#i-landmark"/></svg></span>
     <span>Sectors</span>
   </div>
 </div>
@@ -612,6 +640,7 @@
 <script src="js/treemap.js"></script>
 <script src="js/shareCard.js"></script>
 <script src="js/app.js"></script>
+<script src="js/ui.js"></script>
 
 </body>
 </html>
