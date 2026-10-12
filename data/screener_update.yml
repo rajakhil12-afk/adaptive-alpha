@@ -1,0 +1,78 @@
+name: Daily Screener Update
+
+on:
+  schedule:
+    # Run every Monday to Friday at 2:10 PM UTC (7:40 PM IST)
+    # Using an off-peak minute (:10) bypasses GitHub Actions queue congestion
+    - cron: '10 14 * * 1-5'
+  workflow_dispatch: # Enable manual triggers anytime from GitHub Actions UI
+
+concurrency:
+  group: repo-data-writes   # screener + keep-alive both push to the repo; never run them at the same time
+  cancel-in-progress: false
+
+jobs:
+  update-screener:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install system dependencies
+        run: command -v unzip >/dev/null || (sudo apt-get update && sudo apt-get install -y unzip)
+
+      - name: Run Indicator Unit Tests
+        run: node --test test/indicators.test.js
+
+      - name: Run Screener Generator (with retry)
+        run: |
+          for attempt in 1 2 3; do
+            echo "Attempt $attempt of 3..."
+            node scripts/update_data.js && echo "Success on attempt $attempt" && break
+            if [ $attempt -eq 3 ]; then
+              echo "All 3 attempts failed. Exiting."
+              exit 1
+            fi
+            echo "Attempt $attempt failed. Retrying in 30 seconds..."
+            sleep 30
+          done
+
+      - name: Send Telegram Notification
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          node scripts/send_telegram_notification.js || echo "::warning::Telegram notification failed, continuing workflow."
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Write a heartbeat timestamp to keep repo active
+          echo "Last successful run: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > .github/last_updated.txt
+
+          # `git add <missing file>` aborts the whole step (e.g. first run before breakout_history.json exists) -> add only what exists
+          for f in data/screener.json data/screener.js data/breakout_history.json data/jishu_portfolio.json data/jishu_portfolio.js data/jishu_portfolio_backup.json .github/last_updated.txt; do
+            [ -e "$f" ] && git add "$f"
+          done
+
+          # If data files changed, use a descriptive message; otherwise heartbeat
+          if git diff --cached --quiet -- data/screener.json data/screener.js data/jishu_portfolio.json data/jishu_portfolio.js data/jishu_portfolio_backup.json data/breakout_history.json; then
+            git commit -m "ci: heartbeat keep-alive [skip ci]" || echo "No changes to commit"
+          else
+            git commit -m "Auto-update market data $(date -u '+%Y-%m-%d') [skip ci]"
+          fi
+          # another commit may have landed during the run: rebase, then push (retry once)
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+          git push || (sleep 5 && git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push)
