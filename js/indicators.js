@@ -283,6 +283,18 @@ function calcIchimoku(candles) {
 }
 
 // Calculate Adaptive Relative Strength (ARS) & Shorter-Term Relative Strength (SRS)
+// Date-aligned benchmark lookup (was index-aligned: wrong whenever stock/benchmark candle counts differ,
+// e.g. suspended days, late listings, stale last bar). Falls back up to 5 days to cover holidays.
+function makeBenchLookup(benchCandles) {
+  const m = new Map();
+  benchCandles.forEach(c => m.set(Math.floor(c.t / 86400), c));
+  return function (t) {
+    const d = Math.floor(t / 86400);
+    for (let k = 0; k <= 5; k++) { const c = m.get(d - k); if (c) return c; }
+    return null;
+  };
+}
+
 function calcARS(stockCandles, benchCandles, cutoffTs) {
   if (!stockCandles || !benchCandles) return null;
   const sLen = stockCandles.length;
@@ -298,9 +310,10 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
   }
 
   const sToday = stockCandles[sLen - 1];
-  const bToday = benchCandles[bLen - 1];
+  const benchAt = makeBenchLookup(benchCandles);
+  const bToday = benchAt(sToday.t) || benchCandles[bLen - 1];
   const sPrev  = stockCandles[sLen - 2];
-  const bPrev  = benchCandles[bLen - 2];
+  const bPrev  = benchAt(sPrev.t) || benchCandles[bLen - 2];
 
   const sRatio = sStart.c > 0 ? sToday.c / sStart.c : 1;
   const bRatio = bStart.c > 0 ? bToday.c / bStart.c : 1;
@@ -312,7 +325,7 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
 
   // SRS: rolling 63 trading days (approx 3 months)
   const s63 = stockCandles[Math.max(0, sLen - 64)];
-  const b63 = benchCandles[Math.max(0, bLen - 64)];
+  const b63 = benchAt(s63.t) || benchCandles[Math.max(0, bLen - 64)];
   const srs = (s63.c > 0 && b63.c > 0) ? ((sToday.c / s63.c) / (bToday.c / b63.c)) - 1 : 0;
 
   // Volume ratio vs 20-day SMA
@@ -333,7 +346,7 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
 
   for (let i = sLen - 1; i >= 0; i--) {
     const sC = stockCandles[i];
-    const bC = benchCandles[Math.min(i, bLen - 1)];
+    const bC = benchAt(sC.t) || benchCandles[Math.min(i, bLen - 1)];
     const sR = sStart.c > 0 ? sC.c / sStart.c : 1;
     const bR = bStart.c > 0 ? bC.c / bStart.c : 1;
     const a = bR !== 0 ? (sR / bR) - 1 : 0;
@@ -359,7 +372,7 @@ function calcARS(stockCandles, benchCandles, cutoffTs) {
   
   // 5-day ARS momentum slope
   const sPrev5 = stockCandles[Math.max(0, sLen - 6)];
-  const bPrev5 = benchCandles[Math.max(0, bLen - 6)];
+  const bPrev5 = benchAt(sPrev5.t) || benchCandles[Math.max(0, bLen - 6)];
   const ars5 = (sStart.c > 0 && bStart.c > 0) ? ((sPrev5.c / sStart.c) / (bPrev5.c / bStart.c)) - 1 : 0;
   const ars_slope = ars - ars5;
 
@@ -388,7 +401,9 @@ function computeRSRatings(stocks) {
   const getRanks = (key, customValFn) => {
     const sorted = [...stocks]
       .map((s, idx) => ({ idx, val: customValFn ? customValFn(s) : s[key] }))
-      .sort((a, b) => a.val - b.val);
+      // NaN-safe comparator: a single non-finite value used to corrupt the whole sort order
+      .map(o => ({ idx: o.idx, val: Number.isFinite(o.val) ? o.val : -Infinity }))
+      .sort((a, b) => (a.val > b.val) - (a.val < b.val));
     const ranks = new Array(N);
     sorted.forEach((item, r) => {
       ranks[item.idx] = r / (N - 1 || 1);
@@ -583,9 +598,17 @@ function calcMultiTimeframeConfluence(stock) {
     return { daily: false, weekly: false, monthly: false, score: 0, is_triple_confluence: false, badge: '⚪ ⚪ ⚪', label: 'No Trend Confluence' };
   }
 
-  const dOk = (stock.ars || 0) > 0;
-  const wOk = (stock.srs || 0) > 0;
-  const mOk = stock.ma_status === 'MA+' || (stock.hi52_prox !== undefined && stock.hi52_prox >= -0.20) || (stock.rs_rating || 0) >= 65;
+  // Daily Trend: Must have active daily strength (Supertrend BUY OR (MA+ with ARS > 0 and no Sell signal))
+  const isSTBuy = (stock.st14?.trend === 'buy' || stock.st10?.trend === 'buy');
+  const isSTSell = (stock.st14?.trend === 'sell' || stock.st10?.trend === 'sell');
+  const dOk = isSTBuy || (!isSTSell && (stock.ars || 0) > 0 && stock.ma_status === 'MA+');
+
+  // Weekly Trend: Positive 63D relative momentum (SRS > 0) AND healthy institutional accumulation (not Grade E exit)
+  const isInstExit = stock.institutional?.ad_grade === 'E';
+  const wOk = (stock.srs || 0) > 0 && !isInstExit;
+
+  // Monthly / Structural Macro: Stage-2 structural trend (MA+ or near 52W high >= -15%, with ARS > 0 and RS >= 50)
+  const mOk = ((stock.ma_status === 'MA+' || (stock.hi52_prox !== undefined && stock.hi52_prox >= -0.15)) && (stock.ars || 0) > 0 && (stock.rs_rating || 0) >= 50);
 
   let score = 0;
   if (dOk) score++;
@@ -600,7 +623,8 @@ function calcMultiTimeframeConfluence(stock) {
   let label = 'Partial Alignment';
   if (score === 3) label = '🔥 Triple Confluence (Daily · Weekly · Monthly)';
   else if (score === 2) label = 'Dual Confluence';
-  else if (score === 0) label = 'Bearish Divergence';
+  else if (score === 1) label = 'Single Timeframe Only';
+  else if (score === 0) label = 'Bearish Divergence / Breakdown';
 
   return {
     daily: dOk,

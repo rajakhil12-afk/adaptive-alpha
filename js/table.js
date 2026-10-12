@@ -287,9 +287,9 @@ function renderTable() {
 
   if (search) {
     data = data.filter(d => 
-      d.sym.toUpperCase().includes(search) || 
-      d.name.toUpperCase().includes(search) || 
-      d.ind.toUpperCase().includes(search)
+      (d.sym || '').toUpperCase().includes(search) || 
+      (d.name || '').toUpperCase().includes(search) || 
+      (d.ind || '').toUpperCase().includes(search)
     );
   }
   

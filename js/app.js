@@ -311,9 +311,15 @@ function renderBreakoutPerformanceRibbon() {
     }
   });
 
-  const winRate = count > 0 ? Math.round((wins / count) * 100) : 76;
-  const avgRunup = count > 0 ? (totalGains / count).toFixed(1) : '12.4';
-  const topSym = topGainer ? `${topGainer.sym} (+${topGainer.gain.toFixed(1)}%)` : 'TRENT (+28.4%)';
+  if (count === 0) {
+    // was: invented placeholders (76 % hit rate, +12.4 % run-up, "TRENT +28.4%") displayed as real statistics
+    ribbon.innerHTML = '<span class="perf-title">🎯 30-Day Breakout Track Record:</span><span class="perf-stat">No tracked breakouts yet</span>';
+    ribbon.style.display = 'flex';
+    return;
+  }
+  const winRate = Math.round((wins / count) * 100);
+  const avgRunup = (totalGains / count).toFixed(1);
+  const topSym = topGainer ? `${topGainer.sym} (+${topGainer.gain.toFixed(1)}%)` : '—';
 
   ribbon.innerHTML = `
     <span class="perf-title">🎯 30-Day Breakout Track Record:</span>
@@ -2102,56 +2108,6 @@ async function loadData() {
 
 // ═══════ HYBRID SEARCH & ON-DEMAND NSE STOCK ANALYZER ═══════
 
-function handleSearchInput() {
-  const input = document.getElementById('search-box');
-  const suggContainer = document.getElementById('search-suggestions');
-  if (!input) return;
-
-  renderTable();
-
-  const query = input.value.trim().toUpperCase();
-  if (!query || query.length < 2) {
-    if (suggContainer) suggContainer.style.display = 'none';
-    return;
-  }
-
-  if (suggContainer) {
-    suggContainer.innerHTML = `
-      <div class="search-sugg-item" onclick="analyzeExternalStock('${query.replace(/'/g, "\\'")}')">
-        <span style="font-size:14px;">🔍</span>
-        <div>
-          <div style="font-weight:700;">Analyze <strong>${query}</strong> across entire NSE</div>
-          <div style="font-size:9.5px;color:var(--muted);">Generate instant on-demand RS Scorecard, Supertrend & VCP</div>
-        </div>
-      </div>
-    `;
-    suggContainer.style.display = 'block';
-  }
-}
-
-function handleSearchKeydown(e) {
-  if (e.key === 'Enter') {
-    const input = document.getElementById('search-box');
-    if (!input) return;
-    const query = input.value.trim().toUpperCase();
-    if (!query) return;
-
-    const suggContainer = document.getElementById('search-suggestions');
-    if (suggContainer) suggContainer.style.display = 'none';
-
-    // If exactly in allData, select it
-    const match = allData.find(d => d.sym.toUpperCase() === query);
-    if (match) {
-      selectStock(match.sym);
-    } else {
-      analyzeExternalStock(query);
-    }
-  } else if (e.key === 'Escape') {
-    const suggContainer = document.getElementById('search-suggestions');
-    if (suggContainer) suggContainer.style.display = 'none';
-  }
-}
-
 async function analyzeExternalStock(symInput) {
   const sym = symInput.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '');
   if (!sym) return;
@@ -2546,6 +2502,8 @@ function applyAIFilters(aiResult) {
   renderAll();
 }
 
+const escHtml = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
 function handleSearchInput() {
   const input = document.getElementById('search-box');
   const suggBox = document.getElementById('search-suggestions');
@@ -2561,7 +2519,7 @@ function handleSearchInput() {
 
   const aiParsed = parseAIQuery(val);
   const upVal = val.toUpperCase();
-  const directMatches = allData.filter(d => d.sym.includes(upVal) || d.name.toUpperCase().includes(upVal)).slice(0, 5);
+  const directMatches = allData.filter(d => d.sym.toUpperCase().includes(upVal) || (d.name || '').toUpperCase().includes(upVal)).slice(0, 5);
 
   let html = '';
 
@@ -2573,7 +2531,7 @@ function handleSearchInput() {
         <span style="font-size:14px;">✨</span>
         <div style="flex:1;">
           <div style="font-size:11px; font-weight:700; color:#c4b5fd;">Ask AI Screener: Filter by intent</div>
-          <div style="font-size:9.5px; color:var(--text-lt);">${chipTags}</div>
+          <div style="font-size:9.5px; color:var(--text-lt);">${escHtml(chipTags)}</div>
         </div>
         <span class="tf-btn" style="padding:2px 6px; font-size:9px;">Apply ↵</span>
       </div>
@@ -2582,10 +2540,10 @@ function handleSearchInput() {
 
   if (directMatches.length > 0) {
     html += directMatches.map(d => `
-      <div class="search-sugg-item" onclick="selectStockFromSearch('${d.sym}')" style="padding:6px 10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border-bottom:1px solid rgba(255,255,255,0.03);">
+      <div class="search-sugg-item" onclick="selectStockFromSearch('${escHtml(d.sym)}')" style="padding:6px 10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border-bottom:1px solid rgba(255,255,255,0.03);">
         <div>
-          <strong style="color:var(--text); font-size:11.5px;">${d.sym}</strong>
-          <span style="color:var(--muted); font-size:10px; margin-left:6px;">${d.name}</span>
+          <strong style="color:var(--text); font-size:11.5px;">${escHtml(d.sym)}</strong>
+          <span style="color:var(--muted); font-size:10px; margin-left:6px;">${escHtml(d.name)}</span>
         </div>
         <div style="display:flex; gap:6px; align-items:center;">
           <span style="font-size:10px; color:${d.ars>=0?'var(--up)':'var(--down)'}; font-family:var(--font-num); font-weight:700;">${(d.ars*100).toFixed(1)}%</span>
@@ -2593,6 +2551,19 @@ function handleSearchInput() {
         </div>
       </div>
     `).join('');
+  }
+
+  const extQuery = val.toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+  if (extQuery.length >= 2 && !allData.some(d => d.sym.toUpperCase() === extQuery)) {
+    html += `
+      <div class="search-sugg-item" onclick="analyzeExternalStock('${extQuery}')">
+        <span style="font-size:14px;">🔍</span>
+        <div>
+          <div style="font-weight:700;">Analyze <strong>${extQuery}</strong> across entire NSE</div>
+          <div style="font-size:9.5px;color:var(--muted);">Generate instant on-demand RS Scorecard, Supertrend & VCP</div>
+        </div>
+      </div>
+    `;
   }
 
   if (html) {
@@ -2620,10 +2591,17 @@ function handleSearchKeydown(e) {
     if (!input) return;
     const val = input.value.trim();
     const aiParsed = parseAIQuery(val);
+    const suggBox = document.getElementById('search-suggestions');
+    const exact = allData.find(d => d.sym.toUpperCase() === val.toUpperCase());
     if (aiParsed) {
       applyAIFilters(aiParsed);
+    } else if (exact) {
+      if (suggBox) suggBox.style.display = 'none';
+      selectStock(exact.sym, true);
+    } else if (val.length >= 2) {
+      if (suggBox) suggBox.style.display = 'none';
+      analyzeExternalStock(val); // restored: previously unreachable
     } else {
-      const suggBox = document.getElementById('search-suggestions');
       if (suggBox) suggBox.style.display = 'none';
       renderTable();
     }

@@ -58,7 +58,7 @@ const TOOLTIP_DEFINITIONS = {
   },
   deliv: {
     title: 'Delivery Volume Surge Ratio',
-    body: 'Ratio of today\'s delivery quantity vs 20-day average delivery. Values ≥2.0× indicate aggressive institutional cash accumulation.'
+    body: 'Ratio of today\'s delivery quantity vs 20-day average delivery. Values ≥2.0× indicate aggressive institutional cash accumulation. NOTE: shown as ESTIMATED (derived from volume) unless real NSE delivery data is loaded.'
   },
   mtf: {
     title: 'Multi-Timeframe Trend Confluence (D · W · M)',

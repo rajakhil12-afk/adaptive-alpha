@@ -219,7 +219,7 @@ function openStockModal(sym) {
   }
 
   // Initialize Position Calculator for this stock
-  const stVal = (stData && stData.val > 0) ? stData.val : Math.round(d.price * 0.90 * 10) / 10;
+  const stVal = (isSTBuy && stData && stData.val > 0 && stData.val < d.price) ? stData.val : Math.round(d.price * 0.93 * 10) / 10;
   const savedCap = localStorage.getItem('calc_capital') || '500000';
   const savedRisk = localStorage.getItem('calc_risk') || '1.0';
   
@@ -281,9 +281,10 @@ function setStopLossMode(mode) {
 
   const slInput = document.getElementById('calc-sl-price');
   const stData = stParam === '14' ? d.st14 : d.st10;
+  const isSTBuy = stData && stData.trend === 'buy';
 
   if (mode === 'st') {
-    slInput.value = (stData && stData.val > 0) ? stData.val : (d.price * 0.90).toFixed(1);
+    slInput.value = (isSTBuy && stData && stData.val > 0 && stData.val < d.price) ? stData.val : (d.price * 0.93).toFixed(1);
   } else if (mode === 'fixed10') {
     slInput.value = (d.price * 0.90).toFixed(1);
   } else if (mode === 'fixed5') {
@@ -304,7 +305,12 @@ function recalcPositionSize() {
 
   const cap = parseFloat(document.getElementById('calc-cap').value) || 500000;
   const riskPct = parseFloat(document.getElementById('calc-risk-pct').value) || 1.0;
-  const slPrice = parseFloat(document.getElementById('calc-sl-price').value) || (d.price * 0.90);
+  let slPrice = parseFloat(document.getElementById('calc-sl-price').value);
+  if (isNaN(slPrice) || slPrice <= 0 || slPrice >= d.price) {
+    slPrice = Math.round(d.price * 0.93 * 10) / 10;
+    const slInput = document.getElementById('calc-sl-price');
+    if (slInput) slInput.value = slPrice;
+  }
 
   try {
     localStorage.setItem('calc_capital', cap);
@@ -312,7 +318,7 @@ function recalcPositionSize() {
   } catch(e) {}
 
   const maxRiskAmount = cap * (riskPct / 100);
-  const riskPerShare = Math.max(0.5, d.price - slPrice);
+  const riskPerShare = Math.max(d.price * 0.01, d.price - slPrice);
   const riskPctPerShare = ((riskPerShare / d.price) * 100).toFixed(1);
   
   let qty = Math.floor(maxRiskAmount / riskPerShare);
@@ -736,7 +742,7 @@ function renderAIThesisCard(d) {
 
   const mtf = (typeof calcMultiTimeframeConfluence === 'function') 
     ? calcMultiTimeframeConfluence(d) 
-    : { badge: '🟢 🟢 ⚪', is_triple_confluence: (d.ars > 0 && d.srs > 0), score: 2, label: 'Dual Confluence' };
+    : { badge: '⚪ ⚪ ⚪', is_triple_confluence: false, score: 0, label: 'Bearish Divergence' };
   
   const tb = (typeof calcTightBase3W === 'function') 
     ? calcTightBase3W(null, d.price, d.hi52_prox) 
@@ -744,50 +750,148 @@ function renderAIThesisCard(d) {
 
   const stData = stParam === '14' ? d.st14 : d.st10;
   const isSTBuy = stData && stData.trend === 'buy';
+  const isSTSell = stData && stData.trend === 'sell';
   const quadKey = (typeof getDualRSQuad === 'function') ? getDualRSQuad(d) : 'quad-1';
-  const inst = d.institutional || { ad_grade: 'B', status: 'Accumulation', inst_score: d.rs_rating || 50 };
+  const inst = d.institutional || { ad_grade: 'B', status: 'Accumulation', inst_score: d.rs_rating || 50, money_flow_ratio: 0, up_down_vol_ratio: 1.0 };
 
-  // Generate Setup Classification & Confidence
+  // Institutional Distribution & Trend Health Diagnosis
+  const isHeavyExit = (inst.ad_grade === 'E') || 
+                      (inst.status && inst.status.toLowerCase().includes('exit')) || 
+                      ((inst.money_flow_ratio !== undefined && inst.money_flow_ratio < -0.15) && (inst.up_down_vol_ratio !== undefined && inst.up_down_vol_ratio < 0.5));
+  
+  const isSevereDowntrend = (isSTSell && d.ma_status === 'MA-' && (d.hi52_prox !== undefined && d.hi52_prox <= -0.15));
+
+  // Determine Setup Classification & Bias
   let setupTitle = '⚡ MOMENTUM CONTINUATION';
   let setupTagColor = '#0fe586';
   let bias = 'BULLISH';
+  let isBullishTrade = true;
+  let thesisSummary = '';
 
-  if (d.hi52_prox >= -0.03 && (d.vol_ratio || 1) >= 1.5) {
+  if (isHeavyExit) {
+    setupTitle = '⚠️ HEAVY INSTITUTIONAL DISTRIBUTION';
+    setupTagColor = '#ef5350';
+    bias = 'BEARISH / AVOID';
+    isBullishTrade = false;
+    thesisSummary = `${d.sym} (${d.name}) is experiencing heavy institutional selling (${inst.ad_grade} Grade) with negative money flow. Technical momentum is compromised (${isSTSell ? 'Supertrend SELL' : 'Neutral'}, ${d.ma_status === 'MA+' ? 'Above MA' : 'Below MA'}). Capital preservation is strictly advised — avoid new long entries until institutional volume absorption confirms a base.`;
+  } else if (isSevereDowntrend || quadKey === 'quad-4') {
+    setupTitle = '💤 STRUCTURAL DOWNTREND (LAGGARD)';
+    setupTagColor = '#ef5350';
+    bias = 'BEARISH / AVOID';
+    isBullishTrade = false;
+    thesisSummary = `${d.sym} (${d.name}) is in a structural downtrend trading below key moving averages with Supertrend SELL. Relative momentum is lagging the benchmark index. No constructive setup present — maintain a defensive cash stance.`;
+  } else if (!isSTBuy && d.ma_status === 'MA-') {
+    setupTitle = '⏸️ CORRECTION / BREAKDOWN BELOW MA';
+    setupTagColor = '#f59e0b';
+    bias = 'DEFENSIVE / CAUTION';
+    isBullishTrade = false;
+    thesisSummary = `${d.sym} (${d.name}) has breached key moving average support (MA-) and triggered a Supertrend SELL. Even with prior RS (${d.rs_rating ?? '—'}/99), immediate momentum is negative. Wait for reversal confirmation above overhead resistance before committing capital.`;
+  } else if (!isSTBuy && (d.ars || 0) > 0) {
+    setupTitle = '⏸️ LEADER PULLBACK / DIP WATCH';
+    setupTagColor = '#ffd700';
+    bias = 'PULLBACK / WAIT';
+    isBullishTrade = false;
+    thesisSummary = `${d.sym} (${d.name}) retains long-term alpha (ARS +${((d.ars||0)*100).toFixed(1)}%) but is undergoing a short-term corrective pullback. Supertrend has not flipped to BUY yet. Place on watchlist for reversal confirmation at key support.`;
+  } else if (d.hi52_prox >= -0.03 && (d.vol_ratio || 1) >= 1.5 && isSTBuy) {
     setupTitle = '🚀 HIGH-CONVICTION 52W BREAKOUT';
     setupTagColor = '#ffd700';
-  } else if (tb.is_tight || (d.vcp && d.vcp.is_vcp)) {
-    setupTitle = '🧘 VOLATILITY CONTRACTION (VCP / 3W TIGHT BASE)';
+    bias = 'BULLISH';
+    isBullishTrade = true;
+    thesisSummary = `${d.sym} (${d.name}) is breaking out within 3% of 52-week highs with volume expansion (${(d.vol_ratio || 1).toFixed(1)}× avg). Composite RS is strong at ${d.rs_rating ?? '—'}/99 with active institutional accumulation.`;
+  } else if ((tb.is_tight || (d.vcp && d.vcp.is_vcp)) && isSTBuy) {
+    setupTitle = '🧘 VOLATILITY CONTRACTION (VCP / TIGHT BASE)';
     setupTagColor = '#7da9ff';
-  } else if (quadKey === 'quad-2') {
+    bias = 'BULLISH';
+    isBullishTrade = true;
+    thesisSummary = `${d.sym} (${d.name}) is forming a constructive low-volatility consolidation base with supply dry-up. Supertrend is in BUY mode, indicating high-probability pre-breakout accumulation.`;
+  } else if (quadKey === 'quad-1' && isSTBuy) {
+    setupTitle = '⚡ MOMENTUM CONTINUATION';
+    setupTagColor = '#0fe586';
+    bias = 'BULLISH';
+    isBullishTrade = true;
+    thesisSummary = `${d.sym} (${d.name}) displays composite RS Rating of ${d.rs_rating ?? '—'}/99 in the ${d.ind} sector. Strong multi-timeframe momentum alignment with active Supertrend BUY and positive alpha.`;
+  } else if (quadKey === 'quad-2' && isSTBuy) {
     setupTitle = '🔄 QUAD-2 RS TURNAROUND';
     setupTagColor = '#5fc4ba';
-  } else if (quadKey === 'quad-3') {
-    setupTitle = '⏸️ QUAD-3 LEADER PULLBACK / DIP BUY';
-    setupTagColor = '#ffd700';
-  } else if (quadKey === 'quad-4') {
-    setupTitle = '💤 QUAD-4 LAGGARD (AVOID / DEFENSIVE)';
-    setupTagColor = '#ef5350';
-    bias = 'NEUTRAL / BEARISH';
+    bias = 'BULLISH';
+    isBullishTrade = true;
+    thesisSummary = `${d.sym} (${d.name}) is an early-stage turnaround candidate showing accelerating short-term momentum (SRS+) and fresh Supertrend BUY confirmation.`;
+  } else {
+    setupTitle = '⚖️ CONSOLIDATION / NEUTRAL';
+    setupTagColor = '#94a3b8';
+    bias = 'NEUTRAL';
+    isBullishTrade = isSTBuy;
+    thesisSummary = `${d.sym} (${d.name}) is range-bound in the ${d.ind} sector with baseline volume participation. Wait for clear directional breakout.`;
   }
 
   // Calculate execution levels
   const entryPrice = d.price || 0;
-  const slPrice = (stData && stData.val > 0) ? stData.val : Math.round(entryPrice * 0.90 * 10) / 10;
-  const riskPerShare = Math.max(0.1, entryPrice - slPrice);
-  const t1Price = Math.round((entryPrice + riskPerShare * 1.0) * 10) / 10;
-  const t2Price = Math.round((entryPrice + riskPerShare * 2.0) * 10) / 10;
-  const t3Price = Math.round((entryPrice + riskPerShare * 3.0) * 10) / 10;
-  const riskPct = entryPrice > 0 ? ((riskPerShare / entryPrice) * 100).toFixed(1) : '10.0';
+  let blueprintHtml = '';
 
-  const mtfDesc = mtf.is_triple_confluence 
-    ? '🔥 Strong Multi-Timeframe Alignment across Daily, Weekly, and Monthly charts (Triple Confluence 🟢 🟢 🟢).' 
-    : `Timeframe alignment: ${mtf.label} (${mtf.badge}).`;
+  if (isBullishTrade && entryPrice > 0) {
+    // Structural Stop Loss strictly below entry
+    let slPrice = (isSTBuy && stData && stData.val > 0 && stData.val < entryPrice) 
+      ? Math.round(stData.val * 10) / 10 
+      : Math.round(entryPrice * 0.93 * 10) / 10;
+    
+    // Safety check: SL must ALWAYS be strictly below entry price (at least 2% risk)
+    const riskPerShare = Math.max(entryPrice * 0.02, entryPrice - slPrice);
+    slPrice = Math.round((entryPrice - riskPerShare) * 10) / 10;
+    const riskPct = ((riskPerShare / entryPrice) * 100).toFixed(1);
 
-  const volDesc = (d.vol_ratio >= 1.5) 
-    ? `Volume expansion (+${((d.vol_ratio - 1) * 100).toFixed(0)}% vs 20D avg) signals active institutional accumulation (${inst.ad_grade} grade).` 
-    : (d.vol_ratio <= 0.7) 
-    ? 'Volume dry-up observed — indicates constructive base contraction before next leg up.' 
-    : 'Trading with normal liquidity and steady baseline participation.';
+    const t1Price = Math.round((entryPrice + riskPerShare * 1.0) * 10) / 10;
+    const t2Price = Math.round((entryPrice + riskPerShare * 2.0) * 10) / 10;
+
+    blueprintHtml = `
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; background:var(--bg2); padding:6px 8px; border-radius:6px; border:1px solid var(--border); margin-top:4px;">
+        <div>
+          <div style="font-size:8.5px; color:var(--muted);">REC. ENTRY</div>
+          <div style="font-size:11px; font-weight:700; color:var(--text);">₹${entryPrice.toLocaleString('en-IN')}</div>
+        </div>
+        <div>
+          <div style="font-size:8.5px; color:var(--muted);">HARD SL (-${riskPct}%)</div>
+          <div style="font-size:11px; font-weight:700; color:var(--down);">₹${slPrice.toLocaleString('en-IN')}</div>
+        </div>
+        <div>
+          <div style="font-size:8.5px; color:var(--muted);">TARGET 1 (1:1)</div>
+          <div style="font-size:11px; font-weight:700; color:var(--up);">₹${t1Price.toLocaleString('en-IN')}</div>
+        </div>
+        <div>
+          <div style="font-size:8.5px; color:var(--muted);">TARGET 2 (1:2)</div>
+          <div style="font-size:11px; font-weight:700; color:#7da9ff;">₹${t2Price.toLocaleString('en-IN')}</div>
+        </div>
+      </div>
+    `;
+  } else if (entryPrice > 0) {
+    // Defensive / Avoid / Risk Management Blueprint
+    const overheadRes = (stData && stData.val > entryPrice) 
+      ? Math.round(stData.val * 10) / 10 
+      : Math.round(entryPrice * 1.07 * 10) / 10;
+    const resPct = (((overheadRes - entryPrice) / entryPrice) * 100).toFixed(1);
+    const sup1 = Math.round(entryPrice * 0.93 * 10) / 10;
+    const sup2 = Math.round(entryPrice * 0.88 * 10) / 10;
+
+    blueprintHtml = `
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; background:rgba(239,83,80,0.08); padding:6px 8px; border-radius:6px; border:1px solid rgba(239,83,80,0.25); margin-top:4px;">
+        <div>
+          <div style="font-size:8.5px; color:var(--muted);">ACTION</div>
+          <div style="font-size:11px; font-weight:700; color:var(--down);">⛔ AVOID / CASH</div>
+        </div>
+        <div>
+          <div style="font-size:8.5px; color:var(--muted);">OVERHEAD RES (+${resPct}%)</div>
+          <div style="font-size:11px; font-weight:700; color:#ff9800;">₹${overheadRes.toLocaleString('en-IN')}</div>
+        </div>
+        <div>
+          <div style="font-size:8.5px; color:var(--muted);">NEXT SUPPORT (-7%)</div>
+          <div style="font-size:11px; font-weight:700; color:var(--text-lt);">₹${sup1.toLocaleString('en-IN')}</div>
+        </div>
+        <div>
+          <div style="font-size:8.5px; color:var(--muted);">DEEP SUPPORT (-12%)</div>
+          <div style="font-size:11px; font-weight:700; color:var(--muted);">₹${sup2.toLocaleString('en-IN')}</div>
+        </div>
+      </div>
+    `;
+  }
 
   // Render HTML inside the modal
   container.innerHTML = `
@@ -795,60 +899,72 @@ function renderAIThesisCard(d) {
       <div style="font-weight:700; color:${setupTagColor}; display:flex; align-items:center; gap:6px;">
         <span>${setupTitle}</span>
       </div>
-      <span class="quad-pill ${quadKey}" style="font-size:9px;">${bias}</span>
+      <span class="quad-pill ${isBullishTrade ? quadKey : 'quad-4'}" style="font-size:9px; background:${isBullishTrade ? '' : 'rgba(239,83,80,0.2)'}; color:${isBullishTrade ? '' : '#ef5350'};">${bias}</span>
     </div>
-    <div style="color:var(--text-lt); font-size:10.5px;">
-      <strong>Core Thesis:</strong> ${d.sym} (${d.name}) displays a composite RS Rating of <strong style="color:var(--gold);">${d.rs_rating ?? '—'}/99</strong> in the <strong>${d.ind}</strong> sector. ${mtfDesc} ${volDesc}
+    <div style="color:var(--text-lt); font-size:10.5px; line-height:1.45;">
+      <strong>Core Thesis:</strong> ${thesisSummary}
     </div>
-    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; background:var(--bg2); padding:6px 8px; border-radius:6px; border:1px solid var(--border); margin-top:2px;">
-      <div>
-        <div style="font-size:8.5px; color:var(--muted);">REC. ENTRY</div>
-        <div style="font-size:11px; font-weight:700; color:var(--text);">₹${entryPrice.toLocaleString('en-IN')}</div>
-      </div>
-      <div>
-        <div style="font-size:8.5px; color:var(--muted);">STOP LOSS (-${riskPct}%)</div>
-        <div style="font-size:11px; font-weight:700; color:var(--down);">₹${slPrice.toLocaleString('en-IN')}</div>
-      </div>
-      <div>
-        <div style="font-size:8.5px; color:var(--muted);">TARGET 1 (1:1)</div>
-        <div style="font-size:11px; font-weight:700; color:var(--up);">₹${t1Price.toLocaleString('en-IN')}</div>
-      </div>
-      <div>
-        <div style="font-size:8.5px; color:var(--muted);">TARGET 2 (1:2)</div>
-        <div style="font-size:11px; font-weight:700; color:#7da9ff;">₹${t2Price.toLocaleString('en-IN')}</div>
-      </div>
-    </div>
+    ${blueprintHtml}
   `;
 }
 
 function copyAIThesisToClipboard() {
   if (!selectedSym) return;
-  const d = allData.find(s => s.sym === selectedSym);
+  let d = allData && allData.find(s => s.sym === selectedSym);
+  if (!d && typeof globalScreenerData !== 'undefined' && globalScreenerData.length > 0) {
+    d = globalScreenerData.find(s => s.sym === selectedSym);
+  }
+  if (!d && window.STATIC_SCREENER_DATA && Array.isArray(window.STATIC_SCREENER_DATA.stocks)) {
+    d = window.STATIC_SCREENER_DATA.stocks.find(s => s.sym === selectedSym);
+  }
   if (!d) return;
 
-  const mtf = (typeof calcMultiTimeframeConfluence === 'function') ? calcMultiTimeframeConfluence(d) : { label: 'Dual Confluence', badge: '🟢 🟢 ⚪' };
+  const mtf = (typeof calcMultiTimeframeConfluence === 'function') ? calcMultiTimeframeConfluence(d) : { label: 'Dual Confluence', badge: '⚪ ⚪ ⚪' };
   const tb = (typeof calcTightBase3W === 'function') ? calcTightBase3W(null, d.price, d.hi52_prox) : { is_tight: false };
   const stData = stParam === '14' ? d.st14 : d.st10;
-  const slPrice = (stData && stData.val > 0) ? stData.val : Math.round(d.price * 0.90 * 10) / 10;
-  const riskPerShare = Math.max(0.1, d.price - slPrice);
-  const t1Price = Math.round((d.price + riskPerShare * 1.0) * 10) / 10;
-  const t2Price = Math.round((d.price + riskPerShare * 2.0) * 10) / 10;
-  const t3Price = Math.round((d.price + riskPerShare * 3.0) * 10) / 10;
+  const isSTBuy = stData && stData.trend === 'buy';
+  const inst = d.institutional || { ad_grade: 'B', status: 'Accumulation' };
+  const isHeavyExit = (inst.ad_grade === 'E') || (inst.status && inst.status.toLowerCase().includes('exit'));
+
+  let blueprintSection = '';
+  if (isSTBuy && !isHeavyExit && d.price > 0) {
+    let slPrice = (stData && stData.val > 0 && stData.val < d.price) ? Math.round(stData.val * 10) / 10 : Math.round(d.price * 0.93 * 10) / 10;
+    const riskPerShare = Math.max(d.price * 0.02, d.price - slPrice);
+    slPrice = Math.round((d.price - riskPerShare) * 10) / 10;
+    const riskPct = ((riskPerShare / d.price) * 100).toFixed(1);
+    const t1Price = Math.round((d.price + riskPerShare * 1.0) * 10) / 10;
+    const t2Price = Math.round((d.price + riskPerShare * 2.0) * 10) / 10;
+    const t3Price = Math.round((d.price + riskPerShare * 3.0) * 10) / 10;
+
+    blueprintSection = `📐 QUANTITATIVE EXECUTION BLUEPRINT:
+• Rec. Entry: ₹${d.price}
+• Hard SL: ₹${slPrice} (-${riskPct}%)
+• Target 1 (1:1 R:R): ₹${t1Price}
+• Target 2 (1:2 R:R): ₹${t2Price}
+• Target 3 (1:3 R:R): ₹${t3Price}`;
+  } else {
+    const overheadRes = (stData && stData.val > d.price) ? Math.round(stData.val * 10) / 10 : Math.round(d.price * 1.07 * 10) / 10;
+    const resPct = (((overheadRes - d.price) / d.price) * 100).toFixed(1);
+    const sup1 = Math.round(d.price * 0.93 * 10) / 10;
+    const sup2 = Math.round(d.price * 0.88 * 10) / 10;
+
+    blueprintSection = `📐 QUANTITATIVE RISK & ADVISORY BLUEPRINT:
+• Rec. Action: ⛔ AVOID / MAINTAIN CASH (No Long Entry)
+• Overhead Resistance: ₹${overheadRes} (+${resPct}% · Supertrend / MA Barrier)
+• Immediate Support: ₹${sup1} (-7.0%)
+• Structural Deep Support: ₹${sup2} (-12.0%)
+• Warning: ${isHeavyExit ? 'Institutional Exit (Grade E)' : 'Technical Breakdown Below MA'}`;
+  }
 
   const text = `🧠 ADAPTIVE ALPHA AI THESIS: ${d.sym} (${d.name})
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎯 Sector: ${d.ind} | Price: ₹${d.price}
-🌟 RS Rating: ${d.rs_rating ?? '—'}/99 | ARS: ${(d.ars*100).toFixed(1)}% | SRS: ${(d.srs*100).toFixed(1)}%
+🌟 RS Rating: ${d.rs_rating ?? '—'}/99 | ARS: ${((d.ars||0)*100).toFixed(1)}% | SRS: ${((d.srs||0)*100).toFixed(1)}%
 ⚡ MTF Confluence: ${mtf.label} (${mtf.badge})
 🧘 3W Tight Base / VCP: ${tb.is_tight ? 'YES (Constructive)' : 'Normal'}
-🏛️ Inst. Accumulation: ${d.institutional?.ad_grade || 'B'} Grade (${d.institutional?.status || 'Neutral'})
+🏛️ Inst. Accumulation: ${inst.ad_grade || 'B'} Grade (${inst.status || 'Neutral'})
 
-📐 QUANTITATIVE EXECUTION BLUEPRINT:
-• Entry: ₹${d.price}
-• Hard SL: ₹${slPrice} (${(((slPrice - d.price)/d.price)*100).toFixed(1)}%)
-• Target 1 (1:1 R:R): ₹${t1Price}
-• Target 2 (1:2 R:R): ₹${t2Price}
-• Target 3 (1:3 R:R): ₹${t3Price}
+${blueprintSection}
 
 Generated via Adaptive Alpha Quantitative Momentum Engine.`;
 
