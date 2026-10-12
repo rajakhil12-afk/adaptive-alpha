@@ -10,10 +10,14 @@ on:
     branches: [ main, master ]
   workflow_dispatch: # Allows manual trigger from GitHub Actions tab
 
+permissions:
+  contents: read
+
 jobs:
   code-health-audit:
     name: Codebase Health & Bug Audit
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout Repository
@@ -33,4 +37,5 @@ jobs:
         run: node scripts/code_health_audit.js
 
       - name: Run Python Jishu Engine Validation
+        if: ${{ hashFiles('test/jishu_test.py') != '' }}   # skip instead of failing daily when the file is absent
         run: python test/jishu_test.py

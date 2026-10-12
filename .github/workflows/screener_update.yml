@@ -7,9 +7,14 @@ on:
     - cron: '10 14 * * 1-5'
   workflow_dispatch: # Enable manual triggers anytime from GitHub Actions UI
 
+concurrency:
+  group: repo-data-writes   # screener + keep-alive both push to the repo; never run them at the same time
+  cancel-in-progress: false
+
 jobs:
   update-screener:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     permissions:
       contents: write
@@ -24,7 +29,7 @@ jobs:
           node-version: '22'
 
       - name: Install system dependencies
-        run: sudo apt-get install -y unzip
+        run: command -v unzip >/dev/null || (sudo apt-get update && sudo apt-get install -y unzip)
 
       - name: Run Indicator Unit Tests
         run: node --test test/indicators.test.js
@@ -47,7 +52,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          node scripts/send_telegram_notification.js || echo "Telegram notification failed, continuing workflow."
+          node scripts/send_telegram_notification.js || echo "::warning::Telegram notification failed, continuing workflow."
 
       - name: Commit and Push changes
         run: |
@@ -57,12 +62,17 @@ jobs:
           # Write a heartbeat timestamp to keep repo active
           echo "Last successful run: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > .github/last_updated.txt
 
-          git add data/screener.json data/screener.js data/breakout_history.json data/jishu_portfolio.json data/jishu_portfolio.js .github/last_updated.txt
+          # `git add <missing file>` aborts the whole step (e.g. first run before breakout_history.json exists) -> add only what exists
+          for f in data/screener.json data/screener.js data/breakout_history.json data/jishu_portfolio.json data/jishu_portfolio.js data/jishu_portfolio_backup.json .github/last_updated.txt; do
+            [ -e "$f" ] && git add "$f"
+          done
 
           # If data files changed, use a descriptive message; otherwise heartbeat
-          if git diff --cached --quiet -- data/screener.json data/screener.js data/jishu_portfolio.json data/jishu_portfolio.js data/breakout_history.json; then
+          if git diff --cached --quiet -- data/screener.json data/screener.js data/jishu_portfolio.json data/jishu_portfolio.js data/jishu_portfolio_backup.json data/breakout_history.json; then
             git commit -m "ci: heartbeat keep-alive [skip ci]" || echo "No changes to commit"
           else
             git commit -m "Auto-update market data $(date -u '+%Y-%m-%d') [skip ci]"
           fi
-          git push
+          # another commit may have landed during the run: rebase, then push (retry once)
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+          git push || (sleep 5 && git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push)
