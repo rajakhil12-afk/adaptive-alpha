@@ -34,17 +34,18 @@ function calculateQuantMetrics(portfolio) {
     const pnl = t.realized_pnl || 0;
     const sleeveKey = (t.sleeve === 'SLEEVE_B' || t.setup_type === 'LEADER_DIP') ? 'SLEEVE_B' : 'SLEEVE_A';
     
-    sleeveStats[sleeveKey].trades += 1;
     sleeveStats[sleeveKey].pnl += pnl;
 
     if (pnl > 0) {
       totalGains += pnl;
       winCount += 1;
       sleeveStats[sleeveKey].wins += 1;
+      sleeveStats[sleeveKey].trades += 1; // breakeven trades excluded everywhere (was counted only per-sleeve)
     } else if (pnl < 0) {
       totalLosses += Math.abs(pnl);
       lossCount += 1;
       sleeveStats[sleeveKey].losses += 1;
+      sleeveStats[sleeveKey].trades += 1;
     }
   });
 
@@ -60,8 +61,8 @@ function calculateQuantMetrics(portfolio) {
     : (totalGains > 0 ? 99.9 : 0);
 
   // Mathematical Expectancy: (Win% * AvgWin) - (Loss% * AvgLoss)
-  const winProb = winRatePct / 100;
-  const lossProb = (100 - winRatePct) / 100;
+  const winProb = totalTrades > 0 ? winCount / totalTrades : 0; // exact, not the 1-decimal rounded %
+  const lossProb = totalTrades > 0 ? lossCount / totalTrades : 0;
   const expectancy = Number(((winProb * avgWin) - (lossProb * avgLoss)).toFixed(2));
 
   // Max Drawdown Calculation from daily_equity series
@@ -70,7 +71,8 @@ function calculateQuantMetrics(portfolio) {
   let maxDrawdownValue = 0;
 
   dailyEquity.forEach(snap => {
-    const eq = snap.total_equity || snap.cash || initialCap;
+    if (typeof snap.total_equity !== 'number') return; // was falling back to `cash` -> phantom drawdowns
+    const eq = snap.total_equity;
     if (eq > peakEquity) {
       peakEquity = eq;
     }
@@ -86,11 +88,12 @@ function calculateQuantMetrics(portfolio) {
   let sharpeRatio = 0;
   let sortinoRatio = 0;
 
-  if (dailyEquity.length >= 3) {
+  if (dailyEquity.length >= 21) { // Sharpe/Sortino on a handful of days are noise (was shown as 14.35 / 210.76 after 3 days)
     const returns = [];
     for (let i = 1; i < dailyEquity.length; i++) {
-      const prev = dailyEquity[i - 1].total_equity || initialCap;
-      const curr = dailyEquity[i].total_equity || initialCap;
+      const prev = dailyEquity[i - 1].total_equity;
+      const curr = dailyEquity[i].total_equity;
+      if (!(prev > 0) || typeof curr !== 'number') continue;
       returns.push((curr - prev) / prev);
     }
 
@@ -139,7 +142,7 @@ function calculateQuantMetrics(portfolio) {
     recommendations.push({
       type: 'DRAWDOWN_ALERT',
       badge: '🛡️ CAPITAL_GUARD',
-      text: `Portfolio drawdown reached ${maxDrawdownPct.toFixed(1)}%. Macro Sentinel circuit breaker active to enforce capital conservation.`
+      text: `Portfolio drawdown reached ${maxDrawdownPct.toFixed(1)}%. Review position sizing and macro-regime filters.`
     });
   } else {
     recommendations.push({

@@ -73,7 +73,7 @@ jsonFiles.forEach(rel => {
       if (!Array.isArray(parsed.stocks)) {
         logCheck('screener.json schema', false, 'Missing stocks array');
       } else {
-        const nanStocks = parsed.stocks.filter(s => isNaN(s.price) || isNaN(s.ars));
+        const nanStocks = parsed.stocks.filter(s => !Number.isFinite(s.price) || !Number.isFinite(s.ars)) /* isNaN(null) is false */;
         if (nanStocks.length > 0) {
           logCheck('screener.json numerical sanity', false, `Found ${nanStocks.length} stocks with NaN price/ARS`);
         } else {

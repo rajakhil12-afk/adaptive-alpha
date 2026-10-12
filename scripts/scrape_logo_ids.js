@@ -34,8 +34,10 @@ function searchLogo(sym) {
         'Accept': '*/*',
         'Origin': 'https://www.tradingview.com',
         'Referer': 'https://www.tradingview.com/'
-      }
+      },
+      timeout: 10000
     }, (res) => {
+      if (res.statusCode !== 200) { res.resume(); return resolve(null); }
       let body = '';
       res.on('data', c => body += c);
       res.on('end', () => {
@@ -43,14 +45,13 @@ function searchLogo(sym) {
           const json = JSON.parse(body);
           if (!Array.isArray(json) || json.length === 0) return resolve(null);
           const match = json.find(r => (r.symbol === tvSym || r.symbol === sym) && (r.exchange === 'NSE' || r.exchange === 'BSE')) 
-                     || json.find(r => r.exchange === 'NSE') 
-                     || json[0];
+                     || json.find(r => r.exchange === 'NSE'); // removed `|| json[0]`: allowed foreign-exchange logos
           resolve(match ? match.logoid : null);
         } catch(e) {
           resolve(null);
         }
       });
-    }).on('error', () => resolve(null));
+    }).on('timeout', function () { this.destroy(); resolve(null); }).on('error', () => resolve(null));
   });
 }
 

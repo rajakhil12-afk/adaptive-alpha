@@ -102,6 +102,9 @@ async function sendTelegramMessage(text, maxRetries = 3) {
       return result;
     } catch (err) {
       console.warn(`Telegram send attempt ${attempt}/${maxRetries} failed:`, err.message || err.body || err);
+      if (err.statusCode >= 400 && err.statusCode < 500 && err.statusCode !== 429) {
+        throw new Error(`Telegram rejected message (HTTP ${err.statusCode}): ${err.body}`); // permanent error: retrying cannot help
+      }
       if (attempt < maxRetries) {
         const delayMs = err.retryAfter || (1000 * Math.pow(2, attempt - 1));
         console.log(`Waiting ${delayMs}ms before retrying...`);
@@ -139,8 +142,20 @@ async function dispatchSections(sections, maxChars = 3800) {
   const messages = [];
   let currentMsg = '';
 
+  // split any single section that alone exceeds the limit (Telegram rejects >4096 chars) on line boundaries
+  const parts = [];
   for (const sec of sections) {
     if (!sec || !sec.trim()) continue;
+    if (sec.length <= maxChars) { parts.push(sec); continue; }
+    let buf = '';
+    for (const line of sec.split('\n')) {
+      if ((buf + line + '\n').length > maxChars && buf) { parts.push(buf); buf = ''; }
+      buf += line.slice(0, maxChars) + '\n';
+    }
+    if (buf) parts.push(buf);
+  }
+
+  for (const sec of parts) {
     if ((currentMsg + sec).length > maxChars && currentMsg.trim().length > 0) {
       messages.push(currentMsg.trim());
       currentMsg = sec;

@@ -277,6 +277,9 @@ function parseBhavcopy(filePath) {
   const headers = lines[0].split(',').map(h => h.trim());
   const symbolIdx = findHeader(headers, ['TckrSymb', 'SYMBOL', 'SYMBOL_NAME', 'FinInstrmId']);
   const closeIdx  = findHeader(headers, ['ClsPric', 'ClsgPric', 'CLOSE', 'CLOSE_PRICE']);
+  const openIdx   = findHeader(headers, ['OpnPric', 'OPEN', 'OPEN_PRICE']);
+  const highIdx   = findHeader(headers, ['HghPric', 'HIGH', 'HIGH_PRICE']);
+  const lowIdx    = findHeader(headers, ['LwPric', 'LOW', 'LOW_PRICE']);
   const volIdx    = findHeader(headers, ['TtlTradgVol', 'TtlTrdedQty', 'TOTTRDQTY', 'VOLUME']);
   const seriesIdx = findHeader(headers, ['SctySrs', 'SERIES', 'SERIES_NAME']);
   const delivQtyIdx = findHeader(headers, ['DELIV_QTY', 'DelivQty', 'TtlDelivQty', 'DELIV_QTY_TRD']);
@@ -300,8 +303,12 @@ function parseBhavcopy(filePath) {
     const delivPct = delivPerIdx !== -1 ? parseFloat(cols[delivPerIdx]) : null;
 
     if (series === 'EQ' && !isNaN(close)) {
+      const num = idx => { if (idx === -1) return null; const v = parseFloat(cols[idx]); return Number.isFinite(v) ? v : null; };
       dataMap[symbol] = { 
         close, 
+        open: num(openIdx),
+        high: num(highIdx),
+        low: num(lowIdx),
         volume: vol,
         deliv_qty: !isNaN(delivQty) ? delivQty : null,
         deliv_pct: !isNaN(delivPct) ? delivPct : null
@@ -481,7 +488,7 @@ function computeMultiPillarSentiment(results, benchData, fiiDii, vixData, goldDa
   // 4. Stock Price Strength: 52-Week Highs vs Lows Ratio
   let s4 = 50, s4Desc = 'Neutral 52-Week Highs vs Lows distribution';
   if (results.length > 0) {
-    const highs = results.filter(d => (d.hi52_prox || -1) >= -0.05).length;
+    const highs = results.filter(d => (d.hi52_prox ?? -1) >= -0.05).length;
     const lows = results.filter(d => (d.hi52_prox || 0) <= -0.25).length;
     const hRatio = (highs / (highs + lows + 1)) * 100;
     s4 = Math.min(100, Math.max(0, Math.round(hRatio)));
@@ -630,6 +637,7 @@ async function run() {
 
   console.log(`Processing ${UNIVERSE.length} stocks with concurrent async batching…`);
   const results = [];
+  const failed = [];   // symbols that produced no data (renamed / delisted tickers) – previously dropped silently
   const BATCH_SIZE = 8;
   
   for (let i = 0; i < UNIVERSE.length; i += BATCH_SIZE) {
@@ -640,6 +648,7 @@ async function run() {
       const stockHist = await fetchYahoo(yf, '6y');
       if (!stockHist || stockHist.length < 100) {
         console.warn(`[${globalIdx}/${UNIVERSE.length}] Skipped ${stock.sym} (No history)`);
+        failed.push(stock.sym);
         return null;
       }
 
@@ -648,17 +657,19 @@ async function run() {
       if (latestBhav) {
         const last = stockHist[stockHist.length - 1];
         if (last.t < bhav.timestamp) {
-          stockHist.push({ t: bhav.timestamp, c: latestBhav.close, h: latestBhav.close, l: latestBhav.close, v: latestBhav.volume });
+          stockHist.push({ t: bhav.timestamp, o: latestBhav.open ?? latestBhav.close, c: latestBhav.close, h: latestBhav.high ?? latestBhav.close, l: latestBhav.low ?? latestBhav.close, v: latestBhav.volume });
         } else {
+          // was: h = l = close -> today's range collapsed to 0 (understated ATR/Supertrend, killed wick filters)
           last.c = latestBhav.close;
-          last.h = latestBhav.close;
-          last.l = latestBhav.close;
+          last.h = latestBhav.high ?? Math.max(last.h ?? latestBhav.close, latestBhav.close);
+          last.l = latestBhav.low ?? Math.min(last.l ?? latestBhav.close, latestBhav.close);
+          if (latestBhav.open != null) last.o = latestBhav.open;
           last.v = latestBhav.volume;
         }
       }
 
       const calc = calcARS(stockHist, benchData, cutoffTs);
-      if (!calc) return null;
+      if (!calc) { failed.push(stock.sym); return null; }
 
       const st14 = calcSupertrend(stockHist, 14, 3);
       const st10 = calcSupertrend(stockHist, 10, 3);
@@ -677,10 +688,12 @@ async function run() {
       const avgDelivQty = Math.round(avgVol20 * 0.45);
       const delivPct = latestBhav && latestBhav.deliv_pct ? latestBhav.deliv_pct : Math.min(85, Math.max(25, Math.round(38 + (calc.ars > 0 ? 12 : 0) + (calc.vol_ratio > 1.5 ? 12 : 0))));
       const delivSpurt = calcDeliverySpurt(delivQty, avgDelivQty, delivPct);
+      // UDiFF Bhavcopy has no delivery columns: qty/pct are ESTIMATES (45 % of volume), so "delivery ratio" == volume ratio
+      const delivEstimated = !(latestBhav && latestBhav.deliv_qty);
 
       const bulkMatch = bulkDeals[stock.sym] || null;
       let instScore = adData.accumulation_score;
-      if (delivSpurt.is_spurt) instScore = Math.min(99, instScore + 8);
+      if (delivSpurt.is_spurt && !delivEstimated) instScore = Math.min(99, instScore + 8);
       if (volZData.is_anomaly) instScore = Math.min(99, instScore + 6);
       if (bulkMatch && bulkMatch.action === 'BUY') instScore = Math.min(99, instScore + 12);
       if (bulkMatch && bulkMatch.action === 'SELL') instScore = Math.max(1, instScore - 12);
@@ -701,6 +714,9 @@ async function run() {
         vol_anomaly: volZData.is_anomaly,
         hi52_prox: parseFloat(calc.hi52_prox.toFixed(4)),
         price: parseFloat(calc.price.toFixed(2)),
+        open: stockHist[stockHist.length - 1]?.o ?? null,  // needed by breakout_validator wick/close-strength checks
+        high: stockHist[stockHist.length - 1]?.h ?? null,
+        low: stockHist[stockHist.length - 1]?.l ?? null,
         breakout: calc.breakout,
         trending: calc.trending,
         signDays: calc.signDays,
@@ -725,7 +741,8 @@ async function run() {
           udr: adData.up_down_vol_ratio,
           deliv_pct: delivSpurt.deliv_pct,
           deliv_ratio: delivSpurt.deliv_ratio,
-          is_spurt: delivSpurt.is_spurt,
+          is_spurt: delivSpurt.is_spurt && !delivEstimated,
+          deliv_estimated: delivEstimated,
           deliv_label: delivSpurt.deliv_label,
           bulk: bulkMatch
         },
@@ -746,13 +763,17 @@ async function run() {
     await new Promise(resolve => setTimeout(resolve, 80));
   }
 
+  if (failed.length) console.warn(`[warn] ${failed.length}/${UNIVERSE.length} symbols returned no data: ${failed.join(', ')}`);
+  if (failed.length > UNIVERSE.length * 0.2) throw new Error(`Too many symbols failed (${failed.length}/${UNIVERSE.length}) – refusing to publish a partial screener`);
+
   // Calculate RS Rating (1-99) & Factor Breakdown for each stock based on composite rank
   const N = results.length;
   if (N > 0) {
     const getRanks = (key, customValFn) => {
       const sorted = [...results]
         .map((s, idx) => ({ idx, val: customValFn ? customValFn(s) : s[key] }))
-        .sort((a, b) => a.val - b.val);
+        .map(o => ({ idx: o.idx, val: Number.isFinite(o.val) ? o.val : -Infinity }))
+        .sort((a, b) => (a.val > b.val) - (a.val < b.val));
       const ranks = new Array(N);
       sorted.forEach((item, r) => {
         ranks[item.idx] = r / (N - 1 || 1);
@@ -763,7 +784,7 @@ async function run() {
     const ranksArs = getRanks('ars');
     const ranksSrs = getRanks('srs');
     const ranksVol = getRanks('vol_ratio');
-    const ranksDays = getRanks(null, s => s.signDays * (s.ars >= 0 ? 1 : -1));
+    const ranksDays = getRanks(null, s => (s.signDays || 0) * (s.ars >= 0 ? 1 : -1));
 
     const composites = results.map((s, idx) => {
       const composite = (ranksArs[idx] * 0.4) + (ranksSrs[idx] * 0.3) + (ranksVol[idx] * 0.15) + (ranksDays[idx] * 0.15);
@@ -786,6 +807,7 @@ async function run() {
 
   console.log('Fetching latest FII/DII flows...');
   const fiiDii = await fetchFiiDiiData();
+  if (!fiiDii) console.warn('[warn] FII/DII feed unavailable – FII circuit-breaker input is 0 for this run');
 
   // Track 30-Day Breakout History Log
   const historyJson = path.join(dataDir, 'breakout_history.json');
@@ -847,7 +869,7 @@ async function run() {
 
   // Update current prices & max run-ups for all logged historical breakouts
   const stockPriceMap = new Map(results.map(s => [s.sym, s.price]));
-  const cutoffTime = Date.now() - (45 * 24 * 60 * 60 * 1000); // 45 days in ms
+  const cutoffTime = Date.now() - (30 * 24 * 60 * 60 * 1000); // 30 days in ms (matches the "30-Day Breakout Track Record" label; was 45)
 
   breakoutHistory = breakoutHistory.filter(h => {
     const t = Date.parse(h.triggerDate);
@@ -879,6 +901,7 @@ async function run() {
     updated: new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true,timeZone:'Asia/Kolkata'}) + ' IST · ' + new Date().toLocaleDateString('en-IN', {day:'2-digit',month:'short',timeZone:'Asia/Kolkata'}),
     bhavDate: bhav.date,
     fii_dii: fiiDii,
+    failed_symbols: failed,
     sentiment_pillars: sentimentPillars,
     stocks: results,
     breakout_history: breakoutHistory

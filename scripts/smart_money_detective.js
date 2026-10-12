@@ -25,7 +25,9 @@ function computeSmartMoneyFootprint(stock) {
   const mfr = inst.mfr || 0.5;
   const udr = inst.udr || 1.0;
   const volRatio = stock.vol_ratio || 1.0;
-  const volZ = stock.vol_zscore || (volRatio > 2.0 ? 2.5 : volRatio > 1.5 ? 1.6 : 0.8);
+  // update_data.js writes `vol_z` (not `vol_zscore`) and `|| fallback` also overwrote a real z of 0
+  const rawZ = stock.vol_z ?? stock.vol_zscore;
+  const volZ = Number.isFinite(rawZ) ? rawZ : (volRatio > 2.0 ? 2.5 : volRatio > 1.5 ? 1.6 : 0.8);
 
   // 1. Institutional Accumulation / Distribution (A/D) Grade (Up to 30 pts)
   if (adGrade === 'A+') {
@@ -36,13 +38,15 @@ function computeSmartMoneyFootprint(stock) {
     signals.push('🏛️ Inst A Accumulation');
   } else if (adGrade === 'B') {
     score += 15;
-  } else if (adGrade === 'D') {
+  } else if (adGrade === 'D' || adGrade === 'E') {
     score -= 15;
     signals.push('⚠️ Institutional Selling Pressure');
   }
 
-  // 2. Delivery Volume Footprint (Up to 25 pts)
-  if (delivRatio >= 2.0) {
+  // 2. Delivery Volume Footprint (Up to 25 pts) — skipped when delivery figures are only estimates (== volume ratio)
+  if (inst.deliv_estimated === true) {
+    // no points: would double-count volume
+  } else if (delivRatio >= 2.0) {
     score += 25;
     signals.push(`📦 Massive Delivery Surge (${delivRatio.toFixed(1)}× 20D Avg)`);
   } else if (delivRatio >= 1.4) {

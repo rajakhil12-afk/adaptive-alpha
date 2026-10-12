@@ -67,9 +67,9 @@ function evaluateMacroRegime(screenerData) {
     regimeColor = '#f97316';
     regimeBadgeBg = 'rgba(249, 115, 22, 0.18)';
     circuitBreakerActive = true;
-    maxAllowedSlots = 3; // Maximum 3 highly defensive slots
+    maxAllowedSlots = 0; // circuit breaker blocks ALL new buys (the engine never traded the old "3 defensive slots")
     maxCapitalPerTradePct = 7.5;
-    guidance = '⚠️ Market in pullback correction. New aggressive breakouts paused. Limit exposure to max 3 slots.';
+    guidance = '⚠️ Market in pullback correction. New buying paused (circuit breaker). Open positions are managed by their stops; buying resumes when the market score recovers above 42 and VIX falls below 18.';
   } else if (marketScore <= 58) {
     regime = 'CHOPPY_CONSOLIDATION';
     regimeColor = '#eab308';

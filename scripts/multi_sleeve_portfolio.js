@@ -101,7 +101,7 @@ function calculateSleeveAllocations(totalEquity, openPositions = [], macroRegime
       investedCapital: Number(investedA.toFixed(2)),
       availableCapital: Number(availableA.toFixed(2)),
       openPositions: countA,
-      openSlots: Math.max(0, (macroRegime?.regime === 'PANIC_LOCKDOWN' ? 0 : 5) - countA),
+      openSlots: Math.max(0, (macroRegime?.regime === 'PANIC_LOCKDOWN' ? 0 : SLEEVE_CONFIG.SLEEVE_A.maxPositions) - countA),
       utilizationPct: sleeveACapital > 0 ? Number(((investedA / sleeveACapital) * 100).toFixed(1)) : 0
     },
     sleeveB: {
@@ -111,7 +111,7 @@ function calculateSleeveAllocations(totalEquity, openPositions = [], macroRegime
       investedCapital: Number(investedB.toFixed(2)),
       availableCapital: Number(availableB.toFixed(2)),
       openPositions: countB,
-      openSlots: Math.max(0, (macroRegime?.regime === 'PANIC_LOCKDOWN' ? 0 : 3) - countB),
+      openSlots: Math.max(0, (macroRegime?.regime === 'PANIC_LOCKDOWN' ? 0 : SLEEVE_CONFIG.SLEEVE_B.maxPositions) - countB),
       utilizationPct: sleeveBCapital > 0 ? Number(((investedB / sleeveBCapital) * 100).toFixed(1)) : 0
     },
     sleeveC: {
@@ -128,9 +128,11 @@ function calculateSleeveAllocations(totalEquity, openPositions = [], macroRegime
  */
 function classifyCandidateSleeve(stock) {
   // If stock is flagged as Dip / Retest / Near 200 EMA / Support
-  const isRetest = (stock.dist_50d && Math.abs(stock.dist_50d) < 3.0) || 
-                   (stock.setup_tags && stock.setup_tags.includes('LEADER_RETEST')) ||
-                   (stock.vcp_score && stock.vcp_score >= 70);
+  // update_data.js emits `vcp: {is_vcp}` (no vcp_score / dist_50d / setup_tags), so Sleeve B was unreachable
+  const isRetest = (stock.dist_50d != null && Math.abs(stock.dist_50d) < 3.0) ||
+                   (Array.isArray(stock.setup_tags) && stock.setup_tags.includes('LEADER_RETEST')) ||
+                   (stock.vcp_score != null && stock.vcp_score >= 70) ||
+                   stock.vcp?.is_vcp === true;
 
   if (isRetest && (stock.rs_rating || 0) >= 65) {
     return {

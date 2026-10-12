@@ -52,14 +52,34 @@ function runJishuEngine(customScreenerData = null) {
 
   // Ensure default settings
   if (!portfolio.settings) portfolio.settings = {};
-  portfolio.settings.fixed_sl_pct = 10;
-  portfolio.settings.target_1_rr = 1;
-  portfolio.settings.target_2_rr = 2;
-  portfolio.settings.min_rs_rating = 75;
-  portfolio.settings.max_distance_from_st_pct = 7.0;
-  portfolio.settings.risk_pct_per_trade = 1.0; // 1% portfolio equity risk
+  // Defaults are applied ONLY when a key is missing, so values edited in jishu_portfolio.json are respected
+  // (previously every run overwrote them with these constants).
+  const DEFAULT_SETTINGS = {
+    fixed_sl_pct: 10,
+    target_1_rr: 1,
+    target_2_rr: 2,
+    min_rs_rating: 75,
+    max_distance_from_st_pct: 7.0,
+    risk_pct_per_trade: 1.0,        // 1% portfolio equity risk
+    round_trip_cost_pct: 0.25,      // brokerage + STT + slippage, split evenly over entry and exit (set 0 to disable)
+    stop_fill_model: 'close'        // 'close' = exit at EOD close (legacy) | 'intraday' = fill at stop price, or at the open if it gapped below
+  };
+  for (const [k, v] of Object.entries(DEFAULT_SETTINGS)) {
+    if (portfolio.settings[k] === undefined) portfolio.settings[k] = v;
+  }
+  const halfCost = (Number(portfolio.settings.round_trip_cost_pct) || 0) / 200; // fraction charged on each leg
 
   const currentDateStr = screener.bhavDate || new Date().toISOString().split('T')[0];
+
+  // Guard: never mark the portfolio to OLDER prices. A stale screener.json (e.g. bhavDate 10-05 while the portfolio
+  // already holds a 10-06 snapshot) re-priced positions backwards and appended an out-of-order daily_equity row,
+  // which corrupts drawdown / Sharpe.
+  const lastSnapDate = Array.isArray(portfolio.daily_equity) && portfolio.daily_equity.length
+    ? portfolio.daily_equity[portfolio.daily_equity.length - 1].date : null;
+  if (lastSnapDate && currentDateStr < lastSnapDate) {
+    console.warn(`[Jishu] Screener bhavDate ${currentDateStr} is older than last portfolio snapshot ${lastSnapDate}. Skipping run.`);
+    return null;
+  }
   const stocksMap = new Map();
   screener.stocks.forEach(s => stocksMap.set(s.sym, s));
 
@@ -86,7 +106,10 @@ function runJishuEngine(customScreenerData = null) {
     let exitPrice = curPrice;
 
     // 1. Check Stop Loss Hits (Initial SL, Cost SL, or Trailing Target 1 SL)
-    if (curPrice <= pos.current_sl) {
+    // stop_fill_model 'intraday' needs real OHLC (stock.low/open from update_data): a stop is hit if the day's low touched it
+    const useIntraday = portfolio.settings.stop_fill_model === 'intraday' && Number.isFinite(stock.low) && pos.current_sl > 0;
+    const stopTouchedIntraday = useIntraday && stock.low <= pos.current_sl;
+    if (curPrice <= pos.current_sl || stopTouchedIntraday) {
       if (pos.sl_moved_to_t1) {
         exitReason = 'TRAILING_PROFIT_SL_HIT';
       } else if (pos.sl_moved_to_cost) {
@@ -94,7 +117,10 @@ function runJishuEngine(customScreenerData = null) {
       } else {
         exitReason = 'STOP_LOSS_HIT';
       }
-      exitPrice = curPrice;
+      // intraday model: a resting stop fills at the stop price, or at the open when the stock gapped through it
+      exitPrice = stopTouchedIntraday
+        ? Math.min(pos.current_sl, Number.isFinite(stock.open) ? stock.open : pos.current_sl)
+        : curPrice;
     }
     // 2. Check Hard Stop Loss Drop
     else if (((curPrice - pos.entry_price) / pos.entry_price) <= -(portfolio.settings.fixed_sl_pct / 100)) {
@@ -149,16 +175,23 @@ function runJishuEngine(customScreenerData = null) {
 
     if (exitReason) {
       const grossProceeds = exitPrice * pos.qty;
-      const realizedTradePnl = (exitPrice - pos.entry_price) * pos.qty;
-      const returnPct = ((exitPrice - pos.entry_price) / pos.entry_price) * 100;
+      const exitCost = grossProceeds * halfCost;
+      const grossTradePnl = (exitPrice - pos.entry_price) * pos.qty;
+      const tradeCosts = (pos.entry_cost || 0) + exitCost;          // both legs
+      const realizedTradePnl = grossTradePnl - tradeCosts;          // NET of costs
+      const returnPct = (realizedTradePnl / (pos.entry_price * pos.qty)) * 100;
 
-      portfolio.account.cash += grossProceeds;
+      portfolio.account.cash += grossProceeds - exitCost;
       portfolio.account.realized_pnl += realizedTradePnl;
+      portfolio.account.total_costs = (portfolio.account.total_costs || 0) + exitCost;
       portfolio.account.total_trades += 1;
+      // breakeven trades are neither wins nor losses (same rule as quant_analytics.js)
       if (realizedTradePnl > 0) {
         portfolio.account.winning_trades += 1;
-      } else {
+      } else if (realizedTradePnl < 0) {
         portfolio.account.losing_trades += 1;
+      } else {
+        portfolio.account.breakeven_trades = (portfolio.account.breakeven_trades || 0) + 1;
       }
 
       const closedTrade = {
@@ -173,8 +206,10 @@ function runJishuEngine(customScreenerData = null) {
         exit_price: exitPrice,
         qty: pos.qty,
         invested_value: pos.invested_value,
-        realized_pnl: realizedTradePnl,
-        return_pct: returnPct,
+        gross_pnl: Number(grossTradePnl.toFixed(2)),
+        costs: Number(tradeCosts.toFixed(2)),
+        realized_pnl: Number(realizedTradePnl.toFixed(2)),
+        return_pct: Number(returnPct.toFixed(2)),
         exit_reason: exitReason,
         highest_price: pos.highest_price,
         smart_money_score: pos.smart_money_score || 50
@@ -264,6 +299,7 @@ function runJishuEngine(customScreenerData = null) {
     // Allocate across Sleeve A and Sleeve B
     for (const stock of validCandidates) {
       if (portfolio.account.cash < 10000) break;
+      if (portfolio.open_positions.length >= macro.maxAllowedSlots) break; // macro cap was never enforced
 
       const sleeveInfo = classifyCandidateSleeve(stock);
       const sleeveState = sleeveInfo.sleeveId === 'SLEEVE_B' ? sleeveAllocations.sleeveB : sleeveAllocations.sleeveA;
@@ -278,7 +314,7 @@ function runJishuEngine(customScreenerData = null) {
       const sizing = calculatePositionSize({
         stock,
         totalEquity: currentEquity,
-        availableCash: portfolio.account.cash,
+        availableCash: portfolio.account.cash / (1 + halfCost), // keep headroom for the entry cost
         sleeveAvailableCapital: sleeveState.availableCapital,
         smartMoneyFootprint: sm,
         riskPctPerTrade: portfolio.settings.risk_pct_per_trade || 1.0,
@@ -295,7 +331,9 @@ function runJishuEngine(customScreenerData = null) {
       const target1Price = sizing.target1Price;
       const target2Price = sizing.target2Price;
 
-      portfolio.account.cash -= investedValue;
+      const entryCost = investedValue * halfCost;
+      portfolio.account.cash -= investedValue + entryCost;
+      portfolio.account.total_costs = (portfolio.account.total_costs || 0) + entryCost;
       sleeveState.availableCapital -= investedValue;
       sleeveState.openSlots -= 1;
       heldSymbols.add(stock.sym);
@@ -311,6 +349,7 @@ function runJishuEngine(customScreenerData = null) {
         entry_price: entryPrice,
         qty: qty,
         invested_value: investedValue,
+        entry_cost: Number(entryCost.toFixed(2)),
         initial_sl: initialSl,
         current_sl: initialSl,
         risk_per_share: sizing.stopDistance,
@@ -363,8 +402,9 @@ function runJishuEngine(customScreenerData = null) {
   portfolio.account.invested_capital = Number(totalInvested.toFixed(2));
   portfolio.account.unrealized_pnl = Number(totalUnrealizedPnl.toFixed(2));
   portfolio.account.total_equity = Number((portfolio.account.cash + totalInvested).toFixed(2));
-  portfolio.account.win_rate = portfolio.account.total_trades > 0 
-    ? Number(((portfolio.account.winning_trades / portfolio.account.total_trades) * 100).toFixed(1)) 
+  const decisiveTrades = portfolio.account.winning_trades + portfolio.account.losing_trades;
+  portfolio.account.win_rate = decisiveTrades > 0
+    ? Number(((portfolio.account.winning_trades / decisiveTrades) * 100).toFixed(1))
     : 0;
 
   // Agent 6: Compute Deep Quant Metrics

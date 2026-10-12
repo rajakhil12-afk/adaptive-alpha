@@ -4,7 +4,7 @@
  * Screens intraday and daily price action quality to eliminate fake breakouts,
  * bull traps, and top-chasing:
  * 1. Upper Shadow Rejection Filter: Discards candles with >40% upper wick (sellers rejecting highs)
- * 2. Pivot Extension Penalty: Rejects setups extending >8% past pivot base / ST10 support
+ * 2. Pivot Extension Penalty: Rejects setups extending >7.5% past pivot base / ST10 support
  * 3. Volume Surge Quality: Requires clean volume accumulation (>1.2x 20MA)
  * 4. Close-to-High Strength (Closing in top 30% of daily range)
  */
