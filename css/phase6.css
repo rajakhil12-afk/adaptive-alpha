@@ -1,0 +1,123 @@
+/* ═══════════════════════════════════════════════════════════════
+   ADAPTIVE ALPHA — PHASE 6 UI POLISH
+   Load AFTER css/styles.css.  Uses the design tokens from the
+   cleanup patch; every var() has a fallback so it also works
+   on the old stylesheet.
+   Sections: 1 utilities & icons · 2 export menu · 3 filters ·
+             4 search icon · 5 skeleton loaders
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. UTILITIES & ICONS (Lucide sprite, see top of index.html) ── */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.ic {
+  width: 1.1em; height: 1.1em; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+  vertical-align: -0.2em; margin-right: 0.2em; pointer-events: none;
+}
+.ic:only-child,
+.modal-close .ic, .toast-close .ic, .sentiment-modal-close .ic,
+.theme-btn .ic, .mobile-nav-icon .ic { margin-right: 0; }
+.mobile-nav-icon .ic { width: 1.3em; height: 1.3em; }
+.theme-btn .ic { width: 1.15em; height: 1.15em; }
+.toast-icon .ic { margin-right: 0; }
+
+/* ── 2. EXPORT MENU ── */
+.export-menu { position: relative; display: inline-flex; }
+.export-trigger { display: inline-flex; align-items: center; gap: 6px; }
+.export-trigger .ic { margin-right: 0; }
+.export-trigger .ic-chev { width: 0.9em; height: 0.9em; transition: transform 0.15s ease; }
+.export-trigger[aria-expanded="true"] { border-color: var(--accent, #5e96ff); color: var(--accent-lt, #7da9ff); }
+.export-trigger[aria-expanded="true"] .ic-chev { transform: rotate(180deg); }
+.export-pop {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 60;
+  min-width: 180px; padding: 4px;
+  display: flex; flex-direction: column; gap: 2px;
+  background: var(--bg2, #11161f); border: 1px solid var(--border, #232a38);
+  border-radius: var(--r-md, 8px); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+.export-pop[hidden] { display: none; }
+.export-pop button {
+  display: flex; align-items: center; justify-content: flex-start; gap: 8px;
+  width: 100%; padding: 7px 10px; text-align: left;
+  background: transparent; border-color: transparent;
+}
+.export-pop button .ic { margin-right: 0; color: var(--muted-lt, #8a93a6); }
+.export-pop button:hover { background: var(--bg3, #1a2030); border-color: transparent; }
+.export-pop button:hover .ic { color: var(--text-hi, #fff); }
+
+/* ── 3. FILTERS: toggle + active pills + collapsible panel ── */
+.filters-toggle { display: inline-flex; align-items: center; gap: 6px; }
+.filters-toggle .ic { margin-right: 0; }
+.filters-toggle[aria-expanded="true"] { border-color: var(--accent, #5e96ff); color: var(--accent-lt, #7da9ff); }
+.filters-count {
+  min-width: 18px; padding: 0 5px; line-height: 18px; text-align: center;
+  border-radius: var(--r-pill, 999px);
+  background: var(--accent-dim, rgba(94, 150, 255, 0.14)); color: var(--accent-lt, #7da9ff);
+  font-family: var(--font-num, 'IBM Plex Mono', monospace); font-size: var(--fs-2xs, 10px); font-weight: 700;
+}
+.filters-count[data-zero="true"] { display: none; }
+
+.active-filters {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  flex: 1 1 200px; min-width: 0; white-space: normal;
+}
+.active-filters .af-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 6px 3px 10px; white-space: nowrap; cursor: pointer;
+  font-size: var(--fs-xs, 11px); font-weight: 600; color: var(--text, #e8ecf2);
+  background: var(--up-dim, rgba(38, 166, 154, 0.12)); border: 1px solid var(--up, #26a69a);
+  border-radius: var(--r-pill, 999px);
+}
+.active-filters .af-pill:hover { background: var(--up-dim, rgba(38, 166, 154, 0.2)); border-color: var(--down, #ef5350); }
+.af-x { display: inline-flex; opacity: 0.65; }
+.af-x .ic { width: 0.95em; height: 0.95em; margin-right: 0; }
+.af-pill:hover .af-x { opacity: 1; color: var(--down, #ef5350); }
+.active-filters .af-clear {
+  background: transparent; border: none; box-shadow: none;
+  padding: 2px 6px; font-size: var(--fs-xs, 11px); font-weight: 600;
+  color: var(--muted, #6b7589); text-decoration: underline; cursor: pointer;
+}
+.active-filters .af-clear:hover { background: transparent; color: var(--text-hi, #fff); }
+.af-empty { font-size: var(--fs-xs, 11px); color: var(--muted, #6b7589); }
+
+.filter-panel {
+  flex: 1 0 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  margin-top: 2px; padding-top: 10px; white-space: normal;
+  border-top: 1px dashed var(--border, #232a38);
+}
+.filter-panel[hidden] { display: none; }
+
+/* ── 4. SEARCH ICON (replaces the emoji that lived in the placeholder) ── */
+.search-wrap .search-ic {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  width: 14px; height: 14px; margin: 0; color: var(--muted, #6b7589);
+}
+.search-wrap #search-box { padding-left: 30px; width: 168px; }          /* global border-box: widen to keep the text area */
+.search-wrap #search-box:focus { width: 208px; }
+
+/* ── 5. SKELETON LOADERS (static markup; removed when JS renders) ── */
+@keyframes skel-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+.skel-bar {
+  display: block; height: 10px; border-radius: var(--r-sm, 4px);
+  background: linear-gradient(90deg, var(--bg3, #1a2030) 25%, var(--border-lt, #2c3547) 37%, var(--bg3, #1a2030) 63%);
+  background-size: 400% 100%; animation: skel-shimmer 1.4s ease infinite;
+}
+.skel-inline { display: inline-block; width: 88px; vertical-align: middle; }
+.skel-box { width: 14px; height: 14px; }
+.skel-row, .skel-row:hover { pointer-events: none; background: transparent; }
+.skel-row .td { display: flex; align-items: center; }
+.skel-card {
+  display: flex; flex-direction: column; gap: 12px; padding: 14px; margin-bottom: 12px;
+  background: var(--bg2, #11161f); border: 1px solid var(--border, #232a38); border-radius: var(--r-md, 8px);
+}
+@media (max-width: 768px) {
+  .skel-row .td:nth-child(n+5) { display: none !important; }
+  .skel-row .td:nth-child(1) { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel-bar { animation: none; }
+}
