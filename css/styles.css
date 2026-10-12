@@ -1494,8 +1494,29 @@ body.light-theme .rrg-clock {
     border-bottom: 1.5px solid var(--border) !important;
     padding-bottom: 8px !important;
     margin-bottom: 4px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
   }
   .td-ticker::before { display: none !important; }
+  .td-ticker .tick-tags {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 4px 6px !important;
+    margin-top: 4px !important;
+    width: 100% !important;
+  }
+  .td-ticker .tag {
+    font-size: 8.5px !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    line-height: 1.2 !important;
+  }
+  .td-ticker .quad-pill {
+    padding: 2.5px 7px !important;
+    font-size: 9px !important;
+    white-space: nowrap !important;
+  }
   .td::before {
     content: attr(data-label);
     font-family: var(--font-sans);
