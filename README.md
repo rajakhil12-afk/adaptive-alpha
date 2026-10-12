@@ -79,11 +79,20 @@ adaptive-alpha/
 │   ├── tooltips.js           # Instant floating micro-tooltips engine
 │   ├── treemap.js            # Sector rotation RRG clock & heatmaps
 │   └── universe.js           # Universal stock constituent lists
-├── scripts/update_data.js    # Node.js backend calculation engine
 ├── test/indicators.test.js   # Automated unit tests (node --test)
-├── index.html                # Main Screener Terminal (~370 lines)
+├── scripts/
+│   ├── update_data.js              # Node.js backend calculation engine
+│   ├── send_telegram_notification.js
+│   ├── code_health_audit.js
+│   └── scrape_logo_ids.js
+├── data/screener.js          # Static JS mirror of screener.json (works from file://)
+├── index.html                # Main Screener Terminal
 ├── landing.html              # Marketing & Regime Map Landing Page
-└── package.json              # Scripts: start, test, update, notify
+├── jishu_desk.html           # Paper-trading desk dashboard (data/jishu_portfolio.json|.js)
+├── preset_playbook.html      # Strategy presets playbook
+├── user_guide.html           # Methodology & formulas
+├── .env.example              # Telegram credentials template (copy to .env)
+└── package.json              # Scripts: start, test, update, audit, scrape-logos, notify
 ```
 
 ---
@@ -95,6 +104,7 @@ Run the native Node.js test suite anytime with zero npm dependencies:
 ```bash
 npm test
 # or: node --test test/indicators.test.js
+# (requires Node >= 22)
 ```
 
 ```text

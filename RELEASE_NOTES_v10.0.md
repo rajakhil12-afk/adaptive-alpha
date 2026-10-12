@@ -17,7 +17,8 @@
 5. **52-Week High Calculation**:
    - Switched from close prices (`c.c`) to true session Highs (`c.h`).
 6. **Symbol Ticker Mappings**:
-   - Corrected Yahoo Finance mappings for `ETERNAL` (`ZOMATO.NS`), `FIRSTCRY` (`BRAINBEES.NS`), and `TMPV` (`TATAMOTORS.NS`).
+   - The universe lists Zomato/Eternal as `ZOMATO` and Tata Motors as `TATAMOTORS` (the Yahoo tickers) directly; there is no alias table in `toYF()`.
+   - `BRAINBEES` returned no data from Yahoo and was replaced by `FIRSTCRY`; `HBLPOWER` → `HBLENGINE`; duplicate stale entries `CENTURYTEX` (= `ABREL`) and `SUVENPHAR` (= `COHANCE`) were removed. Confirm on the next run via `failed_symbols` in `screener.json`.
 7. **TradingView Logo Search Exchange Constraints**:
    - Constrained search matching to `NSE` and `BSE` exchanges to avoid foreign company logo mismatches.
 8. **Multi-Timeframe ARS History Lookup**:

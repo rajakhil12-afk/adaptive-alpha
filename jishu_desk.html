@@ -560,6 +560,13 @@
 
   <script src="data/jishu_portfolio.js"></script>
   <script>
+    // ---- safe helpers (escape HTML, tolerate missing/NaN numbers) ----
+    const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const num = v => (typeof v === 'number' && isFinite(v)) ? v : null;
+    const fx  = (v, d = 2) => num(v) === null ? '—' : v.toFixed(d);
+    const inr = v => num(v) === null ? '—' : v.toLocaleString('en-IN');
+    const fmtDay = ts => { const d = new Date(ts); return isNaN(d) ? '—' : d.toLocaleDateString('en-IN', {day:'2-digit', month:'short'}); };
+
     async function loadPortfolioData() {
       try {
         const res = await fetch('data/jishu_portfolio.json?nocache=' + Date.now());
@@ -581,8 +588,8 @@
 
     function renderDashboard(data) {
       const acc = data.account || {};
-      const initial = acc.initial_capital || 1000000;
-      const equity = acc.total_equity || initial;
+      const initial = acc.initial_capital || 1000000; // guards divide-by-zero
+      const equity = acc.total_equity ?? initial;
       const realized = acc.realized_pnl || 0;
       const unrealized = acc.unrealized_pnl || 0;
       const returnPct = ((equity - initial) / initial) * 100;
@@ -610,13 +617,13 @@
       if (sleeves.sleeveA) {
         document.getElementById('sleeveAPctBadge').innerText = `${sleeves.sleeveA.targetPct}% Target`;
         document.getElementById('sleeveAInvested').innerText = '₹' + (sleeves.sleeveA.investedCapital || 0).toLocaleString('en-IN');
-        document.getElementById('sleeveACapacity').innerText = `Cap: ₹${(sleeves.sleeveA.targetCapital || 500000).toLocaleString('en-IN')} (${sleeves.sleeveA.openPositions || 0}/5)`;
+        document.getElementById('sleeveACapacity').innerText = `Cap: ₹${(sleeves.sleeveA.targetCapital || 500000).toLocaleString('en-IN')} (${sleeves.sleeveA.openPositions || 0}/${sleeves.sleeveA.maxPositions ?? 5})`;
         document.getElementById('sleeveAFill').style.width = `${Math.min(100, sleeves.sleeveA.utilizationPct || 0)}%`;
       }
       if (sleeves.sleeveB) {
         document.getElementById('sleeveBPctBadge').innerText = `${sleeves.sleeveB.targetPct}% Target`;
         document.getElementById('sleeveBInvested').innerText = '₹' + (sleeves.sleeveB.investedCapital || 0).toLocaleString('en-IN');
-        document.getElementById('sleeveBCapacity').innerText = `Cap: ₹${(sleeves.sleeveB.targetCapital || 300000).toLocaleString('en-IN')} (${sleeves.sleeveB.openPositions || 0}/3)`;
+        document.getElementById('sleeveBCapacity').innerText = `Cap: ₹${(sleeves.sleeveB.targetCapital || 300000).toLocaleString('en-IN')} (${sleeves.sleeveB.openPositions || 0}/${sleeves.sleeveB.maxPositions ?? 3})`;
         document.getElementById('sleeveBFill').style.width = `${Math.min(100, sleeves.sleeveB.utilizationPct || 0)}%`;
       }
       if (sleeves.sleeveC) {
@@ -640,7 +647,8 @@
       }
 
       if (data.last_updated) {
-        document.getElementById('lastUpdatedText').innerText = 'Last Updated: ' + new Date(data.last_updated).toLocaleString('en-IN');
+        const lu = new Date(data.last_updated);
+        document.getElementById('lastUpdatedText').innerText = isNaN(lu) ? 'Last Updated: unknown' : 'Last Updated: ' + lu.toLocaleString('en-IN');
       }
 
       // Open Positions Table
@@ -649,7 +657,7 @@
         openTbody.innerHTML = '<tr><td colspan="12" class="empty-state">No active positions. Capital ready for next Quad 1 setup.</td></tr>';
       } else {
         openTbody.innerHTML = openPos.map(p => {
-          const curP = p.current_price || p.entry_price;
+          const curP = p.current_price ?? p.entry_price;
           const pnl = (curP - p.entry_price) * p.qty;
           const pnlPct = ((curP - p.entry_price) / p.entry_price) * 100;
           const pnlClass = pnl >= 0 ? 'val-positive' : 'val-negative';
@@ -662,37 +670,38 @@
             riskStatus = '<span class="status-badge badge-breakeven">🛡️ Risk-Free (Cost SL)</span>';
           }
 
-          const smScore = p.smart_money_score || 75;
+          const smScore = p.smart_money_score ?? 0; // was `|| 75`: a real score of 0 was shown as 75
           const smTier = p.smart_money_tier || (smScore >= 80 ? '🐋 Whale' : '🏛️ Inst');
           const smColor = smScore >= 80 ? 'var(--accent-green)' : smScore >= 60 ? '#06b6d4' : '#f59e0b';
           const sleeveTag = p.sleeve === 'SLEEVE_B' ? '<span class="brand-tag" style="color:var(--accent-cyan);">🎯 SLEEVE B</span>' : '<span class="brand-tag" style="color:var(--accent-green);">🚀 SLEEVE A</span>';
 
-          const progressToT2 = Math.min(100, Math.max(0, ((curP - p.entry_price) / (p.target_2_price - p.entry_price)) * 100));
+          const t2Span = p.target_2_price - p.entry_price;
+          const progressToT2 = t2Span > 0 ? Math.min(100, Math.max(0, ((curP - p.entry_price) / t2Span) * 100)) : 0; // was NaN/Infinity when T2 missing or == entry
 
           return `
             <tr>
               <td>
                 <div class="stock-info">
-                  <span class="stock-sym">${p.sym}</span>
-                  <span class="stock-ind">${p.ind || 'Equities'} · Qty: ${p.qty}</span>
+                  <span class="stock-sym">${esc(p.sym)}</span>
+                  <span class="stock-ind">${esc(p.ind || 'Equities')} · Qty: ${esc(p.qty)}</span>
                 </div>
               </td>
               <td>${sleeveTag}</td>
               <td class="mono-cell">
                 <span style="font-weight:700; color:${smColor};">${smScore}/100</span>
-                <div style="font-size:10px; color:var(--text-dim);">${smTier}</div>
+                <div style="font-size:10px; color:var(--text-dim);">${esc(smTier)}</div>
               </td>
-              <td>${p.entry_date || '-'}</td>
-              <td class="mono-cell">₹${p.entry_price?.toFixed(2)}</td>
-              <td class="mono-cell">₹${curP?.toFixed(2)}</td>
-              <td class="mono-cell">₹${(p.invested_value || (p.qty * p.entry_price)).toLocaleString('en-IN')}</td>
+              <td>${esc(p.entry_date || '-')}</td>
+              <td class="mono-cell">₹${fx(p.entry_price)}</td>
+              <td class="mono-cell">₹${fx(curP)}</td>
+              <td class="mono-cell">₹${inr(p.invested_value ?? (p.qty * p.entry_price))}</td>
               <td class="mono-cell ${pnlClass}">
                 ${pnlPrefix}₹${pnl.toFixed(2)} (${pnlPrefix}${pnlPct.toFixed(2)}%)
                 <div class="progress-track"><div class="progress-fill" style="width: ${progressToT2}%"></div></div>
               </td>
-              <td class="mono-cell" style="color: var(--accent-red);">₹${p.current_sl?.toFixed(2)}</td>
-              <td class="mono-cell" style="color: var(--accent-amber);">₹${p.target_1_price?.toFixed(2)}</td>
-              <td class="mono-cell" style="color: var(--accent-green);">₹${p.target_2_price?.toFixed(2)}</td>
+              <td class="mono-cell" style="color: var(--accent-red);">₹${fx(p.current_sl)}</td>
+              <td class="mono-cell" style="color: var(--accent-amber);">₹${fx(p.target_1_price)}</td>
+              <td class="mono-cell" style="color: var(--accent-green);">₹${fx(p.target_2_price)}</td>
               <td>${riskStatus}</td>
             </tr>
           `;
@@ -707,7 +716,7 @@
         recsCard.style.display = 'block';
         recsList.innerHTML = recs.map(r => `
           <div class="event-item">
-            <span><strong>[${r.badge}]</strong> ${r.text}</span>
+            <span><strong>[${esc(r.badge)}]</strong> ${esc(r.text)}</span>
           </div>
         `).join('');
       }
@@ -720,31 +729,33 @@
         closedTbody.innerHTML = '<tr><td colspan="10" class="empty-state">No completed trades yet.</td></tr>';
       } else {
         closedTbody.innerHTML = closed.map(c => {
-          const pnlClass = c.realized_pnl >= 0 ? 'val-positive' : 'val-negative';
-          const pnlPrefix = c.realized_pnl >= 0 ? '+' : '';
+          const cPnl = num(c.realized_pnl) ?? 0;
+          const pnlClass = cPnl >= 0 ? 'val-positive' : 'val-negative';
+          const pnlPrefix = cPnl >= 0 ? '+' : '-'; // sign is printed explicitly because abs() is used below
           let badgeClass = 'badge-exit-target';
           if (c.exit_reason === 'TRAILING_PROFIT_SL_HIT' || c.exit_reason === 'TARGET_1_3_HIT') {
             badgeClass = 'badge-exit-target';
           } else if (c.exit_reason === 'COST_SL_HIT') {
             badgeClass = 'badge-breakeven';
           } else {
-            badgeClass = 'badge-exit-stop';
+            // unknown reasons (e.g. TARGET_2_HIT, TIME_EXIT) were always painted red; colour by actual P&L instead
+            badgeClass = cPnl > 0 ? 'badge-exit-target' : 'badge-exit-stop';
           }
 
           const sleeveBadge = c.sleeve === 'SLEEVE_B' ? '🎯 B' : '🚀 A';
 
           return `
             <tr>
-              <td><span class="stock-sym">${c.sym}</span></td>
+              <td><span class="stock-sym">${esc(c.sym)}</span></td>
               <td><span class="brand-tag">${sleeveBadge}</span></td>
-              <td>${c.entry_date || '-'}</td>
-              <td>${c.exit_date || '-'}</td>
-              <td class="mono-cell">₹${c.entry_price?.toFixed(2)}</td>
-              <td class="mono-cell">₹${c.exit_price?.toFixed(2)}</td>
-              <td class="mono-cell">${c.qty}</td>
-              <td class="mono-cell ${pnlClass}">${pnlPrefix}₹${c.realized_pnl?.toFixed(2)}</td>
-              <td class="mono-cell ${pnlClass}">${pnlPrefix}${c.return_pct?.toFixed(2)}%</td>
-              <td><span class="status-badge ${badgeClass}">${c.exit_reason}</span></td>
+              <td>${esc(c.entry_date || '-')}</td>
+              <td>${esc(c.exit_date || '-')}</td>
+              <td class="mono-cell">₹${fx(c.entry_price)}</td>
+              <td class="mono-cell">₹${fx(c.exit_price)}</td>
+              <td class="mono-cell">${esc(c.qty)}</td>
+              <td class="mono-cell ${pnlClass}">${pnlPrefix}₹${fx(Math.abs(cPnl))}</td>
+              <td class="mono-cell ${pnlClass}">${pnlPrefix}${fx(Math.abs(c.return_pct ?? 0))}%</td>
+              <td><span class="status-badge ${badgeClass}">${esc(c.exit_reason)}</span></td>
             </tr>
           `;
         }).join('');
@@ -756,8 +767,8 @@
       if (events.length > 0) {
         eventContainer.innerHTML = events.slice(0, 15).map(e => `
           <div class="event-item">
-            <span>${e.message || e.type}</span>
-            <span class="event-time">${new Date(e.timestamp).toLocaleDateString('en-IN', {day:'2-digit',month:'short'})}</span>
+            <span>${esc(e.message || e.type)}</span>
+            <span class="event-time">${fmtDay(e.timestamp)}</span>
           </div>
         `).join('');
       }

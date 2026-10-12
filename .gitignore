@@ -12,3 +12,10 @@ mingit.zip
 *.log
 .DS_Store
 dist/
+
+# Python / editor
+__pycache__/
+*.pyc
+.pytest_cache/
+.vscode/
+.idea/

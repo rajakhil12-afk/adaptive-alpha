@@ -797,7 +797,7 @@
       <div class="foot-brand">
         <div class="brand-name display">Adaptive <span style="color:var(--accent)">Alpha</span> <span class="mono" style="font-size:12px; color:var(--ink-faint); font-weight:400;">v10.0</span></div>
         <p>Next-gen institutional momentum &amp; sector rotation terminal for NSE India. Designed &amp; developed by Raj Akhil.</p>
-        <p style="margin-top:6px;font-size:12.5px;color:var(--accent-ink);font-weight:600;">⭐ Enjoying the platform? Please consider giving it a <a href="https://github.com/rajakhil12-afk/adaptive-alpha" target="_blank" style="text-decoration:underline;color:var(--accent);">Star on GitHub</a>!</p>
+        <p style="margin-top:6px;font-size:12.5px;color:var(--accent-ink);font-weight:600;">⭐ Enjoying the platform? Please consider giving it a <a href="https://github.com/rajakhil12-afk/adaptive-alpha" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;color:var(--accent);">Star on GitHub</a>!</p>
       </div>
       <div class="foot-links">
         <div class="foot-col">
@@ -827,6 +827,7 @@
     var ns = "http://www.w3.org/2000/svg";
     var layer = document.getElementById("dotLayer");
     var body = document.getElementById("boardBody");
+    function esc(v){ return String(v == null ? "" : v).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
 
     var fallbackTickers = [
       {sym:"ZOMATO", ars:2.845, srs:0.112, q:"#E8A23A"},
@@ -908,6 +909,11 @@
     plotDots(fallbackTickers);
 
     var liveRows = [];
+    // one delegated handler instead of inline onclick strings built from data (XSS-safe)
+    body.addEventListener("click", function(e){
+      var tr = e.target.closest("tr[data-sym]");
+      if (tr) window.location.href = "index.html?search=" + encodeURIComponent(tr.getAttribute("data-sym"));
+    });
     function renderBoard(key){
       var data = [];
       if (key === 'volume') {
@@ -917,19 +923,23 @@
       } else {
         data = liveRows;
       }
-      if (data.length === 0) data = liveRows;
+      if (data.length === 0) {
+        // was: silently showed ALL rows under the Volume/Turnaround tabs, which is misleading
+        body.innerHTML = '<tr><td colspan="6" style="text-align:center;opacity:.7">No matching stocks in today\'s scan.</td></tr>';
+        return;
+      }
       var show = data.slice(0, 8);
       body.innerHTML = show.map(function(r){
         var arsStr = (r.ars >= 0 ? '+' : '−') + Math.abs(r.ars * 100).toFixed(1) + '%';
         var srsStr = (r.srs >= 0 ? '+' : '−') + Math.abs(r.srs * 100).toFixed(1) + '%';
         var quadLabel = r.q === 1 ? '🌟 QUAD 1' : (r.q === 2 ? '🔄 QUAD 2' : (r.q === 3 ? '⏸️ QUAD 3' : '💤 QUAD 4'));
-        return '<tr onclick="window.location.href=\'index.html?search='+encodeURIComponent(r.sym)+'\'" style="cursor:pointer">'
-          + '<td><span class="sym">'+r.sym+'</span><span class="sec-tag">'+(r.sec || r.ind || 'Equities')+'</span></td>'
+        return '<tr data-sym="'+esc(r.sym)+'" style="cursor:pointer">'
+          + '<td><span class="sym">'+esc(r.sym)+'</span><span class="sec-tag">'+esc(r.sec || r.ind || 'Equities')+'</span></td>'
           + '<td><span class="quad-chip q'+r.q+'">'+quadLabel+'</span></td>'
           + '<td class="'+(r.ars >= 0 ? 'pos' : 'neg')+'">'+arsStr+'</td>'
           + '<td class="'+(r.srs >= 0 ? 'pos' : 'neg')+'">'+srsStr+'</td>'
           + '<td>'+(r.buy ? '<span class="buy-badge">BUY ⚡</span>' : '—')+'</td>'
-          + '<td class="'+(r.hot ? 'vol-hot' : 'mono')+'">'+r.vol+(r.hot ? ' 🔥' : '')+'</td>'
+          + '<td class="'+(r.hot ? 'vol-hot' : 'mono')+'">'+esc(r.vol)+(r.hot ? ' 🔥' : '')+'</td>'
           + '</tr>';
       }).join('');
     }
@@ -995,7 +1005,7 @@
           return (b.rs_rating || 0) - (a.rs_rating || 0);
         });
 
-        liveRows = breakouts.map(s => {
+        if (breakouts.length) liveRows = breakouts.map(s => { // keep fallback rows if scan has no breakouts (was: blank table)
           var q = s.ars > 0 && s.srs > 0 ? 1 : (s.ars <= 0 && s.srs > 0 ? 2 : (s.ars > 0 && s.srs <= 0 ? 3 : 4));
           return {
             sym: s.sym,
@@ -1017,7 +1027,7 @@
           var sp = data.sentiment_pillars;
           var sentText = document.getElementById('heroSentimentText');
           if (sentText) {
-            sentText.innerHTML = 'Market Sentiment: <strong>' + sp.score + ' · ' + sp.tier + '</strong>';
+            sentText.innerHTML = 'Market Sentiment: <strong>' + esc(sp.score) + ' · ' + esc(sp.tier) + '</strong>';
           }
         }
 
@@ -1035,8 +1045,8 @@
           var gainEl = document.getElementById('heroSpotGain');
           var tagEl = document.getElementById('heroSpotTag');
           if (symEl) symEl.textContent = spot.sym;
-          if (nameEl) nameEl.textContent = spot.name + ' · ' + (spot.ind || 'Equities');
-          if (gainEl) gainEl.textContent = (spot.ars >= 0 ? '+' : '') + (spot.ars * 100).toFixed(1) + '% ARS';
+          if (nameEl) nameEl.textContent = (spot.name || spot.sym) + ' · ' + (spot.ind || 'Equities'); // was 'undefined · ...'
+          if (gainEl) gainEl.textContent = ((spot.ars || 0) >= 0 ? '+' : '') + ((spot.ars || 0) * 100).toFixed(1) + '% ARS';
           if (tagEl) tagEl.textContent = '⚡ ' + (spot.vol_ratio ? spot.vol_ratio.toFixed(1) : '1.8') + '× Vol · Inst ' + (spot.institutional?.ad_grade || 'A+');
         }
 
@@ -1051,7 +1061,7 @@
           if (quadBadge) quadBadge.textContent = 'UPDATED ' + data.updated;
         }
       } catch (err) {
-        console.log('Error loading dynamic landing feed:', err);
+        console.error('Error loading dynamic landing feed:', err);
       }
     }
 
@@ -1065,7 +1075,7 @@
 
       var filtered = [];
       if (filterKey === 'rocket') {
-        filtered = stocks.filter(s => (s.hi52_prox || -1) >= -0.08 && (s.vol_ratio || 1) >= 1.4 && (s.ars || 0) > 0);
+        filtered = stocks.filter(s => (s.hi52_prox ?? -1) >= -0.08 /* was `|| -1`: a stock exactly AT its 52W high (0) was excluded */ && (s.vol_ratio || 1) >= 1.4 && (s.ars || 0) > 0);
       } else if (filterKey === 'whale') {
         filtered = stocks.filter(s => s.institutional?.ad_grade === 'A+' || (s.vol_ratio || 1) >= 2.0);
       } else if (filterKey === 'reversal') {
@@ -1076,19 +1086,19 @@
         filtered = stocks.filter(s => (s.ars || 0) > 0 && (s.srs || 0) > 0);
       }
 
-      if (filtered.length < 6) {
-        filtered = [...filtered, ...stocks.filter(s => (s.ars || 0) > 0)].slice(0, 6);
-      }
+      // removed padding: it re-added the same stocks (duplicates) and, for 'reversal', mixed in ARS>0 names
       filtered.sort((a,b) => (b.rs_rating || 0) - (a.rs_rating || 0));
 
       var previewCards = document.querySelectorAll('.pv-grid .pv-card');
+      previewCards.forEach(function(c){ c.style.visibility = 'hidden'; }); // hide stale cards when fewer than 6 match
       filtered.slice(0, 6).forEach((s, idx) => {
         if (previewCards[idx]) {
+          previewCards[idx].style.visibility = 'visible';
           var symEl = previewCards[idx].querySelector('.pv-sym');
           var valEl = previewCards[idx].querySelector('.pv-val');
           var barEl = previewCards[idx].querySelector('.pv-bar i');
           if (symEl) symEl.textContent = s.sym;
-          if (valEl) valEl.textContent = (s.ars >= 0 ? '+' : '') + (s.ars * 100).toFixed(1) + '%';
+          if (valEl) valEl.textContent = ((s.ars || 0) >= 0 ? '+' : '') + ((s.ars || 0) * 100).toFixed(1) + '%';
           if (barEl) barEl.style.width = Math.min(100, Math.max(15, (s.rs_rating || 50))) + '%';
         }
       });
@@ -1137,7 +1147,7 @@
       }
     });
 
-    window.addEventListener("mouseleave", function(){
+    document.documentElement.addEventListener("mouseleave", function(){ // window never fires mouseleave
       mouse.active = false;
       if (glow) glow.style.opacity = "0.4";
     });

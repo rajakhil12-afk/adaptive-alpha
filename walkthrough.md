@@ -1,12 +1,12 @@
 # Walkthrough — Landing Page Interactive Matrix & SVG Accuracy
 
-The interactive scatter plot and regime matrix SVG on [`landing.html`](file:///C:/Users/compas%20laptop/Desktop/github_upload%20%20%20ARS%20Screener%20Final%20Files/landing.html) have been synchronized with the latest dataset:
+The interactive scatter plot and regime matrix SVG on [`landing.html`](landing.html) have been synchronized with the latest dataset:
 
 ---
 
 ## 1. Landing Page Scatter Plot & Regime Map Fixes
 * **Corrected Stock Metric Coordinates**:
-  * `ZOMATO` (Eternal Ltd) updated from a negative placeholder to **Quad 1 Leader** with **+284.5% ARS** and **+11.2% SRS**.
+  * `ZOMATO` (now listed as `ETERNAL`; Yahoo symbol `ZOMATO.NS` — see Release v10.0) updated from a negative placeholder to **Quad 1 Leader** with **+284.5% ARS** and **+11.2% SRS**.
   * `TRENT` (+142.6%), `COCHINSHIP` (+118.2%), `BEL` (+94.5%), and `BHARTIARTL` (+81.3%) mapped into Quad 1 (Gold).
   * `DIXON`, `KAYNES`, `IREDA` mapped into Quad 2 Turnarounds (Teal).
   * `INFY`, `HDFCBANK` mapped into Quad 3 Consolidations (Blue).
@@ -22,4 +22,3 @@ The interactive scatter plot and regime matrix SVG on [`landing.html`](file:///C
 
 ## 3. Verification
 * Unit tests passing: `node --test test/indicators.test.js` — **6/6 tests passing (100%)**.
-* Folder synced: `C:\Users\compas laptop\Desktop\github_upload   ARS Screener Final Files\`

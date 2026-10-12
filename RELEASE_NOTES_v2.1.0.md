@@ -8,7 +8,7 @@ This release introduces real-time automated daily breakout notifications sent di
 ### ✨ Key Features & Enhancements
 
 #### 1. 🤖 Smart Telegram Breakout Alerts (`scripts/send_telegram_notification.js`)
-* **Real-time Notifications:** Runs automatically via GitHub Actions immediately after the daily EOD market scan finishes (4:30 PM IST).
+* **Real-time Notifications:** Runs automatically via GitHub Actions immediately after the daily EOD market scan finishes (currently scheduled 7:40 PM IST / 14:10 UTC — see `.github/workflows/screener_update.yml`).
 * **Smart Auto-Switching View:**
   * **Detailed Cards (≤ 10 Breakouts):** Displays Price, RS Rating, Volume Surge Multiplier (`x Vol`), and Breakout Pattern type (`ARS Crossover` / `52W High Prox`).
   * **Compact View (> 10 Breakouts):** Keeps Telegram feeds clean during high-volatility market rally days.
@@ -25,4 +25,5 @@ This release introduces real-time automated daily breakout notifications sent di
 ### ⚙️ GitHub Secrets Setup
 To enable Telegram notifications, ensure the following repository secrets are configured under **Settings > Secrets and variables > Actions**:
 * `TELEGRAM_BOT_TOKEN`: Bot API Token from `@BotFather`
-* `TELEGRAM_CHAT_ID`: Personal User ID from `@userinfobot`
+* `TELEGRAM_CHAT_ID`: Personal User ID from `@userinfobot` (or a channel/group ID such as `-100xxxxxxxxxx`)
+* Optional: `TELEGRAM_REQUIRED=true` makes the script exit with an error when the secrets are missing (useful in CI)
