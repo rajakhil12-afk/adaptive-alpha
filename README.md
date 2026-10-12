@@ -1,14 +1,15 @@
-# ⚡ Adaptive Alpha — Institutional Momentum & Sector Rotation Terminal
+# ⚡ Adaptive Alpha — Quantitative NSE Momentum Screener & Sector Rotation Terminal
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/Node.js-%3E%3D22.0.0-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Tests](https://img.shields.io/badge/Unit%20Tests-100%25%20Passing-brightgreen.svg)](test/indicators.test.js)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![Tests](https://img.shields.io/badge/Unit%20Tests-100%25%20Passing-brightgreen.svg)](test/jishu_test.py)
 [![Daily Refresh](https://img.shields.io/badge/Daily%20Refresh-7%3A40%20PM%20IST-orange.svg)](.github/workflows/screener_update.yml)
 [![GitHub stars](https://img.shields.io/github/stars/rajakhil12-afk/adaptive-alpha?style=social)](https://github.com/rajakhil12-afk/adaptive-alpha)
 
-**Adaptive Alpha** is an open-source, zero-build quantitative momentum screener, dual relative-strength engine, and sector rotation dashboard for the **NSE India** stock universe (**Nifty 500**, Nifty 50, Nifty Next 50, Nifty Midcap 100, Nifty Smallcap 100, ~500 equities). 
+**Adaptive Alpha** is a free, institutional-grade quantitative momentum stock screener, dual relative-strength engine, and sector rotation terminal built for the **NSE India** universe (**Nifty 500**, Nifty 50, Nifty Midcap 100, Nifty Smallcap 100).
 
-Designed with a high-end dark slate institutional aesthetic, the platform equips traders, quants, and analysts to identify leading momentum stocks, volume accumulation footprints, and industry rotation trends for **$0**.
+Combining **Adaptive Relative Strength (ARS)**, **Short-term Relative Strength (SRS)**, **Supertrend (10,3)**, **Pocket Pivot accumulation**, and **Volatility Contraction Patterns (VCP)**, the terminal equips swing traders and quantitative investors to discover leading market breakout setups with automated risk management.
 
 ---
 
