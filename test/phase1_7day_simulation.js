@@ -47,13 +47,18 @@ function run7DaySimulation() {
     sym: 'HAL',
     price: 5000,
     vol_ratio: 2.8,
-    vol_zscore: 2.6,
+    vol_z: 2.6,   // production (update_data.js) writes `vol_z`; the old fixture used `vol_zscore`, which hid a field-name mismatch
     institutional: { ad_grade: 'A+', deliv_ratio: 2.4, deliv_pct: 72, mfr: 0.72, udr: 1.85 },
     pocket_pivot: { is_pivot: true }
   };
   const smWhale = computeSmartMoneyFootprint(whaleStock);
   assert(smWhale.score >= 80, `Day 1: HAL scored Whale Accumulation (${smWhale.score}/100)`);
   assert(smWhale.tier.includes('WHALE'), 'Day 1: HAL assigned Whale tier');
+  assert(smWhale.volZ === 2.6, 'Day 1: real vol_z value is used (not the volume-ratio fallback)');
+  const smZero = computeSmartMoneyFootprint({ sym: 'FLAT', price: 100, vol_ratio: 2.1, vol_z: 0, institutional: {} });
+  assert(smZero.volZ === 0, 'Day 1: a genuine vol_z of 0 is not replaced by a made-up anomaly score');
+  const smEst = computeSmartMoneyFootprint({ sym: 'EST', price: 100, vol_ratio: 1.0, vol_z: 0.5, institutional: { deliv_ratio: 2.5, deliv_estimated: true } });
+  assert(!smEst.signals.some(x => x.includes('Delivery')), 'Day 1: estimated delivery data earns no Smart Money points');
 
   // --- DAY 2: 02 Oct - Choppy Consolidation ---
   console.log('\n--- DAY 2: Choppy Consolidation (FII +₹200 Cr, VIX 15.8, Sentiment 52/100) ---');
@@ -70,6 +75,8 @@ function run7DaySimulation() {
   assert(day2Regime.regime === 'CHOPPY_CONSOLIDATION', 'Day 2: Macro Sentinel detects Choppy Consolidation');
   assert(day2Regime.maxAllowedSlots === 6, 'Day 2: Max allowed slots automatically throttled to 6');
 
+  // NOTE: Days 3, 5 and 7 below re-implement the stop logic inline, so they only check the arithmetic.
+  // The real engine behaviour for these rules is verified in phase2_phase3_simulation.js.
   // --- DAY 3: 03 Oct - 1:1 Target 1 Breakeven Trigger ---
   console.log('\n--- DAY 3: Target 1 Hit -> Breakeven SL Adjustment ---');
   const posA = {

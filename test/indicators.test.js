@@ -255,3 +255,49 @@ test('Minervini 3-Weeks Tight Base Detector — detects narrow consolidation var
 });
 
 
+
+// ───────────────────────── Added regression tests ─────────────────────────
+
+// Same price path for stock and benchmark, keyed by DATE, so a correctly date-aligned ARS/SRS must be ~0.
+function pathCandles(count, skip = []) {
+  const out = [];
+  const startTs = 1609459200;
+  for (let i = 0; i < count; i++) {
+    if (skip.includes(i)) continue; // e.g. trading halt: stock has no candle that day
+    const c = 100 + 10 * Math.sin(i / 15) + 0.1 * i;
+    out.push({ t: startTs + i * 86400, o: c - 0.5, h: c + 1, l: c - 1, c, v: 1000 + (i % 7) * 50 });
+  }
+  return out;
+}
+
+test('ARS/SRS — stock outperforming benchmark gives positive ARS, underperforming gives negative', () => {
+  const cutoff = 1609459200 + 100 * 86400;
+  const up = calcARS(generateCandles(400, 100, 1.0), generateCandles(400, 100, 0.1), cutoff);
+  const dn = calcARS(generateCandles(400, 100, 0.1), generateCandles(400, 100, 1.0), cutoff);
+  assert.ok(up.ars > 0, `expected ARS > 0, got ${up.ars}`);
+  assert.ok(dn.ars < 0, `expected ARS < 0, got ${dn.ars}`);
+});
+
+test('ARS/SRS — benchmark is aligned by DATE, not array index (halted stock must not distort SRS)', () => {
+  const cutoff = 1609459200 + 100 * 86400;
+  const bench = pathCandles(400);
+  const halted = pathCandles(400, Array.from({ length: 12 }, (_, k) => 350 + k)); // 12 missing days INSIDE the 63-day SRS window
+  const r = calcARS(halted, bench, cutoff);
+  assert.ok(Math.abs(r.srs) < 1e-9, `identical price paths must give SRS≈0, got ${r.srs}`);
+  assert.ok(Math.abs(r.ars) < 1e-9, `identical price paths must give ARS≈0, got ${r.ars}`);
+});
+
+test('RS Rating — a NaN ARS must not corrupt the ranking of other stocks', () => {
+  const ranked = computeRSRatings([
+    { sym: 'A', ars: 0.5, srs: 0.1, vol_ratio: 1, signDays: 3 },
+    { sym: 'BAD', ars: NaN, srs: 0.2, vol_ratio: 2, signDays: 1 },
+    { sym: 'C', ars: 0.1, srs: 0.3, vol_ratio: 1.5, signDays: 9 }
+  ]);
+  ranked.forEach(s => assert.ok(Number.isFinite(s.rs_rating) && s.rs_rating >= 1 && s.rs_rating <= 99, `${s.sym}: ${s.rs_rating}`));
+});
+
+test('Supertrend — steadily falling prices give a SELL trend', () => {
+  const r = calcSupertrend(generateCandles(40, 200, -2.0), 10, 3);
+  assert.strictEqual(r.trend, 'sell');
+  assert.ok(r.val > 0);
+});

@@ -10,6 +10,13 @@
  * 6. Agent 6: Quant Analytics & Self-Correction Learner
  */
 
+// SAFETY: run everything in a throw-away data folder. Without this, resetPortfolio()/runJishuEngine() overwrite the
+// REAL data/jishu_portfolio.json (and `npm test` runs this file automatically).
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+process.env.JISHU_DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'jishu-sim-'));
+
 const { runJishuEngine, resetPortfolio } = require('../scripts/jishu_engine');
 const { evaluateMacroRegime } = require('../scripts/macro_regime_sentinel');
 const { validateBreakoutQuality } = require('../scripts/breakout_validator');
@@ -93,6 +100,9 @@ const halPos = p1.open_positions.find(p => p.sym === 'HAL');
 const castrolPos = p1.open_positions.find(p => p.sym === 'CASTROLIND');
 
 assertTest(halPos && halPos.sleeve === 'SLEEVE_A', 'Day 1: HAL classified into Sleeve A (Alpha Momentum)');
+// production-shaped stock: update_data.js emits `vcp: { is_vcp }` (no vcp_score / dist_50d / setup_tags)
+assertTest(classifyCandidateSleeve({ rs_rating: 80, vcp: { is_vcp: true } }).sleeveId === 'SLEEVE_B', 'Day 1: production-shaped VCP leader reaches Sleeve B');
+assertTest(halPos && halPos.entry_cost > 0, 'Day 1: entry trading cost recorded');
 assertTest(castrolPos && castrolPos.sleeve === 'SLEEVE_B', 'Day 1: CASTROLIND classified into Sleeve B (Leader Retest)');
 assertTest(halPos && halPos.smart_money_score >= 85, 'Day 1: HAL scored Whale Accumulation');
 assertTest(halPos && halPos.actual_dollar_risk > 0, 'Day 1: Volatility-adjusted dollar risk calculated');
@@ -172,6 +182,8 @@ assertTest(res5.portfolio.macro_regime.maxAllowedSlots === 0, 'Day 5: Zero new b
 
 const closedHal = res5.portfolio.closed_trades.find(t => t.sym === 'HAL');
 assertTest(closedHal != null && closedHal.realized_pnl > 0, 'Day 5: HAL exited in solid profit via Trailing SL');
+assertTest(closedHal && Math.abs(closedHal.gross_pnl - closedHal.costs - closedHal.realized_pnl) < 0.02, 'Day 5: realized P&L = gross P&L - trading costs');
+assertTest(res5.portfolio.account.win_rate === 100 && res5.portfolio.account.winning_trades === 1, 'Day 5: win rate counts only decisive trades');
 
 // --- DAY 6: Quant Analytics & Self-Correction Engine (Agent 6) ---
 console.log('\n--- DAY 6: Agent 6 Quant Analytics & Performance KPIs ---');
@@ -186,8 +198,8 @@ console.log('\n=====================================================');
 console.log(`🎉 MULTI-AGENT QUANT DESK SIMULATION: ${passedTests}/${totalTests} TESTS PASSED (${((passedTests/totalTests)*100).toFixed(0)}%)`);
 console.log('=====================================================\n');
 
-// Clean reset back to ₹10,00,000 for production baseline
-resetPortfolio(1000000, '2026-10-01');
+// Remove the throw-away data folder (the old code reset the REAL portfolio here, wiping production data)
+fs.rmSync(process.env.JISHU_DATA_DIR, { recursive: true, force: true });
 
 if (passedTests !== totalTests) {
   process.exit(1);
