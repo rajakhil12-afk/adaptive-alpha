@@ -2,14 +2,14 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-12T22:06:01.251Z",
+  "last_updated": "2026-10-13T20:12:58.047Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 495925.8735,
-    "invested_capital": 502310.8,
-    "total_equity": 998236.67,
+    "invested_capital": 502076.3,
+    "total_equity": 998002.17,
     "realized_pnl": -6535.726499999991,
-    "unrealized_pnl": 4772.4,
+    "unrealized_pnl": 4537.9,
     "win_rate": 0,
     "total_trades": 1,
     "winning_trades": 0,
@@ -35,7 +35,7 @@
     "regimeColor": "#eab308",
     "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
     "marketScore": 44,
-    "vixLevel": 14.4,
+    "vixLevel": 15.3,
     "vixRegime": "ELEVATED_CHOPPY",
     "fiiNet": 0,
     "diiNet": 0,
@@ -69,9 +69,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 404.7,
-      "current_price": 404.7,
-      "unrealized_pnl": 4895.099999999994,
-      "unrealized_pnl_pct": 4.898911353032654
+      "current_price": 400.45,
+      "unrealized_pnl": 3794.349999999994,
+      "unrealized_pnl_pct": 3.797304302747532
     },
     {
       "sym": "BHEL",
@@ -96,9 +96,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 452,
-      "current_price": 439.9,
-      "unrealized_pnl": 2539.699999999995,
-      "unrealized_pnl_pct": 2.5407925407925354
+      "current_price": 442.35,
+      "unrealized_pnl": 3110.550000000005,
+      "unrealized_pnl_pct": 3.1118881118881174
     },
     {
       "sym": "ADANIPORTS",
@@ -123,9 +123,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 1774,
-      "current_price": 1754,
-      "unrealized_pnl": -1120,
-      "unrealized_pnl_pct": -1.1273957158962795
+      "current_price": 1763,
+      "unrealized_pnl": -616,
+      "unrealized_pnl_pct": -0.6200676437429538
     },
     {
       "sym": "LAURUSLABS",
@@ -150,9 +150,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 2069.2,
-      "current_price": 2069.2,
-      "unrealized_pnl": 921.5999999999913,
-      "unrealized_pnl_pct": 0.9365853658536496
+      "current_price": 2059.4,
+      "unrealized_pnl": 451.20000000000437,
+      "unrealized_pnl_pct": 0.45853658536585806
     },
     {
       "sym": "MARKSANS",
@@ -177,9 +177,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 324.4,
-      "current_price": 316.4,
-      "unrealized_pnl": -2464,
-      "unrealized_pnl_pct": -2.466091245376079
+      "current_price": 317.25,
+      "unrealized_pnl": -2202.199999999993,
+      "unrealized_pnl_pct": -2.2040690505548635
     }
   ],
   "closed_trades": [
@@ -249,6 +249,15 @@
       "realized_pnl": -6535.73,
       "unrealized_pnl": 4772.4,
       "open_positions_count": 5
+    },
+    {
+      "date": "2026-10-13",
+      "cash": 495925.87,
+      "invested": 502076.3,
+      "total_equity": 998002.17,
+      "realized_pnl": -6535.73,
+      "unrealized_pnl": 4537.9,
+      "open_positions_count": 5
     }
   ],
   "recent_events": [
@@ -308,7 +317,7 @@
       "minRsRating": 80,
       "maxHoldingDays": 15,
       "targetPct": 35,
-      "targetCapital": 349382.84,
+      "targetCapital": 349300.76,
       "investedCapital": 497538.4,
       "availableCapital": 0,
       "openPositions": 5,
@@ -324,9 +333,9 @@
       "minRsRating": 65,
       "maxHoldingDays": 30,
       "targetPct": 35,
-      "targetCapital": 349382.84,
+      "targetCapital": 349300.76,
       "investedCapital": 0,
-      "availableCapital": 349382.84,
+      "availableCapital": 349300.76,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -338,7 +347,7 @@
       "targetAllocPct": 20,
       "maxPositions": 0,
       "targetPct": 30,
-      "targetCapital": 299471,
+      "targetCapital": 299400.65,
       "status": "ACTIVE BUFFER"
     }
   },
