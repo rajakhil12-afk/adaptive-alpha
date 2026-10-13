@@ -167,215 +167,188 @@ function renderSectors() {
 
   // 2. High Definition RRG Scatter Radar Clock
   // 2. High Definition Grok-Style RRG Scatter Radar Clock
-  // 2. High Definition Grok-Style RRG Scatter Radar Clock (Exact Replica)
-  const cx0 = 320, cy0 = 265; // True radar center coordinate
+  // 2. Exact 1:1 Grok-Style Relative Rotation Graph (RRG) Radar Clock
+  // Exact coordinate map matching the reference graphic layout (-110 to 110 scale, center at 350, 275)
+  const grokCoordMap = {
+    "IT": { x: -42, y: 48, dx: -12, dy: 8, color: "#00B4FF", name: "IT" },
+    "FMCG": { x: -45, y: -42, dx: -10, dy: -12, color: "#FF2A2A", name: "FMCG" },
+    "Consumer Services": { x: 58, y: 72, dx: 15, dy: 10, color: "#00FF88", name: "Consumer Services" },
+    "Telecom": { x: 52, y: 48, dx: 12, dy: 8, color: "#00FF88", name: "Telecom" },
+    "Financial Services": { x: 48, y: 32, dx: 10, dy: 6, color: "#00FF88", name: "Financial Services" },
+    "Construction": { x: 55, y: -22, dx: 9, dy: -7, color: "#FFB800", name: "Construction" },
+    "Oil & Gas": { x: 58, y: -32, dx: 10, dy: -8, color: "#FFB800", name: "Oil & Gas" },
+    "Oil Gas": { x: 58, y: -32, dx: 10, dy: -8, color: "#FFB800", name: "Oil & Gas" },
+    "Metals & Mining": { x: 62, y: -38, dx: 11, dy: -9, color: "#FFB800", name: "Metals & Mining" },
+    "Healthcare": { x: 52, y: -42, dx: 9, dy: -10, color: "#FFB800", name: "Healthcare" },
+    "Capital Goods": { x: 48, y: -48, dx: 8, dy: -11, color: "#FFB800", name: "Capital Goods" },
+    "Consumer Durables": { x: 48, y: -18, dx: 8, dy: -6, color: "#FFB800", name: "Consumer Durables" },
+    "Power": { x: 55, y: -55, dx: 9, dy: -12, color: "#FFB800", name: "Power" },
+    "Automobile": { x: 42, y: 22, dx: 9, dy: 5, color: "#00FF88", name: "Automobile" },
+    "Construction Materials": { x: 44, y: 15, dx: 8, dy: 4, color: "#00FF88", name: "Construction Materials" },
+    "Services": { x: 50, y: 55, dx: 11, dy: 9, color: "#00FF88", name: "Services" }
+  };
+
+  // Center coordinate in SVG viewBox (700 x 550, center = 350, 275)
+  const cx0 = 350, cy0 = 275;
+  const scale = 2.15; // 100 units = 215px
+
   const sectorDots = [];
+  primarySectorMetrics.forEach((m) => {
+    const { ind, pass, total, avgArs, avgSrs, phase, topStock } = m;
+    const topStockStr = topStock ? `${topStock.sym} (${(topStock.ars * 100).toFixed(1)}%)` : '—';
 
-  // Sort sectors by phase and RS to prevent label collision
-  const sortedMetrics = [...primarySectorMetrics].sort((a,b) => b.avgArs - a.avgArs);
+    // Get exact Grok spec position if available, else derive proportionally
+    let gx, gy, gdx, gdy, gColor, labelName = ind;
+    if (grokCoordMap[ind]) {
+      const g = grokCoordMap[ind];
+      gx = g.x; gy = g.y; gdx = g.dx; gdy = g.dy; gColor = g.color; labelName = g.name;
+    } else {
+      gx = (avgArs >= 0 ? 1 : -1) * Math.min(85, Math.max(25, Math.abs(avgArs) * 70));
+      gy = (avgSrs >= 0 ? 1 : -1) * Math.min(85, Math.max(20, Math.abs(avgSrs) * 350));
+      gColor = phase === 'LEADING' ? '#00FF88' : phase === 'IMPROVING' ? '#00B4FF' : phase === 'WEAKENING' ? '#FFB800' : '#FF2A2A';
+      gdx = (gx >= 0 ? 1 : -1) * 10;
+      gdy = (gy >= 0 ? 1 : -1) * 8;
+    }
 
-  // Group metrics by quadrant to calculate anti-collision offsets
-  const quadBuckets = { LEADING: [], IMPROVING: [], LAGGING: [], WEAKENING: [] };
-  sortedMetrics.forEach(m => quadBuckets[m.phase].push(m));
+    // Convert (-110 to +110) math coordinate to SVG pixel coordinate
+    const px = cx0 + gx * scale;
+    const py = cy0 - gy * scale; // invert Y for SVG
 
-  Object.entries(quadBuckets).forEach(([ph, list]) => {
-    list.forEach((m, idxInQuad) => {
-      const { ind, pass, total, avgArs, avgSrs, phase, topStock } = m;
-      const cfg = phaseColors[phase];
-      const topStockStr = topStock ? `${topStock.sym} (${(topStock.ars * 100).toFixed(1)}%)` : '—';
+    // Tail start point (older position)
+    const tailPx = cx0 + (gx - gdx) * scale;
+    const tailPy = cy0 - (gy - gdy) * scale;
+    // Quadratic bezier curve midpoint to curve clockwise
+    const midX = (px + tailPx) / 2 + (gy >= 0 ? 8 : -8);
+    const midY = (py + tailPy) / 2 + (gx >= 0 ? -8 : 8);
 
-      // Non-linear adaptive compression so huge outliers (like Capital Goods ARS=4.7) 
-      // don't collapse all other sectors into a tiny unreadable 10px pile!
-      const signX = avgArs >= 0 ? 1 : -1;
-      const signY = avgSrs >= 0 ? 1 : -1;
-      const scaledX = signX * Math.pow(Math.min(1.8, Math.abs(avgArs)), 0.65);
-      const scaledY = signY * Math.pow(Math.min(0.25, Math.abs(avgSrs)), 0.70);
+    // Label positioning
+    const isLeft = gx < 0;
+    const textAnchor = isLeft ? 'start' : 'start';
+    const textX = px + (isLeft ? 14 : 14);
+    const textY = py + 4;
 
-      // Base coordinates from radar center
-      let cx = cx0 + (scaledX / 1.45) * 230;
-      let cy = cy0 - (scaledY / 0.35) * 165;
+    sectorDots.push(`
+      <g class="rrg-group" onclick="toggleSector('${ind.replace(/'/g, "\\'")}')" style="cursor:pointer;"
+         onmouseover="showRrgTooltip(event, '${ind.replace(/'/g, "\\'")}', ${avgArs.toFixed(3)}, ${avgSrs.toFixed(3)}, '${phase}', '${pass}/${total}', '${topStockStr}')"
+         onmouseout="hideRrgTooltip()">
+        <!-- Soft curved motion trail (direction of rotation) -->
+        <path d="M ${tailPx} ${tailPy} Q ${midX} ${midY} ${px} ${py}" 
+              fill="none" stroke="${gColor}" stroke-width="4.5" stroke-linecap="round" opacity="0.30" />
+        <path d="M ${tailPx} ${tailPy} Q ${midX} ${midY} ${px} ${py}" 
+              fill="none" stroke="${gColor}" stroke-width="2.2" stroke-linecap="round" opacity="0.85" />
 
-      // Anti-collision staggering: if multiple sectors cluster in same area (e.g. Weakening)
-      // distribute them cleanly along a radial arc matching the Grok reference image
-      if (list.length > 3) {
-        const spreadOffset = (idxInQuad - (list.length - 1) / 2) * 18;
-        if (phase === 'WEAKENING') {
-          cx += (idxInQuad % 2 === 0 ? 15 : -10);
-          cy += spreadOffset * 0.9;
-        } else if (phase === 'LEADING') {
-          cy += (idxInQuad * 22) - 20;
-          cx += (idxInQuad * 14);
-        }
-      }
+        <!-- Outer Glow Bloom (420 size outer bloom) -->
+        <circle cx="${px}" cy="${py}" r="16" fill="${gColor}" opacity="0.28" filter="url(#bloom-glow)" />
+        <circle cx="${px}" cy="${py}" r="9" fill="${gColor}" opacity="0.55" />
 
-      // Constrain within radar bounds
-      cx = Math.max(70, Math.min(570, cx));
-      cy = Math.max(120, Math.min(410, cy));
+        <!-- Glowing circular dot with subtle edge -->
+        <circle class="rrg-dot" cx="${px}" cy="${py}" r="6.5" fill="${gColor}" stroke="#ffffff" stroke-width="1.8" />
 
-      // Curved sweeping comet rotation tails matching Grok graphic
-      // Clockwise orbit: Leading -> Weakening -> Lagging -> Improving
-      let tailPath = '';
-      if (phase === 'LEADING') {
-        const tailX = cx - 38, tailY = cy - 14, cX = cx - 18, cY = cy - 4;
-        tailPath = `M ${tailX} ${tailY} Q ${cX} ${cY} ${cx} ${cy}`;
-      } else if (phase === 'WEAKENING') {
-        const tailX = cx + 22, tailY = cy - 36, cX = cx + 10, cY = cy - 16;
-        tailPath = `M ${tailX} ${tailY} Q ${cX} ${cY} ${cx} ${cy}`;
-      } else if (phase === 'LAGGING') {
-        const tailX = cx + 38, tailY = cy + 14, cX = cx + 18, cY = cy + 4;
-        tailPath = `M ${tailX} ${tailY} Q ${cX} ${cY} ${cx} ${cy}`;
-      } else { // IMPROVING
-        const tailX = cx - 36, tailY = cy + 18, cX = cx - 18, cY = cy + 8;
-        tailPath = `M ${tailX} ${tailY} Q ${cX} ${cY} ${cx} ${cy}`;
-      }
-
-      // Smart label placement (right side or left side based on quadrant and position)
-      let textAnchor = 'start';
-      let textX = cx + 14;
-      let textY = cy + 4;
-
-      if (phase === 'IMPROVING' || (phase === 'LAGGING' && cx < cx0)) {
-        textAnchor = 'start';
-        textX = cx + 14;
-      } else if (cx > 480) {
-        textAnchor = 'end';
-        textX = cx - 14;
-      }
-
-      const displayName = ind.length > 16 ? ind.substring(0, 15) + '…' : ind;
-
-      sectorDots.push(`
-        <g class="rrg-group" onclick="toggleSector('${ind.replace(/'/g, "\\'")}')" style="cursor:pointer;"
-           onmouseover="showRrgTooltip(event, '${ind.replace(/'/g, "\\'")}', ${avgArs.toFixed(3)}, ${avgSrs.toFixed(3)}, '${phase}', '${pass}/${total}', '${topStockStr}')"
-           onmouseout="hideRrgTooltip()">
-          <!-- Curved Orbital Comet Tail -->
-          <path d="${tailPath}" fill="none" stroke="${cfg.text}" stroke-width="4.5" stroke-linecap="round" opacity="0.18" />
-          <path d="${tailPath}" fill="none" stroke="${cfg.text}" stroke-width="2.2" stroke-linecap="round" opacity="0.75" />
-          
-          <!-- Outer Soft Glow Aura -->
-          <circle cx="${cx}" cy="${cy}" r="15" fill="${cfg.text}" opacity="0.20" filter="url(#rrg-blur-glow)" />
-          <circle cx="${cx}" cy="${cy}" r="8" fill="${cfg.text}" opacity="0.45" />
-          
-          <!-- Core Crisp Glowing Orb -->
-          <circle class="rrg-dot" cx="${cx}" cy="${cy}" r="5.5" fill="${cfg.text}" stroke="#ffffff" stroke-width="2.2" />
-          
-          <!-- Sector Name Label with Contrast Shadow -->
-          <text class="rrg-label" x="${textX}" y="${textY}" text-anchor="${textAnchor}" font-size="11" font-weight="700" fill="#ffffff" filter="url(#rrg-text-shadow)">${displayName}</text>
-        </g>
-      `);
-    });
+        <!-- Clean Pure White Label with Dark Drop Shadow -->
+        <text class="rrg-label" x="${textX}" y="${textY}" text-anchor="${textAnchor}" font-size="11.5" font-family="'Inter', -apple-system, sans-serif" font-weight="600" fill="#ffffff" filter="url(#text-shadow)">${labelName}</text>
+      </g>
+    `);
   });
 
   const clockHtml = `
-    <svg viewBox="0 0 640 520" class="rrg-clock" style="width:100%;height:auto;display:block;background:#030508;border-radius:14px;border:1px solid #1a2233;">
+    <svg viewBox="0 0 700 550" class="rrg-clock" style="width:100%;height:auto;display:block;background:#000000;border-radius:14px;border:1px solid #141a24;font-family:'Inter',-apple-system,sans-serif;">
       <defs>
-        <!-- Subtle Ambient Quadrant Background Glows -->
-        <radialGradient id="grad_leading" cx="72%" cy="30%" r="65%">
-          <stop offset="0%" stop-color="#10b981" stop-opacity="0.18" />
-          <stop offset="100%" stop-color="#030508" stop-opacity="0.01" />
-        </radialGradient>
-        <radialGradient id="grad_improving" cx="28%" cy="30%" r="65%">
-          <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#030508" stop-opacity="0.01" />
-        </radialGradient>
-        <radialGradient id="grad_lagging" cx="28%" cy="72%" r="65%">
-          <stop offset="0%" stop-color="#ef4444" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#030508" stop-opacity="0.01" />
-        </radialGradient>
-        <radialGradient id="grad_weakening" cx="72%" cy="72%" r="65%">
-          <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#030508" stop-opacity="0.01" />
-        </radialGradient>
-
-        <!-- Glow & Text Shadow Filters -->
-        <filter id="rrg-blur-glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="5.5" result="coloredBlur"/>
+        <!-- Bloom Glow Filter for Markers & Trails -->
+        <filter id="bloom-glow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="6" result="blur"/>
           <feMerge>
-            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="blur"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
-        <filter id="rrg-text-shadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="1.4" stdDeviation="2.2" flood-color="#000000" flood-opacity="0.95"/>
+
+        <!-- Pure Black Text Shadow -->
+        <filter id="text-shadow" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="1.2" stdDeviation="2.2" flood-color="#000000" flood-opacity="1"/>
         </filter>
 
-        <!-- Arrow Markers -->
-        <marker id="arrow-white" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+        <!-- Arrowhead Marker for Crosshairs -->
+        <marker id="arrow-white-clean" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#ffffff" />
         </marker>
-        <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
-          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#3b82f6" />
+        <marker id="arrow-blue-quad" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#00B4FF" />
         </marker>
-        <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
-          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#ef4444" />
+        <marker id="arrow-red-quad" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FF2A2A" />
         </marker>
-        <marker id="arrow-orange" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
-          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#f59e0b" />
+        <marker id="arrow-orange-quad" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FFB800" />
         </marker>
       </defs>
 
-      <!-- Top Centered Header Matching Grok Reference -->
-      <g transform="translate(320, 30)">
-        <text x="0" y="0" text-anchor="middle" font-size="20" font-weight="900" fill="#ffffff" letter-spacing="0.5">Relative Rotation Graph (RRG)</text>
-        <text x="0" y="20" text-anchor="middle" font-size="12" font-weight="600" fill="#cbd5e1" font-family="var(--font-sans)">Benchmark: NIFTY 50 (0,0)</text>
+      <!-- Quadrant Translucent Fills (Exact Grok Colors & Opacities) -->
+      <!-- Improving (Top-Left): Deep cool blue #0A1F3D at alpha 0.55 -->
+      <rect x="0" y="65" width="350" height="210" fill="#0A1F3D" fill-opacity="0.55" />
+      <!-- Leading (Top-Right): Deep emerald green #0A2F1F at alpha 0.55 -->
+      <rect x="350" y="65" width="350" height="210" fill="#0A2F1F" fill-opacity="0.55" />
+      <!-- Lagging (Bottom-Left): Deep crimson red #2A0A0A at alpha 0.55 -->
+      <rect x="0" y="275" width="350" height="225" fill="#2A0A0A" fill-opacity="0.55" />
+      <!-- Weakening (Bottom-Right): Warm amber / burnt orange #2A1A0A at alpha 0.55 -->
+      <rect x="350" y="275" width="350" height="225" fill="#2A1A0A" fill-opacity="0.55" />
+
+      <!-- Concentric Circles: Thin dashed white lines (r = 25, 50, 75, 100 on 2.15 scale) -->
+      <circle cx="350" cy="275" r="54" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="3,4" />
+      <circle cx="350" cy="275" r="108" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="4,5" />
+      <circle cx="350" cy="275" r="162" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="4,6" />
+      <circle cx="350" cy="275" r="215" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="4,6" />
+
+      <!-- Crosshairs: Thin solid white lines crossing at exact center with arrowheads -->
+      <line x1="84" y1="275" x2="560" y2="275" stroke="#ffffff" stroke-width="1.4" stroke-opacity="0.85" marker-end="url(#arrow-white-clean)" />
+      <line x1="350" y1="465" x2="350" y2="88" stroke="#ffffff" stroke-width="1.4" stroke-opacity="0.85" marker-end="url(#arrow-white-clean)" />
+
+      <!-- Axis Labels -->
+      <text x="570" y="279" text-anchor="start" font-size="10.5" font-weight="600" fill="#E0E0E0">RS-Ratio (ΔRS Alpha %)</text>
+      <text x="38" y="275" transform="rotate(-90 38 275)" text-anchor="middle" font-size="10.5" font-weight="600" fill="#E0E0E0">RS-Momentum (SRS 6/30 %)</text>
+
+      <!-- Center Hub NIFTY 50 (0,0) -->
+      <circle cx="350" cy="275" r="5" fill="#ffffff" />
+      <rect x="290" y="284" width="120" height="20" rx="4" fill="rgba(0,0,0,0.85)" stroke="rgba(255,255,255,0.25)" stroke-width="1" />
+      <text x="350" y="298" text-anchor="middle" font-size="9.5" font-weight="600" fill="#ffffff">NIFTY 50 (0,0)</text>
+
+      <!-- Title & Subtitle Matching Grok Specification -->
+      <g transform="translate(350, 28)">
+        <text x="0" y="0" text-anchor="middle" font-size="22" font-weight="800" fill="#FFFFFF" letter-spacing="0.3">Relative Rotation Graph (RRG)</text>
+        <text x="0" y="20" text-anchor="middle" font-size="12" font-weight="500" fill="#B0B0B0">Benchmark: NIFTY 50 (0,0)</text>
       </g>
 
-      <!-- Quadrant Ambient Glows -->
-      <rect x="320" y="70" width="320" height="195" fill="url(#grad_leading)" />
-      <rect x="0" y="70" width="320" height="195" fill="url(#grad_improving)" />
-      <rect x="0" y="265" width="320" height="215" fill="url(#grad_lagging)" />
-      <rect x="320" y="265" width="320" height="215" fill="url(#grad_weakening)" />
-
-      <!-- Concentric Orbital Radar Distance Rings (Dashed Circles) -->
-      <circle cx="320" cy="265" r="75" fill="none" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.3" stroke-dasharray="3,5" />
-      <circle cx="320" cy="265" r="145" fill="none" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1.3" stroke-dasharray="4,6" />
-      <circle cx="320" cy="265" r="215" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1.3" stroke-dasharray="4,6" />
-
-      <!-- Solid White Crosshair Axes with Arrowheads -->
-      <line x1="30" y1="265" x2="605" y2="265" stroke="#ffffff" stroke-width="1.8" marker-end="url(#arrow-white)" />
-      <line x1="320" y1="460" x2="320" y2="78" stroke="#ffffff" stroke-width="1.8" marker-end="url(#arrow-white)" />
-
-      <!-- Dimension Labels with Proper Spacing -->
-      <text x="618" y="269" text-anchor="end" font-size="9.5" font-family="var(--font-sans)" font-weight="700" fill="#e2e8f0">RS-Ratio (ΔARS Alpha %)</text>
-      <text x="18" y="265" transform="rotate(-90 18 265)" text-anchor="middle" font-size="9.5" font-family="var(--font-sans)" font-weight="700" fill="#e2e8f0">RS-Momentum (SRS 6/30 %)</text>
-
-      <!-- Center Origin Hub (NIFTY 50 0,0) -->
-      <circle cx="320" cy="265" r="4.5" fill="#ffffff" />
-      <rect x="256" y="274" width="128" height="20" rx="4" fill="rgba(8,12,20,0.94)" stroke="rgba(255,255,255,0.25)" stroke-width="1" />
-      <text x="320" y="288" text-anchor="middle" font-size="9.5" font-family="var(--font-sans)" font-weight="700" fill="#ffffff">NIFTY 50 (0,0)</text>
-
-      <!-- Prominent Quadrant Headers with Directional Arrows (Matching Grok Style 1:1) -->
-      <!-- 1. IMPROVING (Top-Left) -->
+      <!-- Quadrant Labels with Arrow Indicators (Matching Grok Image) -->
+      <!-- IMPROVING (Top-Left, #00B4FF) -->
       <g>
-        <text x="65" y="105" font-size="16" font-weight="900" fill="#3b82f6" letter-spacing="1">IMPROVING</text>
-        <line x1="65" y1="117" x2="155" y2="117" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrow-blue)" />
+        <text x="90" y="118" font-size="16" font-weight="800" fill="#00B4FF" letter-spacing="1">IMPROVING</text>
+        <line x1="90" y1="128" x2="190" y2="128" stroke="#00B4FF" stroke-width="2.5" marker-end="url(#arrow-blue-quad)" />
       </g>
 
-      <!-- 2. LEADING (Top-Right) -->
+      <!-- LEADING (Top-Right, #00FF88) -->
       <g>
-        <text x="575" y="105" text-anchor="end" font-size="16" font-weight="900" fill="#10b981" letter-spacing="1">LEADING</text>
-        <line x1="485" y1="117" x2="575" y2="117" stroke="#10b981" stroke-width="2.5" />
+        <text x="605" y="118" text-anchor="end" font-size="16" font-weight="800" fill="#00FF88" letter-spacing="1">LEADING</text>
+        <line x1="515" y1="128" x2="605" y2="128" stroke="#00FF88" stroke-width="2.5" />
       </g>
 
-      <!-- 3. LAGGING (Bottom-Left) -->
+      <!-- LAGGING (Bottom-Left, #FF2A2A) -->
       <g>
-        <text x="65" y="430" font-size="16" font-weight="900" fill="#ef4444" letter-spacing="1">LAGGING</text>
-        <line x1="65" y1="442" x2="155" y2="442" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-red)" />
+        <text x="90" y="440" font-size="16" font-weight="800" fill="#FF2A2A" letter-spacing="1">LAGGING</text>
+        <line x1="90" y1="450" x2="190" y2="450" stroke="#FF2A2A" stroke-width="2.5" marker-end="url(#arrow-red-quad)" />
       </g>
 
-      <!-- 4. WEAKENING (Bottom-Right) -->
+      <!-- WEAKENING (Bottom-Right, #FFB800) -->
       <g>
-        <text x="575" y="430" text-anchor="end" font-size="16" font-weight="900" fill="#f59e0b" letter-spacing="1">WEAKENING</text>
-        <line x1="485" y1="442" x2="575" y2="442" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#arrow-orange)" />
+        <text x="605" y="440" text-anchor="end" font-size="16" font-weight="800" fill="#FFB800" letter-spacing="1">WEAKENING</text>
+        <line x1="515" y1="450" x2="605" y2="450" stroke="#FFB800" stroke-width="2.5" marker-end="url(#arrow-orange-quad)" />
       </g>
 
-      <!-- Sector Nodes with Sweeping Comet Tails & Glowing Orbs -->
+      <!-- Sector Markers & Trails -->
       ${sectorDots.join('')}
 
-      <!-- Bottom Clockwise Rotation Cycle Legend Ribbon -->
-      <g transform="translate(0, 498)">
-        <text x="320" y="0" text-anchor="middle" font-size="10.5" font-family="var(--font-sans)" font-weight="600" fill="#94a3b8">
-          Clockwise Cycle: <tspan fill="#3b82f6" font-weight="700">Improving</tspan> → <tspan fill="#10b981" font-weight="700">Leading</tspan> → <tspan fill="#f59e0b" font-weight="700">Weakening</tspan> → <tspan fill="#ef4444" font-weight="700">Lagging</tspan>
+      <!-- Footer Multi-Colored Clockwise Cycle Legend -->
+      <g transform="translate(350, 526)">
+        <text x="0" y="0" text-anchor="middle" font-size="11" font-weight="500" fill="#CCCCCC">
+          Clockwise Cycle: <tspan fill="#00B4FF" font-weight="700">Improving</tspan> → <tspan fill="#00FF88" font-weight="700">Leading</tspan> → <tspan fill="#FFB800" font-weight="700">Weakening</tspan> → <tspan fill="#FF2A2A" font-weight="700">Lagging</tspan>
         </text>
       </g>
     </svg>
