@@ -497,11 +497,12 @@
               <th>Stop Loss</th>
               <th>1:1 Target</th>
               <th>1:2 Target</th>
+              <th>1:3 Target</th>
               <th>Risk Status</th>
             </tr>
           </thead>
           <tbody id="openPositionsTable">
-            <tr><td colspan="12" class="empty-state">No active positions. Capital ready for next Quad 1 setup.</td></tr>
+            <tr><td colspan="13" class="empty-state">No active positions. Capital ready for next Quad 1 setup.</td></tr>
           </tbody>
         </table>
       </div>
@@ -654,7 +655,7 @@
       // Open Positions Table
       const openTbody = document.getElementById('openPositionsTable');
       if (openPos.length === 0) {
-        openTbody.innerHTML = '<tr><td colspan="12" class="empty-state">No active positions. Capital ready for next Quad 1 setup.</td></tr>';
+        openTbody.innerHTML = '<tr><td colspan="13" class="empty-state">No active positions. Capital ready for next Quad 1 setup.</td></tr>';
       } else {
         openTbody.innerHTML = openPos.map(p => {
           const curP = p.current_price ?? p.entry_price;
@@ -663,8 +664,12 @@
           const pnlClass = pnl >= 0 ? 'val-positive' : 'val-negative';
           const pnlPrefix = pnl >= 0 ? '+' : '';
           
+          const t3Price = p.target_3_price ?? (p.risk_per_share ? (p.entry_price + 3 * p.risk_per_share) : (p.entry_price + (p.target_2_price - p.entry_price) * 1.5));
+
           let riskStatus = '<span class="status-badge badge-initial">⚠️ Active SL (-10%)</span>';
-          if (p.sl_moved_to_t1) {
+          if (p.target_3_hit || (curP >= t3Price)) {
+            riskStatus = '<span class="status-badge" style="background:rgba(125,169,255,0.18); color:#7da9ff; border:1px solid rgba(125,169,255,0.4);">🚀 Target 3 (Trailing)</span>';
+          } else if (p.sl_moved_to_t1) {
             riskStatus = '<span class="status-badge badge-exit-target">🎯 Target 1 Locked (+10% SL)</span>';
           } else if (p.sl_moved_to_cost) {
             riskStatus = '<span class="status-badge badge-breakeven">🛡️ Risk-Free (Cost SL)</span>';
@@ -702,6 +707,7 @@
               <td class="mono-cell" style="color: var(--accent-red);">₹${fx(p.current_sl)}</td>
               <td class="mono-cell" style="color: var(--accent-amber);">₹${fx(p.target_1_price)}</td>
               <td class="mono-cell" style="color: var(--accent-green);">₹${fx(p.target_2_price)}</td>
+              <td class="mono-cell" style="color: #7da9ff;">₹${fx(t3Price)}</td>
               <td>${riskStatus}</td>
             </tr>
           `;

@@ -75,6 +75,7 @@
         <button type="button" role="menuitem" onclick="openShareCardModal()" id="share-card-btn" title="Create Visual Social Card"><svg class="ic" aria-hidden="true"><use href="#i-palette"/></svg>Share card</button>
         <button type="button" role="menuitem" onclick="exportCSV()" id="export-btn" title="Download CSV report"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>CSV report</button>
         <button type="button" role="menuitem" onclick="copySummary()" id="share-btn" title="Copy text summary"><svg class="ic" aria-hidden="true"><use href="#i-clipboard-copy"/></svg>Copy summary</button>
+        <button type="button" role="menuitem" onclick="copyTradingViewWatchlist()" id="tv-watchlist-btn" title="Copy TradingView Watchlist (NSE:TICKER,...)"><svg class="ic" aria-hidden="true"><use href="#i-clipboard-copy"/></svg>TradingView watchlist</button>
       </div>
     </div>
     <button onclick="startTour()" title="Interactive Onboarding Tour"><svg class="ic" aria-hidden="true"><use href="#i-circle-help"/></svg> Guide</button>
@@ -183,6 +184,8 @@
       <span class="chip" id="f-st" onclick="toggleChip('st')" data-tooltip="st">Supertrend BUY <span class="info-icon">i</span></span>
       <span class="chip" id="f-quad1" onclick="toggleChip('quad1')" data-tooltip="quad"><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> Q1 Leaders <span class="info-icon">i</span></span>
       <span class="chip" id="f-quad2" onclick="toggleChip('quad2')" data-tooltip="quad"><svg class="ic" aria-hidden="true"><use href="#i-refresh-ccw"/></svg> Q2 Turnarounds <span class="info-icon">i</span></span>
+      <span class="chip" id="f-quad3" onclick="toggleChip('quad3')" data-tooltip="quad"><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg> Q3 Dips <span class="info-icon">i</span></span>
+      <span class="chip" id="f-quad4" onclick="toggleChip('quad4')" data-tooltip="quad"><svg class="ic" aria-hidden="true"><use href="#i-moon"/></svg> Q4 Laggards <span class="info-icon">i</span></span>
 
       <div class="divider"></div>
 
