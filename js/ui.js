@@ -154,7 +154,7 @@
     }
 
     // export-menu items: app.js may reset their label (e.g. after "Copied!") with the old emoji
-    ['#share-card-btn', '#export-btn', '#share-btn'].forEach(function (sel) {
+    ['#share-card-btn', '#export-btn', '#share-btn', '#tv-watchlist-btn'].forEach(function (sel) {
       var el = $(sel);
       if (!el) return;
       leadingEmoji(el);
@@ -179,4 +179,120 @@
         '<button type="button" onclick="location.reload()">Retry</button></div>';
     }, 25000);
   });
+
+  /* ── 5. PRO TRADER KEYBOARD NAVIGATION ────────────────────────── */
+  guard('keyboard navigation', function () {
+    document.addEventListener('keydown', function (e) {
+      // 1. Check document.activeElement: ignore keystrokes if inside INPUT, TEXTAREA, SELECT, or isContentEditable
+      var activeEl = document.activeElement;
+      var tag = (activeEl && activeEl.tagName) || '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (activeEl && activeEl.isContentEditable)) {
+        return;
+      }
+
+      var key = e.key;
+      var modal = $('#stock-modal');
+      var isModalOpen = modal && modal.classList.contains('open');
+
+      // 2. If modal #stock-modal is open: Escape closes modal, T/t opens TradingView for current modal stock
+      if (isModalOpen) {
+        if (key === 'Escape' || key === 'Esc') {
+          if (typeof closeModal === 'function') closeModal();
+        } else if (key === 't' || key === 'T') {
+          var targetSym = (typeof selectedSym !== 'undefined' && selectedSym) || (modal.querySelector('#m-sym') ? modal.querySelector('#m-sym').textContent.trim() : null);
+          if (targetSym && typeof openTV === 'function') openTV(targetSym);
+        }
+        return;
+      }
+
+      // 3. Row cycling across table rows (#tbl-body .tbl-row:not(.skel-row))
+      var rows = $$('#tbl-body .tbl-row:not(.skel-row)');
+      if (!rows.length) return;
+
+      var curIdx = -1;
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].classList.contains('selected') || (typeof selectedSym !== 'undefined' && selectedSym && rows[i].getAttribute('data-sym') === selectedSym)) {
+          curIdx = i;
+          break;
+        }
+      }
+
+      function highlightAndSelectRow(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= rows.length) idx = rows.length - 1;
+        for (var j = 0; j < rows.length; j++) {
+          var isCurrent = (j === idx);
+          rows[j].classList.toggle('selected', isCurrent);
+          if (isCurrent) {
+            rows[j].style.borderLeftColor = 'var(--up)';
+          } else {
+            rows[j].style.borderLeftColor = '';
+          }
+        }
+        var sym = rows[idx].getAttribute('data-sym');
+        if (sym) {
+          if (typeof selectedSym !== 'undefined') {
+            selectedSym = sym;
+          }
+          window.selectedSym = sym;
+          if (typeof rows[idx].scrollIntoView === 'function') {
+            rows[idx].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
+        }
+      }
+
+      // J or ArrowDown: advance to next row
+      if (key === 'j' || key === 'J' || key === 'ArrowDown') {
+        e.preventDefault();
+        var nextIdx = curIdx === -1 ? 0 : Math.min(rows.length - 1, curIdx + 1);
+        highlightAndSelectRow(nextIdx);
+      }
+      // K or ArrowUp: decrement to previous row
+      else if (key === 'k' || key === 'K' || key === 'ArrowUp') {
+        e.preventDefault();
+        var prevIdx = curIdx === -1 ? 0 : Math.max(0, curIdx - 1);
+        highlightAndSelectRow(prevIdx);
+      }
+      // Space: toggle watchlist star via togglePin(selectedSym) and update star element inline
+      else if (key === ' ' || key === 'Spacebar') {
+        e.preventDefault();
+        var symToToggle = (typeof selectedSym !== 'undefined' && selectedSym) || (curIdx >= 0 && rows[curIdx] && rows[curIdx].getAttribute('data-sym')) || rows[0].getAttribute('data-sym');
+        if (symToToggle && typeof togglePin === 'function') {
+          var wasOpen = isModalOpen;
+          togglePin(symToToggle);
+          if (!wasOpen && typeof closeModal === 'function') {
+            closeModal();
+          }
+          var updatedRows = $$('#tbl-body .tbl-row:not(.skel-row)');
+          var targetRow = (curIdx >= 0 && updatedRows[curIdx]) ? updatedRows[curIdx] : $('#tbl-body .tbl-row[data-sym="' + symToToggle + '"]');
+          if (targetRow) {
+            targetRow.classList.add('selected');
+            targetRow.style.borderLeftColor = 'var(--up)';
+            var star = targetRow.querySelector('.pin-star');
+            if (star) {
+              var isPinned = (typeof pinnedStocks !== 'undefined' && Array.isArray(pinnedStocks)) ? (pinnedStocks.indexOf(symToToggle) !== -1) : false;
+              star.textContent = isPinned ? '★' : '☆';
+              star.classList.toggle('pinned', isPinned);
+              star.setAttribute('title', isPinned ? 'Remove from Watchlist' : 'Add to Watchlist');
+            }
+          }
+        }
+      }
+      // Enter: open stock detail modal for currently selected row
+      else if (key === 'Enter') {
+        var symToOpen = (typeof selectedSym !== 'undefined' && selectedSym) || (curIdx >= 0 && rows[curIdx] && rows[curIdx].getAttribute('data-sym')) || rows[0].getAttribute('data-sym');
+        if (symToOpen && typeof openStockModal === 'function') {
+          openStockModal(symToOpen);
+        }
+      }
+      // T or t: open stock chart on TradingView in a new tab
+      else if (key === 't' || key === 'T') {
+        var symForTV = (typeof selectedSym !== 'undefined' && selectedSym) || (curIdx >= 0 && rows[curIdx] && rows[curIdx].getAttribute('data-sym')) || rows[0].getAttribute('data-sym');
+        if (symForTV && typeof openTV === 'function') {
+          openTV(symForTV);
+        }
+      }
+    });
+  });
 })();
+

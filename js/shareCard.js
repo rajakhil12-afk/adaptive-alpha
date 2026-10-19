@@ -489,3 +489,78 @@ function copySummary() {
     alert('Failed to copy summary to clipboard.');
   });
 }
+
+function copyTradingViewWatchlist() {
+  const searchEl = document.getElementById('search-box');
+  const search = searchEl ? searchEl.value.toLowerCase().trim() : '';
+  let data = (typeof allData !== 'undefined' && Array.isArray(allData))
+    ? allData.map(d => ({ ...d, pass: (typeof passes === 'function' ? passes(d) : true) }))
+    : [];
+  if (search) {
+    data = data.filter(d => (d.sym && d.sym.toLowerCase().includes(search)) || (d.name && d.name.toLowerCase().includes(search)) || (d.ind && d.ind.toLowerCase().includes(search)));
+  }
+  if (typeof activeSector !== 'undefined' && activeSector) {
+    data = data.filter(d => d.ind === activeSector);
+  }
+  if (typeof filters !== 'undefined') {
+    if (filters.pass) data = data.filter(d => d.pass);
+    if (filters.watchlist && typeof pinnedStocks !== 'undefined') data = data.filter(d => pinnedStocks.includes(d.sym));
+  }
+
+  if (!data.length) {
+    if (typeof showStaleToast === 'function') {
+      showStaleToast('No stocks matching current filters to export.');
+    } else {
+      alert('No stocks matching current filters.');
+    }
+    return;
+  }
+
+  const tickers = data.map(d => d.sym).filter(s => s && s.trim());
+  const tvString = tickers.map(s => `NSE:${s.trim().toUpperCase()}`).join(',');
+
+  const doCopy = (str) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(str);
+    }
+    return new Promise((resolve, reject) => {
+      try {
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(el);
+        if (ok) resolve(); else reject(new Error('execCommand failed'));
+      } catch (err) {
+        reject(err);
+      }
+    });
+  };
+
+  doCopy(tvString).then(() => {
+    const btn = document.getElementById('tv-watchlist-btn');
+    const origHTML = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-clipboard-copy"/></svg>✓ Copied Watchlist!';
+      btn.style.color = 'var(--up)';
+    }
+    if (typeof showStaleToast === 'function') {
+      showStaleToast(`✓ Copied ${tickers.length} tickers in TradingView format (NSE:TICKER,...)`);
+    }
+    setTimeout(() => {
+      if (btn) {
+        btn.innerHTML = origHTML || '<svg class="ic" aria-hidden="true"><use href="#i-clipboard-copy"/></svg>TradingView watchlist';
+        btn.style.color = '';
+      }
+    }, 2000);
+  }).catch(() => {
+    prompt('Copy TradingView Watchlist:', tvString);
+  });
+}
+
+window.copyTradingViewWatchlist = copyTradingViewWatchlist;
+

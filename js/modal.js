@@ -7,6 +7,119 @@ let activeARSTF = 'D';
 let modalStockCandles = null;
 let modalBenchCandles = null;
 let activeTLTab = 'swot';
+let jishuPortfolioData = null;
+
+// Load Jishu Paper Trading Portfolio for synchronization
+async function loadJishuPortfolio() {
+  if (window.STATIC_JISHU_PORTFOLIO) {
+    jishuPortfolioData = window.STATIC_JISHU_PORTFOLIO;
+    return jishuPortfolioData;
+  }
+  if (typeof window !== 'undefined' && window.JISHU_PORTFOLIO) {
+    jishuPortfolioData = window.JISHU_PORTFOLIO;
+    return jishuPortfolioData;
+  }
+  try {
+    const res = await fetch('data/jishu_portfolio.json?nocache=' + Date.now());
+    if (res.ok) {
+      jishuPortfolioData = await res.json();
+      return jishuPortfolioData;
+    }
+  } catch (e) {}
+
+  if (typeof document !== 'undefined' && !window.STATIC_JISHU_PORTFOLIO) {
+    try {
+      const s = document.createElement('script');
+      s.src = 'data/jishu_portfolio.js';
+      s.onload = () => {
+        jishuPortfolioData = window.STATIC_JISHU_PORTFOLIO;
+        if (typeof selectedSym !== 'undefined' && selectedSym) {
+          renderJishuModalBanner(selectedSym);
+        }
+      };
+      document.head.appendChild(s);
+    } catch (e) {}
+  }
+  return jishuPortfolioData;
+}
+
+if (typeof window !== 'undefined') {
+  loadJishuPortfolio();
+}
+
+function renderJishuModalBanner(sym) {
+  const pData = jishuPortfolioData || window.STATIC_JISHU_PORTFOLIO || window.JISHU_PORTFOLIO;
+  const modalBody = document.querySelector('#stock-modal .modal-body');
+  if (!modalBody) return;
+
+  let banner = document.getElementById('m-jishu-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'm-jishu-banner';
+    modalBody.insertBefore(banner, modalBody.firstChild);
+  }
+
+  if (!pData) {
+    banner.style.display = 'none';
+    return;
+  }
+
+  const openPos = (pData.open_positions || []).find(p => p.sym === sym);
+  const closedPos = !openPos ? (pData.closed_trades || []).find(p => p.sym === sym) : null;
+
+  if (openPos) {
+    let targetStatus = '<span style="background:rgba(239,83,80,0.2); color:#ef5350; border:1px solid rgba(239,83,80,0.4); padding:2px 7px; border-radius:4px; font-weight:700; font-size:10px;">⚠️ Active Initial SL (-10%)</span>';
+    const curP = openPos.current_price || openPos.entry_price;
+    const t3Price = openPos.target_3_price || (openPos.entry_price + (openPos.risk_per_share ? openPos.risk_per_share * 3 : 0));
+
+    if (openPos.target_3_hit || (curP >= t3Price && t3Price > 0)) {
+      targetStatus = '<span style="background:rgba(125,169,255,0.2); color:#7da9ff; border:1px solid rgba(125,169,255,0.4); padding:2px 7px; border-radius:4px; font-weight:700; font-size:10px;">🚀 Target 3 Hit (Expansion Trailing)</span>';
+    } else if (openPos.sl_moved_to_t1) {
+      targetStatus = '<span style="background:rgba(15,229,134,0.2); color:var(--up); border:1px solid rgba(15,229,134,0.4); padding:2px 7px; border-radius:4px; font-weight:700; font-size:10px;">🎯 Target 1 Locked (+10% Profit)</span>';
+    } else if (openPos.sl_moved_to_cost) {
+      targetStatus = '<span style="background:rgba(255,215,0,0.2); color:var(--gold); border:1px solid rgba(255,215,0,0.4); padding:2px 7px; border-radius:4px; font-weight:700; font-size:10px;">🛡️ Target 1 Hit (Breakeven Cost SL)</span>';
+    }
+
+    const pnl = ((curP - openPos.entry_price) * openPos.qty);
+    const pnlPct = (((curP - openPos.entry_price) / openPos.entry_price) * 100).toFixed(1);
+    const pnlColor = pnl >= 0 ? 'var(--up)' : 'var(--down)';
+
+    banner.className = 'jishu-modal-active-banner';
+    banner.style.display = 'block';
+    banner.innerHTML = `
+      <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.12)); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: var(--radius); padding: 8px 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span style="background: var(--up); color: #000; font-weight: 800; font-size: 9px; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">💼 JISHU DESK ACTIVE</span>
+          <span style="font-weight: 700; color: var(--text); font-size: 11px;">Entry: <span style="color:var(--text-lt)">₹${openPos.entry_price.toLocaleString('en-IN')}</span></span>
+          <span style="color: var(--muted); font-size: 11px;">·</span>
+          <span style="font-weight: 700; color: var(--amber); font-size: 11px;">Current Trailing SL: ₹${openPos.current_sl.toLocaleString('en-IN')}</span>
+          <span style="color: var(--muted); font-size: 11px;">·</span>
+          <span style="font-weight: 700; color: ${pnlColor}; font-size: 11px;">P&L: ${pnl >= 0 ? '+' : ''}₹${pnl.toFixed(0)} (${pnl >= 0 ? '+' : ''}${pnlPct}%)</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          ${targetStatus}
+        </div>
+      </div>
+    `;
+  } else if (closedPos) {
+    banner.className = 'jishu-modal-closed-banner';
+    banner.style.display = 'block';
+    const pnlColor = closedPos.realized_pnl >= 0 ? 'var(--up)' : 'var(--down)';
+    banner.innerHTML = `
+      <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 11px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="background: var(--muted); color: #000; font-weight: 700; font-size: 9px; padding: 2px 6px; border-radius: 4px;">💼 JISHU DESK CLOSED</span>
+          <span style="color: var(--text);">Entry: ₹${closedPos.entry_price} · Exit: ₹${closedPos.exit_price}</span>
+        </div>
+        <div>
+          <span style="color: ${pnlColor}; font-weight: 700;">Realized P&L: ${closedPos.realized_pnl >= 0 ? '+' : ''}₹${closedPos.realized_pnl} (${closedPos.exit_reason || 'Closed'})</span>
+        </div>
+      </div>
+    `;
+  } else {
+    banner.style.display = 'none';
+  }
+}
 
 function openStockModal(sym) {
   selectedSym = sym;
@@ -246,6 +359,7 @@ function openStockModal(sym) {
   // Setup Broker Bridge links
   setupBrokerBridge(d.sym);
 
+  renderJishuModalBanner(d.sym);
   recalcPositionSize();
   document.getElementById('stock-modal').classList.add('open');
 
@@ -276,7 +390,13 @@ function setupBrokerBridge(sym) {
 
 function setStopLossMode(mode) {
   if (!selectedSym) return;
-  const d = allData.find(s => s.sym === selectedSym);
+  let d = allData && allData.find(s => s.sym === selectedSym);
+  if (!d && typeof globalScreenerData !== 'undefined' && globalScreenerData.length > 0) {
+    d = globalScreenerData.find(s => s.sym === selectedSym);
+  }
+  if (!d && window.STATIC_SCREENER_DATA && Array.isArray(window.STATIC_SCREENER_DATA.stocks)) {
+    d = window.STATIC_SCREENER_DATA.stocks.find(s => s.sym === selectedSym);
+  }
   if (!d || !d.price) return;
 
   const slInput = document.getElementById('calc-sl-price');
@@ -284,11 +404,11 @@ function setStopLossMode(mode) {
   const isSTBuy = stData && stData.trend === 'buy';
 
   if (mode === 'st') {
-    slInput.value = (isSTBuy && stData && stData.val > 0 && stData.val < d.price) ? stData.val : (d.price * 0.93).toFixed(1);
+    slInput.value = (isSTBuy && stData && stData.val > 0 && stData.val < d.price) ? Number(stData.val.toFixed(2)) : Number((d.price * 0.93).toFixed(2));
   } else if (mode === 'fixed10') {
-    slInput.value = (d.price * 0.90).toFixed(1);
+    slInput.value = Number((d.price * 0.90).toFixed(2));
   } else if (mode === 'fixed5') {
-    slInput.value = (d.price * 0.95).toFixed(1);
+    slInput.value = Number((d.price * 0.95).toFixed(2));
   }
   recalcPositionSize();
 }
@@ -300,14 +420,20 @@ function closeModal() {
 
 function recalcPositionSize() {
   if (!selectedSym) return;
-  const d = allData.find(s => s.sym === selectedSym);
+  let d = allData && allData.find(s => s.sym === selectedSym);
+  if (!d && typeof globalScreenerData !== 'undefined' && globalScreenerData.length > 0) {
+    d = globalScreenerData.find(s => s.sym === selectedSym);
+  }
+  if (!d && window.STATIC_SCREENER_DATA && Array.isArray(window.STATIC_SCREENER_DATA.stocks)) {
+    d = window.STATIC_SCREENER_DATA.stocks.find(s => s.sym === selectedSym);
+  }
   if (!d || !d.price) return;
 
   const cap = parseFloat(document.getElementById('calc-cap').value) || 500000;
   const riskPct = parseFloat(document.getElementById('calc-risk-pct').value) || 1.0;
   let slPrice = parseFloat(document.getElementById('calc-sl-price').value);
   if (isNaN(slPrice) || slPrice <= 0 || slPrice >= d.price) {
-    slPrice = Math.round(d.price * 0.93 * 10) / 10;
+    slPrice = Number((d.price * 0.93).toFixed(2));
     const slInput = document.getElementById('calc-sl-price');
     if (slInput) slInput.value = slPrice;
   }
@@ -330,12 +456,13 @@ function recalcPositionSize() {
     qty = Math.max(1, Math.floor(maxAllocCap / d.price));
   }
 
-  const totalInv = qty * d.price;
+  const totalInv = Math.round(qty * d.price * 100) / 100;
   const capPct = cap > 0 ? ((totalInv / cap) * 100).toFixed(1) : 0;
+  const actualRisk = Math.round(qty * riskPerShare * 100) / 100;
 
-  const target1 = d.price + (riskPerShare * 1); // 1:1 Breakeven
-  const target2 = d.price + (riskPerShare * 2); // 1:2 Dynamic Trail
-  const target3 = d.price + (riskPerShare * 3); // 1:3 Multibagger
+  const target1 = Number((d.price + (riskPerShare * 1.0)).toFixed(2)); // 1:1 Breakeven
+  const target2 = Number((d.price + (riskPerShare * 2.0)).toFixed(2)); // 1:2 Dynamic Trail
+  const target3 = Number((d.price + (riskPerShare * 3.0)).toFixed(2)); // 1:3 Multibagger
 
   const qtyEl = document.getElementById('calc-qty');
   const invEl = document.getElementById('calc-inv');
@@ -346,7 +473,7 @@ function recalcPositionSize() {
 
   if (qtyEl) qtyEl.textContent = `${qty.toLocaleString('en-IN')} shares`;
   if (invEl) invEl.textContent = `₹${totalInv.toLocaleString('en-IN', {maximumFractionDigits:0})} (${capPct}% Cap)`;
-  if (riskAmtEl) riskAmtEl.textContent = `₹${(qty * riskPerShare).toLocaleString('en-IN', {maximumFractionDigits:0})} (-${riskPctPerShare}%)`;
+  if (riskAmtEl) riskAmtEl.textContent = `₹${actualRisk.toLocaleString('en-IN', {maximumFractionDigits:0})} (-${riskPctPerShare}%)`;
   if (t1El)  t1El.textContent  = `₹${target1.toFixed(1)} (+${((target1-d.price)/d.price*100).toFixed(1)}%)`;
   if (t2El)  t2El.textContent  = `₹${target2.toFixed(1)} (+${((target2-d.price)/d.price*100).toFixed(1)}%)`;
   if (t3El)  t3El.textContent  = `₹${target3.toFixed(1)} (+${((target3-d.price)/d.price*100).toFixed(1)}%)`;
@@ -736,164 +863,128 @@ function closeCompare() {
   if (modal) modal.classList.remove('open');
 }
 
+function generateAIThesis(d) {
+  const stData = stParam === '14' ? d.st14 : d.st10;
+  const isSTBuy = stData && stData.trend === 'buy';
+  const quadKey = (typeof getDualRSQuad === 'function') ? getDualRSQuad(d) : 'quad-1';
+  const inst = d.institutional || { ad_grade: 'B', status: 'Accumulation', deliv_ratio: d.vol_ratio || 1.0 };
+  const safety = d.safety || d.forensics || {};
+  const pledge = safety.promoter_pledge_pct ?? safety.pledge_pct ?? d.pledge_pct;
+  const entryPrice = d.price || 0;
+  const delivRatio = (inst.deliv_ratio !== undefined && inst.deliv_ratio !== null) ? Number(inst.deliv_ratio) : (d.vol_ratio || 1.0);
+
+  // 1. Growth Catalyst Bullet
+  let growthCatalyst = '';
+  if (d.breakout || (d.hi52_prox !== undefined && d.hi52_prox >= -0.05 && (d.vol_ratio || 1) >= 1.5)) {
+    growthCatalyst = `52-Week High Breakout expansion supported by institutional delivery surge (${delivRatio.toFixed(1)}× 20D avg delivery) and strong sector momentum in ${d.ind}. Order book momentum and earnings acceleration drive continuation.`;
+  } else if ((d.vcp && d.vcp.is_vcp) || d.is_vcp) {
+    growthCatalyst = `Volatility Contraction Pattern (VCP) consolidation complete with volume dry-up, positioning stock for Stage-2 base breakout in ${d.ind}.`;
+  } else if (quadKey === 'quad-1') {
+    growthCatalyst = `Dual Relative Strength Power Leader (ARS +${((d.ars||0)*100).toFixed(1)}%, SRS +${((d.srs||0)*100).toFixed(1)}%) in ${d.ind} with RS Rating ${d.rs_rating ?? '—'}/99, backed by ${inst.ad_grade || 'A'} Grade institutional accumulation (${delivRatio.toFixed(1)}× delivery). Consistent alpha leader with capex expansion tailwinds.`;
+  } else if (quadKey === 'quad-2') {
+    growthCatalyst = `RS Turnaround setup: Short-term relative momentum accelerating (SRS +${((d.srs||0)*100).toFixed(1)}%) with fresh Supertrend confirmation in ${d.ind} and institutional accumulation.`;
+  } else if (d.hi52_prox !== undefined && d.hi52_prox >= -0.05) {
+    growthCatalyst = `52-Week High Breakout setup with institutional delivery surge (${delivRatio.toFixed(1)}× 20D avg) and sector leadership in ${d.ind}.`;
+  } else {
+    growthCatalyst = `Sector rotation play in ${d.ind} with steady institutional delivery volume (${delivRatio.toFixed(1)}× 20D avg) and constructive base formation.`;
+  }
+
+  // 2. Risk Factor Bullet
+  let riskFactor = '';
+  if (!safety.is_safe && safety.warnings && safety.warnings.length > 0) {
+    riskFactor = `Forensic Alert: ${safety.warnings.join('; ')}. Maintain strict position sizing and tight trailing stop discipline.`;
+  } else if (safety.high_pledge || (pledge !== undefined && pledge > 20)) {
+    riskFactor = `Forensic Alert: Elevated promoter pledge (${pledge}%) exceeds 20% limit; creates balance sheet vulnerability and demands strict trailing stops.`;
+  } else if (safety.high_debt || d.high_debt) {
+    riskFactor = `Forensic Alert: High Debt Load with elevated leverage ratio; strict capital allocation cap enforced.`;
+  } else if (safety.auditor_warning || safety.auditor_change || d.auditor_change) {
+    riskFactor = `Forensic Alert: Auditor Alert: unexpected auditor resignation or adverse qualification; size position defensively.`;
+  } else if (['D', 'E'].includes(inst.ad_grade) || (inst.status && inst.status.toLowerCase().includes('exit'))) {
+    riskFactor = `Institutional accumulation is muted (${inst.ad_grade} Grade) showing volume churn or distribution.`;
+  } else if (!isSTBuy) {
+    riskFactor = `Supertrend indicator remains in SELL mode; overhead moving average resistance present. Wait for structural trend confirmation.`;
+  } else {
+    riskFactor = `Broad market regime contraction or breakdown below key trailing swing pivot; protect capital using systematic stop-loss ladder.`;
+  }
+
+  // 3. Technical Trigger Bullet (Calculation of 1:1, 1:2, and 1:3 targets)
+  let slPrice = (isSTBuy && stData && stData.val > 0 && stData.val < entryPrice)
+    ? Math.round(stData.val * 100) / 100
+    : Math.round(entryPrice * 0.93 * 100) / 100;
+
+  const riskPerShare = Math.max(Math.round(entryPrice * 0.01 * 100) / 100, Math.round((entryPrice - slPrice) * 100) / 100);
+  slPrice = Math.round((entryPrice - riskPerShare) * 100) / 100;
+  const riskPct = ((riskPerShare / entryPrice) * 100).toFixed(1);
+
+  const t1 = Math.round((entryPrice + (1.0 * riskPerShare)) * 100) / 100;
+  const t2 = Math.round((entryPrice + (2.0 * riskPerShare)) * 100) / 100;
+  const t3 = Math.round((entryPrice + (3.0 * riskPerShare)) * 100) / 100;
+
+  const technicalTrigger = `Entry Trigger: Above ₹${entryPrice.toFixed(2)} | Initial SL: ₹${slPrice.toFixed(2)} (-${riskPct}%) | Target 1 (1:1): ₹${t1.toFixed(2)} | Target 2 (1:2): ₹${t2.toFixed(2)} | Target 3 (1:3): ₹${t3.toFixed(2)}`;
+
+  return {
+    growthCatalyst,
+    riskFactor,
+    technicalTrigger,
+    entryPrice,
+    slPrice,
+    riskPerShare,
+    riskPct,
+    t1,
+    t2,
+    t3,
+    isSTBuy,
+    quadKey,
+    inst
+  };
+}
+
 function renderAIThesisCard(d) {
   const container = document.getElementById('m-ai-thesis-body');
   if (!container) return;
 
-  const mtf = (typeof calcMultiTimeframeConfluence === 'function') 
-    ? calcMultiTimeframeConfluence(d) 
-    : { badge: '⚪ ⚪ ⚪', is_triple_confluence: false, score: 0, label: 'Bearish Divergence' };
-  
-  const tb = (typeof calcTightBase3W === 'function') 
-    ? calcTightBase3W(null, d.price, d.hi52_prox) 
-    : { is_tight: (d.hi52_prox >= -0.06), range_pct: 4.2 };
+  const thesis = generateAIThesis(d);
+  const isSTBuy = thesis.isSTBuy;
+  const quadKey = thesis.quadKey;
+  const inst = thesis.inst;
 
-  const stData = stParam === '14' ? d.st14 : d.st10;
-  const isSTBuy = stData && stData.trend === 'buy';
-  const isSTSell = stData && stData.trend === 'sell';
-  const quadKey = (typeof getDualRSQuad === 'function') ? getDualRSQuad(d) : 'quad-1';
-  const inst = d.institutional || { ad_grade: 'B', status: 'Accumulation', inst_score: d.rs_rating || 50, money_flow_ratio: 0, up_down_vol_ratio: 1.0 };
-
-  // Institutional Distribution & Trend Health Diagnosis
-  const isHeavyExit = (inst.ad_grade === 'E') || 
-                      (inst.status && inst.status.toLowerCase().includes('exit')) || 
-                      ((inst.money_flow_ratio !== undefined && inst.money_flow_ratio < -0.15) && (inst.up_down_vol_ratio !== undefined && inst.up_down_vol_ratio < 0.5));
-  
-  const isSevereDowntrend = (isSTSell && d.ma_status === 'MA-' && (d.hi52_prox !== undefined && d.hi52_prox <= -0.15));
-
-  // Determine Setup Classification & Bias
   let setupTitle = '⚡ MOMENTUM CONTINUATION';
   let setupTagColor = '#0fe586';
   let bias = 'BULLISH';
   let isBullishTrade = true;
-  let thesisSummary = '';
 
-  if (isHeavyExit) {
+  if (['D', 'E'].includes(inst.ad_grade) || (inst.status && inst.status.toLowerCase().includes('exit'))) {
     setupTitle = '⚠️ HEAVY INSTITUTIONAL DISTRIBUTION';
     setupTagColor = '#ef5350';
     bias = 'BEARISH / AVOID';
     isBullishTrade = false;
-    thesisSummary = `${d.sym} (${d.name}) is experiencing heavy institutional selling (${inst.ad_grade} Grade) with negative money flow. Technical momentum is compromised (${isSTSell ? 'Supertrend SELL' : 'Neutral'}, ${d.ma_status === 'MA+' ? 'Above MA' : 'Below MA'}). Capital preservation is strictly advised — avoid new long entries until institutional volume absorption confirms a base.`;
-  } else if (isSevereDowntrend || quadKey === 'quad-4') {
+  } else if (quadKey === 'quad-4' || (!isSTBuy && d.ma_status === 'MA-')) {
     setupTitle = '💤 STRUCTURAL DOWNTREND (LAGGARD)';
     setupTagColor = '#ef5350';
     bias = 'BEARISH / AVOID';
     isBullishTrade = false;
-    thesisSummary = `${d.sym} (${d.name}) is in a structural downtrend trading below key moving averages with Supertrend SELL. Relative momentum is lagging the benchmark index. No constructive setup present — maintain a defensive cash stance.`;
-  } else if (!isSTBuy && d.ma_status === 'MA-') {
-    setupTitle = '⏸️ CORRECTION / BREAKDOWN BELOW MA';
-    setupTagColor = '#f59e0b';
-    bias = 'DEFENSIVE / CAUTION';
-    isBullishTrade = false;
-    thesisSummary = `${d.sym} (${d.name}) has breached key moving average support (MA-) and triggered a Supertrend SELL. Even with prior RS (${d.rs_rating ?? '—'}/99), immediate momentum is negative. Wait for reversal confirmation above overhead resistance before committing capital.`;
-  } else if (!isSTBuy && (d.ars || 0) > 0) {
-    setupTitle = '⏸️ LEADER PULLBACK / DIP WATCH';
+  } else if (!isSTBuy) {
+    setupTitle = '⏸️ LEADER PULLBACK / CAUTION';
     setupTagColor = '#ffd700';
     bias = 'PULLBACK / WAIT';
     isBullishTrade = false;
-    thesisSummary = `${d.sym} (${d.name}) retains long-term alpha (ARS +${((d.ars||0)*100).toFixed(1)}%) but is undergoing a short-term corrective pullback. Supertrend has not flipped to BUY yet. Place on watchlist for reversal confirmation at key support.`;
-  } else if (d.hi52_prox >= -0.03 && (d.vol_ratio || 1) >= 1.5 && isSTBuy) {
+  } else if (d.hi52_prox !== undefined && d.hi52_prox >= -0.03 && (d.vol_ratio || 1) >= 1.5) {
     setupTitle = '🚀 HIGH-CONVICTION 52W BREAKOUT';
     setupTagColor = '#ffd700';
     bias = 'BULLISH';
     isBullishTrade = true;
-    thesisSummary = `${d.sym} (${d.name}) is breaking out within 3% of 52-week highs with volume expansion (${(d.vol_ratio || 1).toFixed(1)}× avg). Composite RS is strong at ${d.rs_rating ?? '—'}/99 with active institutional accumulation.`;
-  } else if ((tb.is_tight || (d.vcp && d.vcp.is_vcp)) && isSTBuy) {
-    setupTitle = '🧘 VOLATILITY CONTRACTION (VCP / TIGHT BASE)';
+  } else if ((d.vcp && d.vcp.is_vcp) || d.is_vcp) {
+    setupTitle = '🧘 VOLATILITY CONTRACTION (VCP)';
     setupTagColor = '#7da9ff';
     bias = 'BULLISH';
     isBullishTrade = true;
-    thesisSummary = `${d.sym} (${d.name}) is forming a constructive low-volatility consolidation base with supply dry-up. Supertrend is in BUY mode, indicating high-probability pre-breakout accumulation.`;
-  } else if (quadKey === 'quad-1' && isSTBuy) {
-    setupTitle = '⚡ MOMENTUM CONTINUATION';
-    setupTagColor = '#0fe586';
-    bias = 'BULLISH';
-    isBullishTrade = true;
-    thesisSummary = `${d.sym} (${d.name}) displays composite RS Rating of ${d.rs_rating ?? '—'}/99 in the ${d.ind} sector. Strong multi-timeframe momentum alignment with active Supertrend BUY and positive alpha.`;
-  } else if (quadKey === 'quad-2' && isSTBuy) {
+  } else if (quadKey === 'quad-2') {
     setupTitle = '🔄 QUAD-2 RS TURNAROUND';
     setupTagColor = '#5fc4ba';
     bias = 'BULLISH';
     isBullishTrade = true;
-    thesisSummary = `${d.sym} (${d.name}) is an early-stage turnaround candidate showing accelerating short-term momentum (SRS+) and fresh Supertrend BUY confirmation.`;
-  } else {
-    setupTitle = '⚖️ CONSOLIDATION / NEUTRAL';
-    setupTagColor = '#94a3b8';
-    bias = 'NEUTRAL';
-    isBullishTrade = isSTBuy;
-    thesisSummary = `${d.sym} (${d.name}) is range-bound in the ${d.ind} sector with baseline volume participation. Wait for clear directional breakout.`;
   }
 
-  // Calculate execution levels
-  const entryPrice = d.price || 0;
-  let blueprintHtml = '';
-
-  if (isBullishTrade && entryPrice > 0) {
-    // Structural Stop Loss strictly below entry
-    let slPrice = (isSTBuy && stData && stData.val > 0 && stData.val < entryPrice) 
-      ? Math.round(stData.val * 10) / 10 
-      : Math.round(entryPrice * 0.93 * 10) / 10;
-    
-    // Safety check: SL must ALWAYS be strictly below entry price (at least 2% risk)
-    const riskPerShare = Math.max(entryPrice * 0.02, entryPrice - slPrice);
-    slPrice = Math.round((entryPrice - riskPerShare) * 10) / 10;
-    const riskPct = ((riskPerShare / entryPrice) * 100).toFixed(1);
-
-    const t1Price = Math.round((entryPrice + riskPerShare * 1.0) * 10) / 10;
-    const t2Price = Math.round((entryPrice + riskPerShare * 2.0) * 10) / 10;
-
-    blueprintHtml = `
-      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; background:var(--bg2); padding:6px 8px; border-radius:6px; border:1px solid var(--border); margin-top:4px;">
-        <div>
-          <div style="font-size:8.5px; color:var(--muted);">REC. ENTRY</div>
-          <div style="font-size:11px; font-weight:700; color:var(--text);">₹${entryPrice.toLocaleString('en-IN')}</div>
-        </div>
-        <div>
-          <div style="font-size:8.5px; color:var(--muted);">HARD SL (-${riskPct}%)</div>
-          <div style="font-size:11px; font-weight:700; color:var(--down);">₹${slPrice.toLocaleString('en-IN')}</div>
-        </div>
-        <div>
-          <div style="font-size:8.5px; color:var(--muted);">TARGET 1 (1:1)</div>
-          <div style="font-size:11px; font-weight:700; color:var(--up);">₹${t1Price.toLocaleString('en-IN')}</div>
-        </div>
-        <div>
-          <div style="font-size:8.5px; color:var(--muted);">TARGET 2 (1:2)</div>
-          <div style="font-size:11px; font-weight:700; color:#7da9ff;">₹${t2Price.toLocaleString('en-IN')}</div>
-        </div>
-      </div>
-    `;
-  } else if (entryPrice > 0) {
-    // Defensive / Avoid / Risk Management Blueprint
-    const overheadRes = (stData && stData.val > entryPrice) 
-      ? Math.round(stData.val * 10) / 10 
-      : Math.round(entryPrice * 1.07 * 10) / 10;
-    const resPct = (((overheadRes - entryPrice) / entryPrice) * 100).toFixed(1);
-    const sup1 = Math.round(entryPrice * 0.93 * 10) / 10;
-    const sup2 = Math.round(entryPrice * 0.88 * 10) / 10;
-
-    blueprintHtml = `
-      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; background:rgba(239,83,80,0.08); padding:6px 8px; border-radius:6px; border:1px solid rgba(239,83,80,0.25); margin-top:4px;">
-        <div>
-          <div style="font-size:8.5px; color:var(--muted);">ACTION</div>
-          <div style="font-size:11px; font-weight:700; color:var(--down);">⛔ AVOID / CASH</div>
-        </div>
-        <div>
-          <div style="font-size:8.5px; color:var(--muted);">OVERHEAD RES (+${resPct}%)</div>
-          <div style="font-size:11px; font-weight:700; color:#ff9800;">₹${overheadRes.toLocaleString('en-IN')}</div>
-        </div>
-        <div>
-          <div style="font-size:8.5px; color:var(--muted);">NEXT SUPPORT (-7%)</div>
-          <div style="font-size:11px; font-weight:700; color:var(--text-lt);">₹${sup1.toLocaleString('en-IN')}</div>
-        </div>
-        <div>
-          <div style="font-size:8.5px; color:var(--muted);">DEEP SUPPORT (-12%)</div>
-          <div style="font-size:11px; font-weight:700; color:var(--muted);">₹${sup2.toLocaleString('en-IN')}</div>
-        </div>
-      </div>
-    `;
-  }
-
-  // Render HTML inside the modal
   container.innerHTML = `
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:6px;">
       <div style="font-weight:700; color:${setupTagColor}; display:flex; align-items:center; gap:6px;">
@@ -901,10 +992,55 @@ function renderAIThesisCard(d) {
       </div>
       <span class="quad-pill ${isBullishTrade ? quadKey : 'quad-4'}" style="font-size:9px; background:${isBullishTrade ? '' : 'rgba(239,83,80,0.2)'}; color:${isBullishTrade ? '' : '#ef5350'};">${bias}</span>
     </div>
-    <div style="color:var(--text-lt); font-size:10.5px; line-height:1.45;">
-      <strong>Core Thesis:</strong> ${thesisSummary}
+
+    <!-- 3-Bullet AI Quantitative Thesis -->
+    <div class="thesis-bullet-container" style="display:flex; flex-direction:column; gap:6px; margin: 4px 0;">
+      <div class="thesis-bullet-item" style="display:flex; gap:8px; align-items:flex-start; padding:3px 0;">
+        <span style="font-size:14px; flex-shrink:0;">🚀</span>
+        <div>
+          <strong style="color:var(--up); font-size:11px;">Growth Catalyst:</strong>
+          <span style="color:var(--text); font-size:10.5px;"> ${thesis.growthCatalyst}</span>
+        </div>
+      </div>
+      <div class="thesis-bullet-item" style="display:flex; gap:8px; align-items:flex-start; padding:3px 0; border-top:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:14px; flex-shrink:0;">⚠️</span>
+        <div>
+          <strong style="color:var(--amber); font-size:11px;">Risk Factor:</strong>
+          <span style="color:var(--text); font-size:10.5px;"> ${thesis.riskFactor}</span>
+        </div>
+      </div>
+      <div class="thesis-bullet-item" style="display:flex; gap:8px; align-items:flex-start; padding:3px 0; border-top:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:14px; flex-shrink:0;">🎯</span>
+        <div>
+          <strong style="color:#7da9ff; font-size:11px;">Technical Trigger:</strong>
+          <span style="color:var(--text); font-size:10.5px;"> ${thesis.technicalTrigger}</span>
+        </div>
+      </div>
     </div>
-    ${blueprintHtml}
+
+    <!-- 5-Column Risk-Reward Blueprint -->
+    <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:6px; background:var(--bg2); padding:6px 8px; border-radius:6px; border:1px solid var(--border); margin-top:4px;">
+      <div>
+        <div style="font-size:8px; color:var(--muted);">REC. ENTRY</div>
+        <div style="font-size:10.5px; font-weight:700; color:var(--text);">₹${thesis.entryPrice.toLocaleString('en-IN', {maximumFractionDigits:2})}</div>
+      </div>
+      <div>
+        <div style="font-size:8px; color:var(--muted);">HARD SL (-${thesis.riskPct}%)</div>
+        <div style="font-size:10.5px; font-weight:700; color:var(--down);">₹${thesis.slPrice.toLocaleString('en-IN', {maximumFractionDigits:2})}</div>
+      </div>
+      <div>
+        <div style="font-size:8px; color:var(--muted);">TARGET 1 (1:1)</div>
+        <div style="font-size:10.5px; font-weight:700; color:var(--up);">₹${thesis.t1.toLocaleString('en-IN', {maximumFractionDigits:2})}</div>
+      </div>
+      <div>
+        <div style="font-size:8px; color:var(--muted);">TARGET 2 (1:2)</div>
+        <div style="font-size:10.5px; font-weight:700; color:#7da9ff;">₹${thesis.t2.toLocaleString('en-IN', {maximumFractionDigits:2})}</div>
+      </div>
+      <div>
+        <div style="font-size:8px; color:var(--muted);">TARGET 3 (1:3)</div>
+        <div style="font-size:10.5px; font-weight:700; color:var(--gold);">₹${thesis.t3.toLocaleString('en-IN', {maximumFractionDigits:2})}</div>
+      </div>
+    </div>
   `;
 }
 
@@ -919,52 +1055,26 @@ function copyAIThesisToClipboard() {
   }
   if (!d) return;
 
-  const mtf = (typeof calcMultiTimeframeConfluence === 'function') ? calcMultiTimeframeConfluence(d) : { label: 'Dual Confluence', badge: '⚪ ⚪ ⚪' };
-  const tb = (typeof calcTightBase3W === 'function') ? calcTightBase3W(null, d.price, d.hi52_prox) : { is_tight: false };
-  const stData = stParam === '14' ? d.st14 : d.st10;
-  const isSTBuy = stData && stData.trend === 'buy';
+  const thesis = generateAIThesis(d);
   const inst = d.institutional || { ad_grade: 'B', status: 'Accumulation' };
-  const isHeavyExit = (inst.ad_grade === 'E') || (inst.status && inst.status.toLowerCase().includes('exit'));
 
-  let blueprintSection = '';
-  if (isSTBuy && !isHeavyExit && d.price > 0) {
-    let slPrice = (stData && stData.val > 0 && stData.val < d.price) ? Math.round(stData.val * 10) / 10 : Math.round(d.price * 0.93 * 10) / 10;
-    const riskPerShare = Math.max(d.price * 0.02, d.price - slPrice);
-    slPrice = Math.round((d.price - riskPerShare) * 10) / 10;
-    const riskPct = ((riskPerShare / d.price) * 100).toFixed(1);
-    const t1Price = Math.round((d.price + riskPerShare * 1.0) * 10) / 10;
-    const t2Price = Math.round((d.price + riskPerShare * 2.0) * 10) / 10;
-    const t3Price = Math.round((d.price + riskPerShare * 3.0) * 10) / 10;
-
-    blueprintSection = `📐 QUANTITATIVE EXECUTION BLUEPRINT:
-• Rec. Entry: ₹${d.price}
-• Hard SL: ₹${slPrice} (-${riskPct}%)
-• Target 1 (1:1 R:R): ₹${t1Price}
-• Target 2 (1:2 R:R): ₹${t2Price}
-• Target 3 (1:3 R:R): ₹${t3Price}`;
-  } else {
-    const overheadRes = (stData && stData.val > d.price) ? Math.round(stData.val * 10) / 10 : Math.round(d.price * 1.07 * 10) / 10;
-    const resPct = (((overheadRes - d.price) / d.price) * 100).toFixed(1);
-    const sup1 = Math.round(d.price * 0.93 * 10) / 10;
-    const sup2 = Math.round(d.price * 0.88 * 10) / 10;
-
-    blueprintSection = `📐 QUANTITATIVE RISK & ADVISORY BLUEPRINT:
-• Rec. Action: ⛔ AVOID / MAINTAIN CASH (No Long Entry)
-• Overhead Resistance: ₹${overheadRes} (+${resPct}% · Supertrend / MA Barrier)
-• Immediate Support: ₹${sup1} (-7.0%)
-• Structural Deep Support: ₹${sup2} (-12.0%)
-• Warning: ${isHeavyExit ? 'Institutional Exit (Grade E)' : 'Technical Breakdown Below MA'}`;
-  }
-
-  const text = `🧠 ADAPTIVE ALPHA AI THESIS: ${d.sym} (${d.name})
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const text = `🧠 ADAPTIVE ALPHA AI QUANT THESIS: ${d.sym} (${d.name})
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎯 Sector: ${d.ind} | Price: ₹${d.price}
 🌟 RS Rating: ${d.rs_rating ?? '—'}/99 | ARS: ${((d.ars||0)*100).toFixed(1)}% | SRS: ${((d.srs||0)*100).toFixed(1)}%
-⚡ MTF Confluence: ${mtf.label} (${mtf.badge})
-🧘 3W Tight Base / VCP: ${tb.is_tight ? 'YES (Constructive)' : 'Normal'}
-🏛️ Inst. Accumulation: ${inst.ad_grade || 'B'} Grade (${inst.status || 'Neutral'})
+🏛️ Institutional Grade: ${inst.ad_grade || 'B'} (${inst.status || 'Neutral'})
 
-${blueprintSection}
+📌 3-BULLET QUANTITATIVE THESIS:
+• Growth Catalyst: ${thesis.growthCatalyst}
+• Risk Factor: ${thesis.riskFactor}
+• Technical Trigger: ${thesis.technicalTrigger}
+
+📐 EXECUTION BLUEPRINT (1:1, 1:2, 1:3 RISK-REWARD):
+• Rec. Entry: ₹${thesis.entryPrice.toFixed(2)}
+• Initial Hard SL: ₹${thesis.slPrice.toFixed(2)} (-${thesis.riskPct}%)
+• Target 1 (1:1 Breakeven): ₹${thesis.t1.toFixed(2)}
+• Target 2 (1:2 Trailing Lock): ₹${thesis.t2.toFixed(2)}
+• Target 3 (1:3 Expansion): ₹${thesis.t3.toFixed(2)}
 
 Generated via Adaptive Alpha Quantitative Momentum Engine.`;
 

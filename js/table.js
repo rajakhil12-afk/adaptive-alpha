@@ -132,11 +132,33 @@ function rowHtml(d) {
     if (d.institutional.is_spurt || (d.institutional.deliv_ratio >= 1.5)) {
       tags.push(`<span class="tag tag-deliv-surge">📦 ${d.institutional.deliv_ratio}× Deliv</span>`);
     }
-    if (d.institutional.ad_grade === 'A+' || d.institutional.ad_grade === 'A') {
-      tags.push(`<span class="tag tag-inst-a">🏛️ ${d.institutional.ad_grade} Inst</span>`);
-    } else if (d.institutional.ad_grade === 'D' || d.institutional.ad_grade === 'E') {
-      tags.push('<span class="tag tag-inst-d">⚠️ Inst Exit</span>');
+    const grade = d.institutional.ad_grade;
+    if (grade === 'A+' || grade === 'A') {
+      tags.push(`<span class="tag tag-inst-a" title="Grade ${grade} Heavy Institutional Accumulation">🏛️ Grade ${grade}</span>`);
+    } else if (grade === 'B') {
+      tags.push(`<span class="tag tag-inst-b" title="Grade B Neutral / Moderate Inflow">⚖️ Grade B</span>`);
+    } else if (grade === 'C') {
+      tags.push(`<span class="tag tag-inst-c" title="Grade C Churn / Absorption">🔄 Grade C</span>`);
+    } else if (grade === 'D' || grade === 'E') {
+      tags.push(`<span class="tag tag-inst-d" title="Institutional Exit / Selling Pressure">⚠️ Grade ${grade}</span>`);
     }
+  }
+
+  // Forensic safety warning tags (High Promoter Pledge, High Debt Burden, Auditor Warning)
+  const forensics = d.forensics || d.safety || {};
+  const pledgePct = forensics.promoter_pledge_pct ?? forensics.pledge_pct ?? d.promoter_pledge_pct ?? d.pledge_pct;
+  const isHighPledge = forensics.flags?.includes('HIGH_PROMOTER_PLEDGE') || forensics.high_pledge || (pledgePct != null && Number(pledgePct) > 20);
+  if (isHighPledge) {
+    const displayPledge = pledgePct != null ? pledgePct : (d.pledge_pct || '>20');
+    tags.push(`<span class="tag tag-forensic-pledge" title="Forensic Warning: High Promoter Pledge (${displayPledge}% > 20%)">🚩 Pledge ${displayPledge}%</span>`);
+  }
+  const isHighDebt = forensics.flags?.includes('HIGH_DEBT_LOAD') || forensics.high_debt || d.high_debt;
+  if (isHighDebt) {
+    tags.push('<span class="tag tag-forensic-debt" title="Forensic Warning: High Debt Burden (Elevated D/E)">⚠️ High Debt</span>');
+  }
+  const isAuditorWarning = forensics.flags?.includes('AUDITOR_WARNING') || forensics.auditor_warning || forensics.auditor_change || d.auditor_warning || d.auditor_change;
+  if (isAuditorWarning) {
+    tags.push('<span class="tag tag-forensic-auditor" title="Forensic Warning: Auditor Resignation / Regulatory Warning">⚠️ Auditor Chg</span>');
   }
 
   if (d.ichimoku && (d.ichimoku.status === 'Kumo BUY' || d.ichimoku.kumo_buy || /Bull/i.test(d.ichimoku.status))) tags.push('<span class="tag tag-kumo">☁️ KUMO BUY</span>');

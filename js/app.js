@@ -16,7 +16,7 @@ let allData      = [];
 let globalScreenerData = [];
 let liveCache    = {};
 let prevDataMap  = {};
-let filters      = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
+let filters      = { ars:true, trend:true, srs:false, mrs:false, quad1:false, quad2:false, quad3:false, quad4:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
 let activePreset = null;
 let stParam      = '14';
 let activeTab    = 'screener';
@@ -67,6 +67,8 @@ function passes(d) {
   if (filters.mrs)         ok = ok && ((d.mrs !== undefined && d.mrs > 0) || d.ars > 0);
   if (filters.quad1)       ok = ok && getDualRSQuad(d) === 'quad-1';
   if (filters.quad2)       ok = ok && getDualRSQuad(d) === 'quad-2';
+  if (filters.quad3)       ok = ok && getDualRSQuad(d) === 'quad-3';
+  if (filters.quad4)       ok = ok && getDualRSQuad(d) === 'quad-4';
   if (filters.ichimoku)    ok = ok && d.ichimoku && (d.ichimoku.status === 'Kumo BUY' || d.ichimoku.kumo_buy || /Bull/i.test(d.ichimoku.status));
   if (filters.smartmoney) {
     const inst = d.institutional;
@@ -93,7 +95,7 @@ function applyPreset(presetName) {
   if (activePreset === presetName) {
     activePreset = null;
     document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
-    filters = { ars:true, trend:true, srs:false, mtf:false, tightbase:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
+    filters = { ars:true, trend:true, srs:false, mtf:false, tightbase:false, mrs:false, quad1:false, quad2:false, quad3:false, quad4:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:false, pass:true, groups:true, watchlist:false };
     syncChipUI();
     renderAll();
     return;
@@ -105,7 +107,7 @@ function applyPreset(presetName) {
   });
 
   const keepFno = filters.fno;
-  filters = { ars:false, trend:false, srs:false, mtf:false, tightbase:false, mrs:false, quad1:false, quad2:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:keepFno, pass:true, groups:true, watchlist:false };
+  filters = { ars:false, trend:false, srs:false, mtf:false, tightbase:false, mrs:false, quad1:false, quad2:false, quad3:false, quad4:false, ichimoku:false, smartmoney:false, delivsurge:false, vol:false, volsurge:false, volz:false, vcp:false, pocketpivot:false, '52w':false, st:false, fno:keepFno, pass:true, groups:true, watchlist:false };
 
   if (presetName === 'rocket-breakouts') {
     filters['52w'] = true;
@@ -167,7 +169,7 @@ function applyPreset(presetName) {
 }
 
 function syncChipUI() {
-  const keys = ['ars','trend','srs','mtf','tightbase','mrs','smartmoney','delivsurge','vol','volsurge','volz','vcp','pocketpivot','52w','st','quad1','quad2','fno','pass','groups','watchlist'];
+  const keys = ['ars','trend','srs','mtf','tightbase','mrs','smartmoney','delivsurge','vol','volsurge','volz','vcp','pocketpivot','52w','st','quad1','quad2','quad3','quad4','fno','pass','groups','watchlist'];
   keys.forEach(k => {
     const el = document.getElementById('f-' + k);
     if (el) el.classList.toggle('on', !!filters[k]);
@@ -1695,7 +1697,7 @@ function renderOverviewTab() {
           </div>
 
           <!-- QUAD 3 -->
-          <div class="ov-quad-card q3" onclick="toggleChip('quad1')">
+          <div class="ov-quad-card q3" onclick="toggleChip('quad3')">
             <div class="ov-quad-head">
               <span class="ov-quad-name" style="color:#e3b341">⚠️ QUAD 3: PULLBACKS</span>
               <span class="ov-quad-count" style="color:#e3b341">${q3List.length}</span>
@@ -1707,7 +1709,7 @@ function renderOverviewTab() {
           </div>
 
           <!-- QUAD 4 -->
-          <div class="ov-quad-card q4">
+          <div class="ov-quad-card q4" onclick="toggleChip('quad4')">
             <div class="ov-quad-head">
               <span class="ov-quad-name" style="color:#ef5350">❄️ QUAD 4: LAGGARDS</span>
               <span class="ov-quad-count" style="color:#ef5350">${q4List.length}</span>
