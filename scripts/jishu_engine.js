@@ -137,7 +137,31 @@ function runJishuEngine(customScreenerData = null) {
       exitReason = 'QUAD_DOWNGRADE';
       exitPrice = curPrice;
     }
-    // 5. Check Target 2 (1:2 RR Hit -> Move SL to Target 1 price & activate Trailing)
+    // 5. Check Target 3 (1:3 RR Hit -> Open Trailing Trend Expansion)
+    else if (pos.target_3_price && curPrice >= pos.target_3_price) {
+      if (!pos.target_3_hit) {
+        pos.target_3_hit = true;
+        pos.sl_moved_to_t1 = true;
+        pos.sl_moved_to_cost = true;
+        if (!pos.current_sl || pos.current_sl < pos.target_1_price) {
+          pos.current_sl = pos.target_1_price;
+        }
+        const trailMsg = `🚀 [JISHU TRAIL] ${pos.sym} hit 1:3 Target (₹${pos.target_3_price.toFixed(2)}). Open trailing trend expansion active!`;
+        console.log(trailMsg);
+        events.push({
+          timestamp: new Date().toISOString(),
+          type: 'TRAILING_SL_TARGET3',
+          symbol: pos.sym,
+          message: trailMsg
+        });
+      }
+      // Dynamic Trailing: trail 10% below highest peak, guaranteed >= target_1_price
+      const dynamicTrail = Number((pos.highest_price * 0.90).toFixed(2));
+      if (dynamicTrail > pos.current_sl) {
+        pos.current_sl = Math.max(pos.target_1_price, dynamicTrail);
+      }
+    }
+    // 6. Check Target 2 (1:2 RR Hit -> Move SL to Target 1 price & activate Trailing)
     else if (curPrice >= pos.target_2_price) {
       if (!pos.sl_moved_to_t1) {
         pos.sl_moved_to_t1 = true;
@@ -159,7 +183,7 @@ function runJishuEngine(customScreenerData = null) {
         }
       }
     }
-    // 6. Check Target 1 (1:1 RR Hit -> Move SL to Cost Price / Breakeven)
+    // 7. Check Target 1 (1:1 RR Hit -> Move SL to Cost Price / Breakeven)
     else if (curPrice >= pos.target_1_price && !pos.sl_moved_to_cost && !pos.sl_moved_to_t1) {
       pos.sl_moved_to_cost = true;
       pos.current_sl = pos.entry_price; // Risk-free breakeven
@@ -330,6 +354,7 @@ function runJishuEngine(customScreenerData = null) {
       const initialSl = sizing.stopLossPrice;
       const target1Price = sizing.target1Price;
       const target2Price = sizing.target2Price;
+      const target3Price = Number((entryPrice + (3 * sizing.stopDistance)).toFixed(2));
 
       const entryCost = investedValue * halfCost;
       portfolio.account.cash -= investedValue + entryCost;
@@ -357,6 +382,7 @@ function runJishuEngine(customScreenerData = null) {
         risk_pct_of_equity: sizing.riskPctOfEquity,
         target_1_price: target1Price,
         target_2_price: target2Price,
+        target_3_price: target3Price,
         smart_money_score: sm.score,
         smart_money_tier: sm.tier,
         sl_moved_to_cost: false,
@@ -369,7 +395,7 @@ function runJishuEngine(customScreenerData = null) {
 
       portfolio.open_positions.push(newPosition);
 
-      const buyMsg = `🟢 [JISHU BUY] [${sleeveInfo.icon} ${sleeveInfo.sleeveId}] ${stock.sym} @ ₹${entryPrice.toFixed(2)} | Qty: ${qty} | Total: ₹${investedValue.toFixed(2)} | Risk: ₹${sizing.actualDollarRisk} (${sizing.riskPctOfEquity}%) | Smart Money: ${sm.score}/100 (${sm.tier}) | SL: ₹${initialSl.toFixed(2)} | T1: ₹${target1Price.toFixed(2)} | T2: ₹${target2Price.toFixed(2)}`;
+      const buyMsg = `🟢 [JISHU BUY] [${sleeveInfo.icon} ${sleeveInfo.sleeveId}] ${stock.sym} @ ₹${entryPrice.toFixed(2)} | Qty: ${qty} | Total: ₹${investedValue.toFixed(2)} | Risk: ₹${sizing.actualDollarRisk} (${sizing.riskPctOfEquity}%) | Smart Money: ${sm.score}/100 (${sm.tier}) | SL: ₹${initialSl.toFixed(2)} | T1: ₹${target1Price.toFixed(2)} | T2: ₹${target2Price.toFixed(2)} | T3: ₹${target3Price.toFixed(2)}`;
       console.log(buyMsg);
       events.push({
         timestamp: new Date().toISOString(),
@@ -381,6 +407,7 @@ function runJishuEngine(customScreenerData = null) {
         smart_money: sm.score,
         target_1: target1Price,
         target_2: target2Price,
+        target_3: target3Price,
         sl: initialSl,
         message: buyMsg
       });
@@ -480,6 +507,7 @@ function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
       fixed_sl_pct: 10,
       target_1_rr: 1,
       target_2_rr: 2,
+      target_3_rr: 3,
       min_volume_ratio: 1.2,
       min_rs_rating: 75,
       max_distance_from_st_pct: 7.0,
