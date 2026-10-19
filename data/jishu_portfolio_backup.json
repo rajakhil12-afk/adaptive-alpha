@@ -2,19 +2,19 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-16T17:58:55.740Z",
+  "last_updated": "2026-10-19T12:23:29.012Z",
   "account": {
     "initial_capital": 1000000,
-    "cash": 593848.1174999999,
-    "invested_capital": 404235.45,
-    "total_equity": 998083.57,
-    "realized_pnl": -7957.482499999993,
-    "unrealized_pnl": 6041.05,
+    "cash": 495864.75,
+    "invested_capital": 495807.75,
+    "total_equity": 991672.5,
+    "realized_pnl": -6596.849999999997,
+    "unrealized_pnl": -1730.65,
     "win_rate": 0,
-    "total_trades": 2,
+    "total_trades": 1,
     "winning_trades": 0,
-    "losing_trades": 2,
-    "total_costs": 239.08250000000004
+    "losing_trades": 1,
+    "total_costs": 116.45
   },
   "settings": {
     "max_positions": 10,
@@ -34,8 +34,8 @@
     "regime": "CHOPPY_CONSOLIDATION",
     "regimeColor": "#eab308",
     "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
-    "marketScore": 49,
-    "vixLevel": 14,
+    "marketScore": 46,
+    "vixLevel": 14.8,
     "vixRegime": "ELEVATED_CHOPPY",
     "fiiNet": 0,
     "diiNet": 0,
@@ -58,7 +58,7 @@
       "qty": 259,
       "invested_value": 99922.2,
       "initial_sl": 357.27,
-      "current_sl": 385.8,
+      "current_sl": 357.27,
       "risk_per_share": 28.53,
       "actual_dollar_risk": 7389.27,
       "risk_pct_of_equity": 0.74,
@@ -66,12 +66,12 @@
       "target_2_price": 442.86,
       "smart_money_score": 87,
       "smart_money_tier": "🐋 WHALE_ACCUMULATION",
-      "sl_moved_to_cost": true,
+      "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 418.15,
-      "current_price": 418.15,
-      "unrealized_pnl": 8378.64999999999,
-      "unrealized_pnl_pct": 8.385173665111449
+      "highest_price": 404.2,
+      "current_price": 404.2,
+      "unrealized_pnl": 4765.599999999994,
+      "unrealized_pnl_pct": 4.769310523587345
     },
     {
       "sym": "BHEL",
@@ -85,7 +85,7 @@
       "qty": 233,
       "invested_value": 99957,
       "initial_sl": 398.71,
-      "current_sl": 429,
+      "current_sl": 398.71,
       "risk_per_share": 30.29,
       "actual_dollar_risk": 7057.57,
       "risk_pct_of_equity": 0.71,
@@ -93,12 +93,39 @@
       "target_2_price": 489.58,
       "smart_money_score": 55,
       "smart_money_tier": "⚖️ BALANCED_FLOW",
-      "sl_moved_to_cost": true,
+      "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 464,
-      "current_price": 434.6,
-      "unrealized_pnl": 1304.8000000000052,
-      "unrealized_pnl_pct": 1.3053613053613107
+      "highest_price": 452,
+      "current_price": 427.35,
+      "unrealized_pnl": -384.4499999999947,
+      "unrealized_pnl_pct": -0.3846153846153793
+    },
+    {
+      "sym": "ADANIPORTS",
+      "name": "Adani Ports",
+      "ind": "Services",
+      "logoid": "adani-ports-and-special-economic-zone",
+      "sleeve": "SLEEVE_A",
+      "setup_type": "ALPHA_BREAKOUT",
+      "entry_date": "2026-10-05",
+      "entry_price": 1774,
+      "qty": 56,
+      "invested_value": 99344,
+      "initial_sl": 1684.55,
+      "current_sl": 1684.55,
+      "risk_per_share": 89.45,
+      "actual_dollar_risk": 5009.2,
+      "risk_pct_of_equity": 0.5,
+      "target_1_price": 1863.45,
+      "target_2_price": 1952.9,
+      "smart_money_score": 40,
+      "smart_money_tier": "⚖️ BALANCED_FLOW",
+      "sl_moved_to_cost": false,
+      "sl_moved_to_t1": false,
+      "highest_price": 1774,
+      "current_price": 1766,
+      "unrealized_pnl": -448,
+      "unrealized_pnl_pct": -0.4509582863585118
     },
     {
       "sym": "LAURUSLABS",
@@ -122,10 +149,10 @@
       "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 2069.2,
-      "current_price": 2060.1,
-      "unrealized_pnl": 484.79999999999563,
-      "unrealized_pnl_pct": 0.49268292682926385
+      "highest_price": 2069,
+      "current_price": 2069,
+      "unrealized_pnl": 912,
+      "unrealized_pnl_pct": 0.9268292682926829
     },
     {
       "sym": "MARKSANS",
@@ -150,32 +177,12 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 324.4,
-      "current_price": 311,
-      "unrealized_pnl": -4127.199999999993,
-      "unrealized_pnl_pct": -4.130702836004926
+      "current_price": 303.05,
+      "unrealized_pnl": -6575.799999999989,
+      "unrealized_pnl_pct": -6.581381011097401
     }
   ],
   "closed_trades": [
-    {
-      "sym": "ADANIPORTS",
-      "name": "Adani Ports",
-      "ind": "Services",
-      "sleeve": "SLEEVE_A",
-      "setup_type": "ALPHA_BREAKOUT",
-      "entry_date": "2026-10-05",
-      "exit_date": "2026-10-16",
-      "entry_price": 1774,
-      "exit_price": 1750.8,
-      "qty": 56,
-      "invested_value": 99344,
-      "gross_pnl": -1299.2,
-      "costs": 122.56,
-      "realized_pnl": -1421.76,
-      "return_pct": -1.43,
-      "exit_reason": "QUAD_DOWNGRADE",
-      "highest_price": 1774,
-      "smart_money_score": 40
-    },
     {
       "sym": "RKFORGE",
       "name": "Ramkrishna Forgings",
@@ -183,15 +190,15 @@
       "sleeve": "SLEEVE_A",
       "setup_type": "ALPHA_BREAKOUT",
       "entry_date": "2026-10-06",
-      "exit_date": "2026-10-09",
+      "exit_date": "2026-10-19",
       "entry_price": 732.65,
-      "exit_price": 685.45,
+      "exit_price": 685,
       "qty": 136,
       "invested_value": 99640.4,
-      "gross_pnl": -6419.2,
-      "costs": 116.53,
-      "realized_pnl": -6535.73,
-      "return_pct": -6.56,
+      "gross_pnl": -6480.4,
+      "costs": 116.45,
+      "realized_pnl": -6596.85,
+      "return_pct": -6.62,
       "exit_reason": "STOP_LOSS_HIT",
       "highest_price": 732.65,
       "smart_money_score": 42
@@ -226,90 +233,24 @@
       "open_positions_count": 6
     },
     {
-      "date": "2026-10-09",
-      "cash": 495925.87,
-      "invested": 490415.75,
-      "total_equity": 986341.62,
-      "realized_pnl": -6535.73,
-      "unrealized_pnl": -7122.65,
+      "date": "2026-10-19",
+      "cash": 495864.75,
+      "invested": 495807.75,
+      "total_equity": 991672.5,
+      "realized_pnl": -6596.85,
+      "unrealized_pnl": -1730.65,
       "open_positions_count": 5
-    },
-    {
-      "date": "2026-10-12",
-      "cash": 495925.87,
-      "invested": 502310.8,
-      "total_equity": 998236.67,
-      "realized_pnl": -6535.73,
-      "unrealized_pnl": 4772.4,
-      "open_positions_count": 5
-    },
-    {
-      "date": "2026-10-13",
-      "cash": 495925.87,
-      "invested": 502076.3,
-      "total_equity": 998002.17,
-      "realized_pnl": -6535.73,
-      "unrealized_pnl": 4537.9,
-      "open_positions_count": 5
-    },
-    {
-      "date": "2026-10-14",
-      "cash": 495925.87,
-      "invested": 505515.4,
-      "total_equity": 1001441.27,
-      "realized_pnl": -6535.73,
-      "unrealized_pnl": 7977,
-      "open_positions_count": 5
-    },
-    {
-      "date": "2026-10-15",
-      "cash": 495925.87,
-      "invested": 495840.55,
-      "total_equity": 991766.42,
-      "realized_pnl": -6535.73,
-      "unrealized_pnl": -1697.85,
-      "open_positions_count": 5
-    },
-    {
-      "date": "2026-10-16",
-      "cash": 593848.12,
-      "invested": 404235.45,
-      "total_equity": 998083.57,
-      "realized_pnl": -7957.48,
-      "unrealized_pnl": 6041.05,
-      "open_positions_count": 4
     }
   ],
   "recent_events": [
     {
-      "timestamp": "2026-10-16T17:58:55.738Z",
-      "type": "TRAILING_SL_COST",
-      "symbol": "NAZARA",
-      "message": "🛡️ [JISHU TRAIL] NAZARA hit 1:1 Target (₹414.33). Stop Loss adjusted to COST PRICE (₹385.80). Trade is RISK-FREE!"
-    },
-    {
-      "timestamp": "2026-10-16T17:58:55.738Z",
-      "type": "TRADE_EXIT",
-      "symbol": "ADANIPORTS",
-      "reason": "QUAD_DOWNGRADE",
-      "pnl": -1421.7560000000026,
-      "return_pct": -1.4311443066516374,
-      "message": "🛑 [JISHU STOP LOSS] Closed ADANIPORTS at ₹1750.80 | Reason: QUAD_DOWNGRADE | PnL: ₹-1421.76 (-1.43%)"
-    },
-    {
-      "timestamp": "2026-10-14T18:31:32.601Z",
-      "type": "TRAILING_SL_COST",
-      "symbol": "BHEL",
-      "message": "🛡️ [JISHU TRAIL] BHEL hit 1:1 Target (₹459.29). Stop Loss adjusted to COST PRICE (₹429.00). Trade is RISK-FREE!"
-    },
-    {
-      "timestamp": "2026-10-12T07:04:19.586Z",
+      "timestamp": "2026-10-19T12:23:28.790Z",
       "type": "TRADE_EXIT",
       "symbol": "RKFORGE",
       "reason": "STOP_LOSS_HIT",
-      "pnl": -6535.726499999991,
-      "return_pct": -6.559313792397452,
-      "message": "🛑 [JISHU STOP LOSS] Closed RKFORGE at ₹685.45 | Reason: STOP_LOSS_HIT | PnL: ₹-6535.73 (-6.56%)"
+      "pnl": -6596.849999999997,
+      "return_pct": -6.620657885757179,
+      "message": "🛑 [JISHU STOP LOSS] Closed RKFORGE at ₹685.00 | Reason: STOP_LOSS_HIT | PnL: ₹-6596.85 (-6.62%)"
     },
     {
       "timestamp": "2026-10-06T19:28:41.425Z",
@@ -358,12 +299,12 @@
       "minRsRating": 80,
       "maxHoldingDays": 15,
       "targetPct": 35,
-      "targetCapital": 349329.25,
-      "investedCapital": 398194.4,
+      "targetCapital": 347085.38,
+      "investedCapital": 497538.4,
       "availableCapital": 0,
-      "openPositions": 4,
-      "openSlots": 1,
-      "utilizationPct": 114
+      "openPositions": 5,
+      "openSlots": 0,
+      "utilizationPct": 143.3
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -374,9 +315,9 @@
       "minRsRating": 65,
       "maxHoldingDays": 30,
       "targetPct": 35,
-      "targetCapital": 349329.25,
+      "targetCapital": 347085.38,
       "investedCapital": 0,
-      "availableCapital": 349329.25,
+      "availableCapital": 347085.38,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -388,7 +329,7 @@
       "targetAllocPct": 20,
       "maxPositions": 0,
       "targetPct": 30,
-      "targetCapital": 299425.07,
+      "targetCapital": 297501.75,
       "status": "ACTIVE BUFFER"
     }
   },
@@ -396,20 +337,20 @@
     "profitFactor": 0,
     "sharpeRatio": 0,
     "sortinoRatio": 0,
-    "maxDrawdownPct": 1.89,
-    "maxDrawdownValue": 19017.38,
+    "maxDrawdownPct": 0,
+    "maxDrawdownValue": 0,
     "payoffRatio": 0,
-    "expectancy": -3978.74,
+    "expectancy": -6596.85,
     "totalGains": 0,
-    "totalLosses": 7957.49,
-    "totalClosedTrades": 2,
+    "totalLosses": 6596.85,
+    "totalClosedTrades": 1,
     "winRatePct": 0
   },
   "quant_recommendations": [
     {
       "type": "CAPITAL_HEALTH",
       "badge": "✅ STABLE",
-      "text": "Capital curve is well-protected. Max Drawdown contained at 1.9% (Institutional standard < 8%)."
+      "text": "Capital curve is well-protected. Max Drawdown contained at 0.0% (Institutional standard < 8%)."
     }
   ]
 }
