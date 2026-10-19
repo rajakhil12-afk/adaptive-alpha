@@ -2,7 +2,7 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-19T12:23:29.012Z",
+  "last_updated": "2026-10-19T19:49:21.437Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 495864.75,
@@ -22,6 +22,7 @@
     "fixed_sl_pct": 10,
     "target_1_rr": 1,
     "target_2_rr": 2,
+    "target_3_rr": 3,
     "min_volume_ratio": 1.2,
     "min_rs_rating": 75,
     "max_distance_from_st_pct": 7,
@@ -34,8 +35,8 @@
     "regime": "CHOPPY_CONSOLIDATION",
     "regimeColor": "#eab308",
     "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
-    "marketScore": 46,
-    "vixLevel": 14.8,
+    "marketScore": 49,
+    "vixLevel": 14.1,
     "vixRegime": "ELEVATED_CHOPPY",
     "fiiNet": 0,
     "diiNet": 0,
@@ -64,6 +65,7 @@
       "risk_pct_of_equity": 0.74,
       "target_1_price": 414.33,
       "target_2_price": 442.86,
+      "target_3_price": 471.39,
       "smart_money_score": 87,
       "smart_money_tier": "🐋 WHALE_ACCUMULATION",
       "sl_moved_to_cost": false,
@@ -91,6 +93,7 @@
       "risk_pct_of_equity": 0.71,
       "target_1_price": 459.29,
       "target_2_price": 489.58,
+      "target_3_price": 519.87,
       "smart_money_score": 55,
       "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
@@ -118,6 +121,7 @@
       "risk_pct_of_equity": 0.5,
       "target_1_price": 1863.45,
       "target_2_price": 1952.9,
+      "target_3_price": 2042.35,
       "smart_money_score": 40,
       "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
@@ -145,6 +149,7 @@
       "risk_pct_of_equity": 0.67,
       "target_1_price": 2189.18,
       "target_2_price": 2328.36,
+      "target_3_price": 2467.54,
       "smart_money_score": 40,
       "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
@@ -172,6 +177,7 @@
       "risk_pct_of_equity": 0.68,
       "target_1_price": 346.64,
       "target_2_price": 368.88,
+      "target_3_price": 391.12,
       "smart_money_score": 33,
       "smart_money_tier": "⚠️ DISTRIBUTION_RISK",
       "sl_moved_to_cost": false,
@@ -337,8 +343,8 @@
     "profitFactor": 0,
     "sharpeRatio": 0,
     "sortinoRatio": 0,
-    "maxDrawdownPct": 0,
-    "maxDrawdownValue": 0,
+    "maxDrawdownPct": 1.36,
+    "maxDrawdownValue": 13686.5,
     "payoffRatio": 0,
     "expectancy": -6596.85,
     "totalGains": 0,
@@ -350,7 +356,7 @@
     {
       "type": "CAPITAL_HEALTH",
       "badge": "✅ STABLE",
-      "text": "Capital curve is well-protected. Max Drawdown contained at 0.0% (Institutional standard < 8%)."
+      "text": "Capital curve is well-protected. Max Drawdown contained at 1.4% (Institutional standard < 8%)."
     }
   ]
 }

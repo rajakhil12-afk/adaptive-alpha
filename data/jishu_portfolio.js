@@ -2,7 +2,7 @@ window.STATIC_JISHU_PORTFOLIO = {
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-19T12:23:29.012Z",
+  "last_updated": "2026-10-19T19:49:21.437Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 495864.75,
@@ -35,8 +35,8 @@ window.STATIC_JISHU_PORTFOLIO = {
     "regime": "CHOPPY_CONSOLIDATION",
     "regimeColor": "#eab308",
     "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
-    "marketScore": 46,
-    "vixLevel": 14.8,
+    "marketScore": 49,
+    "vixLevel": 14.1,
     "vixRegime": "ELEVATED_CHOPPY",
     "fiiNet": 0,
     "diiNet": 0,
@@ -343,8 +343,8 @@ window.STATIC_JISHU_PORTFOLIO = {
     "profitFactor": 0,
     "sharpeRatio": 0,
     "sortinoRatio": 0,
-    "maxDrawdownPct": 0,
-    "maxDrawdownValue": 0,
+    "maxDrawdownPct": 1.36,
+    "maxDrawdownValue": 13686.5,
     "payoffRatio": 0,
     "expectancy": -6596.85,
     "totalGains": 0,
@@ -356,7 +356,7 @@ window.STATIC_JISHU_PORTFOLIO = {
     {
       "type": "CAPITAL_HEALTH",
       "badge": "✅ STABLE",
-      "text": "Capital curve is well-protected. Max Drawdown contained at 0.0% (Institutional standard < 8%)."
+      "text": "Capital curve is well-protected. Max Drawdown contained at 1.4% (Institutional standard < 8%)."
     }
   ]
 };
