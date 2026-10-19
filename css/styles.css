@@ -465,7 +465,11 @@ select:focus, button:focus { outline: none; border-color: var(--up); box-shadow:
 .tag-ma-dn { background: rgba(239,83,80,0.1); color: var(--down); }
 .tag-inst-a { background: linear-gradient(135deg, rgba(38,166,154,0.2), rgba(0,230,118,0.12)); color: #00e676; border: 1px solid rgba(0,230,118,0.4); text-shadow: 0 0 8px rgba(0,230,118,0.3); }
 .tag-inst-b { background: rgba(94,150,255,0.15); color: #82b1ff; border: 1px solid rgba(94,150,255,0.35); }
+.tag-inst-c { background: rgba(255, 255, 255, 0.05); color: var(--muted-lt); border: 1px solid var(--border); }
 .tag-inst-d { background: rgba(239,83,80,0.15); color: #ef5350; border: 1px solid rgba(239,83,80,0.35); }
+.tag-forensic-pledge { background: linear-gradient(135deg, rgba(239, 83, 80, 0.25), rgba(220, 38, 38, 0.15)); color: #ff6b6b; border: 1px solid rgba(239, 83, 80, 0.5); font-weight: 800; }
+.tag-forensic-debt { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45); font-weight: 700; }
+.tag-forensic-auditor { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.45); font-weight: 700; }
 .tag-bulk-buy { background: linear-gradient(135deg, rgba(38,166,154,0.3), rgba(0,230,118,0.2)); color: #00e676; border: 1px solid rgba(0,230,118,0.5); font-weight: 800; animation: pulse-signal-glow 2s infinite ease-in-out; }
 .tag-bulk-sell { background: rgba(239,83,80,0.2); color: #ff5252; border: 1px solid rgba(239,83,80,0.4); font-weight: 800; }
 .tag-deliv-surge { background: rgba(227, 179, 65, 0.16); color: var(--gold); border: 1px solid rgba(227, 179, 65, 0.4); font-weight: 700; }
