@@ -2,7 +2,7 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-19T19:49:21.437Z",
+  "last_updated": "2026-10-20T18:26:55.244Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 495864.75,
@@ -35,8 +35,8 @@
     "regime": "CHOPPY_CONSOLIDATION",
     "regimeColor": "#eab308",
     "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
-    "marketScore": 49,
-    "vixLevel": 14.1,
+    "marketScore": 46,
+    "vixLevel": 14.8,
     "vixRegime": "ELEVATED_CHOPPY",
     "fiiNet": 0,
     "diiNet": 0,
@@ -240,6 +240,15 @@
     },
     {
       "date": "2026-10-19",
+      "cash": 495864.75,
+      "invested": 495807.75,
+      "total_equity": 991672.5,
+      "realized_pnl": -6596.85,
+      "unrealized_pnl": -1730.65,
+      "open_positions_count": 5
+    },
+    {
+      "date": "2026-10-20",
       "cash": 495864.75,
       "invested": 495807.75,
       "total_equity": 991672.5,

@@ -227,10 +227,10 @@
     "triggerDate": "2026-10-01",
     "triggerPrice": 46.48,
     "maxPrice": 53.62,
-    "currentPrice": 53.62,
+    "currentPrice": 52.55,
     "volRatioAtTrigger": 3.43,
     "rsRatingAtTrigger": 27,
-    "gainPct": 15.36,
+    "gainPct": 13.06,
     "maxGainPct": 15.36
   },
   {
@@ -305,10 +305,10 @@
     "triggerDate": "2026-10-05",
     "triggerPrice": 46.48,
     "maxPrice": 53.62,
-    "currentPrice": 53.62,
+    "currentPrice": 52.55,
     "volRatioAtTrigger": 3.43,
     "rsRatingAtTrigger": 30,
-    "gainPct": 15.36,
+    "gainPct": 13.06,
     "maxGainPct": 15.36
   },
   {
