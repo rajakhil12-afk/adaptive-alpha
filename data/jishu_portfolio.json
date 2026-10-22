@@ -2,14 +2,14 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-21T18:34:19.007Z",
+  "last_updated": "2026-10-22T18:29:32.248Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 638661.8915,
-    "invested_capital": 342167.9,
-    "total_equity": 980829.79,
+    "invested_capital": 339351.05,
+    "total_equity": 978012.94,
     "realized_pnl": -19296.5085,
-    "unrealized_pnl": 181.7,
+    "unrealized_pnl": -2635.15,
     "win_rate": 0,
     "total_trades": 3,
     "winning_trades": 0,
@@ -35,8 +35,8 @@
     "regime": "CHOPPY_CONSOLIDATION",
     "regimeColor": "#eab308",
     "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
-    "marketScore": 47,
-    "vixLevel": 14.8,
+    "marketScore": 44,
+    "vixLevel": 15.8,
     "vixRegime": "ELEVATED_CHOPPY",
     "fiiNet": 0,
     "diiNet": 0,
@@ -71,9 +71,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 404.2,
-      "current_price": 398.9,
-      "unrealized_pnl": 3392.899999999991,
-      "unrealized_pnl_pct": 3.3955417314670724
+      "current_price": 387.95,
+      "unrealized_pnl": 556.8499999999941,
+      "unrealized_pnl_pct": 0.5572835666148204
     },
     {
       "sym": "ADANIPORTS",
@@ -99,9 +99,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 1774,
-      "current_price": 1748.8,
-      "unrealized_pnl": -1411.2000000000025,
-      "unrealized_pnl_pct": -1.4205186020293148
+      "current_price": 1750,
+      "unrealized_pnl": -1344,
+      "unrealized_pnl_pct": -1.3528748590755355
     },
     {
       "sym": "LAURUSLABS",
@@ -127,9 +127,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 2069,
-      "current_price": 2012.5,
-      "unrealized_pnl": -1800,
-      "unrealized_pnl_pct": -1.8292682926829267
+      "current_price": 2002.5,
+      "unrealized_pnl": -2280,
+      "unrealized_pnl_pct": -2.317073170731707
     },
     {
       "sym": "ICICIBANK",
@@ -155,10 +155,10 @@
       "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 1385,
-      "current_price": 1385,
-      "unrealized_pnl": 0,
-      "unrealized_pnl_pct": 0
+      "highest_price": 1398.5,
+      "current_price": 1398.5,
+      "unrealized_pnl": 432,
+      "unrealized_pnl_pct": 0.9747292418772563
     }
   ],
   "closed_trades": [
@@ -277,6 +277,15 @@
       "realized_pnl": -19296.51,
       "unrealized_pnl": 181.7,
       "open_positions_count": 4
+    },
+    {
+      "date": "2026-10-22",
+      "cash": 638661.89,
+      "invested": 339351.05,
+      "total_equity": 978012.94,
+      "realized_pnl": -19296.51,
+      "unrealized_pnl": -2635.15,
+      "open_positions_count": 4
     }
   ],
   "recent_events": [
@@ -368,12 +377,12 @@
       "minRsRating": 80,
       "maxHoldingDays": 15,
       "targetPct": 35,
-      "targetCapital": 343309.82,
-      "investedCapital": 297666.2,
-      "availableCapital": 1323.6200000000026,
-      "openPositions": 3,
+      "targetCapital": 342304.53,
+      "investedCapital": 341986.2,
+      "availableCapital": 318.33,
+      "openPositions": 4,
       "openSlots": 1,
-      "utilizationPct": 86.7
+      "utilizationPct": 99.9
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -384,9 +393,9 @@
       "minRsRating": 65,
       "maxHoldingDays": 30,
       "targetPct": 35,
-      "targetCapital": 343309.82,
+      "targetCapital": 342304.53,
       "investedCapital": 0,
-      "availableCapital": 343309.82,
+      "availableCapital": 342304.53,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -398,7 +407,7 @@
       "targetAllocPct": 20,
       "maxPositions": 0,
       "targetPct": 30,
-      "targetCapital": 294265.56,
+      "targetCapital": 293403.88,
       "status": "ACTIVE BUFFER"
     }
   },
@@ -406,8 +415,8 @@
     "profitFactor": 0,
     "sharpeRatio": 0,
     "sortinoRatio": 0,
-    "maxDrawdownPct": 1.36,
-    "maxDrawdownValue": 13686.5,
+    "maxDrawdownPct": 2.44,
+    "maxDrawdownValue": 24529.21,
     "payoffRatio": 0,
     "expectancy": -6432.17,
     "totalGains": 0,
@@ -419,7 +428,7 @@
     {
       "type": "CAPITAL_HEALTH",
       "badge": "✅ STABLE",
-      "text": "Capital curve is well-protected. Max Drawdown contained at 1.4% (Institutional standard < 8%)."
+      "text": "Capital curve is well-protected. Max Drawdown contained at 2.4% (Institutional standard < 8%)."
     }
   ]
 }
