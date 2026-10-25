@@ -2268,23 +2268,32 @@ function closeTour() {
 }
 
 async function loadFiiDiiData() {
+  if (window.STATIC_SCREENER_DATA && window.STATIC_SCREENER_DATA.fii_dii) {
+    latestFiiDiiData = window.STATIC_SCREENER_DATA.fii_dii;
+  }
   try {
-    let res = await fetch('https://fii-diidata.mrchartist.com/api/data');
-    if (!res.ok) {
-      res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://fii-diidata.mrchartist.com/api/data'));
+    const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.nseindia.com/api/fiidiiTradeReact');
+    const res = await fetch(proxyUrl);
+    if (res.ok) {
       const obj = await res.json();
       if (obj && obj.contents) {
         const parsed = JSON.parse(obj.contents);
-        if (parsed && parsed.date) {
-          latestFiiDiiData = { date: parsed.date, fii: parsed.fii_net || 0, dii: parsed.dii_net || 0 };
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          let fiiNet = 0, diiNet = 0, flowDate = '';
+          parsed.forEach(item => {
+            const cat = (item.category || '').toUpperCase();
+            const val = parseFloat(String(item.netValue || '0').replace(/,/g, '')) || 0;
+            if (cat.includes('DII')) {
+              diiNet = val;
+              flowDate = item.date || flowDate;
+            } else if (cat.includes('FII') || cat.includes('FPI')) {
+              fiiNet = val;
+              flowDate = item.date || flowDate;
+            }
+          });
+          latestFiiDiiData = { date: flowDate, fii: fiiNet, dii: diiNet };
           if (!selectedSym) clearSelection();
         }
-      }
-    } else {
-      const parsed = await res.json();
-      if (parsed && parsed.date) {
-        latestFiiDiiData = { date: parsed.date, fii: parsed.fii_net || 0, dii: parsed.dii_net || 0 };
-        if (!selectedSym) clearSelection();
       }
     }
   } catch (e) {
