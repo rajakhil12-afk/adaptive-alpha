@@ -89,28 +89,74 @@ function classifyInstitutionalGrade(adData, delivRatio, delivPct, volRatio, clos
 
 function fetchFiiDiiData() {
   return new Promise((resolve) => {
-    const url = 'https://fii-diidata.mrchartist.com/api/data';
-    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
+    const options = {
+      hostname: 'www.nseindia.com',
+      path: '/api/fiidiiTradeReact',
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.9'
+      },
+      timeout: 10000
+    };
+
+    https.get(options, (res) => {
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
         try {
           const parsed = JSON.parse(data);
-          if (parsed && parsed.date) {
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            let fiiNet = 0, diiNet = 0, flowDate = '';
+            parsed.forEach(item => {
+              const cat = (item.category || '').toUpperCase();
+              const val = parseFloat(String(item.netValue || '0').replace(/,/g, '')) || 0;
+              if (cat.includes('DII')) {
+                diiNet = val;
+                flowDate = item.date || flowDate;
+              } else if (cat.includes('FII') || cat.includes('FPI')) {
+                fiiNet = val;
+                flowDate = item.date || flowDate;
+              }
+            });
             resolve({
-              date: parsed.date,
-              fii: parsed.fii_net || 0,
-              dii: parsed.dii_net || 0
+              date: flowDate || new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+              fii: fiiNet,
+              dii: diiNet
             });
             return;
           }
         } catch (e) {}
-        resolve(null);
+
+        tryFallbackMrChartist(resolve);
       });
     }).on('error', () => {
-      resolve(null);
+      tryFallbackMrChartist(resolve);
     });
   });
+}
+
+function tryFallbackMrChartist(resolve) {
+  const url = 'https://fii-diidata.mrchartist.com/api/data';
+  https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 5000 }, (res) => {
+    let data = '';
+    res.on('data', chunk => data += chunk);
+    res.on('end', () => {
+      try {
+        const parsed = JSON.parse(data);
+        if (parsed && parsed.date) {
+          resolve({
+            date: parsed.date,
+            fii: parsed.fii_net || 0,
+            dii: parsed.dii_net || 0
+          });
+          return;
+        }
+      } catch (e) {}
+      resolve(null);
+    });
+  }).on('error', () => resolve(null));
 }
 
 function fetchNSEBulkDeals() {
