@@ -2,14 +2,14 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-23T18:16:15.329Z",
+  "last_updated": "2026-10-26T19:52:57.335Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 638661.8915,
-    "invested_capital": 338682.45,
-    "total_equity": 977344.34,
+    "invested_capital": 345527.95,
+    "total_equity": 984189.84,
     "realized_pnl": -19296.5085,
-    "unrealized_pnl": -3303.75,
+    "unrealized_pnl": 3541.75,
     "win_rate": 0,
     "total_trades": 3,
     "winning_trades": 0,
@@ -32,19 +32,19 @@
     "stop_fill_model": "close"
   },
   "macro_regime": {
-    "regime": "CORRECTION_DEFENSE",
-    "regimeColor": "#f97316",
-    "regimeBadgeBg": "rgba(249, 115, 22, 0.18)",
-    "marketScore": 41,
+    "regime": "CHOPPY_CONSOLIDATION",
+    "regimeColor": "#eab308",
+    "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
+    "marketScore": 45,
     "vixLevel": 16.9,
     "vixRegime": "ELEVATED_CHOPPY",
-    "fiiNet": 0,
-    "diiNet": 0,
-    "combinedNet": 0,
-    "circuitBreakerActive": true,
-    "maxAllowedSlots": 0,
-    "maxCapitalPerTradePct": 7.5,
-    "guidance": "⚠️ Market in pullback correction. New buying paused (circuit breaker). Open positions are managed by their stops; buying resumes when the market score recovers above 42 and VIX falls below 18."
+    "fiiNet": -1462.49,
+    "diiNet": 2609.57,
+    "combinedNet": 1147.0800000000002,
+    "circuitBreakerActive": false,
+    "maxAllowedSlots": 6,
+    "maxCapitalPerTradePct": 10,
+    "guidance": "⚖️ Selective sideways market. Trade only top RS leaders with volume confirmation (max 6 slots)."
   },
   "open_positions": [
     {
@@ -71,9 +71,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 404.2,
-      "current_price": 402.15,
-      "unrealized_pnl": 4234.649999999991,
-      "unrealized_pnl_pct": 4.237947122861577
+      "current_price": 400.25,
+      "unrealized_pnl": 3742.549999999997,
+      "unrealized_pnl_pct": 3.7454639709694115
     },
     {
       "sym": "ADANIPORTS",
@@ -99,9 +99,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 1774,
-      "current_price": 1702.7,
-      "unrealized_pnl": -3992.7999999999975,
-      "unrealized_pnl_pct": -4.019165727170234
+      "current_price": 1752.5,
+      "unrealized_pnl": -1204,
+      "unrealized_pnl_pct": -1.2119503945885006
     },
     {
       "sym": "LAURUSLABS",
@@ -127,9 +127,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 2069,
-      "current_price": 1970,
-      "unrealized_pnl": -3840,
-      "unrealized_pnl_pct": -3.902439024390244
+      "current_price": 2058.9,
+      "unrealized_pnl": 427.20000000000437,
+      "unrealized_pnl_pct": 0.43414634146341907
     },
     {
       "sym": "ICICIBANK",
@@ -155,10 +155,10 @@
       "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 1398.5,
-      "current_price": 1394.2,
-      "unrealized_pnl": 294.40000000000146,
-      "unrealized_pnl_pct": 0.6642599277978372
+      "highest_price": 1403,
+      "current_price": 1403,
+      "unrealized_pnl": 576,
+      "unrealized_pnl_pct": 1.2996389891696751
     }
   ],
   "closed_trades": [
@@ -295,6 +295,15 @@
       "realized_pnl": -19296.51,
       "unrealized_pnl": -3303.75,
       "open_positions_count": 4
+    },
+    {
+      "date": "2026-10-26",
+      "cash": 638661.89,
+      "invested": 345527.95,
+      "total_equity": 984189.84,
+      "realized_pnl": -19296.51,
+      "unrealized_pnl": 3541.75,
+      "open_positions_count": 4
     }
   ],
   "recent_events": [
@@ -390,13 +399,13 @@
       "maxPositions": 5,
       "minRsRating": 80,
       "maxHoldingDays": 15,
-      "targetPct": 20,
-      "targetCapital": 195468.87,
+      "targetPct": 35,
+      "targetCapital": 344466.44,
       "investedCapital": 341986.2,
-      "availableCapital": 0,
+      "availableCapital": 2480.24,
       "openPositions": 4,
       "openSlots": 1,
-      "utilizationPct": 175
+      "utilizationPct": 99.3
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -406,10 +415,10 @@
       "maxPositions": 3,
       "minRsRating": 65,
       "maxHoldingDays": 30,
-      "targetPct": 30,
-      "targetCapital": 293203.3,
+      "targetPct": 35,
+      "targetCapital": 344466.44,
       "investedCapital": 0,
-      "availableCapital": 293203.3,
+      "availableCapital": 344466.44,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -420,8 +429,8 @@
       "icon": "🛡️",
       "targetAllocPct": 20,
       "maxPositions": 0,
-      "targetPct": 50,
-      "targetCapital": 488672.17,
+      "targetPct": 30,
+      "targetCapital": 295256.95,
       "status": "ACTIVE BUFFER"
     }
   },
@@ -429,8 +438,8 @@
     "profitFactor": 0,
     "sharpeRatio": 0,
     "sortinoRatio": 0,
-    "maxDrawdownPct": 2.72,
-    "maxDrawdownValue": 27346.06,
+    "maxDrawdownPct": 2.79,
+    "maxDrawdownValue": 28014.66,
     "payoffRatio": 0,
     "expectancy": -6432.17,
     "totalGains": 0,
@@ -442,7 +451,7 @@
     {
       "type": "CAPITAL_HEALTH",
       "badge": "✅ STABLE",
-      "text": "Capital curve is well-protected. Max Drawdown contained at 2.7% (Institutional standard < 8%)."
+      "text": "Capital curve is well-protected. Max Drawdown contained at 2.8% (Institutional standard < 8%)."
     }
   ]
 }

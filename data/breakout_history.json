@@ -1,80 +1,15 @@
 [
   {
-    "sym": "MOTILALOFS",
-    "name": "Motilal Oswal Fin",
-    "ind": "Financial Services",
-    "triggerDate": "2026-09-24",
-    "triggerPrice": 1022,
-    "maxPrice": 1029,
-    "currentPrice": 925.8,
-    "volRatioAtTrigger": 1.17,
-    "rsRatingAtTrigger": 58,
-    "gainPct": -9.41,
-    "maxGainPct": 0.68
-  },
-  {
-    "sym": "JUBLPHARMA",
-    "name": "Jubilant Pharmova",
-    "ind": "Healthcare",
-    "triggerDate": "2026-09-24",
-    "triggerPrice": 1063.85,
-    "maxPrice": 1071.95,
-    "currentPrice": 938.3,
-    "volRatioAtTrigger": 0.43,
-    "rsRatingAtTrigger": 43,
-    "gainPct": -11.8,
-    "maxGainPct": 0.76
-  },
-  {
-    "sym": "VGUARD",
-    "name": "V-Guard Industries",
-    "ind": "Consumer Durables",
-    "triggerDate": "2026-09-24",
-    "triggerPrice": 308.6,
-    "maxPrice": 308.6,
-    "currentPrice": 269.3,
-    "volRatioAtTrigger": 0.4,
-    "rsRatingAtTrigger": 37,
-    "gainPct": -12.73,
-    "maxGainPct": 0
-  },
-  {
-    "sym": "CASTROLIND",
-    "name": "Castrol India",
-    "ind": "Oil Gas",
-    "triggerDate": "2026-09-25",
-    "triggerPrice": 201.67,
-    "maxPrice": 201.67,
-    "currentPrice": 194.64,
-    "volRatioAtTrigger": 5.12,
-    "rsRatingAtTrigger": 66,
-    "gainPct": -3.49,
-    "maxGainPct": 0
-  },
-  {
-    "sym": "CUB",
-    "name": "City Union Bank",
-    "ind": "Financial Services",
-    "triggerDate": "2026-09-25",
-    "triggerPrice": 225.57,
-    "maxPrice": 230.95,
-    "currentPrice": 222.02,
-    "volRatioAtTrigger": 0.67,
-    "rsRatingAtTrigger": 52,
-    "gainPct": -1.57,
-    "maxGainPct": 2.39
-  },
-  {
     "sym": "CASTROLIND",
     "name": "Castrol India",
     "ind": "Oil Gas",
     "triggerDate": "2026-09-29",
     "triggerPrice": 199.83,
     "maxPrice": 200.52,
-    "currentPrice": 194.64,
+    "currentPrice": 190.78,
     "volRatioAtTrigger": 1.74,
     "rsRatingAtTrigger": 62,
-    "gainPct": -2.6,
+    "gainPct": -4.53,
     "maxGainPct": 0.35
   },
   {
@@ -84,10 +19,10 @@
     "triggerDate": "2026-09-29",
     "triggerPrice": 307.05,
     "maxPrice": 307.05,
-    "currentPrice": 269.3,
+    "currentPrice": 265.95,
     "volRatioAtTrigger": 0.64,
     "rsRatingAtTrigger": 40,
-    "gainPct": -12.29,
+    "gainPct": -13.39,
     "maxGainPct": 0
   },
   {
@@ -97,10 +32,10 @@
     "triggerDate": "2026-09-30",
     "triggerPrice": 125280,
     "maxPrice": 125280,
-    "currentPrice": 117915,
+    "currentPrice": 117380,
     "volRatioAtTrigger": 1.28,
     "rsRatingAtTrigger": 42,
-    "gainPct": -5.88,
+    "gainPct": -6.31,
     "maxGainPct": 0
   },
   {
@@ -110,10 +45,10 @@
     "triggerDate": "2026-09-30",
     "triggerPrice": 1272,
     "maxPrice": 1272,
-    "currentPrice": 1027.4,
+    "currentPrice": 997.5,
     "volRatioAtTrigger": 2.21,
     "rsRatingAtTrigger": 30,
-    "gainPct": -19.23,
+    "gainPct": -21.58,
     "maxGainPct": 0
   },
   {
@@ -123,10 +58,10 @@
     "triggerDate": "2026-09-30",
     "triggerPrice": 226.05,
     "maxPrice": 230.95,
-    "currentPrice": 222.02,
+    "currentPrice": 207.98,
     "volRatioAtTrigger": 3.79,
     "rsRatingAtTrigger": 63,
-    "gainPct": -1.78,
+    "gainPct": -7.99,
     "maxGainPct": 2.17
   },
   {
@@ -136,10 +71,10 @@
     "triggerDate": "2026-09-30",
     "triggerPrice": 1987,
     "maxPrice": 2005.1,
-    "currentPrice": 1838.2,
+    "currentPrice": 1855.6,
     "volRatioAtTrigger": 1.7,
     "rsRatingAtTrigger": 69,
-    "gainPct": -7.49,
+    "gainPct": -6.61,
     "maxGainPct": 0.91
   },
   {
@@ -149,10 +84,10 @@
     "triggerDate": "2026-10-01",
     "triggerPrice": 1239,
     "maxPrice": 1251.5,
-    "currentPrice": 1027.4,
+    "currentPrice": 997.5,
     "volRatioAtTrigger": 2.04,
     "rsRatingAtTrigger": 28,
-    "gainPct": -17.08,
+    "gainPct": -19.49,
     "maxGainPct": 1.01
   },
   {
@@ -175,10 +110,10 @@
     "triggerDate": "2026-10-01",
     "triggerPrice": 737.45,
     "maxPrice": 738.2,
-    "currentPrice": 710.75,
+    "currentPrice": 703.05,
     "volRatioAtTrigger": 0.66,
     "rsRatingAtTrigger": 38,
-    "gainPct": -3.62,
+    "gainPct": -4.66,
     "maxGainPct": 0.1
   },
   {
@@ -188,10 +123,10 @@
     "triggerDate": "2026-10-01",
     "triggerPrice": 919.7,
     "maxPrice": 919.7,
-    "currentPrice": 869.95,
+    "currentPrice": 887.25,
     "volRatioAtTrigger": 2.04,
     "rsRatingAtTrigger": 57,
-    "gainPct": -5.41,
+    "gainPct": -3.53,
     "maxGainPct": 0
   },
   {
@@ -200,12 +135,12 @@
     "ind": "Telecom",
     "triggerDate": "2026-10-05",
     "triggerPrice": 380.2,
-    "maxPrice": 382.4,
-    "currentPrice": 380,
+    "maxPrice": 389,
+    "currentPrice": 389,
     "volRatioAtTrigger": 1.23,
     "rsRatingAtTrigger": 54,
-    "gainPct": -0.05,
-    "maxGainPct": 0.58
+    "gainPct": 2.31,
+    "maxGainPct": 2.31
   },
   {
     "sym": "MOTILALOFS",
@@ -214,10 +149,10 @@
     "triggerDate": "2026-10-05",
     "triggerPrice": 1011.1,
     "maxPrice": 1021,
-    "currentPrice": 925.8,
+    "currentPrice": 933.35,
     "volRatioAtTrigger": 0.54,
     "rsRatingAtTrigger": 47,
-    "gainPct": -8.44,
+    "gainPct": -7.69,
     "maxGainPct": 0.98
   },
   {
@@ -227,10 +162,10 @@
     "triggerDate": "2026-10-05",
     "triggerPrice": 1251.5,
     "maxPrice": 1251.5,
-    "currentPrice": 1027.4,
+    "currentPrice": 997.5,
     "volRatioAtTrigger": 0.98,
     "rsRatingAtTrigger": 24,
-    "gainPct": -17.91,
+    "gainPct": -20.3,
     "maxGainPct": 0
   },
   {
@@ -253,10 +188,10 @@
     "triggerDate": "2026-10-05",
     "triggerPrice": 738.2,
     "maxPrice": 738.2,
-    "currentPrice": 710.75,
+    "currentPrice": 703.05,
     "volRatioAtTrigger": 0.98,
     "rsRatingAtTrigger": 47,
-    "gainPct": -3.72,
+    "gainPct": -4.76,
     "maxGainPct": 0
   },
   {
@@ -266,10 +201,10 @@
     "triggerDate": "2026-10-05",
     "triggerPrice": 236.49,
     "maxPrice": 236.49,
-    "currentPrice": 215.52,
+    "currentPrice": 216.64,
     "volRatioAtTrigger": 1.33,
     "rsRatingAtTrigger": 34,
-    "gainPct": -8.87,
+    "gainPct": -8.39,
     "maxGainPct": 0
   },
   {
@@ -279,10 +214,10 @@
     "triggerDate": "2026-10-05",
     "triggerPrice": 890.3,
     "maxPrice": 890.3,
-    "currentPrice": 817.05,
+    "currentPrice": 806.55,
     "volRatioAtTrigger": 0.61,
     "rsRatingAtTrigger": 31,
-    "gainPct": -8.23,
+    "gainPct": -9.41,
     "maxGainPct": 0
   },
   {
@@ -292,8 +227,8 @@
     "triggerDate": "2026-10-15",
     "triggerPrice": 1650,
     "maxPrice": 1834.7,
-    "currentPrice": 1790,
-    "gainPct": 8.48,
+    "currentPrice": 1795,
+    "gainPct": 8.79,
     "maxGainPct": 11.19,
     "volRatioAtTrigger": 1.12,
     "rsRatingAtTrigger": 75
@@ -305,8 +240,8 @@
     "triggerDate": "2026-10-19",
     "triggerPrice": 2500,
     "maxPrice": 2575,
-    "currentPrice": 2480,
-    "gainPct": -0.8,
+    "currentPrice": 2557.6,
+    "gainPct": 2.3,
     "maxGainPct": 3,
     "volRatioAtTrigger": 1.3,
     "rsRatingAtTrigger": 69
@@ -318,10 +253,10 @@
     "triggerDate": "2026-10-19",
     "triggerPrice": 1008.2,
     "maxPrice": 1018.9,
-    "currentPrice": 971.4,
+    "currentPrice": 974.2,
     "volRatioAtTrigger": 32.17,
     "rsRatingAtTrigger": 56,
-    "gainPct": -3.65,
+    "gainPct": -3.37,
     "maxGainPct": 1.06
   },
   {
@@ -331,8 +266,8 @@
     "triggerDate": "2026-10-14",
     "triggerPrice": 5019.5,
     "maxPrice": 5230,
-    "currentPrice": 5047,
-    "gainPct": 0.55,
+    "currentPrice": 5199,
+    "gainPct": 3.58,
     "maxGainPct": 4.19,
     "volRatioAtTrigger": 0.7,
     "rsRatingAtTrigger": 60
@@ -343,12 +278,12 @@
     "ind": "IT",
     "triggerDate": "2026-10-21",
     "triggerPrice": 3996.3,
-    "maxPrice": 3996.3,
-    "currentPrice": 3910.3,
+    "maxPrice": 4035.6,
+    "currentPrice": 4035.6,
     "volRatioAtTrigger": 108.46,
     "rsRatingAtTrigger": 77,
-    "gainPct": -2.15,
-    "maxGainPct": 0
+    "gainPct": 0.98,
+    "maxGainPct": 0.98
   },
   {
     "sym": "SONATSOFTW",
@@ -357,8 +292,8 @@
     "triggerDate": "2026-10-21",
     "triggerPrice": 240.5,
     "maxPrice": 240.5,
-    "currentPrice": 232.15,
-    "gainPct": -3.47,
+    "currentPrice": 235.9,
+    "gainPct": -1.91,
     "maxGainPct": 0,
     "volRatioAtTrigger": 0.69,
     "rsRatingAtTrigger": 25
@@ -369,11 +304,24 @@
     "ind": "Healthcare",
     "triggerDate": "2026-10-23",
     "triggerPrice": 1338,
-    "maxPrice": 1338,
-    "currentPrice": 1338,
-    "gainPct": 0,
-    "maxGainPct": 0,
+    "maxPrice": 1355,
+    "currentPrice": 1355,
+    "gainPct": 1.27,
+    "maxGainPct": 1.27,
     "volRatioAtTrigger": 1.35,
     "rsRatingAtTrigger": 56
+  },
+  {
+    "sym": "MANKIND",
+    "name": "Mankind Pharma",
+    "ind": "Healthcare",
+    "triggerDate": "2026-10-26",
+    "triggerPrice": 2312,
+    "maxPrice": 2312,
+    "currentPrice": 2312,
+    "volRatioAtTrigger": 1.65,
+    "rsRatingAtTrigger": 53,
+    "gainPct": 0,
+    "maxGainPct": 0
   }
 ]
