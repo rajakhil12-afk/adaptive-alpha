@@ -2,14 +2,14 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-27T19:24:02.616Z",
+  "last_updated": "2026-10-28T19:29:14.417Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 638661.8915,
-    "invested_capital": 349385.5,
-    "total_equity": 988047.39,
+    "invested_capital": 351047.2,
+    "total_equity": 989709.09,
     "realized_pnl": -19296.5085,
-    "unrealized_pnl": 7399.3,
+    "unrealized_pnl": 9061,
     "win_rate": 0,
     "total_trades": 3,
     "winning_trades": 0,
@@ -35,12 +35,12 @@
     "regime": "CHOPPY_CONSOLIDATION",
     "regimeColor": "#eab308",
     "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
-    "marketScore": 51,
-    "vixLevel": 17.2,
+    "marketScore": 49,
+    "vixLevel": 16.4,
     "vixRegime": "ELEVATED_CHOPPY",
-    "fiiNet": 4240.39,
-    "diiNet": -1250.03,
-    "combinedNet": 2990.3600000000006,
+    "fiiNet": 871.83,
+    "diiNet": 643.35,
+    "combinedNet": 1515.18,
     "circuitBreakerActive": false,
     "maxAllowedSlots": 6,
     "maxCapitalPerTradePct": 10,
@@ -71,9 +71,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 404.2,
-      "current_price": 401.3,
-      "unrealized_pnl": 4014.5,
-      "unrealized_pnl_pct": 4.017625712804562
+      "current_price": 400,
+      "unrealized_pnl": 3677.799999999997,
+      "unrealized_pnl_pct": 3.680663556246757
     },
     {
       "sym": "ADANIPORTS",
@@ -99,9 +99,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 1774,
-      "current_price": 1754.5,
-      "unrealized_pnl": -1092,
-      "unrealized_pnl_pct": -1.0992108229988726
+      "current_price": 1761.3,
+      "unrealized_pnl": -711.2000000000025,
+      "unrealized_pnl_pct": -0.7158962795941402
     },
     {
       "sym": "LAURUSLABS",
@@ -126,10 +126,10 @@
       "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 2142,
-      "current_price": 2142,
-      "unrealized_pnl": 4416,
-      "unrealized_pnl_pct": 4.48780487804878
+      "highest_price": 2181.9,
+      "current_price": 2181.9,
+      "unrealized_pnl": 6331.200000000004,
+      "unrealized_pnl_pct": 6.434146341463419
     },
     {
       "sym": "ICICIBANK",
@@ -156,9 +156,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 1403,
-      "current_price": 1386.9,
-      "unrealized_pnl": 60.80000000000291,
-      "unrealized_pnl_pct": 0.1371841155234723
+      "current_price": 1377.6,
+      "unrealized_pnl": -236.8000000000029,
+      "unrealized_pnl_pct": -0.534296028880873
     }
   ],
   "closed_trades": [
@@ -313,6 +313,15 @@
       "realized_pnl": -19296.51,
       "unrealized_pnl": 7399.3,
       "open_positions_count": 4
+    },
+    {
+      "date": "2026-10-28",
+      "cash": 638661.89,
+      "invested": 351047.2,
+      "total_equity": 989709.09,
+      "realized_pnl": -19296.51,
+      "unrealized_pnl": 9061,
+      "open_positions_count": 4
     }
   ],
   "recent_events": [
@@ -409,12 +418,12 @@
       "minRsRating": 80,
       "maxHoldingDays": 15,
       "targetPct": 35,
-      "targetCapital": 345816.59,
+      "targetCapital": 346398.18,
       "investedCapital": 341986.2,
-      "availableCapital": 3830.39,
+      "availableCapital": 4411.98,
       "openPositions": 4,
       "openSlots": 1,
-      "utilizationPct": 98.9
+      "utilizationPct": 98.7
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -425,9 +434,9 @@
       "minRsRating": 65,
       "maxHoldingDays": 30,
       "targetPct": 35,
-      "targetCapital": 345816.59,
+      "targetCapital": 346398.18,
       "investedCapital": 0,
-      "availableCapital": 345816.59,
+      "availableCapital": 346398.18,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -439,7 +448,7 @@
       "targetAllocPct": 20,
       "maxPositions": 0,
       "targetPct": 30,
-      "targetCapital": 296414.22,
+      "targetCapital": 296912.73,
       "status": "ACTIVE BUFFER"
     }
   },
