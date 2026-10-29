@@ -2,14 +2,14 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-10-28T19:29:14.417Z",
+  "last_updated": "2026-10-29T19:33:28.006Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 638661.8915,
-    "invested_capital": 351047.2,
-    "total_equity": 989709.09,
+    "invested_capital": 361913.8,
+    "total_equity": 1000575.69,
     "realized_pnl": -19296.5085,
-    "unrealized_pnl": 9061,
+    "unrealized_pnl": 19927.6,
     "win_rate": 0,
     "total_trades": 3,
     "winning_trades": 0,
@@ -35,12 +35,12 @@
     "regime": "CHOPPY_CONSOLIDATION",
     "regimeColor": "#eab308",
     "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
-    "marketScore": 49,
-    "vixLevel": 16.4,
+    "marketScore": 47,
+    "vixLevel": 16.3,
     "vixRegime": "ELEVATED_CHOPPY",
-    "fiiNet": 871.83,
-    "diiNet": 643.35,
-    "combinedNet": 1515.18,
+    "fiiNet": -943.6,
+    "diiNet": 1924.41,
+    "combinedNet": 980.8100000000001,
     "circuitBreakerActive": false,
     "maxAllowedSlots": 6,
     "maxCapitalPerTradePct": 10,
@@ -70,10 +70,10 @@
       "smart_money_tier": "🐋 WHALE_ACCUMULATION",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 404.2,
-      "current_price": 400,
-      "unrealized_pnl": 3677.799999999997,
-      "unrealized_pnl_pct": 3.680663556246757
+      "highest_price": 405.4,
+      "current_price": 405.4,
+      "unrealized_pnl": 5076.399999999991,
+      "unrealized_pnl_pct": 5.080352514256082
     },
     {
       "sym": "ADANIPORTS",
@@ -87,7 +87,7 @@
       "qty": 56,
       "invested_value": 99344,
       "initial_sl": 1684.55,
-      "current_sl": 1684.55,
+      "current_sl": 1774,
       "risk_per_share": 89.45,
       "actual_dollar_risk": 5009.2,
       "risk_pct_of_equity": 0.5,
@@ -96,12 +96,12 @@
       "target_3_price": 2042.35,
       "smart_money_score": 40,
       "smart_money_tier": "⚖️ BALANCED_FLOW",
-      "sl_moved_to_cost": false,
+      "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
-      "highest_price": 1774,
-      "current_price": 1761.3,
-      "unrealized_pnl": -711.2000000000025,
-      "unrealized_pnl_pct": -0.7158962795941402
+      "highest_price": 1872,
+      "current_price": 1872,
+      "unrealized_pnl": 5488,
+      "unrealized_pnl_pct": 5.5242390078917705
     },
     {
       "sym": "LAURUSLABS",
@@ -115,7 +115,7 @@
       "qty": 48,
       "invested_value": 98400,
       "initial_sl": 1910.82,
-      "current_sl": 1910.82,
+      "current_sl": 2050,
       "risk_per_share": 139.18,
       "actual_dollar_risk": 6680.64,
       "risk_pct_of_equity": 0.67,
@@ -124,12 +124,12 @@
       "target_3_price": 2467.54,
       "smart_money_score": 40,
       "smart_money_tier": "⚖️ BALANCED_FLOW",
-      "sl_moved_to_cost": false,
+      "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
-      "highest_price": 2181.9,
-      "current_price": 2181.9,
-      "unrealized_pnl": 6331.200000000004,
-      "unrealized_pnl_pct": 6.434146341463419
+      "highest_price": 2244,
+      "current_price": 2244,
+      "unrealized_pnl": 9312,
+      "unrealized_pnl_pct": 9.463414634146341
     },
     {
       "sym": "ICICIBANK",
@@ -156,9 +156,9 @@
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 1403,
-      "current_price": 1377.6,
-      "unrealized_pnl": -236.8000000000029,
-      "unrealized_pnl_pct": -0.534296028880873
+      "current_price": 1386.6,
+      "unrealized_pnl": 51.19999999999709,
+      "unrealized_pnl_pct": 0.11552346570396456
     }
   ],
   "closed_trades": [
@@ -322,9 +322,30 @@
       "realized_pnl": -19296.51,
       "unrealized_pnl": 9061,
       "open_positions_count": 4
+    },
+    {
+      "date": "2026-10-29",
+      "cash": 638661.89,
+      "invested": 361913.8,
+      "total_equity": 1000575.69,
+      "realized_pnl": -19296.51,
+      "unrealized_pnl": 19927.6,
+      "open_positions_count": 4
     }
   ],
   "recent_events": [
+    {
+      "timestamp": "2026-10-29T19:33:28.005Z",
+      "type": "TRAILING_SL_COST",
+      "symbol": "ADANIPORTS",
+      "message": "🛡️ [JISHU TRAIL] ADANIPORTS hit 1:1 Target (₹1863.45). Stop Loss adjusted to COST PRICE (₹1774.00). Trade is RISK-FREE!"
+    },
+    {
+      "timestamp": "2026-10-29T19:33:28.005Z",
+      "type": "TRAILING_SL_COST",
+      "symbol": "LAURUSLABS",
+      "message": "🛡️ [JISHU TRAIL] LAURUSLABS hit 1:1 Target (₹2189.18). Stop Loss adjusted to COST PRICE (₹2050.00). Trade is RISK-FREE!"
+    },
     {
       "timestamp": "2026-10-23T18:16:15.329Z",
       "type": "MACRO_REGIME_PAUSE",
@@ -418,12 +439,12 @@
       "minRsRating": 80,
       "maxHoldingDays": 15,
       "targetPct": 35,
-      "targetCapital": 346398.18,
+      "targetCapital": 350201.49,
       "investedCapital": 341986.2,
-      "availableCapital": 4411.98,
+      "availableCapital": 8215.29,
       "openPositions": 4,
       "openSlots": 1,
-      "utilizationPct": 98.7
+      "utilizationPct": 97.7
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -434,9 +455,9 @@
       "minRsRating": 65,
       "maxHoldingDays": 30,
       "targetPct": 35,
-      "targetCapital": 346398.18,
+      "targetCapital": 350201.49,
       "investedCapital": 0,
-      "availableCapital": 346398.18,
+      "availableCapital": 350201.49,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -448,7 +469,7 @@
       "targetAllocPct": 20,
       "maxPositions": 0,
       "targetPct": 30,
-      "targetCapital": 296912.73,
+      "targetCapital": 300172.71,
       "status": "ACTIVE BUFFER"
     }
   },
