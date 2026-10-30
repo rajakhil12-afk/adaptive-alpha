@@ -7,10 +7,21 @@ const { calculateSleeveAllocations, classifyCandidateSleeve, SLEEVE_CONFIG } = r
 const { calculatePositionSize } = require('./position_sizer');
 const { calculateQuantMetrics } = require('./quant_analytics');
 
-const PORTFOLIO_PATH = path.join(__dirname, '..', 'data', 'jishu_portfolio.json');
-const BACKUP_PATH = path.join(__dirname, '..', 'data', 'jishu_portfolio_backup.json');
-const PORTFOLIO_JS_PATH = path.join(__dirname, '..', 'data', 'jishu_portfolio.js');
-const SCREENER_PATH = path.join(__dirname, '..', 'data', 'screener.json');
+function getDataDir() {
+  return process.env.JISHU_DATA_DIR || path.join(__dirname, '..', 'data');
+}
+function getPortfolioPath() {
+  return path.join(getDataDir(), 'jishu_portfolio.json');
+}
+function getBackupPath() {
+  return path.join(getDataDir(), 'jishu_portfolio_backup.json');
+}
+function getPortfolioJsPath() {
+  return path.join(getDataDir(), 'jishu_portfolio.js');
+}
+function getScreenerPath() {
+  return path.join(getDataDir(), 'screener.json');
+}
 
 function loadJSON(filePath, defaultValue) {
   try {
@@ -28,14 +39,19 @@ function saveJSON(filePath, data) {
 }
 
 function runJishuEngine(customScreenerData = null) {
-  const screener = customScreenerData || loadJSON(SCREENER_PATH, null);
+  const portfolioPath = getPortfolioPath();
+  const backupPath = getBackupPath();
+  const portfolioJsPath = getPortfolioJsPath();
+  const screenerPath = getScreenerPath();
+
+  const screener = customScreenerData || loadJSON(screenerPath, null);
   if (!screener || !Array.isArray(screener.stocks) || screener.stocks.length === 0) {
     console.log('[Jishu] No screener data found. Skipping execution.');
     return null;
   }
 
-  let portfolio = loadJSON(PORTFOLIO_PATH, null);
-  const backup = loadJSON(BACKUP_PATH, null);
+  let portfolio = loadJSON(portfolioPath, null);
+  const backup = loadJSON(backupPath, null);
 
   // Safeguard: If the loaded portfolio is completely empty (e.g. from an accidental file upload overwrite)
   // but we have a valid backup with active open positions, recover from backup!
@@ -58,6 +74,7 @@ function runJishuEngine(customScreenerData = null) {
     fixed_sl_pct: 10,
     target_1_rr: 1,
     target_2_rr: 2,
+    target_3_rr: 3,
     min_rs_rating: 75,
     max_distance_from_st_pct: 7.0,
     risk_pct_per_trade: 1.0,        // 1% portfolio equity risk
@@ -466,10 +483,10 @@ function runJishuEngine(customScreenerData = null) {
     portfolio.recent_events = [...events, ...(portfolio.recent_events || [])].slice(0, 50);
   }
 
-  saveJSON(PORTFOLIO_PATH, portfolio);
-  saveJSON(BACKUP_PATH, portfolio);
+  saveJSON(portfolioPath, portfolio);
+  saveJSON(backupPath, portfolio);
   try {
-    fs.writeFileSync(PORTFOLIO_JS_PATH, 'window.STATIC_JISHU_PORTFOLIO = ' + JSON.stringify(portfolio, null, 2) + ';\nwindow.JISHU_PORTFOLIO = window.STATIC_JISHU_PORTFOLIO;', 'utf8');
+    fs.writeFileSync(portfolioJsPath, 'window.STATIC_JISHU_PORTFOLIO = ' + JSON.stringify(portfolio, null, 2) + ';\nwindow.JISHU_PORTFOLIO = window.STATIC_JISHU_PORTFOLIO;', 'utf8');
   } catch (jsErr) {
     console.warn('[Jishu] Could not write jishu_portfolio.js:', jsErr.message);
   }
@@ -483,6 +500,10 @@ function runJishuEngine(customScreenerData = null) {
 }
 
 function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
+  const portfolioPath = getPortfolioPath();
+  const backupPath = getBackupPath();
+  const portfolioJsPath = getPortfolioJsPath();
+
   const currentDateStr = startDate;
   const freshPortfolio = {
     bot_name: 'Jishu',
@@ -536,9 +557,10 @@ function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
     ]
   };
 
-  saveJSON(PORTFOLIO_PATH, freshPortfolio);
+  saveJSON(portfolioPath, freshPortfolio);
+  saveJSON(backupPath, freshPortfolio);
   try {
-    fs.writeFileSync(PORTFOLIO_JS_PATH, 'window.STATIC_JISHU_PORTFOLIO = ' + JSON.stringify(freshPortfolio, null, 2) + ';', 'utf8');
+    fs.writeFileSync(portfolioJsPath, 'window.STATIC_JISHU_PORTFOLIO = ' + JSON.stringify(freshPortfolio, null, 2) + ';', 'utf8');
   } catch (jsErr) {
     console.warn('[Jishu] Could not write jishu_portfolio.js:', jsErr.message);
   }
@@ -549,7 +571,12 @@ function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
 module.exports = {
   runJishuEngine,
   resetPortfolio,
-  PORTFOLIO_PATH
+  getDataDir,
+  getPortfolioPath,
+  getBackupPath,
+  get PORTFOLIO_PATH() {
+    return getPortfolioPath();
+  }
 };
 
 if (require.main === module) {
