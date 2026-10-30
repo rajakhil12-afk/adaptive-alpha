@@ -40,10 +40,11 @@ class TestChallenger2WorkflowVerification(unittest.TestCase):
         runner_path = os.path.join(REPO_ROOT, 'test', 'e2e_runner.py')
         res = subprocess.run([sys.executable, runner_path], cwd=REPO_ROOT, capture_output=True, text=True, encoding='utf-8', errors='replace')
         self.assertEqual(res.returncode, 0, f"Unified runner exited with non-zero code {res.returncode}. Stderr: {res.stderr}")
-        self.assertIn("Total Tests : 105", res.stdout)
-        self.assertIn("Passed      : 105", res.stdout)
-        self.assertIn("Failed      : 0", res.stdout)
-        self.assertIn("ALL SUITES PASSED", res.stdout)
+        clean_stdout = re.sub(r'\x1b\[[0-9;]*[mK]', '', res.stdout)
+        self.assertIn("Total Tests : 105", clean_stdout)
+        self.assertIn("Passed      : 105", clean_stdout)
+        self.assertIn("Failed      : 0", clean_stdout)
+        self.assertIn("ALL SUITES PASSED", clean_stdout)
 
     # ══════════════════════════════════════════════════════════════════
     # 2. TRADINGVIEW WATCHLIST COPY FUNCTIONALITY
@@ -97,7 +98,9 @@ class TestChallenger2WorkflowVerification(unittest.TestCase):
                     value: '',
                     setAttribute: function() {},
                     style: {},
-                    select: function() {}
+                    select: function() {
+                        lastCopiedString = this.value;
+                    }
                 };
             },
             body: {
@@ -109,14 +112,28 @@ class TestChallenger2WorkflowVerification(unittest.TestCase):
             }
         };
 
-        global.navigator = {
-            clipboard: {
+        if (typeof global.navigator === 'undefined') {
+            global.navigator = {};
+        }
+        try {
+            Object.defineProperty(global.navigator, 'clipboard', {
+                value: {
+                    writeText: function(str) {
+                        lastCopiedString = str;
+                        return Promise.resolve();
+                    }
+                },
+                configurable: true,
+                writable: true
+            });
+        } catch (e) {
+            global.navigator.clipboard = {
                 writeText: function(str) {
                     lastCopiedString = str;
                     return Promise.resolve();
                 }
-            }
-        };
+            };
+        }
 
         // Load shareCard.js implementation
         const shareCardCode = fs.readFileSync(path.join(__dirname, '..', 'js', 'shareCard.js'), 'utf8');
