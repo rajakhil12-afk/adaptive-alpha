@@ -2,14 +2,14 @@ window.STATIC_JISHU_PORTFOLIO = {
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-11-03T20:30:14.745Z",
+  "last_updated": "2026-11-04T20:46:29.231Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 533155.73075,
-    "invested_capital": 468803.2,
-    "total_equity": 1001958.93,
+    "invested_capital": 478166.35,
+    "total_equity": 1011322.08,
     "realized_pnl": -22079.425499999987,
-    "unrealized_pnl": 24222,
+    "unrealized_pnl": 33585.15,
     "win_rate": 0,
     "total_trades": 3,
     "winning_trades": 0,
@@ -35,12 +35,12 @@ window.STATIC_JISHU_PORTFOLIO = {
     "regime": "HEALTHY_EXPANSION",
     "regimeColor": "#10b981",
     "regimeBadgeBg": "rgba(16, 185, 129, 0.18)",
-    "marketScore": 61,
-    "vixLevel": 15.5,
+    "marketScore": 63,
+    "vixLevel": 15.7,
     "vixRegime": "ELEVATED_CHOPPY",
-    "fiiNet": 6836.81,
-    "diiNet": -3678.85,
-    "combinedNet": 3157.9600000000005,
+    "fiiNet": 7284.03,
+    "diiNet": -3712.23,
+    "combinedNet": 3571.7999999999997,
     "circuitBreakerActive": false,
     "maxAllowedSlots": 9,
     "maxCapitalPerTradePct": 10,
@@ -59,7 +59,7 @@ window.STATIC_JISHU_PORTFOLIO = {
       "qty": 259,
       "invested_value": 99922.2,
       "initial_sl": 357.27,
-      "current_sl": 357.27,
+      "current_sl": 385.8,
       "risk_per_share": 28.53,
       "actual_dollar_risk": 7389.27,
       "risk_pct_of_equity": 0.74,
@@ -67,12 +67,12 @@ window.STATIC_JISHU_PORTFOLIO = {
       "target_2_price": 442.86,
       "smart_money_score": 87,
       "smart_money_tier": "🐋 WHALE_ACCUMULATION",
-      "sl_moved_to_cost": false,
+      "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
-      "highest_price": 404.2,
-      "current_price": 399.2,
-      "unrealized_pnl": 3470.599999999994,
-      "unrealized_pnl_pct": 3.4733022291342603,
+      "highest_price": 421.05,
+      "current_price": 421.05,
+      "unrealized_pnl": 9129.75,
+      "unrealized_pnl_pct": 9.136858475894245,
       "target_3_price": 471.39,
       "target_3_hit": false
     },
@@ -98,10 +98,10 @@ window.STATIC_JISHU_PORTFOLIO = {
       "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
-      "highest_price": 1866.9,
-      "current_price": 1866.9,
-      "unrealized_pnl": 5202.400000000005,
-      "unrealized_pnl_pct": 5.236753100338224,
+      "highest_price": 1910,
+      "current_price": 1910,
+      "unrealized_pnl": 7616,
+      "unrealized_pnl_pct": 7.666290868094701,
       "target_3_price": 2042.35,
       "target_3_hit": false
     },
@@ -128,9 +128,9 @@ window.STATIC_JISHU_PORTFOLIO = {
       "sl_moved_to_cost": true,
       "sl_moved_to_t1": true,
       "highest_price": 2405.5,
-      "current_price": 2323,
-      "unrealized_pnl": 13104,
-      "unrealized_pnl_pct": 13.317073170731708,
+      "current_price": 2323.8,
+      "unrealized_pnl": 13142.400000000009,
+      "unrealized_pnl_pct": 13.356097560975618,
       "target_3_price": 2467.54,
       "target_3_hit": false
     },
@@ -147,7 +147,7 @@ window.STATIC_JISHU_PORTFOLIO = {
       "invested_value": 47200,
       "entry_cost": 59,
       "initial_sl": 43985.7,
-      "current_sl": 43985.7,
+      "current_sl": 47200,
       "risk_per_share": 3214.3,
       "actual_dollar_risk": 3214.3,
       "risk_pct_of_equity": 0.32,
@@ -156,12 +156,12 @@ window.STATIC_JISHU_PORTFOLIO = {
       "target_3_price": 56842.9,
       "smart_money_score": 25,
       "smart_money_tier": "⚠️ DISTRIBUTION_RISK",
-      "sl_moved_to_cost": false,
+      "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
-      "highest_price": 49645,
-      "current_price": 49645,
-      "unrealized_pnl": 2445,
-      "unrealized_pnl_pct": 5.180084745762712
+      "highest_price": 50925,
+      "current_price": 50925,
+      "unrealized_pnl": 3725,
+      "unrealized_pnl_pct": 7.891949152542373
     },
     {
       "sym": "ICICIBANK",
@@ -188,9 +188,9 @@ window.STATIC_JISHU_PORTFOLIO = {
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
       "highest_price": 1424.5,
-      "current_price": 1424.5,
-      "unrealized_pnl": 0,
-      "unrealized_pnl_pct": 0
+      "current_price": 1424.1,
+      "unrealized_pnl": -28.000000000006366,
+      "unrealized_pnl_pct": -0.028080028080034465
     }
   ],
   "closed_trades": [
@@ -318,9 +318,30 @@ window.STATIC_JISHU_PORTFOLIO = {
       "realized_pnl": -22079.43,
       "unrealized_pnl": 24222,
       "open_positions_count": 5
+    },
+    {
+      "date": "2026-11-04",
+      "cash": 533155.73,
+      "invested": 478166.35,
+      "total_equity": 1011322.08,
+      "realized_pnl": -22079.43,
+      "unrealized_pnl": 33585.15,
+      "open_positions_count": 5
     }
   ],
   "recent_events": [
+    {
+      "timestamp": "2026-11-04T20:46:29.230Z",
+      "type": "TRAILING_SL_COST",
+      "symbol": "NAZARA",
+      "message": "🛡️ [JISHU TRAIL] NAZARA hit 1:1 Target (₹414.33). Stop Loss adjusted to COST PRICE (₹385.80). Trade is RISK-FREE!"
+    },
+    {
+      "timestamp": "2026-11-04T20:46:29.230Z",
+      "type": "TRAILING_SL_COST",
+      "symbol": "BOSCHLTD",
+      "message": "🛡️ [JISHU TRAIL] BOSCHLTD hit 1:1 Target (₹50414.30). Stop Loss adjusted to COST PRICE (₹47200.00). Trade is RISK-FREE!"
+    },
     {
       "timestamp": "2026-11-03T20:30:14.742Z",
       "type": "TRAILING_SL_COST",
@@ -435,12 +456,12 @@ window.STATIC_JISHU_PORTFOLIO = {
       "minRsRating": 80,
       "maxHoldingDays": 15,
       "targetPct": 50,
-      "targetCapital": 501041.79,
-      "investedCapital": 344866.2,
-      "availableCapital": 56460.59,
-      "openPositions": 4,
+      "targetCapital": 505661.04,
+      "investedCapital": 444581.2,
+      "availableCapital": 61079.84,
+      "openPositions": 5,
       "openSlots": 0,
-      "utilizationPct": 68.8
+      "utilizationPct": 87.9
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -451,9 +472,9 @@ window.STATIC_JISHU_PORTFOLIO = {
       "minRsRating": 65,
       "maxHoldingDays": 30,
       "targetPct": 30,
-      "targetCapital": 300625.07,
+      "targetCapital": 303396.62,
       "investedCapital": 0,
-      "availableCapital": 300625.07,
+      "availableCapital": 303396.62,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -465,7 +486,7 @@ window.STATIC_JISHU_PORTFOLIO = {
       "targetAllocPct": 20,
       "maxPositions": 0,
       "targetPct": 20,
-      "targetCapital": 200416.71,
+      "targetCapital": 202264.42,
       "status": "ACTIVE BUFFER"
     }
   },
