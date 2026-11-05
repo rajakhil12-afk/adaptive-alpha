@@ -2,14 +2,14 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-11-04T20:46:29.231Z",
+  "last_updated": "2026-11-05T21:02:00.259Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 533155.73075,
-    "invested_capital": 478166.35,
-    "total_equity": 1011322.08,
+    "invested_capital": 483779,
+    "total_equity": 1016934.73,
     "realized_pnl": -22079.425499999987,
-    "unrealized_pnl": 33585.15,
+    "unrealized_pnl": 39197.8,
     "win_rate": 0,
     "total_trades": 3,
     "winning_trades": 0,
@@ -35,12 +35,12 @@
     "regime": "HEALTHY_EXPANSION",
     "regimeColor": "#10b981",
     "regimeBadgeBg": "rgba(16, 185, 129, 0.18)",
-    "marketScore": 63,
-    "vixLevel": 15.7,
+    "marketScore": 65,
+    "vixLevel": 15.2,
     "vixRegime": "ELEVATED_CHOPPY",
-    "fiiNet": 7284.03,
-    "diiNet": -3712.23,
-    "combinedNet": 3571.7999999999997,
+    "fiiNet": 14974.68,
+    "diiNet": -10444.54,
+    "combinedNet": 4530.139999999999,
     "circuitBreakerActive": false,
     "maxAllowedSlots": 9,
     "maxCapitalPerTradePct": 10,
@@ -70,9 +70,9 @@
       "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
       "highest_price": 421.05,
-      "current_price": 421.05,
-      "unrealized_pnl": 9129.75,
-      "unrealized_pnl_pct": 9.136858475894245,
+      "current_price": 417.6,
+      "unrealized_pnl": 8236.200000000003,
+      "unrealized_pnl_pct": 8.24261275272162,
       "target_3_price": 471.39,
       "target_3_hit": false
     },
@@ -99,9 +99,9 @@
       "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
       "highest_price": 1910,
-      "current_price": 1910,
-      "unrealized_pnl": 7616,
-      "unrealized_pnl_pct": 7.666290868094701,
+      "current_price": 1884.6,
+      "unrealized_pnl": 6193.599999999995,
+      "unrealized_pnl_pct": 6.234498308906421,
       "target_3_price": 2042.35,
       "target_3_hit": false
     },
@@ -128,9 +128,9 @@
       "sl_moved_to_cost": true,
       "sl_moved_to_t1": true,
       "highest_price": 2405.5,
-      "current_price": 2323.8,
-      "unrealized_pnl": 13142.400000000009,
-      "unrealized_pnl_pct": 13.356097560975618,
+      "current_price": 2346,
+      "unrealized_pnl": 14208,
+      "unrealized_pnl_pct": 14.439024390243901,
       "target_3_price": 2467.54,
       "target_3_hit": false
     },
@@ -158,10 +158,10 @@
       "smart_money_tier": "⚠️ DISTRIBUTION_RISK",
       "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
-      "highest_price": 50925,
-      "current_price": 50925,
-      "unrealized_pnl": 3725,
-      "unrealized_pnl_pct": 7.891949152542373
+      "highest_price": 52475,
+      "current_price": 52475,
+      "unrealized_pnl": 5275,
+      "unrealized_pnl_pct": 11.175847457627118
     },
     {
       "sym": "ICICIBANK",
@@ -187,10 +187,10 @@
       "smart_money_tier": "⚖️ BALANCED_FLOW",
       "sl_moved_to_cost": false,
       "sl_moved_to_t1": false,
-      "highest_price": 1424.5,
-      "current_price": 1424.1,
-      "unrealized_pnl": -28.000000000006366,
-      "unrealized_pnl_pct": -0.028080028080034465
+      "highest_price": 1500,
+      "current_price": 1500,
+      "unrealized_pnl": 5285,
+      "unrealized_pnl_pct": 5.3001053001053
     }
   ],
   "closed_trades": [
@@ -327,6 +327,15 @@
       "realized_pnl": -22079.43,
       "unrealized_pnl": 33585.15,
       "open_positions_count": 5
+    },
+    {
+      "date": "2026-11-05",
+      "cash": 533155.73,
+      "invested": 483779,
+      "total_equity": 1016934.73,
+      "realized_pnl": -22079.43,
+      "unrealized_pnl": 39197.8,
+      "open_positions_count": 5
     }
   ],
   "recent_events": [
@@ -456,12 +465,12 @@
       "minRsRating": 80,
       "maxHoldingDays": 15,
       "targetPct": 50,
-      "targetCapital": 505661.04,
+      "targetCapital": 508467.37,
       "investedCapital": 444581.2,
-      "availableCapital": 61079.84,
+      "availableCapital": 63886.17,
       "openPositions": 5,
       "openSlots": 0,
-      "utilizationPct": 87.9
+      "utilizationPct": 87.4
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -472,9 +481,9 @@
       "minRsRating": 65,
       "maxHoldingDays": 30,
       "targetPct": 30,
-      "targetCapital": 303396.62,
+      "targetCapital": 305080.42,
       "investedCapital": 0,
-      "availableCapital": 303396.62,
+      "availableCapital": 305080.42,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -486,7 +495,7 @@
       "targetAllocPct": 20,
       "maxPositions": 0,
       "targetPct": 20,
-      "targetCapital": 202264.42,
+      "targetCapital": 203386.95,
       "status": "ACTIVE BUFFER"
     }
   },
