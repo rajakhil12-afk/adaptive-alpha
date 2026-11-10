@@ -2,7 +2,7 @@ window.STATIC_JISHU_PORTFOLIO = {
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-11-09T23:24:26.180Z",
+  "last_updated": "2026-11-10T20:47:05.539Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 533155.73075,
@@ -32,19 +32,19 @@ window.STATIC_JISHU_PORTFOLIO = {
     "target_3_rr": 3
   },
   "macro_regime": {
-    "regime": "CHOPPY_CONSOLIDATION",
-    "regimeColor": "#eab308",
-    "regimeBadgeBg": "rgba(234, 179, 8, 0.16)",
-    "marketScore": 58,
-    "vixLevel": 17.5,
+    "regime": "HEALTHY_EXPANSION",
+    "regimeColor": "#10b981",
+    "regimeBadgeBg": "rgba(16, 185, 129, 0.18)",
+    "marketScore": 59,
+    "vixLevel": 17.4,
     "vixRegime": "ELEVATED_CHOPPY",
     "fiiNet": 7212.22,
     "diiNet": -7172.53,
     "combinedNet": 39.69000000000051,
     "circuitBreakerActive": false,
-    "maxAllowedSlots": 6,
+    "maxAllowedSlots": 9,
     "maxCapitalPerTradePct": 10,
-    "guidance": "⚖️ Selective sideways market. Trade only top RS leaders with volume confirmation (max 6 slots)."
+    "guidance": "🟢 Broad institutional accumulation. Favorable risk-reward for Quad-1 momentum leaders."
   },
   "open_positions": [
     {
@@ -354,6 +354,15 @@ window.STATIC_JISHU_PORTFOLIO = {
       "realized_pnl": -22079.43,
       "unrealized_pnl": 48428.1,
       "open_positions_count": 5
+    },
+    {
+      "date": "2026-11-10",
+      "cash": 533155.73,
+      "invested": 493009.3,
+      "total_equity": 1026165.03,
+      "realized_pnl": -22079.43,
+      "unrealized_pnl": 48428.1,
+      "open_positions_count": 5
     }
   ],
   "recent_events": [
@@ -488,13 +497,13 @@ window.STATIC_JISHU_PORTFOLIO = {
       "maxPositions": 5,
       "minRsRating": 80,
       "maxHoldingDays": 15,
-      "targetPct": 35,
-      "targetCapital": 359157.76,
+      "targetPct": 50,
+      "targetCapital": 513082.52,
       "investedCapital": 444581.2,
-      "availableCapital": 0,
+      "availableCapital": 68501.32,
       "openPositions": 5,
       "openSlots": 0,
-      "utilizationPct": 123.8
+      "utilizationPct": 86.6
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -504,10 +513,10 @@ window.STATIC_JISHU_PORTFOLIO = {
       "maxPositions": 3,
       "minRsRating": 65,
       "maxHoldingDays": 30,
-      "targetPct": 35,
-      "targetCapital": 359157.76,
+      "targetPct": 30,
+      "targetCapital": 307849.51,
       "investedCapital": 0,
-      "availableCapital": 359157.76,
+      "availableCapital": 307849.51,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -518,8 +527,8 @@ window.STATIC_JISHU_PORTFOLIO = {
       "icon": "🛡️",
       "targetAllocPct": 20,
       "maxPositions": 0,
-      "targetPct": 30,
-      "targetCapital": 307849.51,
+      "targetPct": 20,
+      "targetCapital": 205233.01,
       "status": "ACTIVE BUFFER"
     }
   },
