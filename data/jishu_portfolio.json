@@ -2,14 +2,14 @@
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-11-13T20:52:44.785Z",
+  "last_updated": "2026-11-16T23:20:47.920Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 533155.73075,
-    "invested_capital": 493357.4,
-    "total_equity": 1026513.13,
+    "invested_capital": 483786.6,
+    "total_equity": 1016942.33,
     "realized_pnl": -22079.425499999987,
-    "unrealized_pnl": 48776.2,
+    "unrealized_pnl": 39205.4,
     "win_rate": 0,
     "total_trades": 3,
     "winning_trades": 0,
@@ -36,7 +36,7 @@
     "regimeColor": "#10b981",
     "regimeBadgeBg": "rgba(16, 185, 129, 0.18)",
     "marketScore": 62,
-    "vixLevel": 16.6,
+    "vixLevel": 15.5,
     "vixRegime": "ELEVATED_CHOPPY",
     "fiiNet": 0,
     "diiNet": 0,
@@ -69,10 +69,10 @@
       "smart_money_tier": "🐋 WHALE_ACCUMULATION",
       "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
-      "highest_price": 425.4,
-      "current_price": 425.4,
-      "unrealized_pnl": 10256.39999999999,
-      "unrealized_pnl_pct": 10.26438569206842,
+      "highest_price": 430.4,
+      "current_price": 430.4,
+      "unrealized_pnl": 11551.39999999999,
+      "unrealized_pnl_pct": 11.560393986521504,
       "target_3_price": 471.39,
       "target_3_hit": false
     },
@@ -99,9 +99,9 @@
       "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
       "highest_price": 1942.7,
-      "current_price": 1903.3,
-      "unrealized_pnl": 7240.799999999997,
-      "unrealized_pnl_pct": 7.288613303269445,
+      "current_price": 1893,
+      "unrealized_pnl": 6664,
+      "unrealized_pnl_pct": 6.708004509582864,
       "target_3_price": 2042.35,
       "target_3_hit": false
     },
@@ -128,9 +128,9 @@
       "sl_moved_to_cost": true,
       "sl_moved_to_t1": true,
       "highest_price": 2454,
-      "current_price": 2424,
-      "unrealized_pnl": 17952,
-      "unrealized_pnl_pct": 18.24390243902439,
+      "current_price": 2220,
+      "unrealized_pnl": 8160,
+      "unrealized_pnl_pct": 8.292682926829269,
       "target_3_price": 2467.54,
       "target_3_hit": false
     },
@@ -159,9 +159,9 @@
       "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
       "highest_price": 52475,
-      "current_price": 49390,
-      "unrealized_pnl": 2190,
-      "unrealized_pnl_pct": 4.639830508474576
+      "current_price": 48795,
+      "unrealized_pnl": 1595,
+      "unrealized_pnl_pct": 3.3792372881355934
     },
     {
       "sym": "ICICIBANK",
@@ -188,9 +188,9 @@
       "sl_moved_to_cost": true,
       "sl_moved_to_t1": false,
       "highest_price": 1590,
-      "current_price": 1583.6,
-      "unrealized_pnl": 11136.999999999993,
-      "unrealized_pnl_pct": 11.168831168831163
+      "current_price": 1585,
+      "unrealized_pnl": 11235,
+      "unrealized_pnl_pct": 11.267111267111266
     }
   ],
   "closed_trades": [
@@ -390,6 +390,15 @@
       "realized_pnl": -22079.43,
       "unrealized_pnl": 48776.2,
       "open_positions_count": 5
+    },
+    {
+      "date": "2026-11-16",
+      "cash": 533155.73,
+      "invested": 483786.6,
+      "total_equity": 1016942.33,
+      "realized_pnl": -22079.43,
+      "unrealized_pnl": 39205.4,
+      "open_positions_count": 5
     }
   ],
   "recent_events": [
@@ -525,12 +534,12 @@
       "minRsRating": 80,
       "maxHoldingDays": 15,
       "targetPct": 50,
-      "targetCapital": 513256.57,
+      "targetCapital": 508471.17,
       "investedCapital": 444581.2,
-      "availableCapital": 68675.37,
+      "availableCapital": 63889.97,
       "openPositions": 5,
       "openSlots": 0,
-      "utilizationPct": 86.6
+      "utilizationPct": 87.4
     },
     "sleeveB": {
       "id": "SLEEVE_B",
@@ -541,9 +550,9 @@
       "minRsRating": 65,
       "maxHoldingDays": 30,
       "targetPct": 30,
-      "targetCapital": 307953.94,
+      "targetCapital": 305082.7,
       "investedCapital": 0,
-      "availableCapital": 307953.94,
+      "availableCapital": 305082.7,
       "openPositions": 0,
       "openSlots": 3,
       "utilizationPct": 0
@@ -555,7 +564,7 @@
       "targetAllocPct": 20,
       "maxPositions": 0,
       "targetPct": 20,
-      "targetCapital": 205302.63,
+      "targetCapital": 203388.47,
       "status": "ACTIVE BUFFER"
     }
   },
