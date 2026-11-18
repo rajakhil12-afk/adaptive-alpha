@@ -218,7 +218,13 @@ function setSortCol(val) {
   const sel = document.getElementById('sort-sel');
   if (sel) {
     sel.value = val; 
-    renderTable(); 
+    if (activeTab === 'watchlist') {
+      renderWatchlistTab();
+    } else if (activeTab === 'breakouts') {
+      renderBreakoutsTab();
+    } else {
+      renderTable(); 
+    }
   }
 }
 
@@ -279,7 +285,7 @@ function renderTickerStrip() {
     else if (avgArs > 0)      phase = 'WEAKENING';
     else if (rising)          phase = 'IMPROVING';
     const cls = avgArs >= 0 ? 'tk-up' : 'tk-down';
-    items.push(`<span class="tk-item"><span class="tk-sector">${ind}</span><span class="tk-phase ph-${phase}">${phase}</span><span class="tk-pct ${cls}">${avgArs>=0?'+':''}${(avgArs*100).toFixed(1)}%</span></span>`);
+    items.push(`<span class="tk-item"><span class="tk-sector">${escHtml(ind)}</span><span class="tk-phase ph-${phase}">${phase}</span><span class="tk-pct ${cls}">${avgArs>=0?'+':''}${(avgArs*100).toFixed(1)}%</span></span>`);
   });
   const totalPass = allData.filter(passes).length;
   const total     = allData.length;
@@ -893,38 +899,41 @@ function clearSelection(filteredData = allData) {
   const breakoutCount = filteredData.filter(d => d.breakout).length;
   const near52wCount = filteredData.filter(d => d.hi52_prox >= -0.05).length;
 
-  let fiiVal = 0, diiVal = 0, flowDate = 'Today';
-  if (latestFiiDiiData) {
-    fiiVal = latestFiiDiiData.fii || 0;
-    diiVal = latestFiiDiiData.dii || 0;
-    flowDate = latestFiiDiiData.date || new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-  } else {
-    if (!cachedSimFiiDii) {
-      const isBull = passRate > 50;
-      const isBear = passRate < 25;
-      let simFii, simDii;
-      if (isBull) {
-        simFii = (Math.random() * 1500) + 200;
-        simDii = (Math.random() * 1000) + 100;
-      } else if (isBear) {
-        simFii = -((Math.random() * 2000) + 500);
-        simDii = (Math.random() * 1200) - 200;
-      } else {
-        simFii = (Math.random() * 800) - 400;
-        simDii = (Math.random() * 800) - 200;
-      }
-      cachedSimFiiDii = { fii: simFii, dii: simDii };
-    }
-    fiiVal = cachedSimFiiDii.fii;
-    diiVal = cachedSimFiiDii.dii;
-    flowDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-  }
+  let fiiDiiBodyHtml = '';
+  if (latestFiiDiiData && (latestFiiDiiData.fii !== undefined || latestFiiDiiData.dii !== undefined)) {
+    const fiiVal = latestFiiDiiData.fii || 0;
+    const diiVal = latestFiiDiiData.dii || 0;
+    const flowDate = latestFiiDiiData.date || new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    const netCombined = fiiVal + diiVal;
+    const fiiColor = fiiVal >= 0 ? 'var(--up)' : 'var(--down)';
+    const diiColor = diiVal >= 0 ? 'var(--up)' : 'var(--down)';
+    const netColor = netCombined >= 0 ? 'var(--up)' : 'var(--down)';
+    const fmtCr = (v) => `${v >= 0 ? '+' : ''}₹${v.toLocaleString('en-IN', { maximumFractionDigits: 2 })} Cr`;
 
-  const netCombined = fiiVal + diiVal;
-  const fiiColor = fiiVal >= 0 ? 'var(--up)' : 'var(--down)';
-  const diiColor = diiVal >= 0 ? 'var(--up)' : 'var(--down)';
-  const netColor = netCombined >= 0 ? 'var(--up)' : 'var(--down)';
-  const fmtCr = (v) => `${v >= 0 ? '+' : ''}₹${v.toLocaleString('en-IN', { maximumFractionDigits: 2 })} Cr`;
+    fiiDiiBodyHtml = `
+      <div style="font-size:8.5px;color:var(--muted);margin-bottom:6px;font-family:var(--font-sans);">As of ${escHtml(flowDate)} (provisional)</div>
+      <div class="rp-row">
+        <span class="rp-label">FII Net Flow</span>
+        <span class="rp-val" style="color:${fiiColor};font-family:var(--font-num);font-weight:700;">${fmtCr(fiiVal)}</span>
+      </div>
+      <div class="rp-row">
+        <span class="rp-label">DII Net Flow</span>
+        <span class="rp-val" style="color:${diiColor};font-family:var(--font-num);font-weight:700;">${fmtCr(diiVal)}</span>
+      </div>
+      <div class="rp-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">
+        <span class="rp-label" style="font-weight:600;">Net Combined</span>
+        <span class="rp-val" style="color:${netColor};font-family:var(--font-num);font-weight:700;">${fmtCr(netCombined)}</span>
+      </div>
+    `;
+  } else {
+    fiiDiiBodyHtml = `
+      <div style="font-size:10px;color:var(--muted);padding:8px 0;text-align:center;">
+        <div style="font-size:14px;margin-bottom:4px;">📊</div>
+        Data Unavailable / Market Closed
+        <div style="font-size:8.5px;margin-top:4px;opacity:0.7;">Official NSE provisional flows publish after 18:30 IST</div>
+      </div>
+    `;
+  }
 
   sideEl.innerHTML = `
     <div class="side-welcome">
@@ -963,19 +972,7 @@ function clearSelection(filteredData = allData) {
       <div class="rp-card" id="fii-dii-card">
         <div class="rp-title">🏛️ FII / DII Flows</div>
         <div class="rp-body">
-          <div style="font-size:8.5px;color:var(--muted);margin-bottom:6px;font-family:var(--font-sans);">As of ${flowDate} (provisional)</div>
-          <div class="rp-row">
-            <span class="rp-label">FII Net Flow</span>
-            <span class="rp-val" style="color:${fiiColor};font-family:var(--font-num);font-weight:700;">${fmtCr(fiiVal)}</span>
-          </div>
-          <div class="rp-row">
-            <span class="rp-label">DII Net Flow</span>
-            <span class="rp-val" style="color:${diiColor};font-family:var(--font-num);font-weight:700;">${fmtCr(diiVal)}</span>
-          </div>
-          <div class="rp-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">
-            <span class="rp-label" style="font-weight:600;">Net Combined</span>
-            <span class="rp-val" style="color:${netColor};font-family:var(--font-num);font-weight:700;">${fmtCr(netCombined)}</span>
-          </div>
+          ${fiiDiiBodyHtml}
         </div>
       </div>
     </div>
@@ -1029,7 +1026,8 @@ function renderWatchlistTab() {
   const container = document.getElementById('wl-body');
   if (!container) return;
 
-  const wlData = allData.filter(d => pinnedStocks.includes(d.sym));
+  const sourceData = (window.globalScreenerData && window.globalScreenerData.length > 0) ? window.globalScreenerData : allData;
+  const wlData = sourceData.filter(d => pinnedStocks.includes(d.sym));
   if (wlData.length === 0) {
     container.innerHTML = `
       <div class="empty-watch">
@@ -1373,7 +1371,7 @@ function renderBreakoutsTab() {
             return `
               <div class="bo-weekly-grid bo-weekly-row" onclick="openStockModal('${d.sym}')" style="cursor:pointer;">
                 <div><span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${d.sym}')">${isPinned ? '★' : '☆'}</span></div>
-                <div><span class="bo-sym">${d.sym}</span><br><span class="bo-name">${d.name}</span></div>
+                <div><span class="bo-sym">${escHtml(d.sym)}</span><br><span class="bo-name">${escHtml(d.name)}</span></div>
                 <div style="color:var(--up);font-weight:600">${(d.ars * 100).toFixed(1)}%</div>
                 <div class="bo-col-bo-price" style="color:var(--muted-lt)">₹${boPrice.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
                 <div style="font-weight:600">₹${d.price.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
@@ -2513,7 +2511,8 @@ function applyAIFilters(aiResult) {
   renderAll();
 }
 
-const escHtml = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// Use existing escHtml from treemap.js or define safe fallback
+var escHtml = window.escHtml || (v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
 
 function handleSearchInput() {
   const input = document.getElementById('search-box');
