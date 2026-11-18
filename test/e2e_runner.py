@@ -134,6 +134,18 @@ def main():
 
     suites_to_run.append(("Acceptance: Jishu Engine Validation", JishuAcceptanceTestCase))
 
+    # Optional Omniscient QA Multi-Agent Squad (Agents 7-10) when --with-qa is passed
+    if '--with-qa' in sys.argv:
+        try:
+            import test_qa_agents_suite
+            suites_to_run.append(("Acceptance: Omniscient QA Multi-Agent Squad", test_qa_agents_suite.TestOmniscientQASquad))
+        except ImportError:
+            try:
+                from test import test_qa_agents_suite
+                suites_to_run.append(("Acceptance: Omniscient QA Multi-Agent Squad", test_qa_agents_suite.TestOmniscientQASquad))
+            except Exception as e:
+                print(f"{YELLOW}[WARN] Omniscient QA Squad suite skipped: {e}{RESET}")
+
     # 2. Tier 1 to Tier 4 Suites
     tier_modules = [
         ("Tier 1: Feature Coverage (R1-R5)", ["test_tier1_features", "test.test_tier1_features"]),
