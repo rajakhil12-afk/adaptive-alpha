@@ -7,7 +7,12 @@
     "start": "node scripts/update_data.js",
     "update": "node scripts/update_data.js",
     "test": "node --test",
+    "test:qa": "python -m unittest test/test_qa_agents_suite.py",
     "audit": "node scripts/code_health_audit.js",
+    "qa:audit": "python scripts/omniscient_qa_agent.py",
+    "qa:tabs": "python scripts/qa_tab_inspector.py",
+    "qa:filters": "python scripts/qa_filter_sentinel.py",
+    "qa:fii-dii": "python scripts/qa_fii_dii_verifier.py",
     "scrape-logos": "node scripts/scrape_logo_ids.js",
     "notify": "node scripts/send_telegram_notification.js"
   },

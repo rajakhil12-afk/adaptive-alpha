@@ -33,9 +33,17 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install Python Dependencies & Playwright
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright requests
+          playwright install --with-deps chromium
+
       - name: Run Full Code Health & Bug Audit Bot
         run: node scripts/code_health_audit.js
 
-      - name: Run Python Jishu Engine Validation
-        if: ${{ hashFiles('test/jishu_test.py') != '' }}   # skip instead of failing daily when the file is absent
-        run: python test/jishu_test.py
+      - name: Run Omniscient QA & Bug Hunter Multi-Agent Squad (Agents 7-10)
+        run: python scripts/omniscient_qa_agent.py
+
+      - name: Run Unified E2E Test Runner & Jishu Validation
+        run: python test/e2e_runner.py
