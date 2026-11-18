@@ -9,6 +9,10 @@ let sectorViewMode = 'table'; // 'table' or 'cards'
 let donutScope = 'primary'; // 'primary' or 'thematic'
 let sectorFilterScope = 'all'; // 'all' or 'thematic'
 
+function escHtml(str) {
+  return String(str ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 const THEMATIC_GROUPS = [
   { name: '🛡️ Defence & Aerospace', code: 'Defence', syms: ['HAL', 'BEL', 'BDL', 'MAZDOCK', 'COCHINSHIP', 'GRSE', 'PARAS', 'ZENTEC', 'DATAPATTNS', 'BEML', 'BHARATFORG', 'ASTRAMICRO', 'SOLARINDS', 'MTARTECH'] },
   { name: '🚆 Railways & Infra', code: 'Railways', syms: ['RVNL', 'IRFC', 'IRCON', 'RAILTEL', 'TITAGARH', 'JUPITERWAG', 'TEXRAIL', 'RITES'] },
@@ -619,14 +623,14 @@ function showRrgTooltip(evt, ind, ars, srs, phase, breadth, topStock) {
 
   tt.innerHTML = `
     <div style="font-weight:800;color:#ffffff;margin-bottom:4px;font-size:12.5px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
-      <span>${ind}</span>
-      <span style="font-size:9.5px;color:${phColor};background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;font-family:var(--font-num);">${phase}</span>
+      <span>${escHtml(ind)}</span>
+      <span style="font-size:9.5px;color:${phColor};background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;font-family:var(--font-num);">${escHtml(phase)}</span>
     </div>
     <div style="font-family:var(--font-num);font-size:11px;line-height:1.5;">
       <div>RS-Ratio (ARS): <span style="color:${ars >= 0 ? 'var(--up)' : 'var(--down)'};font-weight:700;">${(ars * 100).toFixed(1)}%</span></div>
       <div>RS-Momentum (SRS): <span style="color:${srs >= 0 ? 'var(--up)' : 'var(--down)'};font-weight:700;">${(srs * 100).toFixed(1)}%</span></div>
-      <div>Breadth: <span style="color:var(--text);font-weight:600;">${breadth} Stocks Passing</span></div>
-      <div>Top Leader: <span style="color:var(--gold);font-weight:600;">${topStock}</span></div>
+      <div>Breadth: <span style="color:var(--text);font-weight:600;">${escHtml(breadth)} Stocks Passing</span></div>
+      <div>Top Leader: <span style="color:var(--gold);font-weight:600;">${escHtml(topStock)}</span></div>
     </div>
     <div style="font-size:9.5px;color:var(--muted-lt);margin-top:6px;border-top:1px solid rgba(255,255,255,0.1);padding-top:4px;">
       Click node to filter screener table
@@ -742,6 +746,7 @@ function renderHeatmapTab() {
       } else if (val >= 2.0) {
         bgGradient = 'linear-gradient(135deg, #142850, #0c1a36)';
         pillBg = 'rgba(94,150,255,0.25)';
+        pillBorder = 'rgba(94,150,255,0.4)';
       } else if (val >= 1.2) {
         bgGradient = 'linear-gradient(135deg, #0f402c, #09281b)';
         pillBg = 'rgba(38,166,154,0.2)';
