@@ -83,7 +83,8 @@ function passes(d) {
   if (filters.volz)        ok = ok && ((d.vol_z !== undefined && d.vol_z >= 2.0) || d.vol_anomaly || (d.vol_ratio || 1) >= 2.5);
   if (filters.vcp)         ok = ok && ((d.vcp && d.vcp.is_vcp) || d.is_vcp || ((d.vol_ratio || 1) <= 0.7 && d.hi52_prox >= -0.05));
   if (filters.pocketpivot) ok = ok && (d.pocket_pivot || d.is_pocket_pivot);
-  if (filters['52w'])      ok = ok && d.hi52_prox >= -0.05;
+  if (filters['52w'])      ok = ok && (d.hi52_prox != null && d.hi52_prox >= -0.05);
+  if (filters.watchlist)  ok = ok && (Array.isArray(pinnedStocks) && pinnedStocks.includes(d.sym));
   if (filters.st) {
     const stData = stParam === '14' ? d.st14 : d.st10;
     ok = ok && stData && stData.trend === 'buy';
@@ -99,6 +100,12 @@ function applyPreset(presetName) {
     syncChipUI();
     renderAll();
     return;
+  }
+
+  // Auto-switch to Screener tab if user is on Overview or other tabs
+  if (activeTab !== 'screener') {
+    const scrTab = document.querySelector('.tab[onclick*="screener"]') || document.querySelectorAll('.tab')[1];
+    if (scrTab) setTab('screener', scrTab);
   }
 
   activePreset = presetName;
@@ -202,6 +209,7 @@ function toggleTheme() {
 }
 
 function togglePin(sym) {
+  if (!Array.isArray(pinnedStocks)) pinnedStocks = [];
   const idx = pinnedStocks.indexOf(sym);
   if (idx === -1) {
     pinnedStocks.push(sym);
@@ -209,7 +217,9 @@ function togglePin(sym) {
     pinnedStocks.splice(idx, 1);
   }
   try {
-    localStorage.setItem('pinned_stocks', JSON.stringify(pinnedStocks));
+    const serialized = JSON.stringify(pinnedStocks);
+    localStorage.setItem('pinned_stocks', serialized);
+    localStorage.setItem('ars_watchlist', serialized);
   } catch(e) {}
   renderAll();
 }
@@ -217,7 +227,17 @@ function togglePin(sym) {
 function setSortCol(val) { 
   const sel = document.getElementById('sort-sel');
   if (sel) {
+    if (sel.value === val) {
+      if (val.endsWith('-desc')) val = val.replace('-desc', '-asc');
+      else if (val.endsWith('-asc')) val = val.replace('-asc', '-desc');
+    }
     sel.value = val; 
+
+    // Update active sorted class on table headers
+    document.querySelectorAll('.tbl-header .th').forEach(th => th.classList.remove('sorted'));
+    const matchedTh = document.querySelector(`.tbl-header .th[onclick*="'${val}'"]`) || document.querySelector(`.tbl-header .th[onclick*="'${val.split('-')[0]}'"]`);
+    if (matchedTh) matchedTh.classList.add('sorted');
+
     if (activeTab === 'watchlist') {
       renderWatchlistTab();
     } else if (activeTab === 'breakouts') {
@@ -278,7 +298,7 @@ function renderTickerStrip() {
   Object.keys(byInd).sort().forEach(ind => {
     const stocks = byInd[ind];
     const total  = stocks.length;
-    const avgArs = stocks.reduce((s,d)=>s+d.ars,0)/total;
+    const avgArs = stocks.reduce((s,d)=>s+(d.ars || 0),0)/(total || 1);
     const rising = stocks.filter(d=>d.trending).length > total/2;
     let phase = 'LAGGING';
     if (avgArs > 0 && rising) phase = 'LEADING';
@@ -377,7 +397,7 @@ function computeClientSentimentPillars() {
   const s3Desc = `${bRatio}% Advancing Volume share (${adv.length} adv vs ${dec.length} dec)`;
 
   // 4. Strength: 52W Highs vs Lows
-  const highs = allData.filter(d => (d.hi52_prox || -1) >= -0.05).length;
+  const highs = allData.filter(d => (d.hi52_prox != null ? d.hi52_prox : -1) >= -0.05).length;
   const lows = allData.filter(d => (d.hi52_prox || 0) <= -0.25).length;
   const s4 = Math.min(100, Math.max(0, Math.round((highs / (highs + lows + 1)) * 100)));
   const s4Desc = `${highs} stocks near 52W High vs ${lows} near 52W Low`;
@@ -558,127 +578,133 @@ function renderRetailHeroCockpit() {
     const breadthPct = (breadthCount / totalStocks) * 100;
 
     container.innerHTML = `
-    <!-- 1. CNN Fear & Greed Sentiment Cockpit Card -->
-    <div class="rh-card cnn-sentiment" style="border-color: ${tierColor}44; background: radial-gradient(circle at 50% 0%, ${tierColor}10, var(--bg2) 70%);">
-      <div class="rh-header">
-        <span class="rh-title" style="color:${tierColor};">🧭 Fear &amp; Greed Index</span>
-        <span class="badge" style="background:${tierBadgeBg};color:${tierColor};border:1px solid ${tierColor}55;">${sentimentTier}</span>
+      <!-- 1. Authentic CNN-Style Market Sentiment Speedometer Card -->
+      <div class="rh-card sentiment cnn-card" onclick="openSentimentModal()" style="cursor:pointer;" title="Click to inspect 7 Fear &amp; Greed Indicators">
+        <div class="rh-header">
+          <span class="rh-title">🌡️ Market Fear &amp; Greed</span>
+        <span class="badge badge-blue">CNN / S&amp;P Methodology</span>
       </div>
+      <div class="cnn-split-layout">
+        <!-- Left Column: CNN Speedometer Dial -->
+        <div class="cnn-gauge-pane">
+          <svg viewBox="0 0 270 160" class="cnn-svg-gauge">
+            <defs>
+              <!-- 3D Active Sector Glow & Depth -->
+              <filter id="cnn-3d-active-glow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.85"/>
+                <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="${tierColor}" flood-opacity="0.8"/>
+              </filter>
 
-      <!-- Split Container: Dial on Left, Timeline on Right -->
-      <div class="cnn-split-container">
-        <!-- Left Column: Gauge Dial -->
-        <div class="cnn-dial-pane">
-          <div class="cnn-gauge-wrap">
-            <svg viewBox="0 0 270 145" class="cnn-gauge-svg">
-              <defs>
-                <!-- 3D Convex Metallic Shading -->
-                <radialGradient id="cnn-bevel-specular" cx="50%" cy="30%" r="70%">
-                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.32" />
-                  <stop offset="45%" stop-color="#ffffff" stop-opacity="0.08" />
-                  <stop offset="100%" stop-color="#000000" stop-opacity="0.65" />
-                </radialGradient>
+              <!-- 3D Needle Shadow -->
+              <filter id="cnn-needle-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="3" stdDeviation="2" flood-color="#000000" flood-opacity="0.75"/>
+              </filter>
 
-                <!-- Zone 1: Extreme Fear Gradients -->
-                <linearGradient id="grad-z1-base" x1="0%" y1="100%" x2="50%" y2="0%">
-                  <stop offset="0%" stop-color="#7f1d1d" />
-                  <stop offset="100%" stop-color="#ef4444" />
-                </linearGradient>
-                <linearGradient id="grad-z1-active" x1="0%" y1="100%" x2="50%" y2="0%">
-                  <stop offset="0%" stop-color="#991b1b" />
-                  <stop offset="100%" stop-color="#ff4d4d" />
-                </linearGradient>
+              <!-- 3D Center Hub Pedestal Shadow -->
+              <filter id="cnn-hub-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.8"/>
+              </filter>
 
-                <!-- Zone 2: Fear Gradients -->
-                <linearGradient id="grad-z2-base" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#c2410c" />
-                  <stop offset="100%" stop-color="#f97316" />
-                </linearGradient>
-                <linearGradient id="grad-z2-active" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#ea580c" />
-                  <stop offset="100%" stop-color="#fb923c" />
-                </linearGradient>
+              <!-- 3D Center Score Glow -->
+              <filter id="cnn-score-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000000" flood-opacity="0.9"/>
+              </filter>
 
-                <!-- Zone 3: Neutral Gradients -->
-                <linearGradient id="grad-z3-base" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#d97706" />
-                  <stop offset="100%" stop-color="#f59e0b" />
-                </linearGradient>
-                <linearGradient id="grad-z3-active" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#b45309" />
-                  <stop offset="100%" stop-color="#fcd34d" />
-                </linearGradient>
+              <!-- Base Sector Gradients (Rich Color Fills) -->
+              <linearGradient id="grad-z1-base" x1="0%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#7f1d1d" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#ef4444" stop-opacity="0.5"/>
+              </linearGradient>
+              <linearGradient id="grad-z2-base" x1="0%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#9a3412" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#f97316" stop-opacity="0.5"/>
+              </linearGradient>
+              <linearGradient id="grad-z3-base" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#92400e" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.5"/>
+              </linearGradient>
+              <linearGradient id="grad-z4-base" x1="100%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#065f46" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#10b981" stop-opacity="0.5"/>
+              </linearGradient>
+              <linearGradient id="grad-z5-base" x1="100%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#064e3b" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#00e676" stop-opacity="0.55"/>
+              </linearGradient>
 
-                <!-- Zone 4: Greed Gradients -->
-                <linearGradient id="grad-z4-base" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#059669" />
-                  <stop offset="100%" stop-color="#10b981" />
-                </linearGradient>
-                <linearGradient id="grad-z4-active" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#047857" />
-                  <stop offset="100%" stop-color="#34d399" />
-                </linearGradient>
+              <!-- Active 3D Highlighting Gradients -->
+              <linearGradient id="grad-z1-active" x1="0%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#991b1b"/>
+                <stop offset="50%" stop-color="#ef4444"/>
+                <stop offset="100%" stop-color="#ff8585"/>
+              </linearGradient>
+              <linearGradient id="grad-z2-active" x1="0%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#c2410c"/>
+                <stop offset="50%" stop-color="#f97316"/>
+                <stop offset="100%" stop-color="#fdba74"/>
+              </linearGradient>
+              <linearGradient id="grad-z3-active" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#b45309"/>
+                <stop offset="50%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#fde68a"/>
+              </linearGradient>
+              <linearGradient id="grad-z4-active" x1="100%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#047857"/>
+                <stop offset="50%" stop-color="#10b981"/>
+                <stop offset="100%" stop-color="#6ee7b7"/>
+              </linearGradient>
+              <linearGradient id="grad-z5-active" x1="100%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#064e3b"/>
+                <stop offset="50%" stop-color="#00e676"/>
+                <stop offset="100%" stop-color="#a7f3d0"/>
+              </linearGradient>
 
-                <!-- Zone 5: Extreme Greed Gradients -->
-                <linearGradient id="grad-z5-base" x1="50%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#047857" />
-                  <stop offset="100%" stop-color="#00e676" />
-                </linearGradient>
-                <linearGradient id="grad-z5-active" x1="50%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#059669" />
-                  <stop offset="100%" stop-color="#4ade80" />
-                </linearGradient>
+              <!-- 3D Center Hub Pedestal Gradient -->
+              <linearGradient id="grad-hub-3d" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1e293b"/>
+                <stop offset="100%" stop-color="#0b1120"/>
+              </linearGradient>
+            </defs>
 
-                <!-- Active Zone Glow Effect -->
-                <filter id="cnn-3d-active-glow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#ffffff" flood-opacity="0.8" />
-                  <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="${tierColor}" flood-opacity="0.6" />
-                </filter>
-              </defs>
+            <!-- 5 Zone Arc Sectors -->
+            <path d="M 25.0 125.0 A 110 110 0 0 1 57.2 47.2 L 79.8 69.8 A 78 78 0 0 0 57.0 125.0 Z" ${zone1Style} />
+            <path d="M 57.2 47.2 A 110 110 0 0 1 117.8 16.4 L 122.8 48.0 A 78 78 0 0 0 79.8 69.8 Z" ${zone2Style} />
+            <path d="M 117.8 16.4 A 110 110 0 0 1 152.2 16.4 L 147.2 48.0 A 78 78 0 0 0 122.8 48.0 Z" ${zone3Style} />
+            <path d="M 152.2 16.4 A 110 110 0 0 1 212.8 47.2 L 190.2 69.8 A 78 78 0 0 0 147.2 48.0 Z" ${zone4Style} />
+            <path d="M 212.8 47.2 A 110 110 0 0 1 245.0 125.0 L 213.0 125.0 A 78 78 0 0 0 190.2 69.8 Z" ${zone5Style} />
 
-              <!-- Dark Gauge Track Bed -->
-              <path d="M 25 125 A 110 110 0 0 1 245 125 L 217 125 A 82 82 0 0 0 53 125 Z" fill="#090d14" opacity="0.9" />
+            <!-- Zone Arc Text Labels -->
+            <text x="44" y="86" transform="rotate(-67.5 44 86)" text-anchor="middle" class="cnn-zone-lbl ext-fear-lbl ${isExtFear ? 'active-lbl ext-fear' : ''}">EXTREME<tspan x="44" dy="9">FEAR</tspan></text>
+            <text x="88" y="44" transform="rotate(-27 88 44)" text-anchor="middle" class="cnn-zone-lbl fear-lbl ${isFear ? 'active-lbl fear' : ''}">FEAR</text>
+            <text x="135" y="36" text-anchor="middle" class="cnn-zone-lbl neutral-lbl ${isNeutral ? 'active-lbl neutral' : ''}">NEUTRAL</text>
+            <text x="182" y="44" transform="rotate(27 182 44)" text-anchor="middle" class="cnn-zone-lbl greed-lbl ${isGreed ? 'active-lbl greed' : ''}">GREED</text>
+            <text x="226" y="86" transform="rotate(67.5 226 86)" text-anchor="middle" class="cnn-zone-lbl ext-greed-lbl ${isExtGreed ? 'active-lbl ext-greed' : ''}">EXTREME<tspan x="226" dy="9">GREED</tspan></text>
 
-              <!-- 5 Arc Zones -->
-              <path class="cnn-zone" ${zone1Style} d="M 25 125 A 110 110 0 0 1 45.69 61.32 L 68.42 77.48 A 82 82 0 0 0 53 125 Z" />
-              <path class="cnn-zone" ${zone2Style} d="M 47.33 56.28 A 110 110 0 0 1 101.01 20.35 L 109.66 46.90 A 82 82 0 0 0 69.65 73.71 Z" />
-              <path class="cnn-zone" ${zone3Style} d="M 103.11 19.70 A 110 110 0 0 1 166.89 19.70 L 158.77 46.41 A 82 82 0 0 0 111.23 46.41 Z" />
-              <path class="cnn-zone" ${zone4Style} d="M 168.99 20.35 A 110 110 0 0 1 222.67 56.28 L 200.35 73.71 A 82 82 0 0 0 160.34 46.90 Z" />
-              <path class="cnn-zone" ${zone5Style} d="M 224.31 61.32 A 110 110 0 0 1 245 125 L 217 125 A 82 82 0 0 0 201.58 77.48 Z" />
+            <!-- Dotted Ring Scale & Numbers -->
+            <path d="M 60 125 A 75 75 0 0 1 210 125" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" stroke-dasharray="2 4" />
+            <text x="68" y="123" class="cnn-scale-tick">0</text>
+            <text x="88" y="82" class="cnn-scale-tick">25</text>
+            <text x="135" y="63" text-anchor="middle" class="cnn-scale-tick">50</text>
+            <text x="182" y="82" class="cnn-scale-tick">75</text>
+            <text x="202" y="123" class="cnn-scale-tick">100</text>
 
-              <!-- 3D Bevel Overlay Mask for Gloss & Depth -->
-              <path d="M 25 125 A 110 110 0 0 1 245 125 L 217 125 A 82 82 0 0 0 53 125 Z" fill="url(#cnn-bevel-specular)" pointer-events="none" />
+            <!-- 3D Center Score Hub / Pedestal -->
+            <g class="cnn-3d-hub" filter="url(#cnn-hub-shadow)">
+              <rect x="94" y="112" width="82" height="42" rx="12" fill="url(#grad-hub-3d)" stroke="rgba(255,255,255,0.24)" stroke-width="1.5" />
+              <rect x="96" y="114" width="78" height="38" rx="10" fill="rgba(11, 18, 32, 0.94)" stroke="${tierColor}" stroke-width="1.2" stroke-opacity="0.85" />
+              <text x="135" y="125" text-anchor="middle" class="cnn-hub-tier-lbl" fill="${tierColor}">${sentimentTier.split(' ')[0]}</text>
+              <text x="135" y="146" text-anchor="middle" class="cnn-big-score" fill="#ffffff" filter="url(#cnn-score-glow)">${score}</text>
+            </g>
 
-              <!-- High-Contrast Zone Boundary Separator Grooves -->
-              <line x1="45.69" y1="61.32" x2="68.42" y2="77.48" stroke="#05080f" stroke-width="2.5" />
-              <line x1="101.01" y1="20.35" x2="109.66" y2="46.90" stroke="#05080f" stroke-width="2.5" />
-              <line x1="168.99" y1="20.35" x2="160.34" y2="46.90" stroke="#05080f" stroke-width="2.5" />
-              <line x1="224.31" y1="61.32" x2="201.58" y2="77.48" stroke="#05080f" stroke-width="2.5" />
-
-              <!-- Zone Boundary Labels -->
-              <text x="32" y="137" class="cnn-tick-lbl">0</text>
-              <text x="43" y="60" class="cnn-tick-lbl">25</text>
-              <text x="96" y="22" class="cnn-tick-lbl">45</text>
-              <text x="174" y="22" class="cnn-tick-lbl">55</text>
-              <text x="227" y="60" class="cnn-tick-lbl">75</text>
-              <text x="238" y="137" class="cnn-tick-lbl">100</text>
-
-              <!-- Needle Assembly with Drop Shadow -->
-              <g transform="rotate(${needleAngle}, 135, 125)">
-                <line x1="135" y1="125" x2="135" y2="28" stroke="rgba(0,0,0,0.65)" stroke-width="4.5" stroke-linecap="round" />
-                <line x1="135" y1="125" x2="135" y2="30" stroke="#f8fafc" stroke-width="2.8" stroke-linecap="round" />
-                <polygon points="135,23 131.5,37 138.5,37" fill="#f8fafc" />
-                <circle cx="135" cy="125" r="9" fill="#0b0f19" stroke="#f8fafc" stroke-width="2" />
-                <circle cx="135" cy="125" r="4.5" fill="${tierColor}" />
-              </g>
-            </svg>
-
-            <!-- Large Real-Time Digital Readout -->
-            <div class="cnn-digital-score-wrap">
-              <div class="cnn-digital-score" style="color:${tierColor};">${score}</div>
-              <div class="cnn-digital-tier" style="color:${tierColor};">${sentimentTier}</div>
-            </div>
-          </div>
+            <!-- Animated High-Precision Needle -->
+            <g class="cnn-needle-group" style="transform-origin: 135px 125px; transform: rotate(${needleAngle}deg);">
+              <line x1="135" y1="125" x2="135" y2="34" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" filter="url(#cnn-needle-shadow)" />
+              <line x1="135" y1="125" x2="135" y2="34" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" />
+              <circle cx="135" cy="125" r="5.5" fill="#0284c7" stroke="#ffffff" stroke-width="1.5" />
+              <circle cx="135" cy="125" r="2" fill="#ffffff" />
+            </g>
+          </svg>
+          <div class="cnn-last-updated">Last updated: Today at ${activeSentimentData.updatedAt || '05:30 PM'} IST</div>
         </div>
 
         <!-- Right Column: CNN Historical Sentiment Timeline -->
@@ -768,7 +794,7 @@ function renderRetailHeroCockpit() {
         </div>
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; font-size: 9px; color: var(--muted); padding-top: 4px; border-top: 1px solid var(--border);">
-        <span>52W Highs vs Lows: <strong style="color: var(--up);">${allData.filter(d => (d.hi52_prox || -1) >= -0.05).length}</strong> vs <strong style="color: var(--down);">${allData.filter(d => (d.hi52_prox || 0) <= -0.25).length}</strong></span>
+        <span>52W Highs vs Lows: <strong style="color: var(--up);">${allData.filter(d => (d.hi52_prox != null ? d.hi52_prox : -1) >= -0.05).length}</strong> vs <strong style="color: var(--down);">${allData.filter(d => (d.hi52_prox || 0) <= -0.25).length}</strong></span>
         <span style="color: var(--gold); font-weight: 600;">Zweig Thrust</span>
       </div>
     </div>
@@ -892,6 +918,7 @@ function closeSentimentModal(e) {
 }
 
 function selectStock(sym, forceWidget = false) {
+  if (!sym || sym === '—') return;
   selectedSym = sym;
   document.querySelectorAll('.tbl-row').forEach(row => {
     row.classList.toggle('selected', row.getAttribute('data-sym') === sym);
@@ -1065,13 +1092,28 @@ function renderWatchlistTab() {
   const container = document.getElementById('wl-body');
   if (!container) return;
 
-  const sourceData = (window.globalScreenerData && window.globalScreenerData.length > 0) ? window.globalScreenerData : allData;
+  if (!Array.isArray(pinnedStocks) || pinnedStocks.length === 0) {
+    container.innerHTML = `
+      <div class="empty-watch">
+        <div class="big">☆</div>
+        <div>No stocks pinned. Go to the Screener tab and click the star icon to build your watchlist.</div>
+      </div>
+    `;
+    return;
+  }
+
+  const sourceData = (typeof globalScreenerData !== 'undefined' && globalScreenerData.length > 0) ? globalScreenerData : allData;
+  if (!sourceData || sourceData.length === 0) {
+    container.innerHTML = `<div class="empty-watch"><div class="big">⏳</div><div>Loading watchlist market data…</div></div>`;
+    return;
+  }
+
   const wlData = sourceData.filter(d => pinnedStocks.includes(d.sym));
   if (wlData.length === 0) {
     container.innerHTML = `
       <div class="empty-watch">
         <div class="big">☆</div>
-        <div>No stocks pinned. Go to the Screener tab and click the star icon to build your watchlist.</div>
+        <div>Pinned stocks not found in current dataset.</div>
       </div>
     `;
     return;
@@ -1089,7 +1131,7 @@ function renderWatchlistTab() {
         <div class="th" onclick="setSortCol('days-desc')" id="th-wl-days">Days ↕</div>
         <div class="th" onclick="setSortCol('vol-desc')" id="th-wl-vol">Vol ↕</div>
         <div class="th" onclick="setSortCol('st-desc')" id="th-wl-st">Supertrend ↕</div>
-        <div class="th">Price ₹</div>
+        <div class="th" onclick="setSortCol('price-desc')" id="th-wl-price">Price ₹ <span class="sort-arrow">↕</span></div>
         <div class="th" onclick="setSortCol('rs-desc')" id="th-wl-rs">RS ↕</div>
         <div class="th">TV</div>
       </div>
@@ -1141,8 +1183,7 @@ function renderBreakoutsTab() {
   const mondayTs = getMondayTimestamp();
   const weeklyData = sourceData.filter(s =>
     !todaySymSet.has(s.sym) &&
-    !s.breakout && (s.ars ?? 0) > 0 && s.signDays != null && s.signDays <= 5 &&
-    s.signSince != null && s.signSince >= mondayTs
+    !s.breakout && (s.ars ?? 0) > 0 && s.signDays != null && s.signDays <= 5
   );
   const weeklySymSet = new Set(weeklyData.map(s => s.sym));
   const filteredWeekly = filterBoByCap(weeklyData, boCapFilter);
@@ -1268,16 +1309,16 @@ function renderBreakoutsTab() {
         }
 
         return `
-          <div class="setup-card" onclick="openStockModal('${s.sym}')" title="${s.name} · Click to inspect full scorecard">
+          <div class="setup-card" onclick="openStockModal('${escHtml(s.sym)}')" title="${escHtml(s.name)} · Click to inspect full scorecard">
             <div class="sc-top">
               <div class="sc-sym-box">
-                <span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${s.sym}')" title="Pin stock">${isPinned ? '★' : '☆'}</span>
-                <strong class="sc-sym">${s.sym}</strong>
-                <span class="sc-ind">${s.ind || 'Equities'}</span>
+                <span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${escHtml(s.sym)}')" title="Pin stock">${isPinned ? '★' : '☆'}</span>
+                <strong class="sc-sym">${escHtml(s.sym)}</strong>
+                <span class="sc-ind">${escHtml(s.ind || 'Equities')}</span>
               </div>
               <div class="sc-price-box">
                 <span class="sc-price">${priceStr}</span>
-                <button class="sc-tv-btn" onclick="event.stopPropagation();openTV('${s.sym}')" title="Open TradingView Chart">↗ TV</button>
+                <button class="sc-tv-btn" onclick="event.stopPropagation();openTV('${escHtml(s.sym)}')" title="Open TradingView Chart">↗ TV</button>
               </div>
             </div>
             <div class="sc-badges">
@@ -1412,8 +1453,8 @@ function renderBreakoutsTab() {
               <div><span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${d.sym}')">${isPinned ? '★' : '☆'}</span></div>
               <div><span class="bo-sym">${escHtml(d.sym)}</span><br><span class="bo-name">${escHtml(d.name)}</span></div>
               <div style="color:var(--up);font-weight:600">${(d.ars * 100).toFixed(1)}%</div>
-              <div class="bo-col-bo-price" style="color:var(--muted-lt)">₹${boPrice.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
-              <div style="font-weight:600">₹${d.price.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
+              <div class="bo-col-bo-price" style="color:var(--muted-lt)">${boPrice != null ? '₹' + Number(boPrice).toLocaleString('en-IN', {maximumFractionDigits:1}) : '—'}</div>
+              <div style="font-weight:600">${d.price != null ? '₹' + Number(d.price).toLocaleString('en-IN', {maximumFractionDigits:1}) : '—'}</div>
               <div class="${gainCls}">${gainStr}</div>
               <div class="bo-date">${boDateStr} <span style="opacity:0.6;font-size:9px">(${daysLabel})</span></div>
               <div class="bo-col-rs" style="color:var(--gold);font-weight:600">${d.rs_rating ?? '—'}</div>
@@ -1433,7 +1474,7 @@ function renderBreakoutsTab() {
       <div class="bo-section-title-dip"><span class="bo-icon">🎯</span> Leader Retest / Dip Buys (Near Support) <span class="bo-count-pill-dip">${filteredDipBuy.length}</span></div>
   `;
   if (filteredDipBuy.length > 0) {
-    const sortedDip = [...filteredDipBuy].sort((a, b) => (b.rs_rating ?? 0) - (a.rs_rating ?? 0));
+    const sortedDip = sortData(filteredDipBuy);
     html += `
       <div class="tbl-wrap">
         <div class="tbl-header COL" style="border-bottom: 2px solid #38bdf8;">
@@ -1445,7 +1486,7 @@ function renderBreakoutsTab() {
           <div class="th" onclick="setSortCol('days-desc')">Days ↕</div>
           <div class="th" onclick="setSortCol('vol-desc')">Vol ↕</div>
           <div class="th" onclick="setSortCol('st-desc')">Supertrend ↕</div>
-          <div class="th">Price ₹</div>
+          <div class="th" onclick="setSortCol('price-desc')">Price ₹ <span class="sort-arrow">↕</span></div>
           <div class="th" onclick="setSortCol('rs-desc')">RS ↕</div>
           <div class="th">TV</div>
         </div>
@@ -1618,7 +1659,7 @@ function renderOverviewTab() {
     .filter(d => (d.ars || 0) > 0)
     .sort((a,b) => (b.ars || 0) - (a.ars || 0))
     .slice(0, 5);
-  const near52wCount = allData.filter(d => (d.hi52_prox || -1) >= -0.05).length;
+  const near52wCount = allData.filter(d => (d.hi52_prox != null ? d.hi52_prox : -1) >= -0.05).length;
   const vcpAndPpCount = allData.filter(d => (d.vcp?.is_vcp || d.pocket_pivot) && (d.ars || 0) > 0).length;
 
   container.innerHTML = `
@@ -1665,7 +1706,7 @@ function renderOverviewTab() {
         </div>
         <div class="ov-net-flow-row" style="border-top:1px solid rgba(255,255,255,0.08);padding-top:6px;margin-top:4px;">
           <span style="font-size:11px;color:var(--muted);font-weight:600;">Net Combined Smart Money</span>
-          <strong style="font-family:var(--font-num);font-size:12.5px;color:${(latestFiiDiiData?.fii || 0) + (latestFiiDiiData?.dii || 0) >= 0 ? 'var(--up)' : 'var(--down)'};">${netText}</strong>
+          <strong style="font-family:var(--font-num);font-size:12.5px;color:${latestFiiDiiData ? (((latestFiiDiiData.fii || 0) + (latestFiiDiiData.dii || 0) >= 0) ? 'var(--up)' : 'var(--down)') : 'var(--text)'};">${netText}</strong>
         </div>
       </div>
 
@@ -2083,7 +2124,11 @@ async function loadData() {
         pocket_pivot: ppData,
         is_pocket_pivot: ppData,
         mrs: mrsData.mrs,
-        mrs_trend: mrsData.mrs_trend
+        mrs_trend: mrsData.mrs_trend,
+        institutional: (prevDataMap[stock.sym]?.institutional) || (globalScreenerData.find(s => s.sym === stock.sym)?.institutional) || null,
+        is_fno: stock.is_fno ?? (globalScreenerData.find(s => s.sym === stock.sym)?.is_fno) ?? false,
+        forensics: (globalScreenerData.find(s => s.sym === stock.sym)?.forensics) || (globalScreenerData.find(s => s.sym === stock.sym)?.safety) || null,
+        safety: (globalScreenerData.find(s => s.sym === stock.sym)?.safety) || null
       });
     }
 
@@ -2119,6 +2164,11 @@ async function loadData() {
 
   if (results.length > 0) {
     allData = results;
+    if (Array.isArray(globalScreenerData) && globalScreenerData.length > 0) {
+      const resMap = new Map(results.map(r => [r.sym, r]));
+      globalScreenerData = globalScreenerData.map(s => resMap.get(s.sym) || s);
+      window.globalScreenerData = globalScreenerData;
+    }
     liveCache[currentIndex] = { data: [...results], ts: new Date() };
     const nowTime = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
     const tsEl = document.getElementById('ts');
@@ -2310,7 +2360,10 @@ async function loadFiiDiiData() {
   }
   try {
     const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.nseindia.com/api/fiidiiTradeReact');
-    const res = await fetch(proxyUrl);
+    const c = new AbortController();
+    const timeoutId = setTimeout(() => c.abort(), 6000);
+    const res = await fetch(proxyUrl, { signal: c.signal });
+    clearTimeout(timeoutId);
     if (res.ok) {
       const obj = await res.json();
       if (obj && obj.contents) {
@@ -2330,6 +2383,10 @@ async function loadFiiDiiData() {
           });
           latestFiiDiiData = { date: flowDate, fii: fiiNet, dii: diiNet };
           if (!selectedSym) clearSelection();
+          if (activeTab === 'overview') {
+            renderOverviewTab();
+            renderRetailHeroCockpit();
+          }
         }
       }
     }
@@ -2349,7 +2406,9 @@ async function initScreener() {
   } catch(e) {}
 
   try {
-    pinnedStocks = JSON.parse(localStorage.getItem('pinned_stocks')) || [];
+    const rawSaved = localStorage.getItem('pinned_stocks') || localStorage.getItem('ars_watchlist');
+    const parsed = rawSaved ? JSON.parse(rawSaved) : [];
+    pinnedStocks = Array.isArray(parsed) ? parsed : [];
   } catch(e) { pinnedStocks = []; }
 
   showProgress('Loading screener database…', 10);
@@ -2357,6 +2416,7 @@ async function initScreener() {
   if (window.STATIC_SCREENER_DATA && Array.isArray(window.STATIC_SCREENER_DATA.stocks)) {
     const payload = window.STATIC_SCREENER_DATA;
     globalScreenerData = payload.stocks;
+    window.globalScreenerData = globalScreenerData;
     if (payload.fii_dii) latestFiiDiiData = payload.fii_dii;
     if (payload.breakout_history) globalBreakoutHistory = payload.breakout_history;
     
@@ -2376,6 +2436,7 @@ async function initScreener() {
     const payload = await res.json();
     if (payload && Array.isArray(payload.stocks)) {
       globalScreenerData = payload.stocks;
+      window.globalScreenerData = globalScreenerData;
       if (payload.fii_dii) latestFiiDiiData = payload.fii_dii;
       if (payload.breakout_history) globalBreakoutHistory = payload.breakout_history;
       
@@ -2531,7 +2592,7 @@ function applyAIFilters(aiResult) {
     applyThematicBasket(aiResult.basket);
   } else {
     activeThemeBasket = null;
-    document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.theme-btn-chip').forEach(btn => btn.classList.remove('active'));
   }
 
   if (aiResult.sort) {
@@ -2647,9 +2708,6 @@ function handleSearchKeydown(e) {
     } else if (exact) {
       if (suggBox) suggBox.style.display = 'none';
       selectStock(exact.sym, true);
-    } else if (val.length >= 2) {
-      if (suggBox) suggBox.style.display = 'none';
-      analyzeExternalStock(val); // restored: previously unreachable
     } else {
       if (suggBox) suggBox.style.display = 'none';
       renderTable();
