@@ -291,13 +291,16 @@ function openStockModal(sym) {
   }
 
   // Calculate SVG Vector Coordinates based on ARS and SRS
-  const ars = d.ars ?? 0;
-  const srs = d.srs ?? 0;
-  const clampedArs = Math.max(-0.3, Math.min(0.3, ars));
-  const clampedSrs = Math.max(-0.15, Math.min(0.15, srs));
+  const ars = Number.isFinite(d.ars) ? d.ars : 0;
+  const srs = Number.isFinite(d.srs) ? d.srs : 0;
+  // Adaptive nonlinear scaling (tanh) so extreme multi-baggers don't hard-peg at border
+  const scaledArs = Math.tanh(ars / 0.8) * 0.35;
+  const scaledSrs = Math.tanh(srs / 0.3) * 0.18;
+  const clampedArs = Math.max(-0.35, Math.min(0.35, scaledArs));
+  const clampedSrs = Math.max(-0.18, Math.min(0.18, scaledSrs));
   
-  const normX = (clampedArs + 0.3) / 0.6;
-  const normY = (clampedSrs + 0.15) / 0.3;
+  const normX = (clampedArs + 0.35) / 0.70;
+  const normY = (clampedSrs + 0.18) / 0.36;
   
   const dotX = 15 + normX * 70;
   const dotY = 35 - normY * 25;
@@ -419,6 +422,13 @@ function setStopLossMode(mode) {
 function closeModal() {
   const modal = document.getElementById('stock-modal');
   if (modal) modal.classList.remove('open');
+  if (arsChartInstance) {
+    try { arsChartInstance.destroy(); } catch(e) {}
+    arsChartInstance = null;
+  }
+  if (typeof currentModalRequestId !== 'undefined') {
+    currentModalRequestId++;
+  }
 }
 
 function recalcPositionSize() {
@@ -856,7 +866,7 @@ function openCompare() {
       ${selectedData.map(d => {
         const st = stParam === '14' ? d.st14 : d.st10;
         const isBuy = st && st.trend === 'buy';
-        return `<div class="cmp-val" style="color:${isBuy?'var(--up)':'var(--down)'}">${isBuy?'BUY':'SELL'}</div>`;
+        return `<div class="cmp-val" style="color:${isBuy?'var(--up)' : 'var(--down)'}">${isBuy?'BUY':'SELL'}</div>`;
       }).join('')}
 
       <div class="cmp-metric">MA Status</div>
@@ -1103,5 +1113,11 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape' || e.key === 'Esc') {
     closeModal();
     closeCompare();
+    if (typeof closeSentimentModal === 'function') {
+      closeSentimentModal();
+    } else {
+      const sm = document.getElementById('sentiment-modal');
+      if (sm) sm.style.display = 'none';
+    }
   }
 });
