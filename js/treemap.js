@@ -169,50 +169,36 @@ function renderSectors() {
     `;
   }
 
-  // 2. High Definition RRG Scatter Radar Clock
-  // 2. High Definition Grok-Style RRG Scatter Radar Clock
-  // 2. Exact 1:1 Grok-Style Relative Rotation Graph (RRG) Radar Clock
-  // Exact coordinate map matching the reference graphic layout (-110 to 110 scale, center at 350, 275)
-  const grokCoordMap = {
-    "IT": { x: -42, y: 48, dx: -12, dy: 8, color: "#00B4FF", name: "IT" },
-    "FMCG": { x: -45, y: -42, dx: -10, dy: -12, color: "#FF2A2A", name: "FMCG" },
-    "Consumer Services": { x: 58, y: 72, dx: 15, dy: 10, color: "#00FF88", name: "Consumer Services" },
-    "Telecom": { x: 52, y: 48, dx: 12, dy: 8, color: "#00FF88", name: "Telecom" },
-    "Financial Services": { x: 48, y: 32, dx: 10, dy: 6, color: "#00FF88", name: "Financial Services" },
-    "Construction": { x: 55, y: -22, dx: 9, dy: -7, color: "#FFB800", name: "Construction" },
-    "Oil & Gas": { x: 58, y: -32, dx: 10, dy: -8, color: "#FFB800", name: "Oil & Gas" },
-    "Oil Gas": { x: 58, y: -32, dx: 10, dy: -8, color: "#FFB800", name: "Oil & Gas" },
-    "Metals & Mining": { x: 62, y: -38, dx: 11, dy: -9, color: "#FFB800", name: "Metals & Mining" },
-    "Healthcare": { x: 52, y: -42, dx: 9, dy: -10, color: "#FFB800", name: "Healthcare" },
-    "Capital Goods": { x: 48, y: -48, dx: 8, dy: -11, color: "#FFB800", name: "Capital Goods" },
-    "Consumer Durables": { x: 48, y: -18, dx: 8, dy: -6, color: "#FFB800", name: "Consumer Durables" },
-    "Power": { x: 55, y: -55, dx: 9, dy: -12, color: "#FFB800", name: "Power" },
-    "Automobile": { x: 42, y: 22, dx: 9, dy: 5, color: "#00FF88", name: "Automobile" },
-    "Construction Materials": { x: 44, y: 15, dx: 8, dy: 4, color: "#00FF88", name: "Construction Materials" },
-    "Services": { x: 50, y: 55, dx: 11, dy: 9, color: "#00FF88", name: "Services" }
-  };
-
+  // 2. High Definition Dynamic Relative Rotation Graph (RRG) Radar Clock
   // Center coordinate in SVG viewBox (700 x 550, center = 350, 275)
   const cx0 = 350, cy0 = 275;
   const scale = 2.15; // 100 units = 215px
 
+  // Compute maximum absolute ARS and SRS for proportional bivariate normalization
+  const maxArs = Math.max(0.15, ...primarySectorMetrics.map(m => Math.abs(m.avgArs || 0)));
+  const maxSrs = Math.max(0.04, ...primarySectorMetrics.map(m => Math.abs(m.avgSrs || 0)));
+
   const sectorDots = [];
-  primarySectorMetrics.forEach((m) => {
+  primarySectorMetrics.forEach((m, idx) => {
     const { ind, pass, total, avgArs, avgSrs, phase, topStock } = m;
     const topStockStr = topStock ? `${topStock.sym} (${(topStock.ars * 100).toFixed(1)}%)` : '—';
 
-    // Get exact Grok spec position if available, else derive proportionally
-    let gx, gy, gdx, gdy, gColor, labelName = ind;
-    if (grokCoordMap[ind]) {
-      const g = grokCoordMap[ind];
-      gx = g.x; gy = g.y; gdx = g.dx; gdy = g.dy; gColor = g.color; labelName = g.name;
-    } else {
-      gx = (avgArs >= 0 ? 1 : -1) * Math.min(85, Math.max(25, Math.abs(avgArs) * 70));
-      gy = (avgSrs >= 0 ? 1 : -1) * Math.min(85, Math.max(20, Math.abs(avgSrs) * 350));
-      gColor = phase === 'LEADING' ? '#00FF88' : phase === 'IMPROVING' ? '#00B4FF' : phase === 'WEAKENING' ? '#FFB800' : '#FF2A2A';
-      gdx = (gx >= 0 ? 1 : -1) * 10;
-      gdy = (gy >= 0 ? 1 : -1) * 8;
-    }
+    // Truly dynamic bivariate coordinate calculation strictly honoring live market data
+    const normX = Math.min(84, Math.max(16, (Math.abs(avgArs) / maxArs) * 72));
+    const normY = Math.min(84, Math.max(16, (Math.abs(avgSrs) / maxSrs) * 72));
+    
+    // Quadrant signs:
+    // LEADING: +Ars, +Srs (top-right: gx > 0, gy > 0)
+    // WEAKENING: +Ars, -Srs (bottom-right: gx > 0, gy < 0)
+    // LAGGING: -Ars, -Srs (bottom-left: gx < 0, gy < 0)
+    // IMPROVING: -Ars, +Srs (top-left: gx < 0, gy > 0)
+    const gx = (avgArs >= 0 ? 1 : -1) * normX;
+    const gy = (avgSrs >= 0 ? 1 : -1) * normY;
+    const gColor = phase === 'LEADING' ? '#00FF88' : phase === 'IMPROVING' ? '#00B4FF' : phase === 'WEAKENING' ? '#FFB800' : '#FF2A2A';
+
+    // Rotational tail (counter-clockwise origin showing historical clockwise rotation)
+    const gdx = (gy >= 0 ? 1 : -1) * 11;
+    const gdy = (gx >= 0 ? -1 : 1) * 9;
 
     // Convert (-110 to +110) math coordinate to SVG pixel coordinate
     const px = cx0 + gx * scale;
@@ -225,11 +211,12 @@ function renderSectors() {
     const midX = (px + tailPx) / 2 + (gy >= 0 ? 8 : -8);
     const midY = (py + tailPy) / 2 + (gx >= 0 ? -8 : 8);
 
-    // Label positioning
+    // Label positioning with slight stagger to avoid label overlap
     const isLeft = gx < 0;
-    const textAnchor = isLeft ? 'start' : 'start';
-    const textX = px + (isLeft ? 14 : 14);
-    const textY = py + 4;
+    const staggerY = (idx % 2 === 0) ? 3 : -4;
+    const textAnchor = isLeft ? 'end' : 'start';
+    const textX = px + (isLeft ? -12 : 12);
+    const textY = py + staggerY;
 
     sectorDots.push(`
       <g class="rrg-group" onclick="toggleSector('${ind.replace(/'/g, "\\'")}')" style="cursor:pointer;"
@@ -241,15 +228,15 @@ function renderSectors() {
         <path d="M ${tailPx} ${tailPy} Q ${midX} ${midY} ${px} ${py}" 
               fill="none" stroke="${gColor}" stroke-width="2.2" stroke-linecap="round" opacity="0.85" />
 
-        <!-- Outer Glow Bloom (420 size outer bloom) -->
+        <!-- Outer Glow Bloom -->
         <circle cx="${px}" cy="${py}" r="16" fill="${gColor}" opacity="0.28" filter="url(#bloom-glow)" />
         <circle cx="${px}" cy="${py}" r="9" fill="${gColor}" opacity="0.55" />
 
         <!-- Glowing circular dot with subtle edge -->
         <circle class="rrg-dot" cx="${px}" cy="${py}" r="6.5" fill="${gColor}" stroke="#ffffff" stroke-width="1.8" />
 
-        <!-- Clean Pure White Label with Dark Drop Shadow -->
-        <text class="rrg-label" x="${textX}" y="${textY}" text-anchor="${textAnchor}" font-size="11.5" font-family="'Inter', -apple-system, sans-serif" font-weight="600" fill="#ffffff" filter="url(#text-shadow)">${labelName}</text>
+        <!-- Clean Label with Dark Drop Shadow -->
+        <text class="rrg-label" x="${textX}" y="${textY}" text-anchor="${textAnchor}" font-size="11.5" font-family="'Inter', -apple-system, sans-serif" font-weight="600" fill="#ffffff" filter="url(#text-shadow)">${escHtml(ind)}</text>
       </g>
     `);
   });
@@ -281,6 +268,9 @@ function renderSectors() {
         <marker id="arrow-red-quad" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FF2A2A" />
         </marker>
+        <marker id="arrow-green-quad" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#00FF88" />
+        </marker>
         <marker id="arrow-orange-quad" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FFB800" />
         </marker>
@@ -297,28 +287,28 @@ function renderSectors() {
       <rect x="350" y="275" width="350" height="225" fill="#2A1A0A" fill-opacity="0.55" />
 
       <!-- Concentric Circles: Thin dashed white lines (r = 25, 50, 75, 100 on 2.15 scale) -->
-      <circle cx="350" cy="275" r="54" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="3,4" />
-      <circle cx="350" cy="275" r="108" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="4,5" />
-      <circle cx="350" cy="275" r="162" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="4,6" />
-      <circle cx="350" cy="275" r="215" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="4,6" />
+      <circle class="rrg-concentric" cx="350" cy="275" r="54" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="3,4" />
+      <circle class="rrg-concentric" cx="350" cy="275" r="108" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="4,5" />
+      <circle class="rrg-concentric" cx="350" cy="275" r="162" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="4,6" />
+      <circle class="rrg-concentric" cx="350" cy="275" r="215" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.0" stroke-dasharray="4,6" />
 
       <!-- Crosshairs: Thin solid white lines crossing at exact center with arrowheads -->
-      <line x1="84" y1="275" x2="560" y2="275" stroke="#ffffff" stroke-width="1.4" stroke-opacity="0.85" marker-end="url(#arrow-white-clean)" />
-      <line x1="350" y1="465" x2="350" y2="88" stroke="#ffffff" stroke-width="1.4" stroke-opacity="0.85" marker-end="url(#arrow-white-clean)" />
+      <line class="rrg-crosshair" x1="84" y1="275" x2="560" y2="275" stroke="#ffffff" stroke-width="1.4" stroke-opacity="0.85" marker-end="url(#arrow-white-clean)" />
+      <line class="rrg-crosshair" x1="350" y1="465" x2="350" y2="88" stroke="#ffffff" stroke-width="1.4" stroke-opacity="0.85" marker-end="url(#arrow-white-clean)" />
 
       <!-- Axis Labels -->
-      <text x="570" y="279" text-anchor="start" font-size="10.5" font-weight="600" fill="#E0E0E0">RS-Ratio (ΔRS Alpha %)</text>
-      <text x="38" y="275" transform="rotate(-90 38 275)" text-anchor="middle" font-size="10.5" font-weight="600" fill="#E0E0E0">RS-Momentum (SRS 6/30 %)</text>
+      <text class="rrg-axis-label" x="570" y="279" text-anchor="start" font-size="10.5" font-weight="600" fill="#E0E0E0">RS-Ratio (ΔRS Alpha %)</text>
+      <text class="rrg-axis-label" x="38" y="275" transform="rotate(-90 38 275)" text-anchor="middle" font-size="10.5" font-weight="600" fill="#E0E0E0">RS-Momentum (SRS 6/30 %)</text>
 
       <!-- Center Hub NIFTY 50 (0,0) -->
-      <circle cx="350" cy="275" r="5" fill="#ffffff" />
-      <rect x="290" y="284" width="120" height="20" rx="4" fill="rgba(0,0,0,0.85)" stroke="rgba(255,255,255,0.25)" stroke-width="1" />
-      <text x="350" y="298" text-anchor="middle" font-size="9.5" font-weight="600" fill="#ffffff">NIFTY 50 (0,0)</text>
+      <circle class="rrg-center-hub" cx="350" cy="275" r="5" fill="#ffffff" />
+      <rect class="rrg-center-bg" x="290" y="284" width="120" height="20" rx="4" fill="rgba(0,0,0,0.85)" stroke="rgba(255,255,255,0.25)" stroke-width="1" />
+      <text class="rrg-center-label" x="350" y="298" text-anchor="middle" font-size="9.5" font-weight="600" fill="#ffffff">NIFTY 50 (0,0)</text>
 
       <!-- Title & Subtitle Matching Grok Specification -->
       <g transform="translate(350, 28)">
-        <text x="0" y="0" text-anchor="middle" font-size="22" font-weight="800" fill="#FFFFFF" letter-spacing="0.3">Relative Rotation Graph (RRG)</text>
-        <text x="0" y="20" text-anchor="middle" font-size="12" font-weight="500" fill="#B0B0B0">Benchmark: NIFTY 50 (0,0)</text>
+        <text class="rrg-title-main" x="0" y="0" text-anchor="middle" font-size="22" font-weight="800" fill="#FFFFFF" letter-spacing="0.3">Relative Rotation Graph (RRG)</text>
+        <text class="rrg-title-sub" x="0" y="20" text-anchor="middle" font-size="12" font-weight="500" fill="#B0B0B0">Benchmark: NIFTY 50 (0,0)</text>
       </g>
 
       <!-- Quadrant Labels with Arrow Indicators (Matching Grok Image) -->
@@ -331,7 +321,7 @@ function renderSectors() {
       <!-- LEADING (Top-Right, #00FF88) -->
       <g>
         <text x="605" y="118" text-anchor="end" font-size="16" font-weight="800" fill="#00FF88" letter-spacing="1">LEADING</text>
-        <line x1="515" y1="128" x2="605" y2="128" stroke="#00FF88" stroke-width="2.5" />
+        <line x1="515" y1="128" x2="605" y2="128" stroke="#00FF88" stroke-width="2.5" marker-end="url(#arrow-green-quad)" />
       </g>
 
       <!-- LAGGING (Bottom-Left, #FF2A2A) -->
@@ -690,6 +680,12 @@ function renderHeatmapTab() {
     data.sort((a, b) => (b.vol_ratio ?? 0) - (a.vol_ratio ?? 0));
   }
 
+  if (!data || data.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted)">No stocks match the selected heatmap filter criteria.</div>`;
+    if (legendContainer) legendContainer.innerHTML = '';
+    return;
+  }
+
   container.innerHTML = data.map(d => {
     let bgGradient = 'linear-gradient(135deg, #1f2937, #111827)';
     let valText = '';
@@ -726,15 +722,19 @@ function renderHeatmapTab() {
       if (val >= 0.20) {
         bgGradient = 'linear-gradient(135deg, #0d3822, #062013)';
         pillBg = 'rgba(15,229,134,0.2)';
+        pillBorder = 'rgba(15,229,134,0.4)';
       } else if (val >= 0.05) {
         bgGradient = 'linear-gradient(135deg, #0f402c, #09281b)';
         pillBg = 'rgba(38,166,154,0.2)';
+        pillBorder = 'rgba(38,166,154,0.4)';
       } else if (val >= 0) {
         bgGradient = 'linear-gradient(135deg, #12384a, #0b2430)';
         pillBg = 'rgba(94,150,255,0.2)';
+        pillBorder = 'rgba(94,150,255,0.4)';
       } else {
         bgGradient = 'linear-gradient(135deg, #451619, #290d0f)';
         pillBg = 'rgba(239,83,80,0.2)';
+        pillBorder = 'rgba(239,83,80,0.4)';
       }
     } else if (activeHeatmapMetric === 'vol') {
       const val = d.vol_ratio ?? 1;
@@ -750,8 +750,10 @@ function renderHeatmapTab() {
       } else if (val >= 1.2) {
         bgGradient = 'linear-gradient(135deg, #0f402c, #09281b)';
         pillBg = 'rgba(38,166,154,0.2)';
+        pillBorder = 'rgba(38,166,154,0.4)';
       } else {
         bgGradient = 'linear-gradient(135deg, #1f2937, #111827)';
+        pillBorder = 'rgba(255,255,255,0.15)';
       }
     }
 
@@ -759,12 +761,12 @@ function renderHeatmapTab() {
     const cleanInd = (d.ind || 'Equities').replace('Financial Services', 'Financials').replace('Consumer Services', 'Retail');
 
     return `
-      <div class="hm-cell" style="background:${bgGradient}" onclick="selectStock('${d.sym}')" title="${d.name} (${d.ind}): Click to open detailed chart & scorecard">
+      <div class="hm-cell" style="background:${bgGradient}" onclick="selectStock('${d.sym}')" title="${escHtml(d.name)} (${escHtml(d.ind)}): Click to open detailed chart & scorecard">
         <div class="hm-top">
-          <span class="hm-sym">${d.sym}</span>
+          <span class="hm-sym">${escHtml(d.sym)}</span>
           <span class="hm-price">${priceFormatted}</span>
         </div>
-        <div class="hm-ind">${cleanInd}</div>
+        <div class="hm-ind">${escHtml(cleanInd)}</div>
         <div class="hm-val-pill" style="background:${pillBg};border-color:${pillBorder}">${valText}</div>
       </div>
     `;
