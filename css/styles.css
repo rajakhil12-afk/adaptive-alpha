@@ -933,6 +933,37 @@ select:focus, button:focus { outline: none; border-color: var(--up); box-shadow:
 body.light-theme .rrg-clock {
   background: #f8fafc;
 }
+body.light-theme .rrg-clock .rrg-axis,
+body.light-theme .rrg-clock .rrg-crosshair {
+  stroke: #64748b !important;
+}
+body.light-theme .rrg-clock .rrg-concentric {
+  stroke: #94a3b8 !important;
+  stroke-opacity: 0.35 !important;
+}
+body.light-theme .rrg-clock .rrg-axis-label {
+  fill: #1e293b !important;
+}
+body.light-theme .rrg-clock .rrg-title-main {
+  fill: #0f172a !important;
+}
+body.light-theme .rrg-clock .rrg-title-sub {
+  fill: #475569 !important;
+}
+body.light-theme .rrg-clock .rrg-center-label {
+  fill: #0f172a !important;
+}
+body.light-theme .rrg-clock .rrg-center-hub {
+  fill: #334155 !important;
+}
+body.light-theme .rrg-clock .rrg-center-bg {
+  fill: rgba(255,255,255,0.95) !important;
+  stroke: rgba(0,0,0,0.2) !important;
+}
+body.light-theme .rrg-clock text.rrg-label {
+  fill: #0f172a !important;
+  filter: drop-shadow(0 1px 2px rgba(255,255,255,0.9)) !important;
+}
 .rrg-dot {
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
