@@ -17,6 +17,12 @@ const {
 const { getForensicsForStock } = require('../config/forensics');
 const { computeSmartMoneyFootprint } = require('./smart_money_detective');
 
+function atomicWriteFileSync(filePath, content) {
+  const tmpPath = `${filePath}.tmp.${Date.now()}`;
+  fs.writeFileSync(tmpPath, content, 'utf8');
+  fs.renameSync(tmpPath, filePath);
+}
+
 /**
  * Classifies a stock into the 4-tier Institutional Accumulation Grade:
  * - Grade A+ Heavy Accumulation
@@ -131,6 +137,8 @@ function fetchFiiDiiData() {
 
         tryFallbackMrChartist(resolve);
       });
+    }).on('timeout', function() {
+      this.destroy(new Error('NSE request timeout'));
     }).on('error', () => {
       tryFallbackMrChartist(resolve);
     });
@@ -156,6 +164,8 @@ function tryFallbackMrChartist(resolve) {
       } catch (e) {}
       resolve(null);
     });
+  }).on('timeout', function() {
+    this.destroy(new Error('MrChartist request timeout'));
   }).on('error', () => resolve(null));
 }
 
@@ -275,27 +285,31 @@ function downloadFile(url, dest) {
 // We use curl (always available on Linux/macOS) because it handles
 // cookie jars and redirects far more reliably than Node's https module.
 function downloadNSEWithCurl(url, dest, cookieFile) {
-  // Build curl command — shell-safe using single-quoted strings
   const ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
-  if (process.platform === 'win32') {
-    // Windows fallback: use PowerShell Invoke-WebRequest
+  const curlBin = process.platform === 'win32' ? 'curl.exe' : 'curl';
+
+  try {
     execSync(
-      `powershell -Command "Invoke-WebRequest -Uri '${url}' -OutFile '${dest}' -UserAgent '${ua}' -UseBasicParsing"`,
-      { stdio: 'pipe', timeout: 60000 }
-    );
-  } else {
-    execSync(
-      `curl -L -f -s --retry 3 --retry-delay 3 --max-time 90 ` +
-      `-A '${ua}' ` +
-      `-H 'Referer: https://www.nseindia.com/' ` +
-      `-H 'Accept: application/zip,application/octet-stream,*/*;q=0.8' ` +
-      `-H 'Accept-Language: en-US,en;q=0.9' ` +
-      `-c '${cookieFile}' ` +
-      `-b '${cookieFile}' ` +
-      `-o '${dest}' ` +
-      `'${url}'`,
+      `${curlBin} -L -f -s --retry 3 --retry-delay 3 --max-time 90 ` +
+      `-A "${ua}" ` +
+      `-H "Referer: https://www.nseindia.com/" ` +
+      `-H "Accept: application/zip,application/octet-stream,*/*;q=0.8" ` +
+      `-H "Accept-Language: en-US,en;q=0.9" ` +
+      `-c "${cookieFile}" ` +
+      `-b "${cookieFile}" ` +
+      `-o "${dest}" ` +
+      `"${url}"`,
       { stdio: 'pipe', timeout: 90000 }
     );
+  } catch (curlErr) {
+    if (process.platform === 'win32') {
+      execSync(
+        `powershell -Command "Invoke-WebRequest -Uri '${url}' -OutFile '${dest}' -UserAgent '${ua}' -UseBasicParsing"`,
+        { stdio: 'pipe', timeout: 60000 }
+      );
+    } else {
+      throw curlErr;
+    }
   }
 }
 
@@ -303,6 +317,14 @@ function downloadNSEWithCurl(url, dest, cookieFile) {
 function fetchYahooOnce(ticker, range = '6y') {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=${range}&interval=1d`;
   return new Promise((resolve) => {
+    let resolved = false;
+    const safeResolve = (val) => {
+      if (!resolved) {
+        resolved = true;
+        resolve(val);
+      }
+    };
+
     const options = {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
@@ -314,7 +336,7 @@ function fetchYahooOnce(ticker, range = '6y') {
       if (res.statusCode !== 200) {
         console.warn(`  Yahoo HTTP ${res.statusCode} for ${ticker}`);
         res.resume();
-        return resolve(null);
+        return safeResolve(null);
       }
       let data = '';
       res.on('data', chunk => data += chunk);
@@ -324,7 +346,7 @@ function fetchYahooOnce(ticker, range = '6y') {
           const result = json?.chart?.result?.[0];
           if (!result) {
             console.warn(`  Yahoo returned no chart result for ${ticker}`);
-            return resolve(null);
+            return safeResolve(null);
           }
           const ts    = result.timestamp || [];
           const q     = result.indicators?.quote?.[0] || {};
@@ -344,10 +366,10 @@ function fetchYahooOnce(ticker, range = '6y') {
               });
             }
           }
-          resolve(candles);
+          safeResolve(candles);
         } catch(e) {
           console.warn(`  Yahoo JSON parse error for ${ticker}: ${e.message}`);
-          resolve(null);
+          safeResolve(null);
         }
       });
     });
@@ -355,12 +377,14 @@ function fetchYahooOnce(ticker, range = '6y') {
     req.on('timeout', () => {
       console.warn(`  Yahoo timeout for ${ticker}`);
       req.destroy();
-      resolve(null);
+      safeResolve(null);
     });
 
     req.on('error', (err) => {
-      console.warn(`  Yahoo network error for ${ticker}: ${err.message}`);
-      resolve(null);
+      if (!resolved) {
+        console.warn(`  Yahoo network error for ${ticker}: ${err.message}`);
+        safeResolve(null);
+      }
     });
   });
 }
@@ -492,7 +516,7 @@ async function downloadLatestBhavcopy() {
               timestamp: Math.round(date.getTime() / 1000),
               has_official_delivery: true
             };
-            try { fs.writeFileSync(cacheFile, JSON.stringify(result, null, 2)); } catch (_) {}
+            try { atomicWriteFileSync(cacheFile, JSON.stringify(result, null, 2)); } catch (_) {}
             return result;
           }
           try { fs.unlinkSync(tempCsv); } catch (_) {}
@@ -844,9 +868,9 @@ function runOfflineEnrichment(bhav, activeFnoSet) {
     stocks: enrichedStocks
   };
 
-  fs.writeFileSync(outputJson, JSON.stringify(payload, null, 2));
+  atomicWriteFileSync(outputJson, JSON.stringify(payload, null, 2));
   const outputJs = path.join(dataDir, 'screener.js');
-  fs.writeFileSync(outputJs, 'window.STATIC_SCREENER_DATA = ' + JSON.stringify(payload) + ';');
+  atomicWriteFileSync(outputJs, 'window.STATIC_SCREENER_DATA = ' + JSON.stringify(payload) + ';');
   console.log(`[offline-enrichment] Updated ${outputJson} and ${outputJs}`);
 
   // Run Jishu Engine
@@ -885,8 +909,13 @@ async function run() {
   } catch (err) {
     console.warn('Benchmark fetch error:', err.message);
   }
+  const noFallback = process.argv.includes('--no-fallback');
   if (!benchData || benchData.length < 100) {
     console.warn(`[offline-fallback] Could not load NIFTY benchmark data from Yahoo (${benchData ? benchData.length : 0} candles).`);
+    if (noFallback) {
+      console.error('Fatal: --no-fallback flag passed and benchmark download failed. Exiting with code 1 for CI retry.');
+      process.exit(1);
+    }
     console.log('Activating offline cached pipeline enrichment using data/screener.json...');
     return runOfflineEnrichment(bhav, activeFnoSet);
   }
@@ -899,16 +928,17 @@ async function run() {
   try { goldData = await fetchYahoo('GOLDBEES.NS', '1y', 2); } catch (_) {}
   console.log(`Sentiment feeds: VIX (${vixData ? vixData.length : 0} candles), Gold (${goldData ? goldData.length : 0} candles)`);
 
-  // Override or append Nifty Close from Bhavcopy if available
+  // Override or append Nifty Close from Bhavcopy if available (calendar date aligned)
   const niftyBhav = bhav.data['NIFTY 50'] || bhav.data['NIFTY50'] || bhav.data['^NSEI'];
-  if (niftyBhav) {
+  if (niftyBhav && bhav.date) {
     const last = benchData[benchData.length - 1];
-    if (last.t < bhav.timestamp) {
+    const lastBenchDate = new Date(last.t * 1000).toISOString().split('T')[0];
+    if (lastBenchDate < bhav.date) {
       benchData.push({ t: bhav.timestamp, c: niftyBhav.close, h: niftyBhav.close, l: niftyBhav.close, v: niftyBhav.volume || 0 });
-    } else {
+    } else if (lastBenchDate === bhav.date) {
       last.c = niftyBhav.close;
-      last.h = niftyBhav.close;
-      last.l = niftyBhav.close;
+      last.h = Math.max(last.h ?? niftyBhav.close, niftyBhav.close);
+      last.l = Math.min(last.l ?? niftyBhav.close, niftyBhav.close);
     }
   }
 
@@ -934,14 +964,21 @@ async function run() {
         return null;
       }
 
-      // Merge latest Bhavcopy closing price and volume if available
+      // Merge latest Bhavcopy closing price and volume if available (calendar date aligned)
       const latestBhav = bhav.data[stock.sym];
-      if (latestBhav) {
+      if (latestBhav && bhav.date) {
         const last = stockHist[stockHist.length - 1];
-        if (last.t < bhav.timestamp) {
-          stockHist.push({ t: bhav.timestamp, o: latestBhav.open ?? latestBhav.close, c: latestBhav.close, h: latestBhav.high ?? latestBhav.close, l: latestBhav.low ?? latestBhav.close, v: latestBhav.volume });
-        } else {
-          // was: h = l = close -> today's range collapsed to 0 (understated ATR/Supertrend, killed wick filters)
+        const lastCandleDate = new Date(last.t * 1000).toISOString().split('T')[0];
+        if (lastCandleDate < bhav.date) {
+          stockHist.push({
+            t: bhav.timestamp,
+            o: latestBhav.open ?? latestBhav.close,
+            c: latestBhav.close,
+            h: latestBhav.high ?? latestBhav.close,
+            l: latestBhav.low ?? latestBhav.close,
+            v: latestBhav.volume
+          });
+        } else if (lastCandleDate === bhav.date) {
           last.c = latestBhav.close;
           last.h = latestBhav.high ?? Math.max(last.h ?? latestBhav.close, latestBhav.close);
           last.l = latestBhav.low ?? Math.min(last.l ?? latestBhav.close, latestBhav.close);
@@ -1075,7 +1112,12 @@ async function run() {
 
   if (failed.length) console.warn(`[warn] ${failed.length}/${UNIVERSE.length} symbols returned no data: ${failed.join(', ')}`);
   if (failed.length > UNIVERSE.length * 0.2) {
-    console.warn(`[offline-fallback] High Yahoo failure rate (${failed.length}/${UNIVERSE.length}). Falling back to cached screener data...`);
+    console.warn(`[offline-fallback] High Yahoo failure rate (${failed.length}/${UNIVERSE.length}).`);
+    if (noFallback) {
+      console.error('Fatal: --no-fallback flag passed and failure rate is too high. Exiting with code 1 for CI retry.');
+      process.exit(1);
+    }
+    console.log('Falling back to cached screener data...');
     return runOfflineEnrichment(bhav, activeFnoSet);
   }
 
@@ -1088,9 +1130,18 @@ async function run() {
         .map(o => ({ idx: o.idx, val: Number.isFinite(o.val) ? o.val : -Infinity }))
         .sort((a, b) => (a.val > b.val) - (a.val < b.val));
       const ranks = new Array(N);
-      sorted.forEach((item, r) => {
-        ranks[item.idx] = r / (N - 1 || 1);
-      });
+      let i = 0;
+      while (i < N) {
+        let j = i;
+        while (j + 1 < N && sorted[j + 1].val === sorted[i].val) {
+          j++;
+        }
+        const avgRank = (i + j) / 2 / (N - 1 || 1);
+        for (let k = i; k <= j; k++) {
+          ranks[sorted[k].idx] = avgRank;
+        }
+        i = j + 1;
+      }
       return ranks;
     };
 
@@ -1106,21 +1157,39 @@ async function run() {
 
     composites.sort((a, b) => a.composite - b.composite);
 
-    composites.forEach((item, r) => {
-      const rating = Math.round(1 + (r / (N - 1 || 1)) * 98);
-      results[item.idx].rs_rating = rating;
-      results[item.idx].rs_breakdown = {
-        ars_rank: Math.round(1 + ranksArs[item.idx] * 98),
-        srs_rank: Math.round(1 + ranksSrs[item.idx] * 98),
-        vol_rank: Math.round(1 + ranksVol[item.idx] * 98),
-        streak_rank: Math.round(1 + ranksDays[item.idx] * 98)
-      };
-    });
+    let cIdx = 0;
+    while (cIdx < N) {
+      let nextIdx = cIdx;
+      while (nextIdx + 1 < N && composites[nextIdx + 1].composite === composites[cIdx].composite) {
+        nextIdx++;
+      }
+      const avgR = (cIdx + nextIdx) / 2;
+      const rating = Math.round(1 + (avgR / (N - 1 || 1)) * 98);
+      for (let k = cIdx; k <= nextIdx; k++) {
+        const item = composites[k];
+        results[item.idx].rs_rating = rating;
+        results[item.idx].rs_breakdown = {
+          ars_rank: Math.round(1 + ranksArs[item.idx] * 98),
+          srs_rank: Math.round(1 + ranksSrs[item.idx] * 98),
+          vol_rank: Math.round(1 + ranksVol[item.idx] * 98),
+          streak_rank: Math.round(1 + ranksDays[item.idx] * 98)
+        };
+      }
+      cIdx = nextIdx + 1;
+    }
   }
 
   console.log('Fetching latest FII/DII flows...');
-  const fiiDii = await fetchFiiDiiData();
-  if (!fiiDii) console.warn('[warn] FII/DII feed unavailable – FII circuit-breaker input is 0 for this run');
+  let fiiDii = await fetchFiiDiiData();
+  if (!fiiDii) {
+    console.warn('[warn] FII/DII feed unavailable – preserving previous day cached flow');
+    try {
+      const prevScreener = JSON.parse(fs.readFileSync(path.join(dataDir, 'screener.json'), 'utf8'));
+      if (prevScreener && prevScreener.fii_dii) {
+        fiiDii = prevScreener.fii_dii;
+      }
+    } catch(e) {}
+  }
 
   // Track 30-Day Breakout History Log
   const historyJson = path.join(dataDir, 'breakout_history.json');
@@ -1203,7 +1272,7 @@ async function run() {
     }
   });
 
-  fs.writeFileSync(historyJson, JSON.stringify(breakoutHistory, null, 2));
+  atomicWriteFileSync(historyJson, JSON.stringify(breakoutHistory, null, 2));
   console.log(`Saved ${breakoutHistory.length} active entries in breakout_history.json`);
 
   console.log('Calculating Standard & Poor\'s / CNN 7-Pillar Market Sentiment Index…');
@@ -1220,9 +1289,9 @@ async function run() {
     breakout_history: breakoutHistory
   };
 
-  fs.writeFileSync(outputJson, JSON.stringify(payload, null, 2));
+  atomicWriteFileSync(outputJson, JSON.stringify(payload, null, 2));
   const outputJs = path.join(dataDir, 'screener.js');
-  fs.writeFileSync(outputJs, 'window.STATIC_SCREENER_DATA = ' + JSON.stringify(payload) + ';');
+  atomicWriteFileSync(outputJs, 'window.STATIC_SCREENER_DATA = ' + JSON.stringify(payload) + ';');
   console.log(`Successfully generated data files. Saved to: ${outputJson} and ${outputJs}`);
 
   // Execute Jishu Institutional Paper Trading Engine
