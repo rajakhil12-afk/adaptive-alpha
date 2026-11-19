@@ -372,6 +372,32 @@
       font-family: var(--font-mono);
       color: var(--text-dim);
     }
+
+    .table-container {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 12px 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .main-content {
+        padding: 16px 12px;
+      }
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+      .rules-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -417,6 +443,12 @@
         <span class="kpi-title">Total Equity Value</span>
         <span class="kpi-val" id="totalEquity">₹10,00,000</span>
         <span class="kpi-sub" id="totalReturnPct">Initial: ₹10,00,000 (0.00%)</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-title">Unrealized P&amp;L (Open)</span>
+        <span class="kpi-val" id="unrealizedPnl">₹0</span>
+        <span class="kpi-sub" id="investedCapitalSub">Invested: ₹0</span>
       </div>
 
       <div class="kpi-card">
@@ -603,10 +635,22 @@
       retEl.innerText = `Initial: ₹${initial.toLocaleString('en-IN')} (${returnPct >= 0 ? '+' : ''}${returnPct.toFixed(2)}%)`;
       retEl.className = 'kpi-sub ' + (returnPct >= 0 ? 'val-positive' : 'val-negative');
 
+      const unrlEl = document.getElementById('unrealizedPnl');
+      if (unrlEl) {
+        unrlEl.innerText = (unrealized >= 0 ? '+' : '') + '₹' + Math.abs(unrealized).toLocaleString('en-IN');
+        unrlEl.className = 'kpi-val ' + (unrealized >= 0 ? 'val-positive' : 'val-negative');
+      }
+      const invSub = document.getElementById('investedCapitalSub');
+      if (invSub) {
+        const investedCap = (data.open_positions || []).reduce((s, p) => s + ((p.entry_price || 0) * (p.qty || 0)), 0);
+        invSub.innerText = `Invested: ₹${investedCap.toLocaleString('en-IN')}`;
+      }
+
       const realEl = document.getElementById('realizedPnl');
       realEl.innerText = (realized >= 0 ? '+' : '') + '₹' + realized.toLocaleString('en-IN');
       realEl.className = 'kpi-val ' + (realized >= 0 ? 'val-positive' : 'val-negative');
-      document.getElementById('winRateSub').innerText = `Win Rate: ${acc.win_rate || 0}% (${acc.winning_trades || 0}W / ${acc.losing_trades || 0}L)`;
+      const be = acc.breakeven_trades || 0;
+      document.getElementById('winRateSub').innerText = `Win Rate: ${acc.win_rate || 0}% (${acc.winning_trades || 0}W / ${acc.losing_trades || 0}L${be ? ' / ' + be + 'BE' : ''})`;
 
       // Quant KPIs (Agent 6)
       const quant = data.quant_metrics || {};
@@ -633,6 +677,10 @@
         document.getElementById('sleeveCPctBadge').innerText = `${sleeves.sleeveC.targetPct}% Target`;
         document.getElementById('sleeveCCash').innerText = '₹' + (acc.cash || 0).toLocaleString('en-IN');
         document.getElementById('sleeveCStatus').innerText = sleeves.sleeveC.status || 'ACTIVE BUFFER';
+        const cTarget = sleeves.sleeveC.targetCapital || (initial * ((sleeves.sleeveC.targetPct || 20) / 100)) || 200000;
+        const cFillPct = Math.min(100, Math.max(0, ((acc.cash || 0) / cTarget) * 100));
+        const cFillEl = document.getElementById('sleeveCFill');
+        if (cFillEl) cFillEl.style.width = `${cFillPct.toFixed(1)}%`;
       }
 
       const openPos = data.open_positions || [];
@@ -668,11 +716,13 @@
           
           const t3Price = p.target_3_price ?? (p.risk_per_share ? (p.entry_price + 3 * p.risk_per_share) : (p.entry_price + (p.target_2_price - p.entry_price) * 1.5));
 
-          let riskStatus = '<span class="status-badge badge-initial">⚠️ Active SL (-10%)</span>';
+          const curSl = p.current_sl ?? (p.entry_price * 0.90);
+          const slDiffPct = (((curSl - p.entry_price) / p.entry_price) * 100).toFixed(1);
+          let riskStatus = `<span class="status-badge badge-initial">⚠️ Active SL (${slDiffPct}%)</span>`;
           if (p.target_3_hit || (curP >= t3Price)) {
             riskStatus = '<span class="status-badge" style="background:rgba(125,169,255,0.18); color:#7da9ff; border:1px solid rgba(125,169,255,0.4);">🚀 Target 3 (Trailing)</span>';
           } else if (p.sl_moved_to_t1) {
-            riskStatus = '<span class="status-badge badge-exit-target">🎯 Target 1 Locked (+10% SL)</span>';
+            riskStatus = `<span class="status-badge badge-exit-target">🎯 Target 1 Locked (+${slDiffPct}% SL)</span>`;
           } else if (p.sl_moved_to_cost) {
             riskStatus = '<span class="status-badge badge-breakeven">🛡️ Risk-Free (Cost SL)</span>';
           }
@@ -740,6 +790,9 @@
           const cPnl = num(c.realized_pnl) ?? 0;
           const pnlClass = cPnl >= 0 ? 'val-positive' : 'val-negative';
           const pnlPrefix = cPnl >= 0 ? '+' : '-'; // sign is printed explicitly because abs() is used below
+          const retVal = num(c.return_pct) ?? 0;
+          const retPrefix = retVal >= 0 ? '+' : '-';
+          const retClass = retVal >= 0 ? 'val-positive' : 'val-negative';
           let badgeClass = 'badge-exit-target';
           if (c.exit_reason === 'TRAILING_PROFIT_SL_HIT' || c.exit_reason === 'TARGET_1_3_HIT') {
             badgeClass = 'badge-exit-target';
@@ -762,7 +815,7 @@
               <td class="mono-cell">₹${fx(c.exit_price)}</td>
               <td class="mono-cell">${esc(c.qty)}</td>
               <td class="mono-cell ${pnlClass}">${pnlPrefix}₹${fx(Math.abs(cPnl))}</td>
-              <td class="mono-cell ${pnlClass}">${pnlPrefix}${fx(Math.abs(c.return_pct ?? 0))}%</td>
+              <td class="mono-cell ${retClass}">${retPrefix}${fx(Math.abs(retVal))}%</td>
               <td><span class="status-badge ${badgeClass}">${esc(c.exit_reason)}</span></td>
             </tr>
           `;
