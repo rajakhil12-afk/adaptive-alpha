@@ -35,7 +35,9 @@ function loadJSON(filePath, defaultValue) {
 }
 
 function saveJSON(filePath, data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+  const tmpPath = `${filePath}.tmp.${Date.now()}`;
+  fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf8');
+  fs.renameSync(tmpPath, filePath);
 }
 
 function runJishuEngine(customScreenerData = null) {
@@ -63,7 +65,7 @@ function runJishuEngine(customScreenerData = null) {
   }
 
   if (!portfolio) {
-    portfolio = backup || resetPortfolio(1000000, screener.bhavDate || '2026-10-01');
+    portfolio = backup || resetPortfolio(1000000, screener.bhavDate || '2026-11-03');
   }
 
   // Ensure default settings
@@ -149,21 +151,21 @@ function runJishuEngine(customScreenerData = null) {
       exitReason = 'SUPERTREND_BREAKDOWN';
       exitPrice = curPrice;
     }
-    // 4. Check Quadrant Downgrade (Leaves Quad 1)
-    else if (stock.ars <= 0 || stock.srs <= 0) {
+    // 4. Check Quadrant Downgrade (Leaves Quad 1) - only for early positions before trailing stops lock profit
+    else if ((stock.ars <= 0 || stock.srs <= 0) && !pos.sl_moved_to_t1 && !pos.sl_moved_to_cost) {
       exitReason = 'QUAD_DOWNGRADE';
       exitPrice = curPrice;
     }
-    // 5. Check Target 3 (1:3 RR Hit -> Open Trailing Trend Expansion)
+    // 5. Check Target 3 (1:3 RR Hit -> Open Trailing Trend Expansion with Target 2 locked)
     else if (pos.target_3_price && curPrice >= pos.target_3_price) {
       if (!pos.target_3_hit) {
         pos.target_3_hit = true;
         pos.sl_moved_to_t1 = true;
         pos.sl_moved_to_cost = true;
-        if (!pos.current_sl || pos.current_sl < pos.target_1_price) {
-          pos.current_sl = pos.target_1_price;
+        if (!pos.current_sl || pos.current_sl < pos.target_2_price) {
+          pos.current_sl = pos.target_2_price; // Ratchet floor to Target 2 (+2R)
         }
-        const trailMsg = `🚀 [JISHU TRAIL] ${pos.sym} hit 1:3 Target (₹${pos.target_3_price.toFixed(2)}). Open trailing trend expansion active!`;
+        const trailMsg = `🚀 [JISHU TRAIL] ${pos.sym} hit 1:3 Target (₹${pos.target_3_price.toFixed(2)}). Open trailing trend expansion active! Profit floor locked at Target 2 (₹${pos.target_2_price.toFixed(2)}).`;
         console.log(trailMsg);
         events.push({
           timestamp: new Date().toISOString(),
@@ -172,10 +174,10 @@ function runJishuEngine(customScreenerData = null) {
           message: trailMsg
         });
       }
-      // Dynamic Trailing: trail 10% below highest peak, guaranteed >= target_1_price
+      // Dynamic Trailing: trail 10% below highest peak, guaranteed >= target_2_price
       const dynamicTrail = Number((pos.highest_price * 0.90).toFixed(2));
       if (dynamicTrail > pos.current_sl) {
-        pos.current_sl = Math.max(pos.target_1_price, dynamicTrail);
+        pos.current_sl = Math.max(pos.target_2_price, dynamicTrail);
       }
     }
     // 6. Check Target 2 (1:2 RR Hit -> Move SL to Target 1 price & activate Trailing)
@@ -192,12 +194,11 @@ function runJishuEngine(customScreenerData = null) {
           symbol: pos.sym,
           message: trailMsg
         });
-      } else {
-        // Dynamic Trailing: trail 10% below highest peak, guaranteed >= target_1_price
-        const dynamicTrail = Number((pos.highest_price * 0.90).toFixed(2));
-        if (dynamicTrail > pos.current_sl) {
-          pos.current_sl = Math.max(pos.target_1_price, dynamicTrail);
-        }
+      }
+      // Dynamic Trailing: trail 10% below highest peak, guaranteed >= target_1_price
+      const dynamicTrail = Number((pos.highest_price * 0.90).toFixed(2));
+      if (dynamicTrail > pos.current_sl) {
+        pos.current_sl = Math.max(pos.target_1_price, dynamicTrail);
       }
     }
     // 7. Check Target 1 (1:1 RR Hit -> Move SL to Cost Price / Breakeven)
@@ -212,6 +213,21 @@ function runJishuEngine(customScreenerData = null) {
         symbol: pos.sym,
         message: trailMsg
       });
+    }
+
+    // Dynamic trailing update for active runners even during mid-range pullbacks
+    if (!exitReason) {
+      if (pos.target_3_hit) {
+        const dynamicTrail = Number((pos.highest_price * 0.90).toFixed(2));
+        if (dynamicTrail > pos.current_sl) {
+          pos.current_sl = Math.max(pos.target_2_price, dynamicTrail);
+        }
+      } else if (pos.sl_moved_to_t1) {
+        const dynamicTrail = Number((pos.highest_price * 0.90).toFixed(2));
+        if (dynamicTrail > pos.current_sl) {
+          pos.current_sl = Math.max(pos.target_1_price, dynamicTrail);
+        }
+      }
     }
 
     if (exitReason) {
@@ -434,18 +450,21 @@ function runJishuEngine(customScreenerData = null) {
   // ==========================================
   // STEP 3: UPDATE AGGREGATE ACCOUNT & QUANT METRICS (AGENT 6)
   // ==========================================
-  let totalInvested = 0;
+  let totalCostBasis = 0;
+  let totalMarketValue = 0;
   let totalUnrealizedPnl = 0;
 
   for (const pos of portfolio.open_positions) {
     const curP = pos.current_price || pos.entry_price;
-    totalInvested += curP * pos.qty;
+    totalCostBasis += pos.entry_price * pos.qty;
+    totalMarketValue += curP * pos.qty;
     totalUnrealizedPnl += (curP - pos.entry_price) * pos.qty;
   }
 
-  portfolio.account.invested_capital = Number(totalInvested.toFixed(2));
+  portfolio.account.invested_capital = Number(totalCostBasis.toFixed(2));
+  portfolio.account.market_value = Number(totalMarketValue.toFixed(2));
   portfolio.account.unrealized_pnl = Number(totalUnrealizedPnl.toFixed(2));
-  portfolio.account.total_equity = Number((portfolio.account.cash + totalInvested).toFixed(2));
+  portfolio.account.total_equity = Number((portfolio.account.cash + totalMarketValue).toFixed(2));
   const decisiveTrades = portfolio.account.winning_trades + portfolio.account.losing_trades;
   portfolio.account.win_rate = decisiveTrades > 0
     ? Number(((portfolio.account.winning_trades / decisiveTrades) * 100).toFixed(1))
@@ -464,7 +483,8 @@ function runJishuEngine(customScreenerData = null) {
     portfolio.daily_equity.push({
       date: currentDateStr,
       cash: Number(portfolio.account.cash.toFixed(2)),
-      invested: Number(totalInvested.toFixed(2)),
+      invested: Number(totalCostBasis.toFixed(2)),
+      market_value: Number(totalMarketValue.toFixed(2)),
       total_equity: Number(portfolio.account.total_equity.toFixed(2)),
       realized_pnl: Number(portfolio.account.realized_pnl.toFixed(2)),
       unrealized_pnl: Number(totalUnrealizedPnl.toFixed(2)),
@@ -472,7 +492,8 @@ function runJishuEngine(customScreenerData = null) {
     });
   } else {
     lastSnapshot.cash = Number(portfolio.account.cash.toFixed(2));
-    lastSnapshot.invested = Number(totalInvested.toFixed(2));
+    lastSnapshot.invested = Number(totalCostBasis.toFixed(2));
+    lastSnapshot.market_value = Number(totalMarketValue.toFixed(2));
     lastSnapshot.total_equity = Number(portfolio.account.total_equity.toFixed(2));
     lastSnapshot.realized_pnl = Number(portfolio.account.realized_pnl.toFixed(2));
     lastSnapshot.unrealized_pnl = Number(totalUnrealizedPnl.toFixed(2));
@@ -483,8 +504,15 @@ function runJishuEngine(customScreenerData = null) {
     portfolio.recent_events = [...events, ...(portfolio.recent_events || [])].slice(0, 50);
   }
 
+  // Preserve previous valid portfolio as backup BEFORE overwriting with new state
+  if (fs.existsSync(portfolioPath)) {
+    try {
+      fs.copyFileSync(portfolioPath, backupPath);
+    } catch (bErr) {
+      console.warn('[Jishu] Failed to preserve backup before save:', bErr.message);
+    }
+  }
   saveJSON(portfolioPath, portfolio);
-  saveJSON(backupPath, portfolio);
   try {
     fs.writeFileSync(portfolioJsPath, 'window.STATIC_JISHU_PORTFOLIO = ' + JSON.stringify(portfolio, null, 2) + ';\nwindow.JISHU_PORTFOLIO = window.STATIC_JISHU_PORTFOLIO;', 'utf8');
   } catch (jsErr) {
@@ -499,17 +527,21 @@ function runJishuEngine(customScreenerData = null) {
   };
 }
 
-function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
+function resetPortfolio(initialCapital = 1000000, startDate = '2026-11-03') {
   const portfolioPath = getPortfolioPath();
   const backupPath = getBackupPath();
   const portfolioJsPath = getPortfolioJsPath();
 
   const currentDateStr = startDate;
+  const screener = loadJSON(getScreenerPath(), null);
+  const macro = screener ? evaluateMacroRegime(screener) : null;
+  const sleeveAllocations = macro ? calculateSleeveAllocations(initialCapital, [], macro) : null;
+
   const freshPortfolio = {
     bot_name: 'Jishu',
     version: '3.0.0',
     created_at: `${startDate}T09:15:00.000Z`,
-    last_updated: `${startDate}T14:00:00.000Z`,
+    last_updated: `${startDate}T09:15:00.000Z`,
     account: {
       initial_capital: initialCapital,
       cash: initialCapital,
@@ -520,7 +552,8 @@ function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
       win_rate: 0,
       total_trades: 0,
       winning_trades: 0,
-      losing_trades: 0
+      losing_trades: 0,
+      total_costs: 0
     },
     settings: {
       max_positions: 10,
@@ -533,8 +566,12 @@ function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
       min_rs_rating: 75,
       max_distance_from_st_pct: 7.0,
       risk_pct_per_trade: 1.0,
-      min_market_sentiment_score: 35
+      min_market_sentiment_score: 35,
+      round_trip_cost_pct: 0.25,
+      stop_fill_model: 'close'
     },
+    macro_regime: macro,
+    sleeves: sleeveAllocations,
     open_positions: [],
     closed_trades: [],
     daily_equity: [
@@ -552,15 +589,27 @@ function resetPortfolio(initialCapital = 1000000, startDate = '2026-10-01') {
       {
         timestamp: `${startDate}T09:15:00.000Z`,
         type: 'PORTFOLIO_RESET',
-        message: `🚀 Jishu Institutional Multi-Agent Desk fresh launch on 01 Oct 2026 with ₹${initialCapital.toLocaleString('en-IN')} starting capital.`
+        message: `🚀 Jishu Institutional Multi-Agent Desk reset on ${startDate} with ₹${initialCapital.toLocaleString('en-IN')} starting capital for November 2026 monitoring session.`
       }
     ]
   };
 
+  const quantAnalytics = calculateQuantMetrics(freshPortfolio);
+  if (quantAnalytics) {
+    freshPortfolio.quant_metrics = quantAnalytics.kpis;
+    freshPortfolio.quant_recommendations = [
+      {
+        type: 'CAPITAL_HEALTH',
+        badge: '🟢 FRESH SESSION',
+        text: `Clean trading journal initialized for November 2026. Starting capital ₹${initialCapital.toLocaleString('en-IN')} ready for high-conviction Quad 1 leaders.`
+      }
+    ];
+  }
+
   saveJSON(portfolioPath, freshPortfolio);
   saveJSON(backupPath, freshPortfolio);
   try {
-    fs.writeFileSync(portfolioJsPath, 'window.STATIC_JISHU_PORTFOLIO = ' + JSON.stringify(freshPortfolio, null, 2) + ';', 'utf8');
+    fs.writeFileSync(portfolioJsPath, 'window.STATIC_JISHU_PORTFOLIO = ' + JSON.stringify(freshPortfolio, null, 2) + ';\nwindow.JISHU_PORTFOLIO = window.STATIC_JISHU_PORTFOLIO;', 'utf8');
   } catch (jsErr) {
     console.warn('[Jishu] Could not write jishu_portfolio.js:', jsErr.message);
   }
@@ -582,7 +631,8 @@ module.exports = {
 if (require.main === module) {
   const args = process.argv.slice(2);
   if (args.includes('--reset')) {
-    resetPortfolio();
+    const customDate = args.find(a => /^\d{4}-\d{2}-\d{2}$/.test(a)) || '2026-11-03';
+    resetPortfolio(1000000, customDate);
   } else {
     runJishuEngine();
   }
