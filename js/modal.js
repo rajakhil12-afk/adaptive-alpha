@@ -8,6 +8,7 @@ let modalStockCandles = null;
 let modalBenchCandles = null;
 let activeTLTab = 'swot';
 let jishuPortfolioData = null;
+let currentModalRequestId = 0;
 
 // Load Jishu Paper Trading Portfolio for synchronization
 async function loadJishuPortfolio() {
@@ -19,13 +20,15 @@ async function loadJishuPortfolio() {
     jishuPortfolioData = window.JISHU_PORTFOLIO;
     return jishuPortfolioData;
   }
-  try {
-    const res = await fetch('data/jishu_portfolio.json?nocache=' + Date.now());
-    if (res.ok) {
-      jishuPortfolioData = await res.json();
-      return jishuPortfolioData;
-    }
-  } catch (e) {}
+  if (typeof window !== 'undefined' && window.location && window.location.protocol !== 'file:') {
+    try {
+      const res = await fetch('data/jishu_portfolio.json?nocache=' + Date.now());
+      if (res.ok) {
+        jishuPortfolioData = await res.json();
+        return jishuPortfolioData;
+      }
+    } catch (e) {}
+  }
 
   if (typeof document !== 'undefined' && !window.STATIC_JISHU_PORTFOLIO) {
     try {
@@ -397,7 +400,7 @@ function setStopLossMode(mode) {
   if (!d && window.STATIC_SCREENER_DATA && Array.isArray(window.STATIC_SCREENER_DATA.stocks)) {
     d = window.STATIC_SCREENER_DATA.stocks.find(s => s.sym === selectedSym);
   }
-  if (!d || !d.price) return;
+  if (!d || !d.price || d.price <= 0) return;
 
   const slInput = document.getElementById('calc-sl-price');
   const stData = stParam === '14' ? d.st14 : d.st10;
@@ -427,7 +430,7 @@ function recalcPositionSize() {
   if (!d && window.STATIC_SCREENER_DATA && Array.isArray(window.STATIC_SCREENER_DATA.stocks)) {
     d = window.STATIC_SCREENER_DATA.stocks.find(s => s.sym === selectedSym);
   }
-  if (!d || !d.price) return;
+  if (!d || !d.price || d.price <= 0) return;
 
   const cap = parseFloat(document.getElementById('calc-cap').value) || 500000;
   const riskPct = parseFloat(document.getElementById('calc-risk-pct').value) || 1.0;
@@ -474,9 +477,9 @@ function recalcPositionSize() {
   if (qtyEl) qtyEl.textContent = `${qty.toLocaleString('en-IN')} shares`;
   if (invEl) invEl.textContent = `₹${totalInv.toLocaleString('en-IN', {maximumFractionDigits:0})} (${capPct}% Cap)`;
   if (riskAmtEl) riskAmtEl.textContent = `₹${actualRisk.toLocaleString('en-IN', {maximumFractionDigits:0})} (-${riskPctPerShare}%)`;
-  if (t1El)  t1El.textContent  = `₹${target1.toFixed(1)} (+${((target1-d.price)/d.price*100).toFixed(1)}%)`;
-  if (t2El)  t2El.textContent  = `₹${target2.toFixed(1)} (+${((target2-d.price)/d.price*100).toFixed(1)}%)`;
-  if (t3El)  t3El.textContent  = `₹${target3.toFixed(1)} (+${((target3-d.price)/d.price*100).toFixed(1)}%)`;
+  if (t1El)  t1El.textContent  = d.price > 0 ? `₹${target1.toFixed(1)} (+${((target1-d.price)/d.price*100).toFixed(1)}%)` : '—';
+  if (t2El)  t2El.textContent  = d.price > 0 ? `₹${target2.toFixed(1)} (+${((target2-d.price)/d.price*100).toFixed(1)}%)` : '—';
+  if (t3El)  t3El.textContent  = d.price > 0 ? `₹${target3.toFixed(1)} (+${((target3-d.price)/d.price*100).toFixed(1)}%)` : '—';
 }
 
 function switchTLTab(tab) {
@@ -565,6 +568,8 @@ async function renderModalChart(d) {
   const canvas = document.getElementById('ars-chart');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
+  const requestId = ++currentModalRequestId;
+  const targetSym = d ? d.sym : null;
   
   if (typeof Chart !== 'undefined') {
     const existingChart = Chart.getChart(canvas);
@@ -666,6 +671,10 @@ async function renderModalChart(d) {
             }
           }
           
+          if (requestId !== currentModalRequestId || (activeModalStock && activeModalStock.sym !== targetSym)) {
+            return; // Discard stale chart response from prior modal
+          }
+
           if (history.length > 10 && arsChartInstance) {
             arsChartInstance.data.labels = histLabels;
             arsChartInstance.data.datasets[0].data = history.map(v => isNaN(v) ? 0 : v * 100);
@@ -914,7 +923,7 @@ function generateAIThesis(d) {
 
   const riskPerShare = Math.max(Math.round(entryPrice * 0.01 * 100) / 100, Math.round((entryPrice - slPrice) * 100) / 100);
   slPrice = Math.round((entryPrice - riskPerShare) * 100) / 100;
-  const riskPct = ((riskPerShare / entryPrice) * 100).toFixed(1);
+  const riskPct = entryPrice > 0 ? ((riskPerShare / entryPrice) * 100).toFixed(1) : '0.0';
 
   const t1 = Math.round((entryPrice + (1.0 * riskPerShare)) * 100) / 100;
   const t2 = Math.round((entryPrice + (2.0 * riskPerShare)) * 100) / 100;
@@ -1096,4 +1105,3 @@ document.addEventListener('keydown', function(e) {
     closeCompare();
   }
 });
-
