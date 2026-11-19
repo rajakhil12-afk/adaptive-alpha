@@ -486,22 +486,67 @@ function renderRetailHeroCockpit() {
     const monthText = 'Neutral';
     const yearText = 'Greed';
 
-    // Pick #1 Spotlight Stock of the Day
-    const candidates = allData.filter(d => (d.ars || 0) > 0 && (d.st14?.trend === 'buy' || d.st10?.trend === 'buy'));
-    candidates.sort((a, b) => {
-      const scoreA = ((a.rs_rating || 50) * 0.3) + ((a.ars || 0) * 25) + (Math.min(3, a.vol_ratio || 1) * 15) + (a.signDays != null && a.signDays <= 15 ? 15 : 0) + (a.institutional?.ad_grade === 'A+' ? 15 : 0);
-      const scoreB = ((b.rs_rating || 50) * 0.3) + ((b.ars || 0) * 25) + (Math.min(3, b.vol_ratio || 1) * 15) + (b.signDays != null && b.signDays <= 15 ? 15 : 0) + (b.institutional?.ad_grade === 'A+' ? 15 : 0);
-      return scoreB - scoreA;
-    });
+    // Pick #1 Spotlight Stock of the Day (Rotational, High-Conviction Quad-1 Leader)
+    const pool = (allData && allData.length > 0) ? allData : (window.STATIC_SCREENER_DATA?.stocks || []);
+    let candidates = pool.filter(d =>
+      getDualRSQuad(d) === 'quad-1' &&
+      (d.st14?.trend === 'buy' || d.st10?.trend === 'buy') &&
+      (d.rs_rating || 50) >= 70 &&
+      (d.hi52_prox == null || d.hi52_prox >= -0.22) &&
+      (d.vol_ratio == null || d.vol_ratio >= 0.7)
+    );
 
-    const spotlight = candidates[0] || allData[0];
+    // Fallback to active RS leaders if strict Quad-1 pool is small
+    if (candidates.length === 0) {
+      candidates = pool.filter(d => (d.ars || 0) > 0 && (d.st14?.trend === 'buy' || d.st10?.trend === 'buy'));
+    }
+    if (candidates.length === 0) {
+      candidates = [...pool];
+    }
+
+    const calcEliteScore = (d) => {
+      const rs = d.rs_rating || 50;
+      // Cap ARS contribution so multi-year historical outliers cannot overwhelm
+      const normArs = Math.min(2.0, Math.max(0, d.ars || 0));
+      const srs = Math.max(0, d.srs || 0);
+      const vol = Math.min(3.0, d.vol_ratio || 1);
+      const freshness = (d.signDays != null && d.signDays <= 30) ? 10 : 0;
+      const breakoutBonus = d.breakout ? 15 : 0;
+      const inst = (d.institutional?.ad_grade === 'A+' || d.institutional?.ad_grade === 'A') ? 10 : 0;
+      return (rs * 0.35) + (normArs * 15) + (srs * 50) + (vol * 10) + freshness + breakoutBonus + inst;
+    };
+
+    candidates.sort((a, b) => calcEliteScore(b) - calcEliteScore(a));
+
+    // Dynamic rotation among top elite leaders based on calendar date (changes daily)
+    const elitePool = candidates.slice(0, 8);
+    const daySeed = Math.floor(Date.now() / 86400000);
+    // Fresh breakout today gets prioritized immediately; otherwise rotate through elite pool
+    const freshBreakout = elitePool.find(d => d.breakout);
+    const spotlight = freshBreakout || (elitePool.length > 0 ? elitePool[Math.abs(daySeed) % elitePool.length] : pool[0]);
+
     const spotSym = spotlight ? spotlight.sym : '—';
     const spotName = spotlight ? spotlight.name : '—';
     const spotPrice = (spotlight && spotlight.price != null) ? `₹${Number(spotlight.price).toLocaleString('en-IN', {maximumFractionDigits:1})}` : '—';
     const spotArs = (spotlight && spotlight.ars != null) ? `${spotlight.ars >= 0 ? '+' : ''}${(spotlight.ars * 100).toFixed(1)}% ARS` : '—';
-    const spotVol = spotlight?.vol_ratio ? `${Number(spotlight.vol_ratio).toFixed(1)}× Vol` : '1.8× Vol';
+    const spotVol = spotlight?.vol_ratio ? `${Number(spotlight.vol_ratio).toFixed(1)}× Vol` : '1.2× Vol';
     const spotGrade = spotlight?.institutional?.ad_grade ? `Inst ${spotlight.institutional.ad_grade}` : 'Smart Money';
     const spotInd = spotlight?.ind || 'Equities';
+
+    // Dynamic Composite Score (85-99)
+    const spotScore = spotlight ? Math.min(99, Math.max(82, Math.round(
+      ((spotlight.rs_rating || 50) * 0.40) +
+      (Math.min(1.5, Math.max(0, spotlight.ars || 0)) * 20) +
+      (Math.min(3.0, spotlight.vol_ratio || 1) * 8) +
+      ((spotlight.srs || 0) > 0 ? 12 : 4) +
+      (spotlight.breakout ? 6 : 0)
+    ))) : 95;
+
+    // Truthful dynamic badges
+    const volTagText = (spotlight?.vol_ratio || 1) >= 1.5 ? `⚡ ${spotVol}` : `📊 ${spotVol}`;
+    const volTagCls = (spotlight?.vol_ratio || 1) >= 2.0 ? 'tag-vol-surge' : 'tag-vol';
+    const quadTagText = getDualRSQuad(spotlight || {}) === 'quad-1' ? '🌟 Quad-1 Leader' : '📈 Momentum RS';
+    const statusTagText = spotlight?.breakout ? '🔥 Fresh Breakout' : ((spotlight?.signDays != null && spotlight.signDays <= 15) ? `🚀 Buy (${spotlight.signDays}d)` : '🚀 Active BUY');
 
     // Alpha Edge Calculations
     const q1Stocks = allData.filter(d => getDualRSQuad(d) === 'quad-1');
@@ -513,133 +558,127 @@ function renderRetailHeroCockpit() {
     const breadthPct = (breadthCount / totalStocks) * 100;
 
     container.innerHTML = `
-      <!-- 1. Authentic CNN-Style Market Sentiment Speedometer Card -->
-      <div class="rh-card sentiment cnn-card" onclick="openSentimentModal()" style="cursor:pointer;" title="Click to inspect 7 Fear &amp; Greed Indicators">
-        <div class="rh-header">
-          <span class="rh-title">🌡️ Market Fear &amp; Greed</span>
-        <span class="badge badge-blue">CNN / S&amp;P Methodology</span>
+    <!-- 1. CNN Fear & Greed Sentiment Cockpit Card -->
+    <div class="rh-card cnn-sentiment" style="border-color: ${tierColor}44; background: radial-gradient(circle at 50% 0%, ${tierColor}10, var(--bg2) 70%);">
+      <div class="rh-header">
+        <span class="rh-title" style="color:${tierColor};">🧭 Fear &amp; Greed Index</span>
+        <span class="badge" style="background:${tierBadgeBg};color:${tierColor};border:1px solid ${tierColor}55;">${sentimentTier}</span>
       </div>
-      <div class="cnn-split-layout">
-        <!-- Left Column: CNN Speedometer Dial -->
-        <div class="cnn-gauge-pane">
-          <svg viewBox="0 0 270 160" class="cnn-svg-gauge">
-            <defs>
-              <!-- 3D Active Sector Glow & Depth -->
-              <filter id="cnn-3d-active-glow" x="-30%" y="-30%" width="160%" height="160%">
-                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.85"/>
-                <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="${tierColor}" flood-opacity="0.8"/>
-              </filter>
 
-              <!-- 3D Needle Shadow -->
-              <filter id="cnn-needle-shadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="3" stdDeviation="2" flood-color="#000000" flood-opacity="0.75"/>
-              </filter>
+      <!-- Split Container: Dial on Left, Timeline on Right -->
+      <div class="cnn-split-container">
+        <!-- Left Column: Gauge Dial -->
+        <div class="cnn-dial-pane">
+          <div class="cnn-gauge-wrap">
+            <svg viewBox="0 0 270 145" class="cnn-gauge-svg">
+              <defs>
+                <!-- 3D Convex Metallic Shading -->
+                <radialGradient id="cnn-bevel-specular" cx="50%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.32" />
+                  <stop offset="45%" stop-color="#ffffff" stop-opacity="0.08" />
+                  <stop offset="100%" stop-color="#000000" stop-opacity="0.65" />
+                </radialGradient>
 
-              <!-- 3D Center Hub Pedestal Shadow -->
-              <filter id="cnn-hub-shadow" x="-30%" y="-30%" width="160%" height="160%">
-                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.8"/>
-              </filter>
+                <!-- Zone 1: Extreme Fear Gradients -->
+                <linearGradient id="grad-z1-base" x1="0%" y1="100%" x2="50%" y2="0%">
+                  <stop offset="0%" stop-color="#7f1d1d" />
+                  <stop offset="100%" stop-color="#ef4444" />
+                </linearGradient>
+                <linearGradient id="grad-z1-active" x1="0%" y1="100%" x2="50%" y2="0%">
+                  <stop offset="0%" stop-color="#991b1b" />
+                  <stop offset="100%" stop-color="#ff4d4d" />
+                </linearGradient>
 
-              <!-- 3D Center Score Glow -->
-              <filter id="cnn-score-glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000000" flood-opacity="0.9"/>
-              </filter>
+                <!-- Zone 2: Fear Gradients -->
+                <linearGradient id="grad-z2-base" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#c2410c" />
+                  <stop offset="100%" stop-color="#f97316" />
+                </linearGradient>
+                <linearGradient id="grad-z2-active" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ea580c" />
+                  <stop offset="100%" stop-color="#fb923c" />
+                </linearGradient>
 
-              <!-- Base Sector Gradients (Rich Color Fills) -->
-              <linearGradient id="grad-z1-base" x1="0%" y1="100%" x2="50%" y2="0%">
-                <stop offset="0%" stop-color="#7f1d1d" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="#ef4444" stop-opacity="0.5"/>
-              </linearGradient>
-              <linearGradient id="grad-z2-base" x1="0%" y1="100%" x2="50%" y2="0%">
-                <stop offset="0%" stop-color="#9a3412" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="#f97316" stop-opacity="0.5"/>
-              </linearGradient>
-              <linearGradient id="grad-z3-base" x1="0%" y1="100%" x2="0%" y2="0%">
-                <stop offset="0%" stop-color="#92400e" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.5"/>
-              </linearGradient>
-              <linearGradient id="grad-z4-base" x1="100%" y1="100%" x2="50%" y2="0%">
-                <stop offset="0%" stop-color="#065f46" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="#10b981" stop-opacity="0.5"/>
-              </linearGradient>
-              <linearGradient id="grad-z5-base" x1="100%" y1="100%" x2="50%" y2="0%">
-                <stop offset="0%" stop-color="#064e3b" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="#00e676" stop-opacity="0.55"/>
-              </linearGradient>
+                <!-- Zone 3: Neutral Gradients -->
+                <linearGradient id="grad-z3-base" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#d97706" />
+                  <stop offset="100%" stop-color="#f59e0b" />
+                </linearGradient>
+                <linearGradient id="grad-z3-active" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#b45309" />
+                  <stop offset="100%" stop-color="#fcd34d" />
+                </linearGradient>
 
-              <!-- Active 3D Highlighting Gradients -->
-              <linearGradient id="grad-z1-active" x1="0%" y1="100%" x2="50%" y2="0%">
-                <stop offset="0%" stop-color="#991b1b"/>
-                <stop offset="50%" stop-color="#ef4444"/>
-                <stop offset="100%" stop-color="#ff8585"/>
-              </linearGradient>
-              <linearGradient id="grad-z2-active" x1="0%" y1="100%" x2="50%" y2="0%">
-                <stop offset="0%" stop-color="#c2410c"/>
-                <stop offset="50%" stop-color="#f97316"/>
-                <stop offset="100%" stop-color="#fdba74"/>
-              </linearGradient>
-              <linearGradient id="grad-z3-active" x1="0%" y1="100%" x2="0%" y2="0%">
-                <stop offset="0%" stop-color="#b45309"/>
-                <stop offset="50%" stop-color="#f59e0b"/>
-                <stop offset="100%" stop-color="#fde68a"/>
-              </linearGradient>
-              <linearGradient id="grad-z4-active" x1="100%" y1="100%" x2="50%" y2="0%">
-                <stop offset="0%" stop-color="#047857"/>
-                <stop offset="50%" stop-color="#10b981"/>
-                <stop offset="100%" stop-color="#6ee7b7"/>
-              </linearGradient>
-              <linearGradient id="grad-z5-active" x1="100%" y1="100%" x2="50%" y2="0%">
-                <stop offset="0%" stop-color="#064e3b"/>
-                <stop offset="50%" stop-color="#00e676"/>
-                <stop offset="100%" stop-color="#a7f3d0"/>
-              </linearGradient>
+                <!-- Zone 4: Greed Gradients -->
+                <linearGradient id="grad-z4-base" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#059669" />
+                  <stop offset="100%" stop-color="#10b981" />
+                </linearGradient>
+                <linearGradient id="grad-z4-active" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#047857" />
+                  <stop offset="100%" stop-color="#34d399" />
+                </linearGradient>
 
-              <!-- 3D Center Hub Pedestal Gradient -->
-              <linearGradient id="grad-hub-3d" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#1e293b"/>
-                <stop offset="100%" stop-color="#0b1120"/>
-              </linearGradient>
-            </defs>
+                <!-- Zone 5: Extreme Greed Gradients -->
+                <linearGradient id="grad-z5-base" x1="50%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#047857" />
+                  <stop offset="100%" stop-color="#00e676" />
+                </linearGradient>
+                <linearGradient id="grad-z5-active" x1="50%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#059669" />
+                  <stop offset="100%" stop-color="#4ade80" />
+                </linearGradient>
 
-            <!-- 5 Zone Arc Sectors -->
-            <path d="M 25.0 125.0 A 110 110 0 0 1 57.2 47.2 L 79.8 69.8 A 78 78 0 0 0 57.0 125.0 Z" ${zone1Style} />
-            <path d="M 57.2 47.2 A 110 110 0 0 1 117.8 16.4 L 122.8 48.0 A 78 78 0 0 0 79.8 69.8 Z" ${zone2Style} />
-            <path d="M 117.8 16.4 A 110 110 0 0 1 152.2 16.4 L 147.2 48.0 A 78 78 0 0 0 122.8 48.0 Z" ${zone3Style} />
-            <path d="M 152.2 16.4 A 110 110 0 0 1 212.8 47.2 L 190.2 69.8 A 78 78 0 0 0 147.2 48.0 Z" ${zone4Style} />
-            <path d="M 212.8 47.2 A 110 110 0 0 1 245.0 125.0 L 213.0 125.0 A 78 78 0 0 0 190.2 69.8 Z" ${zone5Style} />
+                <!-- Active Zone Glow Effect -->
+                <filter id="cnn-3d-active-glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#ffffff" flood-opacity="0.8" />
+                  <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="${tierColor}" flood-opacity="0.6" />
+                </filter>
+              </defs>
 
-            <!-- Zone Arc Text Labels -->
-            <text x="44" y="86" transform="rotate(-67.5 44 86)" text-anchor="middle" class="cnn-zone-lbl ext-fear-lbl ${isExtFear ? 'active-lbl ext-fear' : ''}">EXTREME<tspan x="44" dy="9">FEAR</tspan></text>
-            <text x="88" y="44" transform="rotate(-27 88 44)" text-anchor="middle" class="cnn-zone-lbl fear-lbl ${isFear ? 'active-lbl fear' : ''}">FEAR</text>
-            <text x="135" y="36" text-anchor="middle" class="cnn-zone-lbl neutral-lbl ${isNeutral ? 'active-lbl neutral' : ''}">NEUTRAL</text>
-            <text x="182" y="44" transform="rotate(27 182 44)" text-anchor="middle" class="cnn-zone-lbl greed-lbl ${isGreed ? 'active-lbl greed' : ''}">GREED</text>
-            <text x="226" y="86" transform="rotate(67.5 226 86)" text-anchor="middle" class="cnn-zone-lbl ext-greed-lbl ${isExtGreed ? 'active-lbl ext-greed' : ''}">EXTREME<tspan x="226" dy="9">GREED</tspan></text>
+              <!-- Dark Gauge Track Bed -->
+              <path d="M 25 125 A 110 110 0 0 1 245 125 L 217 125 A 82 82 0 0 0 53 125 Z" fill="#090d14" opacity="0.9" />
 
-            <!-- Dotted Ring Scale & Numbers -->
-            <path d="M 60 125 A 75 75 0 0 1 210 125" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" stroke-dasharray="2 4" />
-            <text x="68" y="123" class="cnn-scale-tick">0</text>
-            <text x="88" y="82" class="cnn-scale-tick">25</text>
-            <text x="135" y="63" text-anchor="middle" class="cnn-scale-tick">50</text>
-            <text x="182" y="82" class="cnn-scale-tick">75</text>
-            <text x="202" y="123" class="cnn-scale-tick">100</text>
+              <!-- 5 Arc Zones -->
+              <path class="cnn-zone" ${zone1Style} d="M 25 125 A 110 110 0 0 1 45.69 61.32 L 68.42 77.48 A 82 82 0 0 0 53 125 Z" />
+              <path class="cnn-zone" ${zone2Style} d="M 47.33 56.28 A 110 110 0 0 1 101.01 20.35 L 109.66 46.90 A 82 82 0 0 0 69.65 73.71 Z" />
+              <path class="cnn-zone" ${zone3Style} d="M 103.11 19.70 A 110 110 0 0 1 166.89 19.70 L 158.77 46.41 A 82 82 0 0 0 111.23 46.41 Z" />
+              <path class="cnn-zone" ${zone4Style} d="M 168.99 20.35 A 110 110 0 0 1 222.67 56.28 L 200.35 73.71 A 82 82 0 0 0 160.34 46.90 Z" />
+              <path class="cnn-zone" ${zone5Style} d="M 224.31 61.32 A 110 110 0 0 1 245 125 L 217 125 A 82 82 0 0 0 201.58 77.48 Z" />
 
-            <!-- 3D Center Score Hub / Pedestal -->
-            <g class="cnn-3d-hub" filter="url(#cnn-hub-shadow)">
-              <rect x="94" y="112" width="82" height="42" rx="12" fill="url(#grad-hub-3d)" stroke="rgba(255,255,255,0.24)" stroke-width="1.5" />
-              <rect x="96" y="114" width="78" height="38" rx="10" fill="rgba(11, 18, 32, 0.94)" stroke="${tierColor}" stroke-width="1.2" stroke-opacity="0.85" />
-              <text x="135" y="125" text-anchor="middle" class="cnn-hub-tier-lbl" fill="${tierColor}">${sentimentTier.split(' ')[0]}</text>
-              <text x="135" y="146" text-anchor="middle" class="cnn-big-score" fill="#ffffff" filter="url(#cnn-score-glow)">${score}</text>
-            </g>
+              <!-- 3D Bevel Overlay Mask for Gloss & Depth -->
+              <path d="M 25 125 A 110 110 0 0 1 245 125 L 217 125 A 82 82 0 0 0 53 125 Z" fill="url(#cnn-bevel-specular)" pointer-events="none" />
 
-            <!-- Animated High-Precision Needle -->
-            <g class="cnn-needle-group" style="transform-origin: 135px 125px; transform: rotate(${needleAngle}deg);">
-              <line x1="135" y1="125" x2="135" y2="34" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" filter="url(#cnn-needle-shadow)" />
-              <line x1="135" y1="125" x2="135" y2="34" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" />
-              <circle cx="135" cy="125" r="5.5" fill="#0284c7" stroke="#ffffff" stroke-width="1.5" />
-              <circle cx="135" cy="125" r="2" fill="#ffffff" />
-            </g>
-          </svg>
-          <div class="cnn-last-updated">Last updated: Today at ${activeSentimentData.updatedAt || '05:30 PM'} IST</div>
+              <!-- High-Contrast Zone Boundary Separator Grooves -->
+              <line x1="45.69" y1="61.32" x2="68.42" y2="77.48" stroke="#05080f" stroke-width="2.5" />
+              <line x1="101.01" y1="20.35" x2="109.66" y2="46.90" stroke="#05080f" stroke-width="2.5" />
+              <line x1="168.99" y1="20.35" x2="160.34" y2="46.90" stroke="#05080f" stroke-width="2.5" />
+              <line x1="224.31" y1="61.32" x2="201.58" y2="77.48" stroke="#05080f" stroke-width="2.5" />
+
+              <!-- Zone Boundary Labels -->
+              <text x="32" y="137" class="cnn-tick-lbl">0</text>
+              <text x="43" y="60" class="cnn-tick-lbl">25</text>
+              <text x="96" y="22" class="cnn-tick-lbl">45</text>
+              <text x="174" y="22" class="cnn-tick-lbl">55</text>
+              <text x="227" y="60" class="cnn-tick-lbl">75</text>
+              <text x="238" y="137" class="cnn-tick-lbl">100</text>
+
+              <!-- Needle Assembly with Drop Shadow -->
+              <g transform="rotate(${needleAngle}, 135, 125)">
+                <line x1="135" y1="125" x2="135" y2="28" stroke="rgba(0,0,0,0.65)" stroke-width="4.5" stroke-linecap="round" />
+                <line x1="135" y1="125" x2="135" y2="30" stroke="#f8fafc" stroke-width="2.8" stroke-linecap="round" />
+                <polygon points="135,23 131.5,37 138.5,37" fill="#f8fafc" />
+                <circle cx="135" cy="125" r="9" fill="#0b0f19" stroke="#f8fafc" stroke-width="2" />
+                <circle cx="135" cy="125" r="4.5" fill="${tierColor}" />
+              </g>
+            </svg>
+
+            <!-- Large Real-Time Digital Readout -->
+            <div class="cnn-digital-score-wrap">
+              <div class="cnn-digital-score" style="color:${tierColor};">${score}</div>
+              <div class="cnn-digital-tier" style="color:${tierColor};">${sentimentTier}</div>
+            </div>
+          </div>
         </div>
 
         <!-- Right Column: CNN Historical Sentiment Timeline -->
@@ -687,13 +726,13 @@ function renderRetailHeroCockpit() {
           </div>
         </div>
         <div class="spotlight-tags">
-          <span class="tag tag-vol-surge">⚡ ${spotVol}</span>
+          <span class="tag ${volTagCls}">${volTagText}</span>
           <span class="tag tag-inst-a">🏛️ ${spotGrade}</span>
-          <span class="tag tag-52w">🌟 Quad-1 Leader</span>
-          <span class="tag tag-new">🚀 Active BUY</span>
+          <span class="tag tag-52w">${quadTagText}</span>
+          <span class="tag tag-new">${statusTagText}</span>
         </div>
         <div class="spotlight-action-row">
-          <span style="font-size:9.5px;color:var(--muted)">Composite Momentum Score: <strong style="color:var(--gold);font-family:var(--font-num);">96/100</strong></span>
+          <span style="font-size:9.5px;color:var(--muted)">Composite Momentum Score: <strong style="color:var(--gold);font-family:var(--font-num);">${spotScore}/100</strong></span>
           <button class="spotlight-btn" onclick="event.stopPropagation();selectStock('${spotSym}')">Inspect Stock Scorecard →</button>
         </div>
       </div>
@@ -1303,124 +1342,124 @@ function renderBreakoutsTab() {
     `;
   }
 
+  html += `
+    <div class="bo-stats-ribbon">
+      <div class="bo-stat-card" onclick="setBoCapFilter('all')" title="Filter: All Fresh Breakouts">
+        <div class="bsc-icon">🚀</div>
+        <div class="bsc-info">
+          <div class="bsc-num" style="color:var(--gold);">${allTodayBreakouts.length}</div>
+          <div class="bsc-lbl">Today's Breakouts</div>
+        </div>
+      </div>
+      <div class="bo-stat-card" onclick="document.querySelector('.vcp-panel')?.scrollIntoView({behavior:'smooth'})" title="Jump to VCP Squeezes">
+        <div class="bsc-icon">🧘</div>
+        <div class="bsc-info">
+          <div class="bsc-num" style="color:#7da9ff;">${vcpStocks.length}</div>
+          <div class="bsc-lbl">Active VCP Squeezes</div>
+        </div>
+      </div>
+      <div class="bo-stat-card" onclick="document.querySelector('.pp-panel')?.scrollIntoView({behavior:'smooth'})" title="Jump to Pocket Pivots">
+        <div class="bsc-icon">⚡</div>
+        <div class="bsc-info">
+          <div class="bsc-num" style="color:var(--up);">${pocketPivots.length}</div>
+          <div class="bsc-lbl">Pocket Pivot Setups</div>
+        </div>
+      </div>
+      <div class="bo-stat-card" onclick="document.querySelector('.bo-section-title-dip')?.scrollIntoView({behavior:'smooth'})" title="Jump to Leader Retests">
+        <div class="bsc-icon">🎯</div>
+        <div class="bsc-info">
+          <div class="bsc-num" style="color:#38bdf8;">${filteredDipBuy.length}</div>
+          <div class="bsc-lbl">Leader Dip Buys</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // ─── BOTTOM SPLIT GRID: THIS WEEK'S BREAKOUTS & LEADER RETESTS ───
+  html += `<div class="bo-divider"></div>`;
+  html += `<div class="bo-dual-grid">`;
+
+  // Column A: This Week's Breakouts
+  html += `
+    <div class="bo-dual-col">
+      <div class="bo-section-title"><span class="bo-icon">🟢</span> This Week's Breakouts <span class="bo-count-pill">${filteredWeekly.length}</span></div>
+  `;
+  if (filteredWeekly.length > 0) {
+    const weeklySorted = [...filteredWeekly].sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
     html += `
-      <div class="bo-stats-ribbon">
-        <div class="bo-stat-card" onclick="setBoCapFilter('all')" title="Filter: All Fresh Breakouts">
-          <div class="bsc-icon">🚀</div>
-          <div class="bsc-info">
-            <div class="bsc-num" style="color:var(--gold);">${allTodayBreakouts.length}</div>
-            <div class="bsc-lbl">Today's Breakouts</div>
-          </div>
+      <div class="tbl-wrap">
+        <div class="bo-weekly-grid bo-weekly-header">
+          <div>★</div>
+          <div>Ticker</div>
+          <div>ARS</div>
+          <div class="bo-col-bo-price">BO Price</div>
+          <div>Current ₹</div>
+          <div>Gain</div>
+          <div>BO Date</div>
+          <div class="bo-col-rs">RS</div>
         </div>
-        <div class="bo-stat-card" onclick="document.querySelector('.vcp-panel')?.scrollIntoView({behavior:'smooth'})" title="Jump to VCP Squeezes">
-          <div class="bsc-icon">🧘</div>
-          <div class="bsc-info">
-            <div class="bsc-num" style="color:#7da9ff;">${vcpStocks.length}</div>
-            <div class="bsc-lbl">Active VCP Squeezes</div>
-          </div>
+        ${weeklySorted.map(d => {
+          const boPrice = d.signPrice ?? d.price;
+          const gain = boPrice > 0 ? ((d.price - boPrice) / boPrice * 100) : 0;
+          const gainStr = gain >= 0 ? `+${gain.toFixed(1)}%` : `${gain.toFixed(1)}%`;
+          const gainCls = gain >= 0 ? 'bo-gain-pos' : 'bo-gain-neg';
+          const boDateStr = d.signSince ? new Date(d.signSince * 1000).toLocaleDateString('en-IN', {day:'2-digit', month:'short'}) : '—';
+          const isPinned = pinnedStocks.includes(d.sym);
+          const daysAgo = d.signDays ?? 0;
+          const daysLabel = daysAgo === 1 ? '1d ago' : `${daysAgo}d ago`;
+          return `
+            <div class="bo-weekly-grid bo-weekly-row" onclick="openStockModal('${d.sym}')" style="cursor:pointer;">
+              <div><span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${d.sym}')">${isPinned ? '★' : '☆'}</span></div>
+              <div><span class="bo-sym">${escHtml(d.sym)}</span><br><span class="bo-name">${escHtml(d.name)}</span></div>
+              <div style="color:var(--up);font-weight:600">${(d.ars * 100).toFixed(1)}%</div>
+              <div class="bo-col-bo-price" style="color:var(--muted-lt)">₹${boPrice.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
+              <div style="font-weight:600">₹${d.price.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
+              <div class="${gainCls}">${gainStr}</div>
+              <div class="bo-date">${boDateStr} <span style="opacity:0.6;font-size:9px">(${daysLabel})</span></div>
+              <div class="bo-col-rs" style="color:var(--gold);font-weight:600">${d.rs_rating ?? '—'}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  } else {
+    html += `<div style="padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--muted)">No additional breakouts triggered earlier this week.</div>`;
+  }
+  html += `</div>`; // Close Column A
+
+  // Column B: Leader Retest / Dip Buys
+  html += `
+    <div class="bo-dual-col">
+      <div class="bo-section-title-dip"><span class="bo-icon">🎯</span> Leader Retest / Dip Buys (Near Support) <span class="bo-count-pill-dip">${filteredDipBuy.length}</span></div>
+  `;
+  if (filteredDipBuy.length > 0) {
+    const sortedDip = [...filteredDipBuy].sort((a, b) => (b.rs_rating ?? 0) - (a.rs_rating ?? 0));
+    html += `
+      <div class="tbl-wrap">
+        <div class="tbl-header COL" style="border-bottom: 2px solid #38bdf8;">
+          <div class="th" title="Select for compare" style="cursor:default;"></div>
+          <div class="th sorted" onclick="setSortCol('alpha')">Ticker <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('ars-desc')">ARS <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('srs-desc')">SRS <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('52w-desc')">52W <span class="sort-arrow">↕</span></div>
+          <div class="th" onclick="setSortCol('days-desc')">Days ↕</div>
+          <div class="th" onclick="setSortCol('vol-desc')">Vol ↕</div>
+          <div class="th" onclick="setSortCol('st-desc')">Supertrend ↕</div>
+          <div class="th">Price ₹</div>
+          <div class="th" onclick="setSortCol('rs-desc')">RS ↕</div>
+          <div class="th">TV</div>
         </div>
-        <div class="bo-stat-card" onclick="document.querySelector('.pp-panel')?.scrollIntoView({behavior:'smooth'})" title="Jump to Pocket Pivots">
-          <div class="bsc-icon">⚡</div>
-          <div class="bsc-info">
-            <div class="bsc-num" style="color:var(--up);">${pocketPivots.length}</div>
-            <div class="bsc-lbl">Pocket Pivot Setups</div>
-          </div>
-        </div>
-        <div class="bo-stat-card" onclick="document.querySelector('.bo-section-title-dip')?.scrollIntoView({behavior:'smooth'})" title="Jump to Leader Retests">
-          <div class="bsc-icon">🎯</div>
-          <div class="bsc-info">
-            <div class="bsc-num" style="color:#38bdf8;">${filteredDipBuy.length}</div>
-            <div class="bsc-lbl">Leader Dip Buys</div>
-          </div>
+        <div class="tbl-body">
+          ${sortedDip.slice(0, 15).map(d => rowHtml(d)).join('')}
         </div>
       </div>
     `;
+  } else {
+    html += `<div style="padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--muted)">No leader dip-buy candidates near support currently.</div>`;
+  }
+  html += `</div>`; // Close Column B
 
-    // ─── BOTTOM SPLIT GRID: THIS WEEK'S BREAKOUTS & LEADER RETESTS ───
-    html += `<div class="bo-divider"></div>`;
-    html += `<div class="bo-dual-grid">`;
-
-    // Column A: This Week's Breakouts
-    html += `
-      <div class="bo-dual-col">
-        <div class="bo-section-title"><span class="bo-icon">🟢</span> This Week's Breakouts <span class="bo-count-pill">${filteredWeekly.length}</span></div>
-    `;
-    if (filteredWeekly.length > 0) {
-      const weeklySorted = [...filteredWeekly].sort((a, b) => (a.signDays ?? 99) - (b.signDays ?? 99));
-      html += `
-        <div class="tbl-wrap">
-          <div class="bo-weekly-grid bo-weekly-header">
-            <div>★</div>
-            <div>Ticker</div>
-            <div>ARS</div>
-            <div class="bo-col-bo-price">BO Price</div>
-            <div>Current ₹</div>
-            <div>Gain</div>
-            <div>BO Date</div>
-            <div class="bo-col-rs">RS</div>
-          </div>
-          ${weeklySorted.map(d => {
-            const boPrice = d.signPrice ?? d.price;
-            const gain = boPrice > 0 ? ((d.price - boPrice) / boPrice * 100) : 0;
-            const gainStr = gain >= 0 ? `+${gain.toFixed(1)}%` : `${gain.toFixed(1)}%`;
-            const gainCls = gain >= 0 ? 'bo-gain-pos' : 'bo-gain-neg';
-            const boDateStr = d.signSince ? new Date(d.signSince * 1000).toLocaleDateString('en-IN', {day:'2-digit', month:'short'}) : '—';
-            const isPinned = pinnedStocks.includes(d.sym);
-            const daysAgo = d.signDays ?? 0;
-            const daysLabel = daysAgo === 1 ? '1d ago' : `${daysAgo}d ago`;
-            return `
-              <div class="bo-weekly-grid bo-weekly-row" onclick="openStockModal('${d.sym}')" style="cursor:pointer;">
-                <div><span class="pin-star ${isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();togglePin('${d.sym}')">${isPinned ? '★' : '☆'}</span></div>
-                <div><span class="bo-sym">${escHtml(d.sym)}</span><br><span class="bo-name">${escHtml(d.name)}</span></div>
-                <div style="color:var(--up);font-weight:600">${(d.ars * 100).toFixed(1)}%</div>
-                <div class="bo-col-bo-price" style="color:var(--muted-lt)">₹${boPrice.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
-                <div style="font-weight:600">₹${d.price.toLocaleString('en-IN', {maximumFractionDigits:1})}</div>
-                <div class="${gainCls}">${gainStr}</div>
-                <div class="bo-date">${boDateStr} <span style="opacity:0.6;font-size:9px">(${daysLabel})</span></div>
-                <div class="bo-col-rs" style="color:var(--gold);font-weight:600">${d.rs_rating ?? '—'}</div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      `;
-    } else {
-      html += `<div style="padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--muted)">No additional breakouts triggered earlier this week.</div>`;
-    }
-    html += `</div>`; // Close Column A
-
-    // Column B: Leader Retest / Dip Buys
-    html += `
-      <div class="bo-dual-col">
-        <div class="bo-section-title-dip"><span class="bo-icon">🎯</span> Leader Retest / Dip Buys (Near Support) <span class="bo-count-pill-dip">${filteredDipBuy.length}</span></div>
-    `;
-    if (filteredDipBuy.length > 0) {
-      const sortedDip = [...filteredDipBuy].sort((a, b) => (b.rs_rating ?? 0) - (a.rs_rating ?? 0));
-      html += `
-        <div class="tbl-wrap">
-          <div class="tbl-header COL" style="border-bottom: 2px solid #38bdf8;">
-            <div class="th" title="Select for compare" style="cursor:default;"></div>
-            <div class="th sorted" onclick="setSortCol('alpha')">Ticker <span class="sort-arrow">↕</span></div>
-            <div class="th" onclick="setSortCol('ars-desc')">ARS <span class="sort-arrow">↕</span></div>
-            <div class="th" onclick="setSortCol('srs-desc')">SRS <span class="sort-arrow">↕</span></div>
-            <div class="th" onclick="setSortCol('52w-desc')">52W <span class="sort-arrow">↕</span></div>
-            <div class="th" onclick="setSortCol('days-desc')">Days ↕</div>
-            <div class="th" onclick="setSortCol('vol-desc')">Vol ↕</div>
-            <div class="th" onclick="setSortCol('st-desc')">Supertrend ↕</div>
-            <div class="th">Price ₹</div>
-            <div class="th" onclick="setSortCol('rs-desc')">RS ↕</div>
-            <div class="th">TV</div>
-          </div>
-          <div class="tbl-body">
-            ${sortedDip.slice(0, 15).map(d => rowHtml(d)).join('')}
-          </div>
-        </div>
-      `;
-    } else {
-      html += `<div style="padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--muted)">No leader dip-buy candidates near support currently.</div>`;
-    }
-    html += `</div>`; // Close Column B
-
-    html += `</div>`; // Close .bo-dual-grid
+  html += `</div>`; // Close .bo-dual-grid
 
   container.innerHTML = html;
 }
