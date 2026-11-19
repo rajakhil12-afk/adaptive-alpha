@@ -57,8 +57,8 @@ function makeSparkline(d) {
   const points = [];
   const trend = d.trending ? 1 : -1;
   const srsFactor = (d.srs || 0) * 5;
-  const finalVal = d.ars;
-  const startVal = d.prev ?? (d.ars - trend * 0.02);
+  const finalVal = d.ars || 0;
+  const startVal = d.prev ?? (finalVal - trend * 0.02);
   
   for (let i = 0; i < 7; i++) {
     const t = i / 6;
@@ -156,7 +156,7 @@ function rowHtml(d) {
   if (isHighDebt) {
     tags.push('<span class="tag tag-forensic-debt" title="Forensic Warning: High Debt Burden (Elevated D/E)">⚠️ High Debt</span>');
   }
-  const isAuditorWarning = forensics.flags?.includes('AUDITOR_WARNING') || forensics.auditor_warning || forensics.auditor_change || d.auditor_warning || d.auditor_change;
+  const isAuditorWarning = forensics.flags?.includes('AUDITOR_WARNING') || forensics.auditor_warning || forensics.auditor_change || d.auditor_change || d.auditor_warning;
   if (isAuditorWarning) {
     tags.push('<span class="tag tag-forensic-auditor" title="Forensic Warning: Auditor Resignation / Regulatory Warning">⚠️ Auditor Chg</span>');
   }
@@ -268,11 +268,11 @@ function rowHtml(d) {
     
     <div class="td" data-label="Supertrend">
       <div><span class="st-badge ${stBadgeCls} ${glowCls}">${stText}${signalIcon}</span></div>
-      <div class="cell-sub" style="margin-top:3px">ST: ₹${stVal.toLocaleString('en-IN')}</div>
+      <div class="cell-sub" style="margin-top:3px">${stVal != null ? 'ST: ₹' + Number(stVal).toLocaleString('en-IN') : 'ST: —'}</div>
     </div>
     
     <div class="td" data-label="Price">
-      <div class="ars-val" style="${d.price === 0 ? 'color:var(--muted)' : ''};font-weight:700">${d.price === 0 ? 'N/A' : '₹' + d.price.toLocaleString('en-IN')}</div>
+      <div class="ars-val" style="${(d.price == null || d.price === 0) ? 'color:var(--muted)' : ''};font-weight:700">${(d.price == null || d.price === 0) ? 'N/A' : '₹' + Number(d.price).toLocaleString('en-IN')}</div>
     </div>
     
     <div class="td" style="align-items:center;" data-label="RS">
@@ -320,9 +320,9 @@ function renderTable() {
     if (sort==='inst-desc')  return ((b.institutional && b.institutional.inst_score) || b.rs_rating || 0) - ((a.institutional && a.institutional.inst_score) || a.rs_rating || 0);
     if (sort==='volz-desc')  return (b.vol_z || b.vol_ratio || 0) - (a.vol_z || a.vol_ratio || 0);
     if (sort==='deliv-desc') return ((b.institutional && b.institutional.deliv_ratio) || (b.vol_ratio ?? 0)) - ((a.institutional && a.institutional.deliv_ratio) || (a.vol_ratio ?? 0));
-    if (sort==='ars-desc')   return b.ars - a.ars;
-    if (sort==='ars-asc')    return a.ars - b.ars;
-    if (sort==='srs-desc')   return b.srs - a.srs;
+    if (sort==='ars-desc')   return (b.ars ?? -Infinity) - (a.ars ?? -Infinity);
+    if (sort==='ars-asc')    return (a.ars ?? Infinity) - (b.ars ?? Infinity);
+    if (sort==='srs-desc')   return (b.srs ?? -Infinity) - (a.srs ?? -Infinity);
     if (sort==='st-desc') {
       const aST = stParam === '14' ? a.st14 : a.st10;
       const bST = stParam === '14' ? b.st14 : b.st10;
@@ -330,8 +330,10 @@ function renderTable() {
       const bTrendVal = bST && bST.trend === 'buy' ? 1 : 0;
       return bTrendVal - aTrendVal;
     }
-    if (sort==='vol-desc')  return b.vol_ratio - a.vol_ratio;
-    if (sort==='52w-desc')  return b.hi52_prox - a.hi52_prox;
+    if (sort==='vol-desc')   return (b.vol_ratio ?? 0) - (a.vol_ratio ?? 0);
+    if (sort==='52w-desc')   return (b.hi52_prox ?? -Infinity) - (a.hi52_prox ?? -Infinity);
+    if (sort==='price-desc') return (b.price ?? 0) - (a.price ?? 0);
+    if (sort==='price-asc')  return (a.price ?? 0) - (b.price ?? 0);
     if (sort==='days-desc') return (b.signDays ?? -1) - (a.signDays ?? -1);
     return a.sym.localeCompare(b.sym);
   });
@@ -387,21 +389,29 @@ function sortData(arr) {
   if (sortCol === 'alpha') {
     copy.sort((a,b) => a.sym.localeCompare(b.sym));
   } else if (sortCol === 'ars-desc') {
-    copy.sort((a,b) => b.ars - a.ars);
+    copy.sort((a,b) => (b.ars ?? -Infinity) - (a.ars ?? -Infinity));
   } else if (sortCol === 'ars-asc') {
-    copy.sort((a,b) => a.ars - b.ars);
+    copy.sort((a,b) => (a.ars ?? Infinity) - (b.ars ?? Infinity));
   } else if (sortCol === 'srs-desc') {
-    copy.sort((a,b) => b.srs - a.srs);
+    copy.sort((a,b) => (b.srs ?? -Infinity) - (a.srs ?? -Infinity));
   } else if (sortCol === 'volz-desc') {
     copy.sort((a,b) => (b.vol_z || b.vol_ratio || 0) - (a.vol_z || a.vol_ratio || 0));
   } else if (sortCol === 'vol-desc') {
-    copy.sort((a,b) => b.vol_ratio - a.vol_ratio);
+    copy.sort((a,b) => (b.vol_ratio ?? 0) - (a.vol_ratio ?? 0));
   } else if (sortCol === '52w-desc') {
-    copy.sort((a,b) => b.hi52_prox - a.hi52_prox);
+    copy.sort((a,b) => (b.hi52_prox ?? -Infinity) - (a.hi52_prox ?? -Infinity));
+  } else if (sortCol === 'price-desc') {
+    copy.sort((a,b) => (b.price ?? 0) - (a.price ?? 0));
+  } else if (sortCol === 'price-asc') {
+    copy.sort((a,b) => (a.price ?? 0) - (b.price ?? 0));
   } else if (sortCol === 'days-desc') {
     copy.sort((a,b) => (b.signDays ?? 0) - (a.signDays ?? 0));
   } else if (sortCol === 'rs-desc') {
     copy.sort((a,b) => (b.rs_rating ?? 0) - (a.rs_rating ?? 0));
+  } else if (sortCol === 'inst-desc') {
+    copy.sort((a,b) => ((b.institutional && b.institutional.inst_score) || b.rs_rating || 0) - ((a.institutional && a.institutional.inst_score) || a.rs_rating || 0));
+  } else if (sortCol === 'deliv-desc') {
+    copy.sort((a,b) => ((b.institutional && b.institutional.deliv_ratio) || (b.vol_ratio ?? 0)) - ((a.institutional && a.institutional.deliv_ratio) || (a.vol_ratio ?? 0)));
   } else if (sortCol === 'st-desc') {
     copy.sort((a,b) => {
       const stA = stParam === '14' ? a.st14 : a.st10;
@@ -410,7 +420,7 @@ function sortData(arr) {
       const trB = stB ? stB.trend : 'sell';
       if (trA === 'buy' && trB !== 'buy') return -1;
       if (trA !== 'buy' && trB === 'buy') return 1;
-      return b.ars - a.ars;
+      return (b.ars ?? -Infinity) - (a.ars ?? -Infinity);
     });
   }
   return copy;

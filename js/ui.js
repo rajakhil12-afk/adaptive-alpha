@@ -100,7 +100,11 @@
         clear.className = 'af-clear';
         clear.textContent = 'Clear all';
         clear.addEventListener('click', function () {
-          $$('.chip.on', panel).forEach(function (chip) { chip.click(); });
+          $$('.chip.on', panel).forEach(function (chip) {
+            if (chip.id !== 'f-pass' && chip.id !== 'f-groups') {
+              chip.click();
+            }
+          });
         });
         active.appendChild(clear);
       }
@@ -295,4 +299,3 @@
     });
   });
 })();
-
