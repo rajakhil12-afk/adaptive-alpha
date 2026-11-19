@@ -569,15 +569,17 @@
     const fmtDay = ts => { const d = new Date(ts); return isNaN(d) ? '—' : d.toLocaleDateString('en-IN', {day:'2-digit', month:'short'}); };
 
     async function loadPortfolioData() {
-      try {
-        const res = await fetch('data/jishu_portfolio.json?nocache=' + Date.now());
-        if (res.ok) {
-          const data = await res.json();
-          renderDashboard(data);
-          return;
+      if (typeof window !== 'undefined' && window.location && window.location.protocol !== 'file:') {
+        try {
+          const res = await fetch('data/jishu_portfolio.json?nocache=' + Date.now());
+          if (res.ok) {
+            const data = await res.json();
+            renderDashboard(data);
+            return;
+          }
+        } catch (err) {
+          console.warn('HTTP fetch failed, attempting static JS fallback:', err.message);
         }
-      } catch (err) {
-        console.warn('HTTP fetch failed, attempting static JS fallback:', err.message);
       }
 
       if (typeof window.STATIC_JISHU_PORTFOLIO !== 'undefined' && window.STATIC_JISHU_PORTFOLIO) {
