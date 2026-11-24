@@ -362,5 +362,31 @@
     "rsRatingAtTrigger": 75,
     "gainPct": -1.31,
     "maxGainPct": 0
+  },
+  {
+    "sym": "TECHM",
+    "name": "Tech Mahindra",
+    "ind": "IT",
+    "triggerDate": "2026-11-23",
+    "triggerPrice": 1777.5,
+    "maxPrice": 1777.5,
+    "currentPrice": 1777.5,
+    "gainPct": 0,
+    "maxGainPct": 0,
+    "volRatioAtTrigger": 1.35,
+    "rsRatingAtTrigger": 72
+  },
+  {
+    "sym": "MMTC",
+    "name": "MMTC Ltd",
+    "ind": "Services",
+    "triggerDate": "2026-11-23",
+    "triggerPrice": 50.81,
+    "maxPrice": 50.81,
+    "currentPrice": 50.81,
+    "gainPct": 0,
+    "maxGainPct": 0,
+    "volRatioAtTrigger": 0.41,
+    "rsRatingAtTrigger": 18
   }
 ]

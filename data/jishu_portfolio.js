@@ -2,7 +2,7 @@ window.STATIC_JISHU_PORTFOLIO = {
   "bot_name": "Jishu",
   "version": "3.0.0",
   "created_at": "2026-10-01T09:15:00.000Z",
-  "last_updated": "2026-11-24T01:37:47.025Z",
+  "last_updated": "2026-11-24T23:27:56.641Z",
   "account": {
     "initial_capital": 1000000,
     "cash": 533155.73075,
@@ -36,9 +36,9 @@ window.STATIC_JISHU_PORTFOLIO = {
     "regime": "HEALTHY_EXPANSION",
     "regimeColor": "#10b981",
     "regimeBadgeBg": "rgba(16, 185, 129, 0.18)",
-    "marketScore": 62,
-    "vixLevel": 17.3,
-    "vixRegime": "ELEVATED_CHOPPY",
+    "marketScore": 60,
+    "vixLevel": 17.7,
+    "vixRegime": "HIGH_RISK",
     "fiiNet": 0,
     "diiNet": 0,
     "combinedNet": 0,
@@ -448,6 +448,16 @@ window.STATIC_JISHU_PORTFOLIO = {
       "realized_pnl": -22079.43,
       "unrealized_pnl": 42638.45,
       "open_positions_count": 5
+    },
+    {
+      "date": "2026-11-24",
+      "cash": 533155.73,
+      "invested": 444581.2,
+      "market_value": 487219.65,
+      "total_equity": 1020375.38,
+      "realized_pnl": -22079.43,
+      "unrealized_pnl": 42638.45,
+      "open_positions_count": 5
     }
   ],
   "recent_events": [
@@ -625,8 +635,8 @@ window.STATIC_JISHU_PORTFOLIO = {
   },
   "quant_metrics": {
     "profitFactor": 0,
-    "sharpeRatio": 0,
-    "sortinoRatio": 0,
+    "sharpeRatio": 2.18,
+    "sortinoRatio": 3.11,
     "maxDrawdownPct": 1.36,
     "maxDrawdownValue": 13686.5,
     "payoffRatio": 0,
