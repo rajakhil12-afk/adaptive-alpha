@@ -1643,12 +1643,21 @@ function renderOverviewTab() {
   const volSurges = allData.filter(d => (d.vol_ratio||1) >= 2.0);
 
   // FII / DII
-  let fiiText = '—', diiText = '—', netText = '—';
-  if (latestFiiDiiData) {
-    const fmt = v => `${v>=0?'+':''}₹${v.toLocaleString('en-IN',{maximumFractionDigits:1})} Cr`;
-    fiiText = fmt(latestFiiDiiData.fii || 0);
-    diiText = fmt(latestFiiDiiData.dii || 0);
-    netText = fmt((latestFiiDiiData.fii || 0) + (latestFiiDiiData.dii || 0));
+  const hasFiiDii = !!(latestFiiDiiData && (
+    (latestFiiDiiData.fii !== undefined && latestFiiDiiData.fii !== null) ||
+    (latestFiiDiiData.dii !== undefined && latestFiiDiiData.dii !== null)
+  ));
+  let fiiVal = 0, diiVal = 0, netVal = 0;
+  let fiiText = '—', diiText = '—', netText = '—', flowDateText = '';
+  if (hasFiiDii) {
+    const fmt = v => `${v >= 0 ? '+' : ''}₹${v.toLocaleString('en-IN', { maximumFractionDigits: 1 })} Cr`;
+    fiiVal = Number(latestFiiDiiData.fii) || 0;
+    diiVal = Number(latestFiiDiiData.dii) || 0;
+    netVal = fiiVal + diiVal;
+    fiiText = fmt(fiiVal);
+    diiText = fmt(diiVal);
+    netText = fmt(netVal);
+    flowDateText = latestFiiDiiData.date ? `As of ${escHtml(latestFiiDiiData.date)} (provisional)` : 'Latest NSE Cash Session';
   }
 
   let verdict = 'NEUTRAL', verdictColor = 'var(--amber)';
@@ -1694,20 +1703,29 @@ function renderOverviewTab() {
           <span>🏛️ Institutional Smart Money</span>
           <span class="badge badge-blue">FII + DII Cash</span>
         </div>
-        <div class="ov-flows-grid">
-          <div class="ov-flow-item">
-            <span class="ov-flow-lbl">FII Net Flow</span>
-            <strong class="ov-flow-val" style="color:${latestFiiDiiData?.fii >= 0 ? 'var(--up)' : (latestFiiDiiData?.fii < 0 ? 'var(--down)' : 'var(--text)')};">${fiiText}</strong>
+        ${hasFiiDii ? `
+          <div style="font-size:10px;color:var(--muted);margin:-2px 0 6px;">${flowDateText}</div>
+          <div class="ov-flows-grid">
+            <div class="ov-flow-item">
+              <span class="ov-flow-lbl">FII Net Flow</span>
+              <strong class="ov-flow-val" style="color:${fiiVal >= 0 ? 'var(--up)' : 'var(--down)'};">${fiiText}</strong>
+            </div>
+            <div class="ov-flow-item">
+              <span class="ov-flow-lbl">DII Net Flow</span>
+              <strong class="ov-flow-val" style="color:${diiVal >= 0 ? 'var(--up)' : 'var(--down)'};">${diiText}</strong>
+            </div>
           </div>
-          <div class="ov-flow-item">
-            <span class="ov-flow-lbl">DII Net Flow</span>
-            <strong class="ov-flow-val" style="color:${latestFiiDiiData?.dii >= 0 ? 'var(--up)' : (latestFiiDiiData?.dii < 0 ? 'var(--down)' : 'var(--text)')};">${diiText}</strong>
+          <div class="ov-net-flow-row" style="border-top:1px solid rgba(255,255,255,0.08);padding-top:6px;margin-top:4px;">
+            <span style="font-size:11px;color:var(--muted);font-weight:600;">Net Combined Smart Money</span>
+            <strong style="font-family:var(--font-num);font-size:12.5px;color:${netVal >= 0 ? 'var(--up)' : 'var(--down)'};">${netText}</strong>
           </div>
-        </div>
-        <div class="ov-net-flow-row" style="border-top:1px solid rgba(255,255,255,0.08);padding-top:6px;margin-top:4px;">
-          <span style="font-size:11px;color:var(--muted);font-weight:600;">Net Combined Smart Money</span>
-          <strong style="font-family:var(--font-num);font-size:12.5px;color:${latestFiiDiiData ? (((latestFiiDiiData.fii || 0) + (latestFiiDiiData.dii || 0) >= 0) ? 'var(--up)' : 'var(--down)') : 'var(--text)'};">${netText}</strong>
-        </div>
+        ` : `
+          <div style="font-size:11px;color:var(--muted);padding:10px 0;text-align:center;">
+            <div style="font-size:16px;margin-bottom:4px;">📊</div>
+            <div style="font-weight:600;color:var(--text);">Data Unavailable / Market Closed</div>
+            <div style="font-size:10px;margin-top:3px;opacity:0.75;">Official NSE provisional flows publish after 18:30 IST</div>
+          </div>
+        `}
       </div>
 
       <!-- Card 3: Today's Real-Time Market Pulse -->
@@ -2358,41 +2376,61 @@ async function loadFiiDiiData() {
   if (window.STATIC_SCREENER_DATA && window.STATIC_SCREENER_DATA.fii_dii) {
     latestFiiDiiData = window.STATIC_SCREENER_DATA.fii_dii;
   }
-  try {
-    const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.nseindia.com/api/fiidiiTradeReact');
-    const c = new AbortController();
-    const timeoutId = setTimeout(() => c.abort(), 6000);
-    const res = await fetch(proxyUrl, { signal: c.signal });
-    clearTimeout(timeoutId);
-    if (res.ok) {
-      const obj = await res.json();
-      if (obj && obj.contents) {
-        const parsed = JSON.parse(obj.contents);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          let fiiNet = 0, diiNet = 0, flowDate = '';
-          parsed.forEach(item => {
-            const cat = (item.category || '').toUpperCase();
-            const val = parseFloat(String(item.netValue || '0').replace(/,/g, '')) || 0;
-            if (cat.includes('DII')) {
-              diiNet = val;
-              flowDate = item.date || flowDate;
-            } else if (cat.includes('FII') || cat.includes('FPI')) {
-              fiiNet = val;
-              flowDate = item.date || flowDate;
-            }
-          });
+  const nseUrl = 'https://www.nseindia.com/api/fiidiiTradeReact';
+  const proxyCandidates = [
+    ...PROXIES.slice(0, 3).map(fn => ({ url: fn(nseUrl), wrapped: false })),
+    { url: 'https://api.allorigins.win/get?url=' + encodeURIComponent(nseUrl), wrapped: true }
+  ];
+
+  for (const candidate of proxyCandidates) {
+    try {
+      const c = new AbortController();
+      const timeoutId = setTimeout(() => c.abort(), 5000);
+      const res = await fetch(candidate.url, { signal: c.signal });
+      clearTimeout(timeoutId);
+      if (!res.ok) continue;
+
+      let parsed = null;
+      if (candidate.wrapped) {
+        const obj = await res.json();
+        if (obj && obj.contents) parsed = JSON.parse(obj.contents);
+      } else {
+        parsed = await res.json();
+      }
+
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        let fiiNet = 0, diiNet = 0, flowDate = '';
+        let foundFii = false, foundDii = false;
+        parsed.forEach(item => {
+          const cat = (item.category || '').toUpperCase();
+          const rawNet = item.netValue !== undefined && item.netValue !== null ? item.netValue : item.net;
+          const val = parseFloat(String(rawNet ?? '0').replace(/,/g, ''));
+          if (!Number.isFinite(val)) return;
+          if (cat.includes('DII')) {
+            diiNet = val;
+            foundDii = true;
+            flowDate = item.date || flowDate;
+          } else if (cat.includes('FII') || cat.includes('FPI')) {
+            fiiNet = val;
+            foundFii = true;
+            flowDate = item.date || flowDate;
+          }
+        });
+        if (foundFii || foundDii) {
           latestFiiDiiData = { date: flowDate, fii: fiiNet, dii: diiNet };
           if (!selectedSym) clearSelection();
+          renderRetailHeroCockpit();
           if (activeTab === 'overview') {
             renderOverviewTab();
-            renderRetailHeroCockpit();
           }
+          return;
         }
       }
+    } catch (e) {
+      // Try next proxy candidate
     }
-  } catch (e) {
-    console.warn("Failed to fetch live FII/DII data:", e);
   }
+  console.warn("Failed to fetch live FII/DII data; using cached screener dataset if available.");
 }
 
 async function initScreener() {
