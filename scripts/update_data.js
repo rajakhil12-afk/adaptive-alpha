@@ -1190,6 +1190,10 @@ async function run() {
       }
     } catch(e) {}
   }
+  if (!fiiDii) {
+    console.warn('[warn] No cached FII/DII flow found – using neutral 0 Cr fallback');
+    fiiDii = { fii: 0, dii: 0, date: new Date().toISOString().split('T')[0], stale: true };
+  }
 
   // Track 30-Day Breakout History Log
   const historyJson = path.join(dataDir, 'breakout_history.json');
