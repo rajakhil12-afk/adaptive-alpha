@@ -72,15 +72,27 @@ function makeSparkline(d) {
   const range = max - min || 0.01;
   
   const svgPoints = points.map((val, idx) => {
-    const x = (idx / 6) * 44 + 3;
-    const y = 12 - ((val - min) / range) * 9;
-    return `${x},${y}`;
-  }).join(' ');
-  
-  const strokeColor = d.ars > 0 ? 'var(--up)' : 'var(--down)';
-  
-  return `<svg class="sparkline-svg" width="50" height="15" viewBox="0 0 50 15">
-    <polyline fill="none" stroke="${strokeColor}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="${svgPoints}" />
+    const x = (idx / 6) * 56 + 4;
+    const y = 16 - ((val - min) / range) * 12;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  const lastCoords = svgPoints[svgPoints.length - 1].split(',');
+  const areaPoints = `4,18 ${svgPoints.join(' ')} 60,18`;
+  const isUp = d.ars > 0;
+  const strokeColor = isUp ? 'var(--up)' : 'var(--down)';
+  const gradId = `spk-${isUp ? 'up' : 'dn'}`;
+
+  return `<svg class="sparkline-svg" width="64" height="20" viewBox="0 0 64 20" aria-hidden="true">
+    <defs>
+      <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${isUp ? '#26a69a' : '#ef5350'}" stop-opacity="0.32"/>
+        <stop offset="100%" stop-color="${isUp ? '#26a69a' : '#ef5350'}" stop-opacity="0.0"/>
+      </linearGradient>
+    </defs>
+    <line x1="2" y1="10" x2="62" y2="10" stroke="var(--border-lt)" stroke-width="0.6" stroke-dasharray="2,2" opacity="0.5"/>
+    <polygon fill="url(#${gradId})" points="${areaPoints}"/>
+    <polyline fill="none" stroke="${strokeColor}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" points="${svgPoints.join(' ')}"/>
+    <circle cx="${lastCoords[0]}" cy="${lastCoords[1]}" r="2" fill="${strokeColor}"/>
   </svg>`;
 }
 
@@ -156,7 +168,7 @@ function rowHtml(d) {
   if (isHighDebt) {
     tags.push('<span class="tag tag-forensic-debt" title="Forensic Warning: High Debt Burden (Elevated D/E)">⚠️ High Debt</span>');
   }
-  const isAuditorWarning = forensics.flags?.includes('AUDITOR_WARNING') || forensics.auditor_warning || forensics.auditor_change || d.auditor_change || d.auditor_warning;
+  const isAuditorWarning = forensics.flags?.includes('AUDITOR_WARNING') || forensics.auditor_warning || forensics.auditor_change || d.auditor_warning || d.auditor_change;
   if (isAuditorWarning) {
     tags.push('<span class="tag tag-forensic-auditor" title="Forensic Warning: Auditor Resignation / Regulatory Warning">⚠️ Auditor Chg</span>');
   }

@@ -242,7 +242,7 @@ function renderSectors() {
   });
 
   const clockHtml = `
-    <svg viewBox="0 0 700 550" class="rrg-clock" style="width:100%;height:auto;display:block;background:#000000;border-radius:14px;border:1px solid #141a24;font-family:'Inter',-apple-system,sans-serif;">
+    <svg viewBox="0 0 700 550" class="rrg-clock" style="width:100%;height:auto;display:block;background:radial-gradient(circle at 50% 50%, #0f1623 0%, #080c12 100%);border-radius:14px;border:1px solid var(--border);font-family:'Inter',-apple-system,sans-serif;">
       <defs>
         <!-- Bloom Glow Filter for Markers & Trails -->
         <filter id="bloom-glow" x="-60%" y="-60%" width="220%" height="220%">
@@ -545,7 +545,8 @@ function renderSectorDonut(priMetrics, thmMetrics) {
   const top1Color = colors[0];
 
   container.innerHTML = `
-    <svg viewBox="0 0 360 360" style="width:100%;max-width:360px;height:auto;display:block;">
+    <svg viewBox="0 0 360 360" style="width:100%;max-width:360px;height:auto;display:block;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.32));">
+      <circle cx="180" cy="180" r="96" fill="none" stroke="var(--border-lt)" stroke-width="1" stroke-dasharray="3,4" opacity="0.5"/>
       ${slices.join('')}
     </svg>
     <div class="donut-center-card" id="donut-center-readout">

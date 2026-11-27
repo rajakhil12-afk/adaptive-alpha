@@ -581,7 +581,7 @@ function renderRetailHeroCockpit() {
       <!-- 1. Authentic CNN-Style Market Sentiment Speedometer Card -->
       <div class="rh-card sentiment cnn-card" onclick="openSentimentModal()" style="cursor:pointer;" title="Click to inspect 7 Fear &amp; Greed Indicators">
         <div class="rh-header">
-          <span class="rh-title">🌡️ Market Fear &amp; Greed</span>
+          <span class="rh-title"><svg class="ic" aria-hidden="true"><use href="#i-thermometer"/></svg> Market Fear &amp; Greed</span>
         <span class="badge badge-blue">CNN / S&amp;P Methodology</span>
       </div>
       <div class="cnn-split-layout">

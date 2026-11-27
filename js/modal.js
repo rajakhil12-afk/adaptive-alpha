@@ -302,25 +302,37 @@ function openStockModal(sym) {
   const normX = (clampedArs + 0.35) / 0.70;
   const normY = (clampedSrs + 0.18) / 0.36;
   
-  const dotX = 15 + normX * 70;
-  const dotY = 35 - normY * 25;
+  const dotX = 28 + normX * 164;
+  const dotY = 82 - normY * 64;
   
-  const svgPath = `M 50 22.5 Q ${(50 + dotX)/2} 22.5 ${dotX} ${dotY}`;
+  const svgPath = `M 110 50 Q ${(110 + dotX)/2} 50 ${dotX.toFixed(1)} ${dotY.toFixed(1)}`;
   const trendColor = isSTBuy ? '#0fe586' : '#f45662';
 
   const vectorContainer = document.getElementById('m-vector-chart');
   if (vectorContainer) {
     vectorContainer.innerHTML = `
-      <svg viewBox="0 0 100 45" class="momentum-svg" style="width:100%;height:auto;overflow:visible;">
-        <line x1="10" y1="22.5" x2="90" y2="22.5" stroke="rgba(244, 86, 98, 0.2)" stroke-width="0.5" stroke-dasharray="1,1" />
-        <line x1="50" y1="5" x2="50" y2="40" stroke="rgba(244, 86, 98, 0.2)" stroke-width="0.5" stroke-dasharray="1,1" />
-        <text x="12" y="8" class="svg-lbl svg-lbl-improving" text-anchor="start" style="font-size: 2.2px; fill: #5fc4ba; font-weight: 600;">Improving</text>
-        <text x="88" y="8" class="svg-lbl svg-lbl-leading" text-anchor="end" style="font-size: 2.2px; fill: var(--up); font-weight: 600;">Leading</text>
-        <text x="12" y="38" class="svg-lbl svg-lbl-lagging" text-anchor="start" style="font-size: 2.2px; fill: var(--down); font-weight: 600;">Lagging</text>
-        <text x="88" y="38" class="svg-lbl svg-lbl-weakening" text-anchor="end" style="font-size: 2.2px; fill: var(--amber); font-weight: 600;">Weakening</text>
-        <text x="50" y="24.5" class="svg-lbl" text-anchor="middle" style="font-size:2px;fill:var(--muted)">NIFTY</text>
-        <path d="${svgPath}" fill="none" stroke="${trendColor}" stroke-width="1.2" stroke-linecap="round" class="svg-path-anim" />
-        <circle cx="${dotX}" cy="${dotY}" r="1.5" fill="${trendColor}" class="svg-dot-anim" />
+      <svg viewBox="0 0 220 100" class="momentum-svg" style="width:100%;height:100%;max-height:94px;overflow:visible;">
+        <defs>
+          <marker id="mv-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="4.5" markerHeight="4.5" orient="auto">
+            <path d="M 0 1 L 7 4 L 0 7 z" fill="${trendColor}"/>
+          </marker>
+        </defs>
+        <rect x="110" y="6" width="98" height="44" rx="3" fill="rgba(38,166,154,0.06)"/>
+        <rect x="12" y="6" width="98" height="44" rx="3" fill="rgba(56,189,248,0.05)"/>
+        <rect x="110" y="50" width="98" height="44" rx="3" fill="rgba(210,153,34,0.05)"/>
+        <rect x="12" y="50" width="98" height="44" rx="3" fill="rgba(239,83,80,0.05)"/>
+        <circle cx="110" cy="50" r="24" fill="none" stroke="var(--border-lt)" stroke-width="0.6" stroke-dasharray="2,2" opacity="0.6"/>
+        <line x1="12" y1="50" x2="208" y2="50" stroke="var(--border-lt)" stroke-width="0.8" stroke-dasharray="2,2" />
+        <line x1="110" y1="6" x2="110" y2="94" stroke="var(--border-lt)" stroke-width="0.8" stroke-dasharray="2,2" />
+        <text x="16" y="16" class="svg-lbl svg-lbl-improving" text-anchor="start" style="font-size: 6.5px; fill: #5fc4ba; font-weight: 700;">IMPROVING</text>
+        <text x="204" y="16" class="svg-lbl svg-lbl-leading" text-anchor="end" style="font-size: 6.5px; fill: var(--up); font-weight: 700;">LEADING</text>
+        <text x="16" y="89" class="svg-lbl svg-lbl-lagging" text-anchor="start" style="font-size: 6.5px; fill: var(--down); font-weight: 700;">LAGGING</text>
+        <text x="204" y="89" class="svg-lbl svg-lbl-weakening" text-anchor="end" style="font-size: 6.5px; fill: var(--amber); font-weight: 700;">WEAKENING</text>
+        <text x="110" y="59" class="svg-lbl" text-anchor="middle" style="font-size:5.5px;fill:var(--muted)">NIFTY</text>
+        <circle cx="110" cy="50" r="2" fill="var(--muted-lt)"/>
+        <path d="${svgPath}" fill="none" stroke="${trendColor}" stroke-width="2" stroke-linecap="round" marker-end="url(#mv-arrow)" class="svg-path-anim" />
+        <circle cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="5" fill="${trendColor}" opacity="0.22"/>
+        <circle cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="2.8" fill="${trendColor}" stroke="#fff" stroke-width="0.8" class="svg-dot-anim" />
       </svg>
     `;
   }
@@ -866,7 +878,7 @@ function openCompare() {
       ${selectedData.map(d => {
         const st = stParam === '14' ? d.st14 : d.st10;
         const isBuy = st && st.trend === 'buy';
-        return `<div class="cmp-val" style="color:${isBuy?'var(--up)' : 'var(--down)'}">${isBuy?'BUY':'SELL'}</div>`;
+        return `<div class="cmp-val" style="color:${isBuy?'var(--up)':'var(--down)'}">${isBuy?'BUY':'SELL'}</div>`;
       }).join('')}
 
       <div class="cmp-metric">MA Status</div>
@@ -1121,3 +1133,4 @@ document.addEventListener('keydown', function(e) {
     }
   }
 });
+
