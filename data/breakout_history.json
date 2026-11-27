@@ -1,54 +1,15 @@
 [
   {
-    "sym": "PATANJALI",
-    "name": "Patanjali Foods",
-    "ind": "FMCG",
-    "triggerDate": "2026-10-28",
-    "triggerPrice": 369.6,
-    "maxPrice": 430.8,
-    "currentPrice": 405.4,
-    "volRatioAtTrigger": 4.18,
-    "rsRatingAtTrigger": 72,
-    "gainPct": 9.69,
-    "maxGainPct": 16.56
-  },
-  {
-    "sym": "ABBOTINDIA",
-    "name": "Abbott India",
-    "ind": "Healthcare",
-    "triggerDate": "2026-10-28",
-    "triggerPrice": 26275,
-    "maxPrice": 27300,
-    "currentPrice": 27300,
-    "volRatioAtTrigger": 0.97,
-    "rsRatingAtTrigger": 55,
-    "gainPct": 3.9,
-    "maxGainPct": 3.9
-  },
-  {
-    "sym": "DODLA",
-    "name": "Dodla Dairy",
-    "ind": "FMCG",
-    "triggerDate": "2026-10-28",
-    "triggerPrice": 991.9,
-    "maxPrice": 1025.45,
-    "currentPrice": 969.9,
-    "volRatioAtTrigger": 0.23,
-    "rsRatingAtTrigger": 37,
-    "gainPct": -2.22,
-    "maxGainPct": 3.38
-  },
-  {
     "sym": "INDUSTOWER",
     "name": "Indus Towers",
     "ind": "Telecom",
     "triggerDate": "2026-10-29",
     "triggerPrice": 384,
     "maxPrice": 397.5,
-    "currentPrice": 379,
+    "currentPrice": 377.65,
     "volRatioAtTrigger": 0.73,
     "rsRatingAtTrigger": 52,
-    "gainPct": -1.3,
+    "gainPct": -1.65,
     "maxGainPct": 3.52
   },
   {
@@ -58,10 +19,10 @@
     "triggerDate": "2026-10-29",
     "triggerPrice": 226.9,
     "maxPrice": 248.8,
-    "currentPrice": 239,
+    "currentPrice": 233.1,
     "volRatioAtTrigger": 3.12,
     "rsRatingAtTrigger": 68,
-    "gainPct": 5.33,
+    "gainPct": 2.73,
     "maxGainPct": 9.65
   },
   {
@@ -71,10 +32,10 @@
     "triggerDate": "2026-10-29",
     "triggerPrice": 515.5,
     "maxPrice": 542.2,
-    "currentPrice": 520.75,
+    "currentPrice": 520.6,
     "volRatioAtTrigger": 2.91,
     "rsRatingAtTrigger": 48,
-    "gainPct": 1.02,
+    "gainPct": 0.99,
     "maxGainPct": 5.18
   },
   {
@@ -84,10 +45,10 @@
     "triggerDate": "2026-10-30",
     "triggerPrice": 1461.6,
     "maxPrice": 1620,
-    "currentPrice": 1604.9,
+    "currentPrice": 1594.8,
     "volRatioAtTrigger": 1.02,
     "rsRatingAtTrigger": 43,
-    "gainPct": 9.8,
+    "gainPct": 9.11,
     "maxGainPct": 10.84
   },
   {
@@ -97,10 +58,10 @@
     "triggerDate": "2026-11-02",
     "triggerPrice": 369,
     "maxPrice": 430.8,
-    "currentPrice": 405.4,
+    "currentPrice": 400.35,
     "volRatioAtTrigger": 1.17,
     "rsRatingAtTrigger": 61,
-    "gainPct": 9.86,
+    "gainPct": 8.5,
     "maxGainPct": 16.75
   },
   {
@@ -109,12 +70,12 @@
     "ind": "FMCG",
     "triggerDate": "2026-11-02",
     "triggerPrice": 1023.05,
-    "maxPrice": 1025.45,
-    "currentPrice": 969.9,
+    "maxPrice": 1033.8,
+    "currentPrice": 1033.8,
     "volRatioAtTrigger": 0.32,
     "rsRatingAtTrigger": 42,
-    "gainPct": -5.2,
-    "maxGainPct": 0.23
+    "gainPct": 1.05,
+    "maxGainPct": 1.05
   },
   {
     "sym": "CHAMBLFERT",
@@ -123,10 +84,10 @@
     "triggerDate": "2026-11-03",
     "triggerPrice": 381.7,
     "maxPrice": 394.15,
-    "currentPrice": 370.95,
+    "currentPrice": 374.25,
     "volRatioAtTrigger": 2.07,
     "rsRatingAtTrigger": 39,
-    "gainPct": -2.82,
+    "gainPct": -1.95,
     "maxGainPct": 3.26
   },
   {
@@ -136,10 +97,10 @@
     "triggerDate": "2026-11-04",
     "triggerPrice": 383.9,
     "maxPrice": 430.8,
-    "currentPrice": 405.4,
+    "currentPrice": 400.35,
     "volRatioAtTrigger": 0.84,
     "rsRatingAtTrigger": 56,
-    "gainPct": 5.6,
+    "gainPct": 4.28,
     "maxGainPct": 12.22
   },
   {
@@ -149,10 +110,10 @@
     "triggerDate": "2026-11-04",
     "triggerPrice": 394.15,
     "maxPrice": 394.15,
-    "currentPrice": 370.95,
+    "currentPrice": 374.25,
     "volRatioAtTrigger": 1.51,
     "rsRatingAtTrigger": 38,
-    "gainPct": -5.89,
+    "gainPct": -5.05,
     "maxGainPct": 0
   },
   {
@@ -162,10 +123,10 @@
     "triggerDate": "2026-11-04",
     "triggerPrice": 27120,
     "maxPrice": 27300,
-    "currentPrice": 27300,
+    "currentPrice": 27145,
     "volRatioAtTrigger": 3.82,
     "rsRatingAtTrigger": 62,
-    "gainPct": 0.66,
+    "gainPct": 0.09,
     "maxGainPct": 0.66
   },
   {
@@ -175,10 +136,10 @@
     "triggerDate": "2026-11-05",
     "triggerPrice": 2640,
     "maxPrice": 2730,
-    "currentPrice": 2725.1,
+    "currentPrice": 2706,
     "volRatioAtTrigger": 2.83,
     "rsRatingAtTrigger": 66,
-    "gainPct": 3.22,
+    "gainPct": 2.5,
     "maxGainPct": 3.41
   },
   {
@@ -188,10 +149,10 @@
     "triggerDate": "2026-11-05",
     "triggerPrice": 1553.6,
     "maxPrice": 1620,
-    "currentPrice": 1604.9,
+    "currentPrice": 1594.8,
     "volRatioAtTrigger": 1.14,
     "rsRatingAtTrigger": 41,
-    "gainPct": 3.3,
+    "gainPct": 2.65,
     "maxGainPct": 4.27
   },
   {
@@ -201,10 +162,10 @@
     "triggerDate": "2026-11-05",
     "triggerPrice": 1095,
     "maxPrice": 1240.25,
-    "currentPrice": 1215.25,
+    "currentPrice": 1222.15,
     "volRatioAtTrigger": 3.03,
     "rsRatingAtTrigger": 77,
-    "gainPct": 10.98,
+    "gainPct": 11.61,
     "maxGainPct": 13.26
   },
   {
@@ -214,10 +175,10 @@
     "triggerDate": "2026-11-11",
     "triggerPrice": 2715,
     "maxPrice": 2730,
-    "currentPrice": 2725.1,
+    "currentPrice": 2706,
     "volRatioAtTrigger": 1.22,
     "rsRatingAtTrigger": 58,
-    "gainPct": 0.37,
+    "gainPct": -0.33,
     "maxGainPct": 0.55
   },
   {
@@ -226,12 +187,12 @@
     "ind": "Services",
     "triggerDate": "2026-11-13",
     "triggerPrice": 173.59,
-    "maxPrice": 178.28,
-    "currentPrice": 178.28,
+    "maxPrice": 178.5,
+    "currentPrice": 178.5,
     "volRatioAtTrigger": 3.35,
     "rsRatingAtTrigger": 76,
-    "gainPct": 2.7,
-    "maxGainPct": 2.7
+    "gainPct": 2.83,
+    "maxGainPct": 2.83
   },
   {
     "sym": "GPIL",
@@ -240,10 +201,10 @@
     "triggerDate": "2026-11-16",
     "triggerPrice": 223.45,
     "maxPrice": 228.4,
-    "currentPrice": 211.1,
+    "currentPrice": 211.14,
     "volRatioAtTrigger": 3.11,
     "rsRatingAtTrigger": 46,
-    "gainPct": -5.53,
+    "gainPct": -5.51,
     "maxGainPct": 2.22
   },
   {
@@ -253,10 +214,10 @@
     "triggerDate": "2026-11-17",
     "triggerPrice": 404.8,
     "maxPrice": 407.05,
-    "currentPrice": 405.4,
+    "currentPrice": 400.35,
     "volRatioAtTrigger": 0.23,
     "rsRatingAtTrigger": 52,
-    "gainPct": 0.15,
+    "gainPct": -1.1,
     "maxGainPct": 0.56
   },
   {
@@ -266,10 +227,10 @@
     "triggerDate": "2026-11-17",
     "triggerPrice": 835.6,
     "maxPrice": 859.85,
-    "currentPrice": 856.3,
+    "currentPrice": 846.25,
     "volRatioAtTrigger": 4.27,
     "rsRatingAtTrigger": 67,
-    "gainPct": 2.48,
+    "gainPct": 1.27,
     "maxGainPct": 2.9
   },
   {
@@ -278,12 +239,12 @@
     "ind": "Services",
     "triggerDate": "2026-11-18",
     "triggerPrice": 174.72,
-    "maxPrice": 178.28,
-    "currentPrice": 178.28,
+    "maxPrice": 178.5,
+    "currentPrice": 178.5,
     "volRatioAtTrigger": 1.77,
     "rsRatingAtTrigger": 72,
-    "gainPct": 2.04,
-    "maxGainPct": 2.04
+    "gainPct": 2.16,
+    "maxGainPct": 2.16
   },
   {
     "sym": "GPIL",
@@ -292,10 +253,10 @@
     "triggerDate": "2026-11-19",
     "triggerPrice": 228.4,
     "maxPrice": 228.4,
-    "currentPrice": 211.1,
+    "currentPrice": 211.14,
     "volRatioAtTrigger": 3.81,
     "rsRatingAtTrigger": 45,
-    "gainPct": -7.57,
+    "gainPct": -7.56,
     "maxGainPct": 0
   },
   {
@@ -305,10 +266,10 @@
     "triggerDate": "2026-11-20",
     "triggerPrice": 14011,
     "maxPrice": 14200,
-    "currentPrice": 14015,
+    "currentPrice": 13765,
     "volRatioAtTrigger": 2.64,
     "rsRatingAtTrigger": 64,
-    "gainPct": 0.03,
+    "gainPct": -1.76,
     "maxGainPct": 1.35
   },
   {
@@ -318,10 +279,10 @@
     "triggerDate": "2026-11-20",
     "triggerPrice": 1620,
     "maxPrice": 1620,
-    "currentPrice": 1604.9,
+    "currentPrice": 1594.8,
     "volRatioAtTrigger": 1.25,
     "rsRatingAtTrigger": 53,
-    "gainPct": -0.93,
+    "gainPct": -1.56,
     "maxGainPct": 0
   },
   {
@@ -331,10 +292,10 @@
     "triggerDate": "2026-11-20",
     "triggerPrice": 248.8,
     "maxPrice": 248.8,
-    "currentPrice": 239,
+    "currentPrice": 233.1,
     "volRatioAtTrigger": 5.36,
     "rsRatingAtTrigger": 75,
-    "gainPct": -3.94,
+    "gainPct": -6.31,
     "maxGainPct": 0
   },
   {
@@ -344,8 +305,8 @@
     "triggerDate": "2026-11-23",
     "triggerPrice": 1777.5,
     "maxPrice": 1854.7,
-    "currentPrice": 1854.7,
-    "gainPct": 4.34,
+    "currentPrice": 1813.9,
+    "gainPct": 2.05,
     "maxGainPct": 4.34,
     "volRatioAtTrigger": 1.35,
     "rsRatingAtTrigger": 72
@@ -356,10 +317,10 @@
     "ind": "Services",
     "triggerDate": "2026-11-23",
     "triggerPrice": 50.81,
-    "maxPrice": 50.9,
-    "currentPrice": 50.9,
-    "gainPct": 0.18,
-    "maxGainPct": 0.18,
+    "maxPrice": 50.98,
+    "currentPrice": 50.98,
+    "gainPct": 0.33,
+    "maxGainPct": 0.33,
     "volRatioAtTrigger": 0.41,
     "rsRatingAtTrigger": 18
   },
@@ -370,10 +331,10 @@
     "triggerDate": "2026-11-25",
     "triggerPrice": 5751.5,
     "maxPrice": 5789,
-    "currentPrice": 5789,
+    "currentPrice": 5701,
     "volRatioAtTrigger": 1.73,
     "rsRatingAtTrigger": 62,
-    "gainPct": 0.65,
+    "gainPct": -0.88,
     "maxGainPct": 0.65
   },
   {
@@ -383,10 +344,10 @@
     "triggerDate": "2026-11-25",
     "triggerPrice": 1616.9,
     "maxPrice": 1616.9,
-    "currentPrice": 1604.9,
+    "currentPrice": 1594.8,
     "volRatioAtTrigger": 0.93,
     "rsRatingAtTrigger": 49,
-    "gainPct": -0.74,
+    "gainPct": -1.37,
     "maxGainPct": 0
   },
   {
@@ -395,11 +356,24 @@
     "ind": "Services",
     "triggerDate": "2026-11-26",
     "triggerPrice": 178.28,
-    "maxPrice": 178.28,
-    "currentPrice": 178.28,
+    "maxPrice": 178.5,
+    "currentPrice": 178.5,
     "volRatioAtTrigger": 0.85,
     "rsRatingAtTrigger": 64,
-    "gainPct": 0,
-    "maxGainPct": 0
+    "gainPct": 0.12,
+    "maxGainPct": 0.12
+  },
+  {
+    "sym": "TATACONSUM",
+    "name": "Tata Consumer",
+    "ind": "FMCG",
+    "triggerDate": "2026-11-13",
+    "triggerPrice": 1079,
+    "maxPrice": 1155,
+    "currentPrice": 1155,
+    "gainPct": 7.04,
+    "maxGainPct": 7.04,
+    "volRatioAtTrigger": 0.47,
+    "rsRatingAtTrigger": 57
   }
 ]
